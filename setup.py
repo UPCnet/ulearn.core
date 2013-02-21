@@ -7,7 +7,7 @@ setup(name='ulearn.core',
       version=version,
       description="",
       long_description=open("README.rst").read() + "\n" +
-                       open(os.path.join("docs", "HISTORY.txt")).read(),
+                       open(os.path.join("docs", "HISTORY.rst")).read(),
       # Get more strings from
       # http://pypi.python.org/pypi?%3Aaction=list_classifiers
       classifiers=[
@@ -31,6 +31,7 @@ setup(name='ulearn.core',
       install_requires=[
           'setuptools',
           'ulearn.theme',
+          'plone.app.dexterity',
       ],
       extras_require={'test': ['plone.app.testing']},
       entry_points="""
