@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<object name="ulearn.core.community" meta_type="Dexterity FTI"
+<object name="ulearn.community" meta_type="Dexterity FTI"
    i18n:domain="ulearn" xmlns:i18n="http://xml.zope.org/namespaces/i18n">
 
  <!-- Basic metadata -->
@@ -12,7 +12,7 @@
  <property name="allowed_content_types" />
 
  <!-- schema interface -->
- <property name="schema">ulearn.core.content.ICommunity</property>
+ <property name="schema">ulearn.core.content.community.ICommunity</property>
 
  <!-- class used for content items -->
  <property name="klass">plone.dexterity.content.Container</property>
@@ -22,7 +22,8 @@
 
  <!-- enabled behaviors -->
  <property name="behaviors">
-     <element value="plone.app.content.interfaces.INameFromTitle" />
+    <element value="plone.app.content.interfaces.INameFromTitle"/>
+    <element value="plone.app.dexterity.behaviors.exclfromnav.IExcludeFromNavigation"/>
  </property>
 
  <!-- View information -->
