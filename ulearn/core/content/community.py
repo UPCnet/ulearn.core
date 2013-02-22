@@ -3,6 +3,7 @@ from five import grok
 from zope import schema
 from zope.component import queryUtility
 from zope.app.container.interfaces import IObjectAddedEvent
+from z3c.form import button
 
 from plone.directives import form, dexterity
 from plone.app.textfield import RichText
@@ -11,6 +12,8 @@ from plone.registry.interfaces import IRegistry
 from plone.dexterity.utils import createContentInContainer
 
 from Products.CMFCore.utils import getToolByName
+from Products.CMFPlone.interfaces import IPloneSiteRoot
+from Products.statusmessages.interfaces import IStatusMessage
 
 from maxclient import MaxClient
 from mrs.max.browser.controlpanel import IMAXUISettings
@@ -25,6 +28,7 @@ class ICommunity(form.Schema):
     title = schema.TextLine(
             title=_(u"Nom"),
             description=_(u"Nom de la comunitat"),
+            required=True
         )
 
     form.widget(subscribed=TextLinesFieldWidget)
@@ -42,6 +46,39 @@ class View(grok.View):
 
     # def render(self):
     #     return "asdasd"
+
+
+class communityAdder(form.SchemaForm):
+    grok.name('addCommunity')
+    grok.context(IPloneSiteRoot)
+
+    schema = ICommunity
+    ignoreContext = True
+
+    @button.buttonAndHandler(_(u'Crea la comunitat'))
+    def handleApply(self, action):
+        data, errors = self.extractData()
+        if errors:
+            self.status = self.formErrorsMessage
+            return
+
+        # Handle order here. For now, just print it to the console. A more
+        # realistic action would be to send the order to another system, send
+        # an email, or similar
+
+        nom = data['title']
+        subscribed = data['subscribed']
+
+        new_comunitat = createContentInContainer(self.context, 'ulearn.community', title=nom, subscribed=subscribed)
+
+        # Redirect back to the front page with a status message
+
+        IStatusMessage(self.request).addStatusMessage(
+                "La comunitat {} ha estat creada.".format(nom),
+                "info"
+            )
+
+        self.request.response.redirect(new_comunitat.absolute_url())
 
 
 @grok.subscribe(ICommunity, IObjectAddedEvent)
