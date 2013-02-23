@@ -2,11 +2,13 @@
 from five import grok
 from zope import schema
 from zope.component import queryUtility
+from zope.security import checkPermission
 from zope.app.container.interfaces import IObjectAddedEvent
 from z3c.form import button
 
 from plone.directives import form, dexterity
 from plone.app.textfield import RichText
+from plone.z3cform.textlines.textlines import TextLinesConverter
 from plone.z3cform.textlines.textlines import TextLinesFieldWidget
 from plone.registry.interfaces import IRegistry
 from plone.dexterity.utils import createContentInContainer
@@ -44,13 +46,14 @@ class ICommunity(form.Schema):
 class View(grok.View):
     grok.context(ICommunity)
 
-    # def render(self):
-    #     return "asdasd"
+    def canEditCommunity(self):
+        return checkPermission('cmf.RequestReview', self.context)
 
 
 class communityAdder(form.SchemaForm):
     grok.name('addCommunity')
     grok.context(IPloneSiteRoot)
+    grok.require('genweb.authenticated')
 
     schema = ICommunity
     ignoreContext = True
@@ -79,6 +82,48 @@ class communityAdder(form.SchemaForm):
             )
 
         self.request.response.redirect(new_comunitat.absolute_url())
+
+
+class communityEdit(form.SchemaForm):
+    grok.name('editCommunity')
+    grok.context(ICommunity)
+    grok.require('cmf.ModifyPortalContent')
+
+    schema = ICommunity
+    ignoreContext = True
+
+    def updateWidgets(self):
+        super(communityEdit, self).updateWidgets()
+
+        self.widgets["title"].value = self.context.title
+
+        tlc = TextLinesConverter(self.fields['subscribed'].field, self.widgets["subscribed"])
+        self.widgets["subscribed"].value = tlc.toWidgetValue(self.context.subscribed)
+
+    @button.buttonAndHandler(_(u'Edita la comunitat'))
+    def handleApply(self, action):
+        data, errors = self.extractData()
+        if errors:
+            self.status = self.formErrorsMessage
+            return
+
+        nom = data['title']
+        subscribed = data['subscribed']
+
+        #unsubscribe = [a for a in self.context.subscribed if a not in subscribed]
+
+        # Unsubscribe user from community
+
+        # Set new values in community
+        self.context.title = nom
+        self.context.subscribed = subscribed
+
+        IStatusMessage(self.request).addStatusMessage(
+                "La comunitat {} ha estat modificada.".format(nom),
+                "info"
+            )
+
+        self.request.response.redirect(self.context.absolute_url())
 
 
 @grok.subscribe(ICommunity, IObjectAddedEvent)
