@@ -29,9 +29,6 @@
       <a class="btn btn-large btn-warning" tal:attributes="href string:${context/absolute_url}/documents/++add++File">Document</a>
       <a class="btn btn-large btn-warning" tal:attributes="href string:${context/absolute_url}/enllacos/++add++Link">Enllaç</a>
       <a class="btn btn-large btn-warning" tal:attributes="href string:${context/absolute_url}/fotos/++add++Image">Foto</a>
-      <a class="btn btn-large btn-info"
-         data-toggle="modal" data-remote="editCommunity" data-target="#editmodal"
-         tal:condition="view/canEditCommunity">Editar comunitat</a>
     </p>
 
     <div id="maxui-widget-container"></div>
