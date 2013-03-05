@@ -10,6 +10,8 @@
 
     <grok:grok package="." />
 
+    <include file="subscribers.zcml" />
+
     <genericsetup:registerProfile
       name="default"
       title="ulearn.core"
