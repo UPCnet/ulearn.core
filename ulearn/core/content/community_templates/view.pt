@@ -25,13 +25,31 @@
 
   <metal:content-core define-macro="main">
 
-    <p style="text-align: center">
-      <a class="btn btn-large btn-warning" tal:attributes="href string:${context/absolute_url}/documents/++add++File">Document</a>
-      <a class="btn btn-large btn-warning" tal:attributes="href string:${context/absolute_url}/enllacos/++add++Link">Enllaç</a>
-      <a class="btn btn-large btn-warning" tal:attributes="href string:${context/absolute_url}/fotos/++add++Image">Foto</a>
-    </p>
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li><a href="#" data-toggle="tab">Activitat</a></li>
+              <li><a data-toggle="tab" tal:attributes="href string:${context/absolute_url}/documents/++add++File">Document</a></li>
+              <li><a data-toggle="tab" tal:attributes="href string:${context/absolute_url}/enllacos/++add++Link">Enllaç</a></li>
+              <li><a data-toggle="tab" tal:attributes="href string:${context/absolute_url}/fotos/++add++Image">Foto</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <div id="maxui-widget-container"></div>
+
+    <div id="documents-view"></div>
+    <div id="links-view"></div>
+    <div id="images-view"></div>
 
   </metal:content-core>
 </metal:main>
