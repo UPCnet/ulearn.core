@@ -8,6 +8,7 @@ from z3c.form import button
 
 from plone.directives import form, dexterity
 from plone.app.textfield import RichText
+from plone.namedfile.field import NamedBlobImage
 from plone.z3cform.textlines.textlines import TextLinesConverter
 from plone.z3cform.textlines.textlines import TextLinesFieldWidget
 from plone.registry.interfaces import IRegistry
@@ -28,19 +29,24 @@ class ICommunity(form.Schema):
     """
 
     title = schema.TextLine(
-            title=_(u"Nom"),
-            description=_(u"Nom de la comunitat"),
-            required=True
-        )
+        title=_(u"Nom"),
+        description=_(u"Nom de la comunitat"),
+        required=True
+    )
 
     form.widget(subscribed=TextLinesFieldWidget)
     subscribed = schema.List(
-            title=_(u"Subscrits"),
-            description=_(u"Llista amb les persones subscrites"),
-            value_type=schema.TextLine(),
-            required=False,
-            missing_value=[],
-        )
+        title=_(u"Subscrits"),
+        description=_(u"Llista amb les persones subscrites"),
+        value_type=schema.TextLine(),
+        required=False,
+        missing_value=[])
+
+    image = NamedBlobImage(
+        title=_(u"Imatge"),
+        description=_(u"Imatge que defineix la comunitat"),
+        required=False,
+    )
 
 
 class View(grok.View):
@@ -71,15 +77,16 @@ class communityAdder(form.SchemaForm):
 
         nom = data['title']
         subscribed = data['subscribed']
+        image = data['image']
 
-        new_comunitat = createContentInContainer(self.context, 'ulearn.community', title=nom, subscribed=subscribed)
+        new_comunitat = createContentInContainer(self.context, 'ulearn.community', title=nom, subscribed=subscribed, image=image)
 
         # Redirect back to the front page with a status message
 
         IStatusMessage(self.request).addStatusMessage(
-                "La comunitat {} ha estat creada.".format(nom),
-                "info"
-            )
+            "La comunitat {} ha estat creada.".format(nom),
+            "info"
+        )
 
         self.request.response.redirect(new_comunitat.absolute_url())
 
@@ -109,6 +116,7 @@ class communityEdit(form.SchemaForm):
 
         nom = data['title']
         subscribed = data['subscribed']
+        image = data['image']
 
         #unsubscribe = [a for a in self.context.subscribed if a not in subscribed]
 
@@ -117,11 +125,12 @@ class communityEdit(form.SchemaForm):
         # Set new values in community
         self.context.title = nom
         self.context.subscribed = subscribed
+        self.context.image = image
 
         IStatusMessage(self.request).addStatusMessage(
-                "La comunitat {} ha estat modificada.".format(nom),
-                "info"
-            )
+            "La comunitat {} ha estat modificada.".format(nom),
+            "info"
+        )
 
         self.request.response.redirect(self.context.absolute_url())
 
