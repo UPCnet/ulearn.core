@@ -25,7 +25,27 @@
 
   <metal:content-core define-macro="main">
 
-    <div class="navbar">
+    <ul class="nav nav-tabs" id="community-views">
+      <li class="active"><a href="#"
+             data-toggle="tab"
+             data-target="#maxui-widget-container">Activitat</a></li>
+      <li><a href="#"
+             data-toggle="tab"
+             data-target="#documents-view">Document</a></li>
+      <li><a href="#"
+             data-toggle="tab"
+             data-target="#links-view">Enllaç</a></li>
+      <li><a href="#"
+             data-toggle="tab"
+             data-target="#images-view"
+             >Foto</a></li>
+    </ul>
+
+<!--
+tal:attributes="href string:${context/absolute_url}/documents/++add++File"
+tal:attributes="href string:${context/absolute_url}/enllacos/++add++Link"
+tal:attributes="href string:${context/absolute_url}/fotos/++add++Image"
+     <div class="navbar">
       <div class="navbar-inner">
         <div class="container">
           <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
@@ -44,12 +64,14 @@
         </div>
       </div>
     </div>
-
-    <div id="maxui-widget-container"></div>
-
-    <div id="documents-view"></div>
-    <div id="links-view"></div>
-    <div id="images-view"></div>
+    ajax_folder_summary_view
+     -->
+  <div class="tab-content">
+    <div class="tab-pane active" id="maxui-widget-container"></div>
+    <div class="tab-pane" id="documents-view">Els documents</div>
+    <div class="tab-pane" id="links-view">Links</div>
+    <div class="tab-pane" id="images-view">Images</div>
+  </div>
 
   </metal:content-core>
 </metal:main>
