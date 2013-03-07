@@ -68,9 +68,9 @@ tal:attributes="href string:${context/absolute_url}/fotos/++add++Image"
      -->
   <div class="tab-content">
     <div class="tab-pane active" id="maxui-widget-container"></div>
-    <div class="tab-pane" id="documents-view">Els documents</div>
-    <div class="tab-pane" id="links-view">Links</div>
-    <div class="tab-pane" id="images-view">Images</div>
+    <div class="tab-pane" id="documents-view" data-remote="documents">Els documents</div>
+    <div class="tab-pane" id="links-view" data-remote="enllacos">Links</div>
+    <div class="tab-pane" id="images-view" data-remote="imatges">Images</div>
   </div>
 
   </metal:content-core>
