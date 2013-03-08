@@ -3,12 +3,14 @@ from five import grok
 from zope import schema
 from zope.component import queryUtility
 from zope.security import checkPermission
+from zope.component import getMultiAdapter
 from zope.app.container.interfaces import IObjectAddedEvent
 from z3c.form import button
 
-from plone.directives import form, dexterity
-from plone.app.textfield import RichText
+from plone.directives import form
 from plone.namedfile.field import NamedBlobImage
+from plone.portlets.interfaces import IPortletManager
+from plone.portlets.interfaces import IPortletAssignmentMapping
 from plone.z3cform.textlines.textlines import TextLinesConverter
 from plone.z3cform.textlines.textlines import TextLinesFieldWidget
 from plone.registry.interfaces import IRegistry
@@ -22,6 +24,9 @@ from maxclient import MaxClient
 from mrs.max.browser.controlpanel import IMAXUISettings
 
 from ulearn.core import _
+from ulearn.theme.portlets.profile import Assignment as profileAssignment
+from ulearn.theme.portlets.communities import Assignment as communitiesAssignment
+from ulearn.theme.portlets.thinnkers import Assignment as thinnkersAssignment
 
 
 class ICommunity(form.Schema):
@@ -79,7 +84,7 @@ class communityAdder(form.SchemaForm):
         subscribed = data['subscribed']
         image = data['image']
 
-        new_comunitat = createContentInContainer(self.context, 'ulearn.community', title=nom, subscribed=subscribed, image=image)
+        new_comunitat = createContentInContainer(self.context, 'ulearn.community', title=nom, subscribed=subscribed, image=image, checkConstraints=False)
 
         # Redirect back to the front page with a status message
 
@@ -177,3 +182,10 @@ def initialize_community(community, event):
     portal_workflow.doActionFor(documents, 'publishtointranet')
     portal_workflow.doActionFor(enllacos, 'publishtointranet')
     portal_workflow.doActionFor(fotos, 'publishtointranet')
+
+    # Add default portlets
+    target_manager = queryUtility(IPortletManager, name='plone.leftcolumn', context=community)
+    target_manager_assignments = getMultiAdapter((community, target_manager), IPortletAssignmentMapping)
+    target_manager_assignments['profile'] = profileAssignment()
+    target_manager_assignments['communities'] = communitiesAssignment()
+    target_manager_assignments['thinnkers'] = thinnkersAssignment()
