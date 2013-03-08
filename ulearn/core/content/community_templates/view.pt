@@ -25,21 +25,30 @@
 
   <metal:content-core define-macro="main">
 
-    <ul class="nav nav-tabs" id="community-views">
-      <li class="active"><a href="#"
-             data-toggle="tab"
-             data-target="#maxui-widget-container">Activitat</a></li>
-      <li><a href="#"
-             data-toggle="tab"
-             data-target="#documents-view">Document</a></li>
-      <li><a href="#"
-             data-toggle="tab"
-             data-target="#links-view">Enllaç</a></li>
-      <li><a href="#"
-             data-toggle="tab"
-             data-target="#images-view"
-             >Foto</a></li>
-    </ul>
+    <div id="menusup">
+      <ul class="nav nav-tabs" id="community-views">
+        <li class="active"><a href="#"
+               data-toggle="tab"
+               data-target="#maxui-widget-container">
+                  <i class="fa-icon-comment icons"></i>
+                  Activitat</a></li>
+        <li><a href="#"
+               data-toggle="tab"
+               data-target="#documents-view">
+                  <i class="fa-icon-file-alt icons"></i>
+                  Document</a></li>
+        <li><a href="#"
+               data-toggle="tab"
+               data-target="#links-view">
+                  <i class="fa-icon-link icons"></i>
+                  Enllaç</a></li>
+        <li><a href="#"
+               data-toggle="tab"
+               data-target="#images-view">
+                  <i class="fa-icon-camera-retro icons"></i>
+                  Foto</a></li>
+      </ul>
+    </div>
 
 <!--
 tal:attributes="href string:${context/absolute_url}/documents/++add++File"
