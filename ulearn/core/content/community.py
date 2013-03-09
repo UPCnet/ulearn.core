@@ -24,9 +24,6 @@ from maxclient import MaxClient
 from mrs.max.browser.controlpanel import IMAXUISettings
 
 from ulearn.core import _
-from ulearn.theme.portlets.profile import Assignment as profileAssignment
-from ulearn.theme.portlets.communities import Assignment as communitiesAssignment
-from ulearn.theme.portlets.thinnkers import Assignment as thinnkersAssignment
 
 
 class ICommunity(form.Schema):
@@ -186,6 +183,9 @@ def initialize_community(community, event):
     # Add default portlets
     target_manager = queryUtility(IPortletManager, name='plone.leftcolumn', context=community)
     target_manager_assignments = getMultiAdapter((community, target_manager), IPortletAssignmentMapping)
+    from ulearn.theme.portlets.profile import Assignment as profileAssignment
+    from ulearn.theme.portlets.thinnkers import Assignment as thinnkersAssignment
+    from ulearn.theme.portlets.communities import Assignment as communitiesAssignment
     target_manager_assignments['profile'] = profileAssignment()
     target_manager_assignments['communities'] = communitiesAssignment()
     target_manager_assignments['thinnkers'] = thinnkersAssignment()
