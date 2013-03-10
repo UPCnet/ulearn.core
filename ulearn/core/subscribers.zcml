@@ -7,6 +7,12 @@
     <!-- Added Event Subscriber -->
     <subscriber
         handler=".hooks.Added"
+        for="plone.app.contenttypes.interfaces.IDocument
+             zope.app.container.interfaces.IObjectAddedEvent"
+        />
+
+    <subscriber
+        handler=".hooks.Added"
         for="plone.app.contenttypes.interfaces.IFile
              zope.app.container.interfaces.IObjectAddedEvent"
         />

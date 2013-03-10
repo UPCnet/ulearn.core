@@ -186,6 +186,17 @@ def initialize_community(community, event):
     from ulearn.theme.portlets.profile import Assignment as profileAssignment
     from ulearn.theme.portlets.thinnkers import Assignment as thinnkersAssignment
     from ulearn.theme.portlets.communities import Assignment as communitiesAssignment
+    from plone.app.portlets.portlets.navigation import Assignment as navigationAssignment
     target_manager_assignments['profile'] = profileAssignment()
+    target_manager_assignments['navigation'] = navigationAssignment(root='/{}'.format(community.id))
     target_manager_assignments['communities'] = communitiesAssignment()
     target_manager_assignments['thinnkers'] = thinnkersAssignment()
+
+    target_manager = queryUtility(IPortletManager, name='plone.rightcolumn', context=community)
+    target_manager_assignments = getMultiAdapter((community, target_manager), IPortletAssignmentMapping)
+    from ulearn.theme.portlets.calendar import Assignment as calendarAssignment
+    from ulearn.theme.portlets.mostvalued import Assignment as mostvaluedAssignment
+    from ulearn.theme.portlets.comments import Assignment as commentsAssignment
+    target_manager_assignments['calendar'] = calendarAssignment()
+    target_manager_assignments['mostvalued'] = mostvaluedAssignment()
+    target_manager_assignments['comments'] = commentsAssignment()

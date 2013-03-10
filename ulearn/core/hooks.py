@@ -45,7 +45,7 @@ def Added(content, event):
 
     articles = dict(File=u'un', Image=u'una', Link=u'un')
 
-    tipus = dict(File=u'document', Image=u'foto', Link=u'enllaç')
+    tipus = dict(Document=u'document', File=u'document', Image=u'foto', Link=u'enllaç')
 
     parts = dict(type=tipus.get(content.portal_type, ''),
                  name=content.Title(),
