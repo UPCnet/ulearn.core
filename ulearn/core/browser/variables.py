@@ -19,6 +19,7 @@ window._MAXUI.avatar_url = '%(avatar_url)s';
 window._MAXUI.profile_url = '%(profile_url)s'
 window._MAXUI.contexts = '%(contexts)s';
 window._MAXUI.activitySource = '%(activitySource)s';
+window._MAXUI.language = '%(language)s';
 """
 
 
@@ -44,6 +45,9 @@ class communityVariables(grok.View):
             member = pm.getMemberById(username)
             oauth_token = member.getProperty('oauth_token', None)
 
+        pl = getToolByName(self.context, "portal_languages")
+        default_lang = pl.getDefaultLanguage()
+
         return TEMPLATE % dict(
             username=username,
             oauth_token=oauth_token,
@@ -53,5 +57,6 @@ class communityVariables(grok.View):
             avatar_url='%s/avatar/{0}' % (portal_url),
             profile_url='%s/author/{0}' % (portal_url),
             contexts=self.context.absolute_url(),
-            activitySource='activities'
-            )
+            activitySource='activities',
+            language=default_lang
+        )

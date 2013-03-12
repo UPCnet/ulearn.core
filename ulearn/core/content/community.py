@@ -120,9 +120,19 @@ class communityEdit(form.SchemaForm):
         subscribed = data['subscribed']
         image = data['image']
 
-        #unsubscribe = [a for a in self.context.subscribed if a not in subscribed]
+        registry = queryUtility(IRegistry)
+        maxui_settings = registry.forInterface(IMAXUISettings)
 
-        # Unsubscribe user from community
+        maxclient = MaxClient(maxui_settings.max_server, maxui_settings.oauth_server)
+        maxclient.setActor(maxui_settings.max_restricted_username)
+        maxclient.setToken(maxui_settings.max_restricted_token)
+
+        # Subscribe new usernames to the community
+        for guest in subscribed:
+            maxclient.subscribe(url=self.context.absolute_url(), username=guest)
+
+        #unsubscribe = [a for a in self.context.subscribed if a not in subscribed]
+        # Unsubscribe username from community
 
         # Set new values in community
         self.context.title = nom

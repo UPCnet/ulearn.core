@@ -25,29 +25,30 @@
 
   <metal:content-core define-macro="main">
 
-    <div id="menusup">
+    <div id="menusup"
+         i18n:domain="ulearn">
       <ul class="nav nav-tabs" id="community-views">
         <li class="active"><a href="#"
                data-toggle="tab"
                data-target="#maxui-widget-container">
                   <i class="fa-icon-comment icons"></i>
-                  Activitat</a></li>
+                  <tal:Activity i18n:translate="Activity">Activitat</tal:Activity></a></li>
         <li><a href="#"
                data-toggle="tab"
                data-target="#documents-view">
                   <i class="fa-icon-file-alt icons"></i>
-                  Document</a></li>
+                  <tal:Documents i18n:translate="Documents">Documents</tal:Documents></a></li>
         <li><a href="#"
                data-toggle="tab"
                data-target="#links-view">
                   <i class="fa-icon-link icons"></i>
-                  Enllaç</a></li>
+                  <tal:Links i18n:translate="Links">Enllaços</tal:Links></a></li>
         <li><a href="#"
                data-toggle="tab"
                data-target="#images-view">
                   <i class="fa-icon-camera-retro icons"></i>
-                  Foto</a></li>
-        <li class="dropdown pull-right">
+                  <tal:Photos i18n:translate="Photos">Fotos</tal:Photos></a></li>
+        <li class="btn-plus dropdown pull-right">
             <a class="dropdown-toggle" role="menuitem" data-toggle="dropdown" href="#">
               <i class="fa-icon-plus icons"></i>
             </a>
@@ -63,7 +64,7 @@
 
   <div class="tab-content">
     <div class="tab-pane active" id="maxui-widget-container"></div>
-    <div class="tab-pane" id="documents-view" data-remote="documents">Els documents</div>
+    <div class="tab-pane" id="documents-view" data-remote="documents">Documents</div>
     <div class="tab-pane" id="links-view" data-remote="enllacos">Links</div>
     <div class="tab-pane" id="images-view" data-remote="fotos">Images</div>
   </div>
