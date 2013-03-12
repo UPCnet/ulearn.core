@@ -19,6 +19,9 @@ def Added(content, event):
     """
     portal = getSite()
     pm = getToolByName(portal, "portal_membership")
+    pl = getToolByName(portal, "portal_languages")
+    default_lang = pl.getDefaultLanguage()
+
     if pm.isAnonymousUser():  # the user has not logged in
         username = ''
         return
@@ -43,18 +46,30 @@ def Added(content, event):
     maxclient.setActor(username)
     maxclient.setToken(oauth_token)
 
-    articles = dict(File=u'un', Image=u'una', Link=u'un')
+    articles = {
+        'ca': dict(File=u'un', Image=u'una', Link=u'un'),
+        'es': dict(File=u'un', Image=u'una', Link=u'un'),
+        'en': dict(File=u'a', Image=u'an', Link=u'a'),
+    }
 
-    tipus = dict(Document=u'document', File=u'document', Image=u'foto', Link=u'enllaç')
+    tipus = {
+        'ca': dict(Document=u'document', File=u'document', Image=u'foto', Link=u'enllaç'),
+        'es': dict(Document=u'documento', File=u'documento', Image=u'foto', Link=u'enlace'),
+        'en': dict(Document=u'document', File=u'document', Image=u'photo', Link=u'link'),
+    }
 
-    parts = dict(type=tipus.get(content.portal_type, ''),
-                 name=content.Title(),
+    parts = dict(type=tipus[default_lang].get(content.portal_type, ''),
+                 name=content.Title() or getattr(getattr(content, 'file', ''), 'filename', '') or getattr(getattr(content, 'image', ''), 'filename', ''),
                  link=content.absolute_url(),
-                 un=articles.get(content.portal_type, 'un'))
+                 un=articles[default_lang].get(content.portal_type, 'un'))
 
-    activity_text = u'He afegit %(un)s %(type)s "%(name)s" a %(link)s' % parts
+    activity_text = {
+        'ca': u'He afegit {un} {type} "{name}" a {link}',
+        'es': u'He añadido {un} {type} "{name}" a {link}',
+        'en': u'I\'ve added {un} {type} "{name}" a {link}',
+    }
 
-    maxclient.addActivity(activity_text, contexts=[community.absolute_url(), ])
+    maxclient.addActivity(activity_text[default_lang].format(**parts), contexts=[community.absolute_url(), ])
 
 
 def findContainerCommunity(content):
