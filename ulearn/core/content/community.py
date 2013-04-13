@@ -7,6 +7,7 @@ from zope.component import getMultiAdapter
 from zope.app.container.interfaces import IObjectAddedEvent
 from z3c.form import button
 
+from plone.indexer import indexer
 from plone.directives import form
 from plone.namedfile.field import NamedBlobImage
 from plone.portlets.interfaces import IPortletManager
@@ -49,6 +50,15 @@ class ICommunity(form.Schema):
         description=_(u"Imatge que defineix la comunitat"),
         required=False,
     )
+
+
+@indexer(ICommunity)
+def imageFilename(context):
+    """Create a catalogue indexer, registered as an adapter, which can
+    populate the ``context.filename`` value and index it.
+    """
+    return context.image.filename
+grok.global_adapter(imageFilename, name='image_filename')
 
 
 class View(grok.View):
