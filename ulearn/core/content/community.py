@@ -37,6 +37,12 @@ class ICommunity(form.Schema):
         required=True
     )
 
+    description = schema.Text(
+        title=_(u"Descripció"),
+        description=_(u"La descripció de la comunitat"),
+        required=False
+    )
+
     form.widget(subscribed=TextLinesFieldWidget)
     subscribed = schema.List(
         title=_(u"Subscrits"),
@@ -88,10 +94,11 @@ class communityAdder(form.SchemaForm):
         # an email, or similar
 
         nom = data['title']
+        description = data['description']
         subscribed = data['subscribed']
         image = data['image']
 
-        new_comunitat = createContentInContainer(self.context, 'ulearn.community', title=nom, subscribed=subscribed, image=image, checkConstraints=False)
+        new_comunitat = createContentInContainer(self.context, 'ulearn.community', title=nom, description=description, subscribed=subscribed, image=image, checkConstraints=False)
 
         # Redirect back to the front page with a status message
 
@@ -115,6 +122,7 @@ class communityEdit(form.SchemaForm):
         super(communityEdit, self).updateWidgets()
 
         self.widgets["title"].value = self.context.title
+        self.widgets["description"].value = self.context.description
 
         tlc = TextLinesConverter(self.fields['subscribed'].field, self.widgets["subscribed"])
         self.widgets["subscribed"].value = tlc.toWidgetValue(self.context.subscribed)
@@ -127,6 +135,7 @@ class communityEdit(form.SchemaForm):
             return
 
         nom = data['title']
+        description = data['description']
         subscribed = data['subscribed']
         image = data['image']
 
@@ -146,8 +155,11 @@ class communityEdit(form.SchemaForm):
 
         # Set new values in community
         self.context.title = nom
+        self.context.description = description
         self.context.subscribed = subscribed
         self.context.image = image
+
+        self.context.reindexObject()
 
         IStatusMessage(self.request).addStatusMessage(
             "La comunitat {} ha estat modificada.".format(nom),
