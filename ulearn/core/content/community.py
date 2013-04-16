@@ -21,7 +21,8 @@ from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.interfaces import IPloneSiteRoot
 from Products.statusmessages.interfaces import IStatusMessage
 
-from genweb.core.widgets.token_input_widget import TokenInputFieldWidget
+from genweb.core.adapters.favorites import IFavorite
+from genweb.core.widgets.token_input_widget import UsersTokenInputFieldWidget
 
 from maxclient import MaxClient
 from mrs.max.browser.controlpanel import IMAXUISettings
@@ -45,7 +46,7 @@ class ICommunity(form.Schema):
         required=False
     )
 
-    form.widget(subscribed=TokenInputFieldWidget)
+    form.widget(subscribed=UsersTokenInputFieldWidget)
     subscribed = schema.List(
         title=_(u"Subscrits"),
         description=_(u"Llista amb les persones subscrites"),
@@ -74,6 +75,20 @@ class View(grok.View):
 
     def canEditCommunity(self):
         return checkPermission('cmf.RequestReview', self.context)
+
+
+class ToggleFavorite(grok.View):
+    grok.context(ICommunity)
+    grok.name('toggle-favorite')
+
+    def render(self):
+        pm = getToolByName(self.context, "portal_membership")
+        current_user = pm.getAuthenticatedMember().getUserName()
+        if current_user in IFavorite(self.context).get():
+            IFavorite(self.context).remove(current_user)
+        else:
+            IFavorite(self.context).add(current_user)
+        return "Toggled"
 
 
 class communityAdder(form.SchemaForm):

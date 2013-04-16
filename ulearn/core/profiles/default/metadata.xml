@@ -3,6 +3,7 @@
   <version>0001</version>
     <dependencies>
         <dependency>profile-plone.app.dexterity:default</dependency>
+        <dependency>profile-plone.app.contenttypes:default</dependency>
         <dependency>profile-plone.formwidget.autocomplete:default</dependency>
         <dependency>profile-pas.plugins.preauth:default</dependency>
         <dependency>profile-mrs.max:default</dependency>
