@@ -21,6 +21,8 @@ from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.interfaces import IPloneSiteRoot
 from Products.statusmessages.interfaces import IStatusMessage
 
+from genweb.core.widgets.token_input_widget import TokenInputFieldWidget
+
 from maxclient import MaxClient
 from mrs.max.browser.controlpanel import IMAXUISettings
 
@@ -43,7 +45,7 @@ class ICommunity(form.Schema):
         required=False
     )
 
-    form.widget(subscribed=TextLinesFieldWidget)
+    form.widget(subscribed=TokenInputFieldWidget)
     subscribed = schema.List(
         title=_(u"Subscrits"),
         description=_(u"Llista amb les persones subscrites"),
