@@ -94,7 +94,7 @@ class ToggleFavorite(grok.View):
 class communityAdder(form.SchemaForm):
     grok.name('addCommunity')
     grok.context(IPloneSiteRoot)
-    grok.require('genweb.authenticated')
+    grok.require('genweb.member')
 
     schema = ICommunity
     ignoreContext = True
