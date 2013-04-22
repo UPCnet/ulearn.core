@@ -16,6 +16,9 @@ msgstr ""
 "Preferred-Encodings: utf-8 latin1\n"
 "Domain: ulearn\n"
 
+msgid "my_communities"
+msgstr "Les meves comunitats"
+
 msgid "Nom"
 msgstr "Nombre"
 

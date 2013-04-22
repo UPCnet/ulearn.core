@@ -10,8 +10,10 @@ from z3c.form import button
 from plone.indexer import indexer
 from plone.directives import form
 from plone.namedfile.field import NamedBlobImage
+from plone.portlets.constants import CONTEXT_CATEGORY
 from plone.portlets.interfaces import IPortletManager
 from plone.portlets.interfaces import IPortletAssignmentMapping
+from plone.portlets.interfaces import ILocalPortletAssignmentManager
 from plone.z3cform.textlines.textlines import TextLinesConverter
 from plone.z3cform.textlines.textlines import TextLinesFieldWidget
 from plone.registry.interfaces import IRegistry
@@ -209,8 +211,8 @@ def initialize_community(community, event):
         maxclient.subscribe(url=community.absolute_url(), username=guest)
 
     # Change workflow to intranet
-    portal_workflow = getToolByName(community, 'portal_workflow')
-    portal_workflow.doActionFor(community, 'publishtointranet')
+    # portal_workflow = getToolByName(community, 'portal_workflow')
+    # portal_workflow.doActionFor(community, 'publishtointranet')
 
     # Disable Inheritance
     community.__ac_local_roles_block__ = True
@@ -224,10 +226,10 @@ def initialize_community(community, event):
     enllacos = createContentInContainer(community, 'Folder', title=u"Enllaços", checkConstraints=False)
     fotos = createContentInContainer(community, 'Folder', title=u"Fotos", checkConstraints=False)
 
-    # Change workflow to intranet
-    portal_workflow.doActionFor(documents, 'publishtointranet')
-    portal_workflow.doActionFor(enllacos, 'publishtointranet')
-    portal_workflow.doActionFor(fotos, 'publishtointranet')
+    # Change workflow to intranet ** no longer needed
+    # portal_workflow.doActionFor(documents, 'publishtointranet')
+    # portal_workflow.doActionFor(enllacos, 'publishtointranet')
+    # portal_workflow.doActionFor(fotos, 'publishtointranet')
 
     # Add default portlets
     target_manager = queryUtility(IPortletManager, name='plone.leftcolumn', context=community)
@@ -249,3 +251,18 @@ def initialize_community(community, event):
     target_manager_assignments['calendar'] = calendarAssignment()
     target_manager_assignments['mostvalued'] = mostvaluedAssignment()
     target_manager_assignments['comments'] = commentsAssignment()
+
+    # Blacklist the right column portlets on documents
+    right_manager = queryUtility(IPortletManager, name=u"plone.rightcolumn")
+    blacklist = getMultiAdapter((documents, right_manager), ILocalPortletAssignmentManager)
+    blacklist.setBlacklistStatus(CONTEXT_CATEGORY, True)
+
+    # Blacklist the right column portlets on documents
+    right_manager = queryUtility(IPortletManager, name=u"plone.rightcolumn")
+    blacklist = getMultiAdapter((fotos, right_manager), ILocalPortletAssignmentManager)
+    blacklist.setBlacklistStatus(CONTEXT_CATEGORY, True)
+
+    # Blacklist the right column portlets on documents
+    right_manager = queryUtility(IPortletManager, name=u"plone.rightcolumn")
+    blacklist = getMultiAdapter((enllacos, right_manager), ILocalPortletAssignmentManager)
+    blacklist.setBlacklistStatus(CONTEXT_CATEGORY, True)
