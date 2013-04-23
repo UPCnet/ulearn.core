@@ -2,6 +2,7 @@
 from five import grok
 from zope import schema
 from zope.component import queryUtility
+from zope.interface import alsoProvides
 from zope.security import checkPermission
 from zope.component import getMultiAdapter
 from zope.app.container.interfaces import IObjectAddedEvent
@@ -22,6 +23,7 @@ from plone.dexterity.utils import createContentInContainer
 from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.interfaces import IPloneSiteRoot
 from Products.statusmessages.interfaces import IStatusMessage
+from Products.CMFPlone.interfaces.constrains import ISelectableConstrainTypes
 
 from genweb.core.adapters.favorites import IFavorite
 from genweb.core.widgets.token_input_widget import UsersTokenInputFieldWidget
@@ -30,6 +32,7 @@ from maxclient import MaxClient
 from mrs.max.browser.controlpanel import IMAXUISettings
 
 from ulearn.core import _
+from ulearn.core.interfaces import IDocumentFolder, ILinksFolder, IPhotosFolder
 
 
 class ICommunity(form.Schema):
@@ -210,6 +213,9 @@ def initialize_community(community, event):
     for guest in community.subscribed:
         maxclient.subscribe(url=community.absolute_url(), username=guest)
 
+    # Favorite the owner to this community
+    IFavorite(community).add(community.Creator())
+
     # Change workflow to intranet
     # portal_workflow = getToolByName(community, 'portal_workflow')
     # portal_workflow.doActionFor(community, 'publishtointranet')
@@ -225,6 +231,30 @@ def initialize_community(community, event):
     documents = createContentInContainer(community, 'Folder', title=u"Documents", checkConstraints=False)
     enllacos = createContentInContainer(community, 'Folder', title=u"Enllaços", checkConstraints=False)
     fotos = createContentInContainer(community, 'Folder', title=u"Fotos", checkConstraints=False)
+
+    # Set default view layout
+    documents.setLayout('folder_summary_view')
+    enllacos.setLayout('folder_summary_view')
+    fotos.setLayout('folder_summary_view')
+
+    # Mark them with a marker interface
+    alsoProvides(documents, IDocumentFolder)
+    alsoProvides(enllacos, ILinksFolder)
+    alsoProvides(fotos, IPhotosFolder)
+
+    # Set on them the allowable content types
+    behavior = ISelectableConstrainTypes(documents)
+    behavior.setConstrainTypesMode(1)
+    behavior.setLocallyAllowedTypes(('Document', 'File', 'Folder'))
+    behavior.setImmediatelyAddableTypes(('Document', 'File', 'Folder'))
+    behavior = ISelectableConstrainTypes(enllacos)
+    behavior.setConstrainTypesMode(1)
+    behavior.setLocallyAllowedTypes(('Link', 'Folder'))
+    behavior.setImmediatelyAddableTypes(('Link', 'Folder'))
+    behavior = ISelectableConstrainTypes(fotos)
+    behavior.setConstrainTypesMode(1)
+    behavior.setLocallyAllowedTypes(('Image', 'Folder'))
+    behavior.setImmediatelyAddableTypes(('Image', 'Folder'))
 
     # Change workflow to intranet ** no longer needed
     # portal_workflow.doActionFor(documents, 'publishtointranet')
