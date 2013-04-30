@@ -202,7 +202,7 @@ def initialize_community(community, event):
 
     # Add context for the community on MAX server
     maxclient.addContext(community.absolute_url(),
-                         "Comunitat {}".format(community.title),
+                         "{}".format(community.title),
                          dict(read='subscribed', write='subscribed', join='restricted', invite='restricted')
                          )
 
