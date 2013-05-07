@@ -19,3 +19,5 @@ msgstr ""
 msgid "my_communities"
 msgstr "Les meves comunitats"
 
+msgid "communities"
+msgstr "Comunitats"

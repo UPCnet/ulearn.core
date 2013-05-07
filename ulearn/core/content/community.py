@@ -75,6 +75,15 @@ def imageFilename(context):
 grok.global_adapter(imageFilename, name='image_filename')
 
 
+@indexer(ICommunity)
+def subscribed(context):
+    """Create a catalogue indexer, registered as an adapter, which can
+    populate the ``context.subscribed`` value count it and index.
+    """
+    return len(context.subscribed)
+grok.global_adapter(subscribed, name='subscribed_items')
+
+
 class View(grok.View):
     grok.context(ICommunity)
 
