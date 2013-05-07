@@ -21,3 +21,9 @@ msgstr "Les meves comunitats"
 
 msgid "communities"
 msgstr "Comunitats"
+
+msgid "seemore"
+msgstr "Veure més comunitats"
+
+msgid "gotocampus"
+msgstr "Anar al campus"

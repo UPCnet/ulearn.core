@@ -76,12 +76,21 @@ grok.global_adapter(imageFilename, name='image_filename')
 
 
 @indexer(ICommunity)
-def subscribed(context):
+def subscribed_items(context):
     """Create a catalogue indexer, registered as an adapter, which can
     populate the ``context.subscribed`` value count it and index.
     """
     return len(context.subscribed)
-grok.global_adapter(subscribed, name='subscribed_items')
+grok.global_adapter(subscribed_items, name='subscribed_items')
+
+
+@indexer(ICommunity)
+def subscribed_users(context):
+    """Create a catalogue indexer, registered as an adapter, which can
+    populate the ``context.subscribed`` value count it and index.
+    """
+    return context.subscribed
+grok.global_adapter(subscribed_users, name='subscribed_users')
 
 
 class View(grok.View):
@@ -276,11 +285,13 @@ def initialize_community(community, event):
     from ulearn.theme.portlets.profile import Assignment as profileAssignment
     from ulearn.theme.portlets.thinnkers import Assignment as thinnkersAssignment
     from ulearn.theme.portlets.communities import Assignment as communitiesAssignment
+    from ulearn.theme.portlets.stats import Assignment as statsAssignment
     from plone.app.portlets.portlets.navigation import Assignment as navigationAssignment
     target_manager_assignments['profile'] = profileAssignment()
     target_manager_assignments['navigation'] = navigationAssignment(root='/{}'.format(community.id))
     target_manager_assignments['communities'] = communitiesAssignment()
     target_manager_assignments['thinnkers'] = thinnkersAssignment()
+    target_manager_assignments['stats'] = statsAssignment()
 
     target_manager = queryUtility(IPortletManager, name='plone.rightcolumn', context=community)
     target_manager_assignments = getMultiAdapter((community, target_manager), IPortletAssignmentMapping)

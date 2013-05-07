@@ -4,6 +4,7 @@
     xmlns:i18n="http://namespaces.zope.org/i18n"
     xmlns:grok="http://namespaces.zope.org/grok"
     xmlns:monkey="http://namespaces.plone.org/monkey"
+    xmlns:browser="http://namespaces.zope.org/browser"
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
     i18n_domain="ulearn.core">
 
@@ -15,6 +16,13 @@
 
     <include file="subscribers.zcml" />
 
+    <browser:page
+      name="ulearn-controlpanel"
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      class=".controlpanel.UlearnControlPanel"
+      permission="cmf.ManagePortal"
+      />
+
     <include package="collective.monkeypatcher" />
 
     <monkey:patch
@@ -23,6 +31,12 @@
         original="changeMemberPortrait"
         replacement=".portrait.changeMemberPortrait"
         />
+
+    <genericsetup:importStep
+        name="ulearn.core.setupstep"
+        title="ulearn.core special import handlers"
+        description=""
+        handler="ulearn.core.setuphandlers.setupVarious" />
 
     <genericsetup:registerProfile
       name="default"
