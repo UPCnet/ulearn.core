@@ -32,7 +32,7 @@ from maxclient import MaxClient
 from mrs.max.browser.controlpanel import IMAXUISettings
 
 from ulearn.core import _
-from ulearn.core.interfaces import IDocumentFolder, ILinksFolder, IPhotosFolder
+from ulearn.core.interfaces import IDocumentFolder, ILinksFolder, IPhotosFolder, IEventsFolder
 
 
 class ICommunity(form.Schema):
@@ -245,39 +245,47 @@ def initialize_community(community, event):
     for guest in community.subscribed:
         community.manage_setLocalRoles(guest, ['Reader', 'Editor', 'Contributor'])
 
-    # Create default content
+    # Create default content containers
     documents = createContentInContainer(community, 'Folder', title=u"Documents", checkConstraints=False)
-    enllacos = createContentInContainer(community, 'Folder', title=u"Enllaços", checkConstraints=False)
-    fotos = createContentInContainer(community, 'Folder', title=u"Fotos", checkConstraints=False)
+    links = createContentInContainer(community, 'Folder', title=u"Enllaços", checkConstraints=False)
+    photos = createContentInContainer(community, 'Folder', title=u"Fotos", checkConstraints=False)
+
+    # Create the default events container
+    events = createContentInContainer(community, 'Folder', title=u"Esdeveniments", checkConstraints=False)
 
     # Set default view layout
     documents.setLayout('folder_summary_view')
-    enllacos.setLayout('folder_summary_view')
-    fotos.setLayout('folder_summary_view')
+    links.setLayout('folder_summary_view')
+    photos.setLayout('folder_summary_view')
 
     # Mark them with a marker interface
     alsoProvides(documents, IDocumentFolder)
-    alsoProvides(enllacos, ILinksFolder)
-    alsoProvides(fotos, IPhotosFolder)
+    alsoProvides(links, ILinksFolder)
+    alsoProvides(photos, IPhotosFolder)
+    alsoProvides(events, IEventsFolder)
 
     # Set on them the allowable content types
     behavior = ISelectableConstrainTypes(documents)
     behavior.setConstrainTypesMode(1)
     behavior.setLocallyAllowedTypes(('Document', 'File', 'Folder'))
     behavior.setImmediatelyAddableTypes(('Document', 'File', 'Folder'))
-    behavior = ISelectableConstrainTypes(enllacos)
+    behavior = ISelectableConstrainTypes(links)
     behavior.setConstrainTypesMode(1)
     behavior.setLocallyAllowedTypes(('Link', 'Folder'))
     behavior.setImmediatelyAddableTypes(('Link', 'Folder'))
-    behavior = ISelectableConstrainTypes(fotos)
+    behavior = ISelectableConstrainTypes(photos)
     behavior.setConstrainTypesMode(1)
     behavior.setLocallyAllowedTypes(('Image', 'Folder'))
     behavior.setImmediatelyAddableTypes(('Image', 'Folder'))
+    behavior = ISelectableConstrainTypes(events)
+    behavior.setConstrainTypesMode(1)
+    behavior.setLocallyAllowedTypes(('Event', 'Folder'))
+    behavior.setImmediatelyAddableTypes(('Event', 'Folder'))
 
     # Change workflow to intranet ** no longer needed
     # portal_workflow.doActionFor(documents, 'publishtointranet')
-    # portal_workflow.doActionFor(enllacos, 'publishtointranet')
-    # portal_workflow.doActionFor(fotos, 'publishtointranet')
+    # portal_workflow.doActionFor(links, 'publishtointranet')
+    # portal_workflow.doActionFor(photos, 'publishtointranet')
 
     # Add default portlets
     target_manager = queryUtility(IPortletManager, name='plone.leftcolumn', context=community)
@@ -307,12 +315,17 @@ def initialize_community(community, event):
     blacklist = getMultiAdapter((documents, right_manager), ILocalPortletAssignmentManager)
     blacklist.setBlacklistStatus(CONTEXT_CATEGORY, True)
 
-    # Blacklist the right column portlets on documents
+    # Blacklist the right column portlets on photos
     right_manager = queryUtility(IPortletManager, name=u"plone.rightcolumn")
-    blacklist = getMultiAdapter((fotos, right_manager), ILocalPortletAssignmentManager)
+    blacklist = getMultiAdapter((photos, right_manager), ILocalPortletAssignmentManager)
     blacklist.setBlacklistStatus(CONTEXT_CATEGORY, True)
 
-    # Blacklist the right column portlets on documents
+    # Blacklist the right column portlets on links
     right_manager = queryUtility(IPortletManager, name=u"plone.rightcolumn")
-    blacklist = getMultiAdapter((enllacos, right_manager), ILocalPortletAssignmentManager)
+    blacklist = getMultiAdapter((links, right_manager), ILocalPortletAssignmentManager)
+    blacklist.setBlacklistStatus(CONTEXT_CATEGORY, True)
+
+    # Blacklist the right column portlets on events
+    right_manager = queryUtility(IPortletManager, name=u"plone.rightcolumn")
+    blacklist = getMultiAdapter((events, right_manager), ILocalPortletAssignmentManager)
     blacklist.setBlacklistStatus(CONTEXT_CATEGORY, True)

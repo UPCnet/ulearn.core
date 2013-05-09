@@ -6,8 +6,12 @@ class IDocumentFolder(Interface):
 
 
 class ILinksFolder(Interface):
-    """ Marker for documents folder """
+    """ Marker for links folder """
 
 
 class IPhotosFolder(Interface):
-    """ Marker for documents folder """
+    """ Marker for photos folder """
+
+
+class IEventsFolder(Interface):
+    """ Marker for events folder """
