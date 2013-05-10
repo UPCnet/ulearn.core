@@ -80,7 +80,7 @@ def subscribed_items(context):
     """Create a catalogue indexer, registered as an adapter, which can
     populate the ``context.subscribed`` value count it and index.
     """
-    return len(context.subscribed)
+    return len(context.subscribed) + 1  # Add one in favor of the Creator
 grok.global_adapter(subscribed_items, name='subscribed_items')
 
 
@@ -89,7 +89,7 @@ def subscribed_users(context):
     """Create a catalogue indexer, registered as an adapter, which can
     populate the ``context.subscribed`` value count it and index.
     """
-    return context.subscribed
+    return context.subscribed + [context.Creator()]  # Add the Creator
 grok.global_adapter(subscribed_users, name='subscribed_users')
 
 
@@ -143,8 +143,8 @@ class communityAdder(form.SchemaForm):
         # Redirect back to the front page with a status message
 
         IStatusMessage(self.request).addStatusMessage(
-            "La comunitat {} ha estat creada.".format(nom),
-            "info"
+            u"La comunitat {} ha estat creada.".format(nom),
+            u"info"
         )
 
         self.request.response.redirect(new_comunitat.absolute_url())
@@ -202,8 +202,8 @@ class communityEdit(form.SchemaForm):
         self.context.reindexObject()
 
         IStatusMessage(self.request).addStatusMessage(
-            "La comunitat {} ha estat modificada.".format(nom),
-            "info"
+            u"La comunitat {} ha estat modificada.".format(nom),
+            u"info"
         )
 
         self.request.response.redirect(self.context.absolute_url())
@@ -220,7 +220,7 @@ def initialize_community(community, event):
 
     # Add context for the community on MAX server
     maxclient.addContext(community.absolute_url(),
-                         "{}".format(community.title),
+                         community.title,
                          dict(read='subscribed', write='subscribed', join='restricted', invite='restricted')
                          )
 
@@ -296,7 +296,7 @@ def initialize_community(community, event):
     from ulearn.theme.portlets.stats import Assignment as statsAssignment
     from plone.app.portlets.portlets.navigation import Assignment as navigationAssignment
     target_manager_assignments['profile'] = profileAssignment()
-    target_manager_assignments['navigation'] = navigationAssignment(root='/{}'.format(community.id))
+    target_manager_assignments['navigation'] = navigationAssignment(root=u'/{}'.format(community.id))
     target_manager_assignments['communities'] = communitiesAssignment()
     target_manager_assignments['thinnkers'] = thinnkersAssignment()
     target_manager_assignments['stats'] = statsAssignment()
