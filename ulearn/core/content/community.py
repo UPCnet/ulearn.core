@@ -16,7 +16,6 @@ from plone.portlets.interfaces import IPortletManager
 from plone.portlets.interfaces import IPortletAssignmentMapping
 from plone.portlets.interfaces import ILocalPortletAssignmentManager
 from plone.z3cform.textlines.textlines import TextLinesConverter
-from plone.z3cform.textlines.textlines import TextLinesFieldWidget
 from plone.registry.interfaces import IRegistry
 from plone.dexterity.utils import createContentInContainer
 
@@ -287,28 +286,19 @@ def initialize_community(community, event):
     # portal_workflow.doActionFor(links, 'publishtointranet')
     # portal_workflow.doActionFor(photos, 'publishtointranet')
 
-    # Add default portlets
-    target_manager = queryUtility(IPortletManager, name='plone.leftcolumn', context=community)
-    target_manager_assignments = getMultiAdapter((community, target_manager), IPortletAssignmentMapping)
-    from ulearn.theme.portlets.profile import Assignment as profileAssignment
-    from ulearn.theme.portlets.thinnkers import Assignment as thinnkersAssignment
-    from ulearn.theme.portlets.communities import Assignment as communitiesAssignment
-    from ulearn.theme.portlets.stats import Assignment as statsAssignment
-    from plone.app.portlets.portlets.navigation import Assignment as navigationAssignment
-    target_manager_assignments['profile'] = profileAssignment()
-    target_manager_assignments['navigation'] = navigationAssignment(root=u'/{}'.format(community.id))
-    target_manager_assignments['communities'] = communitiesAssignment()
-    target_manager_assignments['thinnkers'] = thinnkersAssignment()
-    target_manager_assignments['stats'] = statsAssignment()
-
-    target_manager = queryUtility(IPortletManager, name='plone.rightcolumn', context=community)
-    target_manager_assignments = getMultiAdapter((community, target_manager), IPortletAssignmentMapping)
-    from ulearn.theme.portlets.calendar import Assignment as calendarAssignment
-    from ulearn.theme.portlets.mostvalued import Assignment as mostvaluedAssignment
-    from ulearn.theme.portlets.comments import Assignment as commentsAssignment
-    target_manager_assignments['calendar'] = calendarAssignment()
-    target_manager_assignments['mostvalued'] = mostvaluedAssignment()
-    target_manager_assignments['comments'] = commentsAssignment()
+    # Add portlets programatically
+    # target_manager = queryUtility(IPortletManager, name='plone.leftcolumn', context=community)
+    # target_manager_assignments = getMultiAdapter((community, target_manager), IPortletAssignmentMapping)
+    # from ulearn.theme.portlets.profile import Assignment as profileAssignment
+    # from ulearn.theme.portlets.thinnkers import Assignment as thinnkersAssignment
+    # from ulearn.theme.portlets.communities import Assignment as communitiesAssignment
+    # from ulearn.theme.portlets.stats import Assignment as statsAssignment
+    # from plone.app.portlets.portlets.navigation import Assignment as navigationAssignment
+    # target_manager_assignments['profile'] = profileAssignment()
+    # target_manager_assignments['navigation'] = navigationAssignment(root=u'/{}'.format(community.id))
+    # target_manager_assignments['communities'] = communitiesAssignment()
+    # target_manager_assignments['thinnkers'] = thinnkersAssignment()
+    # target_manager_assignments['stats'] = statsAssignment()
 
     # Blacklist the right column portlets on documents
     right_manager = queryUtility(IPortletManager, name=u"plone.rightcolumn")

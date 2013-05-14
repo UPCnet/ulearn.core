@@ -27,3 +27,9 @@ msgstr "Veure més comunitats"
 
 msgid "gotocampus"
 msgstr "Anar al campus"
+
+msgid "editcommunity"
+msgstr "Edita la comunitat"
+
+msgid "createcommunity"
+msgstr "Crea una comunitat"
