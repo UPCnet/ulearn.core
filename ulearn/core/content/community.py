@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 from five import grok
 from zope import schema
+from zope.event import notify
 from zope.component import queryUtility
 from zope.interface import alsoProvides
 from zope.security import checkPermission
 from zope.component import getMultiAdapter
+from zope.lifecycleevent import ObjectModifiedEvent
 from zope.app.container.interfaces import IObjectAddedEvent
+from zope.lifecycleevent.interfaces import IObjectModifiedEvent
 from z3c.form import button
 
 from plone.indexer import indexer
@@ -178,27 +181,16 @@ class communityEdit(form.SchemaForm):
         subscribed = data['subscribed']
         image = data['image']
 
-        registry = queryUtility(IRegistry)
-        maxui_settings = registry.forInterface(IMAXUISettings)
-
-        maxclient = MaxClient(maxui_settings.max_server, maxui_settings.oauth_server)
-        maxclient.setActor(maxui_settings.max_restricted_username)
-        maxclient.setToken(maxui_settings.max_restricted_token)
-
-        # Subscribe new usernames to the community
-        for guest in subscribed:
-            maxclient.subscribe(url=self.context.absolute_url(), username=guest)
-
-        #unsubscribe = [a for a in self.context.subscribed if a not in subscribed]
-        # Unsubscribe username from community
-
         # Set new values in community
         self.context.title = nom
         self.context.description = description
         self.context.subscribed = subscribed
-        self.context.image = image
+        if image:
+            self.context.image = image
 
         self.context.reindexObject()
+
+        notify(ObjectModifiedEvent(self.context))
 
         IStatusMessage(self.request).addStatusMessage(
             u"La comunitat {} ha estat modificada.".format(nom),
@@ -319,3 +311,24 @@ def initialize_community(community, event):
     right_manager = queryUtility(IPortletManager, name=u"plone.rightcolumn")
     blacklist = getMultiAdapter((events, right_manager), ILocalPortletAssignmentManager)
     blacklist.setBlacklistStatus(CONTEXT_CATEGORY, True)
+
+
+@grok.subscribe(ICommunity, IObjectModifiedEvent)
+def edit_community(community, event):
+    registry = queryUtility(IRegistry)
+    maxui_settings = registry.forInterface(IMAXUISettings)
+
+    maxclient = MaxClient(maxui_settings.max_server, maxui_settings.oauth_server)
+    maxclient.setActor(maxui_settings.max_restricted_username)
+    maxclient.setToken(maxui_settings.max_restricted_token)
+
+    # Update the subscribed users
+    for guest in community.subscribed:
+        maxclient.subscribe(url=community.absolute_url(), username=guest)
+
+    #unsubscribe = [a for a in self.context.subscribed if a not in subscribed]
+    # Unsubscribe username from community
+
+    # Update subscribed user permissions
+    for guest in community.subscribed:
+        community.manage_setLocalRoles(guest, ['Reader', 'Editor', 'Contributor'])
