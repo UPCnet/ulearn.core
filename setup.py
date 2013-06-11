@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import os
 
-version = '1.0b2'
+version = '1.0b3'
 
 README = open("README.rst").read()
 HISTORY = open(os.path.join("docs", "HISTORY.rst")).read()
@@ -33,6 +33,7 @@ setup(name='ulearn.core',
           'ulearn.theme',
           'mrs.max',
           'plone.app.dexterity',
+          'plone.app.contenttypes',
       ],
       extras_require={'test': ['plone.app.testing']},
       entry_points="""

@@ -1,6 +1,11 @@
 Changelog
 =========
 
+1.0b3 (2013-06-11)
+--------------------
+
+- Missing plone.app.contenttypes package
+
 1.0b2 (2013-06-11)
 --------------------
 
