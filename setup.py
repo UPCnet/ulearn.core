@@ -31,6 +31,7 @@ setup(name='ulearn.core',
       install_requires=[
           'setuptools',
           'ulearn.theme',
+          'mrs.max',
           'plone.app.dexterity',
       ],
       extras_require={'test': ['plone.app.testing']},
