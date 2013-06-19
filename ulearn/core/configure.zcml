@@ -16,6 +16,11 @@
 
     <include file="subscribers.zcml" />
 
+    <browser:resource
+        name="cpulearn.jpg"
+        file="cpulearn.jpg"
+        />
+
     <browser:page
       name="ulearn-controlpanel"
       for="Products.CMFPlone.interfaces.IPloneSiteRoot"

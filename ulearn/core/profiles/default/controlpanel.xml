@@ -4,7 +4,7 @@
     appId="ulearn.core" category="Products"
     condition_expr="python:True"
     url_expr="string:${portal_url}/ulearn-controlpanel"
-    icon_expr="string:$portal_url/++resource++ulearn.png"
+    icon_expr="string:$portal_url/++resource++cpulearn.jpg"
     visible="True">
   <permission>Manage portal</permission>
  </configlet>
