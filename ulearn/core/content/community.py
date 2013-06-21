@@ -248,6 +248,7 @@ def initialize_community(community, event):
     documents.setLayout('folder_summary_view')
     links.setLayout('folder_summary_view')
     photos.setLayout('folder_summary_view')
+    events.setLayout('folder_summary_view')
 
     # Mark them with a marker interface
     alsoProvides(documents, IDocumentFolder)

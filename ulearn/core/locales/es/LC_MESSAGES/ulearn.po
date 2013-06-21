@@ -48,3 +48,6 @@ msgstr "Enlaces"
 
 msgid "Photos"
 msgstr "Fotos"
+
+msgid "Events"
+msgstr "Eventos"
