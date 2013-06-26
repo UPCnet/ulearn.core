@@ -3,4 +3,5 @@
  <object name="ulearn.community" meta_type="Dexterity FTI" />
  <object name="Plone Site" meta_type="Factory-based Type Information with dynamic views"/>
  <object meta_type="Dexterity FTI" name="Folder" />
+ <object meta_type="Dexterity FTI" name="File" />
 </object>

@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
+from zope.interface import alsoProvides
+from plone.dexterity.utils import createContentInContainer
 from Products.CMFCore.utils import getToolByName
+from genweb.core.interfaces import IHomePage
+
 import logging
 
 PROFILE_ID = 'profile-ulearn.core:default'
@@ -62,3 +66,19 @@ def setupVarious(context):
     logger = logging.getLogger(__name__)
 
     add_catalog_indexes(portal, logger)
+
+    # Fix the DXCT site and add permission to the default page which the
+    # portlets are defined to, failing to do so turns in the users can't see the
+    # home page - Taken from 'setupdxctsite' view in genweb.core
+    pl = getToolByName(portal, 'portal_languages')
+    if getattr(portal, 'front-page', False):
+        portal.manage_delObjects('front-page')
+        frontpage = createContentInContainer(portal, 'Document', title=u"front-page", checkConstraints=False)
+        alsoProvides(frontpage, IHomePage)
+        frontpage.exclude_from_nav = True
+        frontpage.language = pl.getDefaultLanguage()
+        frontpage.reindexObject()
+    # Set the default page to the homepage view
+    portal.setDefaultPage('homepage')
+    portal['front-page'].manage_setLocalRoles('AuthenticatedUsers', ['Reader'])
+    logger.info("DX default content site setup successfully.")

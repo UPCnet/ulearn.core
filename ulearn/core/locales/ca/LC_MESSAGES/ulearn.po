@@ -33,3 +33,17 @@ msgstr "Edita la comunitat"
 
 msgid "createcommunity"
 msgstr "Crea una comunitat"
+
+msgid "community_type_description"
+msgstr "Oberta: Pública (la veu tothom) i et pots subscriure i desubscriure't. \n"
+       "Tancada: Només et pot subscriure algú i et pots desubscriure't. \n"
+       "Organitzativa: Només et pot subscriure un administrador i no et pots desubscriure't."
+
+msgid "Closed"
+msgstr "Tancada"
+
+msgid "Open"
+msgstr "Oberta"
+
+msgid "Organizative"
+msgstr "Organitzativa"

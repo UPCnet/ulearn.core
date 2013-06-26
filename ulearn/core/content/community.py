@@ -1,15 +1,19 @@
 # -*- coding: utf-8 -*-
 from five import grok
 from zope import schema
+from z3c.form import button
 from zope.event import notify
 from zope.component import queryUtility
 from zope.interface import alsoProvides
 from zope.security import checkPermission
 from zope.component import getMultiAdapter
+from zope.component.hooks import getSite
 from zope.lifecycleevent import ObjectModifiedEvent
 from zope.app.container.interfaces import IObjectAddedEvent
 from zope.lifecycleevent.interfaces import IObjectModifiedEvent
-from z3c.form import button
+from zope.schema.interfaces import IContextSourceBinder
+from zope.schema.vocabulary import SimpleVocabulary
+from AccessControl import getSecurityManager
 
 from plone.indexer import indexer
 from plone.directives import form
@@ -37,6 +41,26 @@ from ulearn.core import _
 from ulearn.core.interfaces import IDocumentFolder, ILinksFolder, IPhotosFolder, IEventsFolder
 
 
+@grok.provider(IContextSourceBinder)
+def availableCommunityTypes(context):
+    proot = getSite()
+    pm = getToolByName(proot, 'portal_membership')
+    sm = getSecurityManager()
+    user = pm.getAuthenticatedMember()
+    terms = []
+
+    terms.append(SimpleVocabulary.createTerm(u'Closed', 'closed', _(u'Closed')))
+    terms.append(SimpleVocabulary.createTerm(u'Open', 'open', _(u'Open')))
+
+    if sm.checkPermission('Modify portal content', context) or \
+       ('Manager' in user.getRoles()) or \
+       ('WebMaster' in user.getRoles()) or \
+       ('Site Administrator' in user.getRoles()):
+        terms.append(SimpleVocabulary.createTerm(u'Organizative', 'organizative', _(u'Organizative')))
+
+    return SimpleVocabulary(terms)
+
+
 class ICommunity(form.Schema):
     """ A manageable community
     """
@@ -53,6 +77,14 @@ class ICommunity(form.Schema):
         required=False
     )
 
+    community_type = schema.Choice(
+        title=_(u"Tipus de comunitat"),
+        description=_(u"community_type_description"),
+        source=availableCommunityTypes,
+        required=True,
+        default=u'Open'
+    )
+
     form.widget(subscribed=UsersTokenInputFieldWidget)
     subscribed = schema.List(
         title=_(u"Subscrits"),
@@ -65,6 +97,12 @@ class ICommunity(form.Schema):
         title=_(u"Imatge"),
         description=_(u"Imatge que defineix la comunitat"),
         required=False,
+    )
+
+    twitter_hashtag = schema.TextLine(
+        title=_(u"Twitter hashtag"),
+        description=_(u"El hashtag (per exemple: #ulearn) que utilitzarà aquesta comunitat"),
+        required=False
     )
 
 
@@ -209,10 +247,19 @@ def initialize_community(community, event):
     maxclient.setActor(maxui_settings.max_restricted_username)
     maxclient.setToken(maxui_settings.max_restricted_token)
 
+    # Determine the kind of security the community should have provided the type
+    # of community
+    if community.community_type == u'Open':
+        community_permissions = dict(read='subscribed', write='subscribed', subscribe='public')
+    elif community.community_type == u'Closed':
+        community_permissions = dict(read='subscribed', write='subscribed', subscribe='restricted', unsubscribe='public')
+    elif community.community_type == u'Organizative':
+        community_permissions = dict(read='subscribed', write='subscribed', subscribe='restricted')
+
     # Add context for the community on MAX server
     maxclient.addContext(community.absolute_url(),
                          community.title,
-                         dict(read='subscribed', write='subscribed', join='restricted', invite='restricted')
+                         community_permissions
                          )
 
     # Subscribe owner
@@ -234,7 +281,7 @@ def initialize_community(community, event):
 
     # Set permissions
     for guest in community.subscribed:
-        community.manage_setLocalRoles(guest, ['Reader', 'Editor', 'Contributor'])
+        community.manage_setLocalRoles(guest, ['Reader', 'Contributor'])
 
     # Create default content containers
     documents = createContentInContainer(community, 'Folder', title=u"Documents", checkConstraints=False)
@@ -327,9 +374,13 @@ def edit_community(community, event):
     for guest in community.subscribed:
         maxclient.subscribe(url=community.absolute_url(), username=guest)
 
-    #unsubscribe = [a for a in self.context.subscribed if a not in subscribed]
     # Unsubscribe username from community
+    subscribed = maxclient.subscribed_to_context(community.absolute_url())
+    unsubscribe = [a for a in community.subscribed if a not in subscribed]
+
+    for user in unsubscribe:
+        maxclient.unsubscribe(url=community.absolute_url(), username=user)
 
     # Update subscribed user permissions
     for guest in community.subscribed:
-        community.manage_setLocalRoles(guest, ['Reader', 'Editor', 'Contributor'])
+        community.manage_setLocalRoles(guest, ['Reader', 'Contributor'])
