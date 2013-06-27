@@ -134,6 +134,15 @@ def subscribed_users(context):
 grok.global_adapter(subscribed_users, name='subscribed_users')
 
 
+@indexer(ICommunity)
+def community_type(context):
+    """Create a catalogue indexer, registered as an adapter, which can
+    populate the ``community_type`` value count it and index.
+    """
+    return context.community_type
+grok.global_adapter(community_type, name='community_type')
+
+
 class View(grok.View):
     grok.context(ICommunity)
 

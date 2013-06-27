@@ -10,6 +10,7 @@ PROFILE_ID = 'profile-ulearn.core:default'
 # Specify the indexes you want, with ('index_name', 'index_type')
 INDEXES = (('subscribed_users', 'KeywordIndex'),
            ('subscribed_items', 'FieldIndex'),
+           ('community_type', 'FieldIndex'),
            )
 
 
