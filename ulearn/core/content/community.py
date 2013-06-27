@@ -83,7 +83,7 @@ class ICommunity(form.Schema):
         description=_(u"community_type_description"),
         source=availableCommunityTypes,
         required=True,
-        default=u'Open'
+        default=u'Closed'
     )
 
     form.widget(subscribed=UsersTokenInputFieldWidget)
@@ -195,8 +195,19 @@ class communityAdder(form.SchemaForm):
         description = data['description']
         subscribed = data['subscribed']
         image = data['image']
+        community_type = data['community_type']
+        twitter_hashtag = data['twitter_hashtag']
 
-        new_comunitat = createContentInContainer(self.context, 'ulearn.community', title=nom, description=description, subscribed=subscribed, image=image, checkConstraints=False)
+        new_comunitat = createContentInContainer(
+            self.context,
+            'ulearn.community',
+            title=nom,
+            description=description,
+            subscribed=subscribed,
+            image=image,
+            community_type=community_type,
+            twitter_hashtag=twitter_hashtag,
+            checkConstraints=False)
 
         # Redirect back to the front page with a status message
 
@@ -221,6 +232,8 @@ class communityEdit(form.SchemaForm):
 
         self.widgets["title"].value = self.context.title
         self.widgets["description"].value = self.context.description
+        self.widgets["community_type"].value = self.context.community_type
+        self.widgets["twitter_hashtag"].value = self.context.twitter_hashtag
 
         tlc = TextLinesConverter(self.fields['subscribed'].field, self.widgets["subscribed"])
         self.widgets["subscribed"].value = tlc.toWidgetValue(self.context.subscribed)
@@ -236,11 +249,15 @@ class communityEdit(form.SchemaForm):
         description = data['description']
         subscribed = data['subscribed']
         image = data['image']
+        community_type = data['community_type']
+        twitter_hashtag = data['twitter_hashtag']
 
         # Set new values in community
         self.context.title = nom
         self.context.description = description
         self.context.subscribed = subscribed
+        self.context.community_type = community_type
+        self.context.twitter_hashtag = twitter_hashtag
         if image:
             self.context.image = image
 
