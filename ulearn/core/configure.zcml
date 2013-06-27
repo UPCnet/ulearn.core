@@ -10,6 +10,11 @@
 
     <includeDependencies package="." />
 
+    <permission
+      id="ulearn.addCommunity"
+      title="Ulearn: Add Community"
+      />
+
     <grok:grok package="." />
 
     <i18n:registerTranslations directory="locales" />

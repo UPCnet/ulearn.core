@@ -71,14 +71,16 @@ def setupVarious(context):
     # portlets are defined to, failing to do so turns in the users can't see the
     # home page - Taken from 'setupdxctsite' view in genweb.core
     pl = getToolByName(portal, 'portal_languages')
-    if getattr(portal, 'front-page', False):
+    from plone.dexterity.interfaces import IDexterityContent
+    front_page = getattr(portal, 'front-page', False)
+    if front_page and not IDexterityContent.providedBy(front_page):
         portal.manage_delObjects('front-page')
         frontpage = createContentInContainer(portal, 'Document', title=u"front-page", checkConstraints=False)
         alsoProvides(frontpage, IHomePage)
         frontpage.exclude_from_nav = True
         frontpage.language = pl.getDefaultLanguage()
         frontpage.reindexObject()
+        logger.info("DX default content site setup successfully.")
     # Set the default page to the homepage view
     portal.setDefaultPage('homepage')
     portal['front-page'].manage_setLocalRoles('AuthenticatedUsers', ['Reader'])
-    logger.info("DX default content site setup successfully.")

@@ -166,7 +166,7 @@ class ToggleFavorite(grok.View):
 class communityAdder(form.SchemaForm):
     grok.name('addCommunity')
     grok.context(IPloneSiteRoot)
-    grok.require('genweb.member')
+    grok.require('ulearn.addCommunity')
 
     schema = ICommunity
     ignoreContext = True
@@ -270,7 +270,7 @@ def initialize_community(community, event):
                          community.title,
                          community_permissions
                          )
-    import ipdb;ipdb.set_trace()
+
     # Subscribe owner
     maxclient.subscribe(url=community.absolute_url(), username=community.Creator())
 
