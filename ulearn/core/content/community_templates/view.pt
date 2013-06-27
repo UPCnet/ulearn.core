@@ -12,7 +12,7 @@
       tal:attributes="src string:${context/absolute_url}/communityVariables.js">
     </script>
     <script type="text/javascript"
-      tal:attributes="src string:${context/absolute_url}/++maxui++static/maxui.loader.js">
+      tal:attributes="src string:${view/portal_url}/++maxui++static/maxui.loader.js">
     </script>
   </div>
   <metal:block fill-slot="top_slot"

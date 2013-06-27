@@ -17,6 +17,7 @@ from AccessControl import getSecurityManager
 
 from plone.indexer import indexer
 from plone.directives import form
+from plone.memoize.view import memoize_contextless
 from plone.namedfile.field import NamedBlobImage
 from plone.portlets.constants import CONTEXT_CATEGORY
 from plone.portlets.interfaces import IPortletManager
@@ -138,6 +139,14 @@ class View(grok.View):
 
     def canEditCommunity(self):
         return checkPermission('cmf.RequestReview', self.context)
+
+    @memoize_contextless
+    def portal_url(self):
+        return self.portal().absolute_url()
+
+    @memoize_contextless
+    def portal(self):
+        return getSite()
 
 
 class ToggleFavorite(grok.View):
@@ -261,7 +270,7 @@ def initialize_community(community, event):
                          community.title,
                          community_permissions
                          )
-
+    import ipdb;ipdb.set_trace()
     # Subscribe owner
     maxclient.subscribe(url=community.absolute_url(), username=community.Creator())
 
@@ -375,11 +384,11 @@ def edit_community(community, event):
         maxclient.subscribe(url=community.absolute_url(), username=guest)
 
     # Unsubscribe username from community
-    subscribed = maxclient.subscribed_to_context(community.absolute_url())
-    unsubscribe = [a for a in community.subscribed if a not in subscribed]
+    #subscribed = maxclient.subscribed_to_context(community.absolute_url())
+    #unsubscribe = [a for a in community.subscribed if a not in subscribed]
 
-    for user in unsubscribe:
-        maxclient.unsubscribe(url=community.absolute_url(), username=user)
+    #for user in unsubscribe:
+    #    maxclient.unsubscribe(url=community.absolute_url(), username=user)
 
     # Update subscribed user permissions
     for guest in community.subscribed:
