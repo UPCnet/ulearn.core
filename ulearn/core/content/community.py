@@ -234,7 +234,7 @@ class communityEdit(form.SchemaForm):
         self.widgets["description"].value = self.context.description
         self.widgets["community_type"].value = self.context.community_type
         self.widgets["twitter_hashtag"].value = self.context.twitter_hashtag
-
+        import ipdb;ipdb.set_trace()
         tlc = TextLinesConverter(self.fields['subscribed'].field, self.widgets["subscribed"])
         self.widgets["subscribed"].value = tlc.toWidgetValue(self.context.subscribed)
 
@@ -409,13 +409,16 @@ def edit_community(community, event):
     for guest in community.subscribed:
         maxclient.subscribe(url=community.absolute_url(), username=guest)
 
-    # Unsubscribe username from community
-    #subscribed = maxclient.subscribed_to_context(community.absolute_url())
-    #unsubscribe = [a for a in community.subscribed if a not in subscribed]
-
-    #for user in unsubscribe:
-    #    maxclient.unsubscribe(url=community.absolute_url(), username=user)
-
     # Update subscribed user permissions
     for guest in community.subscribed:
         community.manage_setLocalRoles(guest, ['Reader', 'Contributor'])
+
+    # Unsubscribe no longer members from community
+    subscribed = [user.get('username', '') for user in maxclient.subscribed_to_context(community.absolute_url()).get('items', [])]
+    unsubscribe = [a for a in community.subscribed if a not in subscribed]
+
+    for user in unsubscribe:
+        maxclient.unsubscribe(url=community.absolute_url(), username=user)
+
+    # Update unsubscribed user permissions
+    community.manage_delLocalRoles(unsubscribe)
