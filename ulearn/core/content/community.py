@@ -172,6 +172,30 @@ class ToggleFavorite(grok.View):
         return "Toggled"
 
 
+class ToggleSubscribe(grok.View):
+    grok.context(ICommunity)
+    grok.name('toggle-subscribe')
+
+    def render(self):
+        community = self.context
+        pm = getToolByName(self.context, "portal_membership")
+        current_user = pm.getAuthenticatedMember().getUserName()
+
+        if community.community_type == u'Open' or community.community_type == u'Closed':
+            if current_user in community.subscribed:
+                community.subscribed.remove(current_user)
+            else:
+                community.subscribed.append(current_user)
+
+            community.reindexObject()
+            notify(ObjectModifiedEvent(community))
+            return True
+
+        elif community.community_type == u'Organizative':
+            # You shouldn't been doing this...
+            return False
+
+
 class communityAdder(form.SchemaForm):
     grok.name('addCommunity')
     grok.context(IPloneSiteRoot)
@@ -227,14 +251,16 @@ class communityEdit(form.SchemaForm):
     schema = ICommunity
     ignoreContext = True
 
+    ctype_map = {u'Closed': 'closed', u'Open': 'open', u'Organizative': 'organizative'}
+
     def updateWidgets(self):
         super(communityEdit, self).updateWidgets()
 
         self.widgets["title"].value = self.context.title
         self.widgets["description"].value = self.context.description
-        self.widgets["community_type"].value = self.context.community_type
+        self.widgets["community_type"].value = [self.ctype_map[self.context.community_type]]
         self.widgets["twitter_hashtag"].value = self.context.twitter_hashtag
-        import ipdb;ipdb.set_trace()
+
         tlc = TextLinesConverter(self.fields['subscribed'].field, self.widgets["subscribed"])
         self.widgets["subscribed"].value = tlc.toWidgetValue(self.context.subscribed)
 
@@ -415,7 +441,7 @@ def edit_community(community, event):
 
     # Unsubscribe no longer members from community
     subscribed = [user.get('username', '') for user in maxclient.subscribed_to_context(community.absolute_url()).get('items', [])]
-    unsubscribe = [a for a in community.subscribed if a not in subscribed]
+    unsubscribe = [a for a in subscribed if a not in community.subscribed]
 
     for user in unsubscribe:
         maxclient.unsubscribe(url=community.absolute_url(), username=user)
