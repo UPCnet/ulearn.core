@@ -439,9 +439,10 @@ def edit_community(community, event):
     for guest in community.subscribed:
         community.manage_setLocalRoles(guest, ['Reader', 'Contributor'])
 
-    # Unsubscribe no longer members from community
+    # Unsubscribe no longer members from community, taking account of the
+    # community creator who is not in the subscribed list
     subscribed = [user.get('username', '') for user in maxclient.subscribed_to_context(community.absolute_url()).get('items', [])]
-    unsubscribe = [a for a in subscribed if a not in community.subscribed]
+    unsubscribe = [a for a in subscribed if a not in community.subscribed + [community.Creator()]]
 
     for user in unsubscribe:
         maxclient.unsubscribe(url=community.absolute_url(), username=user)

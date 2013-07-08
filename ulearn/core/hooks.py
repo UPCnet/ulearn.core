@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
+from five import grok
 from Acquisition import aq_chain
 from zope.component import queryUtility
 from zope.component.hooks import getSite
+from zope.app.container.interfaces import IObjectAddedEvent
 
 from plone.registry.interfaces import IRegistry
 
@@ -11,6 +13,42 @@ from Products.CMFCore.utils import getToolByName
 from maxclient import MaxClient
 from ulearn.core.content.community import ICommunity
 from mrs.max.browser.controlpanel import IMAXUISettings
+
+
+@grok.subscribe(ICommunity, IObjectAddedEvent)
+def communityAdded(content, event):
+    """ Community added handler
+    """
+    portal = getSite()
+    pm = getToolByName(portal, "portal_membership")
+    pl = getToolByName(portal, "portal_languages")
+    default_lang = pl.getDefaultLanguage()
+
+    if pm.isAnonymousUser():  # the user has not logged in
+        username = ''
+        return
+    else:
+        member = pm.getAuthenticatedMember()
+
+    registry = queryUtility(IRegistry)
+    settings = registry.forInterface(IMAXUISettings, check=False)
+    effective_grant_type = settings.oauth_grant_type
+
+    username = member.getUserName()
+    memberdata = pm.getMemberById(username)
+    oauth_token = memberdata.getProperty('oauth_token', None)
+
+    maxclient = MaxClient(url=settings.max_server, oauth_server=settings.oauth_server, grant_type=effective_grant_type)
+    maxclient.setActor(username)
+    maxclient.setToken(oauth_token)
+
+    activity_text = {
+        'ca': 'He creat una nova comunitat: {}',
+        'es': 'He creado una comunidad nueva: {}',
+        'en': 'I\'ve just created a new community: {}',
+    }
+
+    maxclient.addActivity(activity_text[default_lang].format(content.Title()), contexts=[portal.absolute_url(), ])
 
 
 def Added(content, event):
