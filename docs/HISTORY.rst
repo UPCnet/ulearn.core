@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.0b4 (unreleased)
+1.0b4 (2013-07-08)
 ------------------
 
  * Various fixes [Victor Fernandez de Alba]
