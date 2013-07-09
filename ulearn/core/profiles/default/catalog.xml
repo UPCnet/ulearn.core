@@ -2,4 +2,6 @@
 <object name="portal_catalog">
     <column value="image_filename"/>
     <column value="subscribed_items"/>
+    <column value="subscribed_users"/>
+    <column value="community_type"/>
 </object>

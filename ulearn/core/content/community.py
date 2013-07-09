@@ -83,7 +83,7 @@ class ICommunity(form.Schema):
         description=_(u"community_type_description"),
         source=availableCommunityTypes,
         required=True,
-        default=u'Open'
+        default=u'Closed'
     )
 
     form.widget(subscribed=UsersTokenInputFieldWidget)
@@ -134,6 +134,15 @@ def subscribed_users(context):
 grok.global_adapter(subscribed_users, name='subscribed_users')
 
 
+@indexer(ICommunity)
+def community_type(context):
+    """Create a catalogue indexer, registered as an adapter, which can
+    populate the ``community_type`` value count it and index.
+    """
+    return context.community_type
+grok.global_adapter(community_type, name='community_type')
+
+
 class View(grok.View):
     grok.context(ICommunity)
 
@@ -163,6 +172,30 @@ class ToggleFavorite(grok.View):
         return "Toggled"
 
 
+class ToggleSubscribe(grok.View):
+    grok.context(ICommunity)
+    grok.name('toggle-subscribe')
+
+    def render(self):
+        community = self.context
+        pm = getToolByName(self.context, "portal_membership")
+        current_user = pm.getAuthenticatedMember().getUserName()
+
+        if community.community_type == u'Open' or community.community_type == u'Closed':
+            if current_user in community.subscribed:
+                community.subscribed.remove(current_user)
+            else:
+                community.subscribed.append(current_user)
+
+            community.reindexObject()
+            notify(ObjectModifiedEvent(community))
+            return True
+
+        elif community.community_type == u'Organizative':
+            # You shouldn't been doing this...
+            return False
+
+
 class communityAdder(form.SchemaForm):
     grok.name('addCommunity')
     grok.context(IPloneSiteRoot)
@@ -186,8 +219,19 @@ class communityAdder(form.SchemaForm):
         description = data['description']
         subscribed = data['subscribed']
         image = data['image']
+        community_type = data['community_type']
+        twitter_hashtag = data['twitter_hashtag']
 
-        new_comunitat = createContentInContainer(self.context, 'ulearn.community', title=nom, description=description, subscribed=subscribed, image=image, checkConstraints=False)
+        new_comunitat = createContentInContainer(
+            self.context,
+            'ulearn.community',
+            title=nom,
+            description=description,
+            subscribed=subscribed,
+            image=image,
+            community_type=community_type,
+            twitter_hashtag=twitter_hashtag,
+            checkConstraints=False)
 
         # Redirect back to the front page with a status message
 
@@ -207,11 +251,15 @@ class communityEdit(form.SchemaForm):
     schema = ICommunity
     ignoreContext = True
 
+    ctype_map = {u'Closed': 'closed', u'Open': 'open', u'Organizative': 'organizative'}
+
     def updateWidgets(self):
         super(communityEdit, self).updateWidgets()
 
         self.widgets["title"].value = self.context.title
         self.widgets["description"].value = self.context.description
+        self.widgets["community_type"].value = [self.ctype_map[self.context.community_type]]
+        self.widgets["twitter_hashtag"].value = self.context.twitter_hashtag
 
         tlc = TextLinesConverter(self.fields['subscribed'].field, self.widgets["subscribed"])
         self.widgets["subscribed"].value = tlc.toWidgetValue(self.context.subscribed)
@@ -227,11 +275,15 @@ class communityEdit(form.SchemaForm):
         description = data['description']
         subscribed = data['subscribed']
         image = data['image']
+        community_type = data['community_type']
+        twitter_hashtag = data['twitter_hashtag']
 
         # Set new values in community
         self.context.title = nom
         self.context.description = description
         self.context.subscribed = subscribed
+        self.context.community_type = community_type
+        self.context.twitter_hashtag = twitter_hashtag
         if image:
             self.context.image = image
 
@@ -383,13 +435,17 @@ def edit_community(community, event):
     for guest in community.subscribed:
         maxclient.subscribe(url=community.absolute_url(), username=guest)
 
-    # Unsubscribe username from community
-    #subscribed = maxclient.subscribed_to_context(community.absolute_url())
-    #unsubscribe = [a for a in community.subscribed if a not in subscribed]
-
-    #for user in unsubscribe:
-    #    maxclient.unsubscribe(url=community.absolute_url(), username=user)
-
     # Update subscribed user permissions
     for guest in community.subscribed:
         community.manage_setLocalRoles(guest, ['Reader', 'Contributor'])
+
+    # Unsubscribe no longer members from community, taking account of the
+    # community creator who is not in the subscribed list
+    subscribed = [user.get('username', '') for user in maxclient.subscribed_to_context(community.absolute_url()).get('items', [])]
+    unsubscribe = [a for a in subscribed if a not in community.subscribed + [community.Creator()]]
+
+    for user in unsubscribe:
+        maxclient.unsubscribe(url=community.absolute_url(), username=user)
+
+    # Update unsubscribed user permissions
+    community.manage_delLocalRoles(unsubscribe)

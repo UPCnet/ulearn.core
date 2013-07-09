@@ -47,3 +47,6 @@ msgstr "Oberta"
 
 msgid "Organizative"
 msgstr "Organitzativa"
+
+msgid "search_communities"
+msgstr "Cerca comunitats"
