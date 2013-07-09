@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GenWebUPC\n"
 "POT-Creation-Date: 2008-11-20 09:40\n"
-"PO-Revision-Date: 2010-06-04 11:35+0100\n"
-"Last-Translator: Roberto Diaz <roberto.diaz@upcnet.es>\n"
+"PO-Revision-Date: 2013-07-09 11:35+0100\n"
+"Last-Translator: Corina Riba <corina.riba@upcnet.es>\n"
 "Language-Team: Plone Team@UPCnet <plone.team@upcnet.es>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
@@ -16,38 +16,137 @@ msgstr ""
 "Preferred-Encodings: utf-8 latin1\n"
 "Domain: ulearn\n"
 
+#. Default: "My communities"
+#: ../../../../../../ulearn.theme/ulearn/theme/portlets/templates/buttonbar.pt:24
 msgid "my_communities"
-msgstr "Les meves comunitats"
+msgstr "Mis comunidades"
 
+#: ../../../content/community.py:70
 msgid "Nom"
 msgstr "Nombre"
 
+#: ../../../content/community.py:71
 msgid "Nom de la comunitat"
 msgstr "Nombre de la comunidad"
 
+#: ../../../content/community.py:91
 msgid "Subscrits"
-msgstr "Subscritos"
+msgstr "Suscritos"
 
+#: ../../../content/community.py:92
 msgid "Llista amb les persones subscrites"
-msgstr "Lista de las personas subscritas a esta comunidad"
+msgstr "Lista de las personas suscritas a esta comunidad"
 
+#: ../../../content/community.py:98
 msgid "Imatge"
 msgstr "Imagen"
 
-msgid "Imatge que defineix la comunitat"
-msgstr "Imagen que define a la comunidad"
+#: ../../../content/community.py:77
+msgid "La descripció de la comunitat"
+msgstr "La descripción de la comunidad"
 
+
+#. Default: "Activitat"
+#: ../../../../../../ulearn.theme/ulearn/theme/browser/viewlets_templates/folderbar.pt:15
 msgid "Activity"
 msgstr "Actividad"
 
+#: ../../../../../../ulearn.theme/ulearn/theme/browser/viewlets_templates/folderbar.pt:26
 msgid "Documents"
 msgstr "Documentos"
 
+#. Default: "Enllaços"
+#: ../../../../../../ulearn.theme/ulearn/theme/browser/viewlets_templates/folderbar.pt:37
 msgid "Links"
 msgstr "Enlaces"
 
+#. Default: "Fotos"
+#: ../../../../../../ulearn.theme/ulearn/theme/browser/viewlets_templates/folderbar.pt:48
 msgid "Photos"
 msgstr "Fotos"
 
+#. Default: "Esdeveniments"
+#: ../../../../../../ulearn.theme/ulearn/theme/browser/viewlets_templates/folderbar.pt:60
 msgid "Events"
 msgstr "Eventos"
+
+msgid "nom_usuari"
+msgstr "nombre.usuario"
+
+msgid "password"
+msgstr "contraseña"
+
+#. Default: "See more communities"
+#: ../../../../../../ulearn.theme/ulearn/theme/portlets/templates/communities.pt:35
+msgid "seemore"
+msgstr "Más comunidades"
+
+#. Default: "Create a new community"
+#: ../../../../../../ulearn.theme/ulearn/theme/portlets/templates/communities.pt:49
+msgid "createcommunity"
+msgstr "Crear una nueva comunidad"
+
+#: ../../../content/community.py:105
+msgid "El hashtag (per exemple: #ulearn) que utilitzarà aquesta comunitat"
+msgstr "El hashtag (por ejemplo: #ulearn) que utilitzará esta comunidad"
+
+#: ../../../content/community.py:53
+msgid "Closed"
+msgstr "Cerrada"
+
+#: ../../../content/community.py:174
+msgid "Crea la comunitat"
+msgstr "Crear la comunidad"
+
+#: ../../../content/community.py:76
+msgid "Descripció"
+msgstr "Descripción"
+
+#: ../../../controlpanel.py:83
+msgid "Edit cancelled"
+msgstr "Edición cancelada"
+
+#: ../../../content/community.py:219
+msgid "Edita la comunitat"
+msgstr "Editar la comunidad"
+
+#: ../../../content/community.py:99
+msgid "Imatge que defineix la comunitat"
+msgstr "Imagen que define la comunidad"
+
+#: ../../../content/community.py:54
+msgid "Open"
+msgstr "Abierta"
+
+#: ../../../content/community.py:60
+msgid "Organizative"
+msgstr "Organizada"
+
+#: ../../../controlpanel.py:70
+msgid "Save"
+msgstr "Guardar"
+
+#: ../../../content/community.py:82
+msgid "Tipus de comunitat"
+msgstr "Tipo de comunidad"
+
+#: ../../../content/community.py:104
+msgid "Twitter hashtag"
+msgstr "Twitter hashtag"
+
+#: ../../../controlpanel.py:60
+msgid "Ulearn settings"
+msgstr "Configuración uLearn"
+
+#. Default: "URL del campus"
+#: ../../../controlpanel.py:19
+msgid "campus_url"
+msgstr "dirección web del campus"
+
+#: ../../../content/community.py:83
+msgid "community_type_description"
+msgstr ""
+"Abierta: pública (la ve todo el mundo) y te puedes suscribir y describirte.\n"
+"Cerrada: solo puede suscribirte el propietario de la comunidad, pero puedes desuscribirte.\n"
+"Organizada: solo puede suscribirte un administrador y no puedes desuscribirte."
+
