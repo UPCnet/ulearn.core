@@ -204,7 +204,11 @@ class communityAdder(form.SchemaForm):
     schema = ICommunity
     ignoreContext = True
 
-    @button.buttonAndHandler(_(u'Crea la comunitat'))
+    def update(self):
+        super(communityAdder, self).update()
+        self.actions['save'].addClass('context')
+
+    @button.buttonAndHandler(_(u'Crea la comunitat'), name="save")
     def handleApply(self, action):
         data, errors = self.extractData()
         if errors:
@@ -253,6 +257,10 @@ class communityEdit(form.SchemaForm):
 
     ctype_map = {u'Closed': 'closed', u'Open': 'open', u'Organizative': 'organizative'}
 
+    def update(self):
+        super(communityEdit, self).update()
+        self.actions['save'].addClass('context')
+
     def updateWidgets(self):
         super(communityEdit, self).updateWidgets()
 
@@ -264,7 +272,7 @@ class communityEdit(form.SchemaForm):
         tlc = TextLinesConverter(self.fields['subscribed'].field, self.widgets["subscribed"])
         self.widgets["subscribed"].value = tlc.toWidgetValue(self.context.subscribed)
 
-    @button.buttonAndHandler(_(u'Edita la comunitat'))
+    @button.buttonAndHandler(_(u'Edita la comunitat'), name="save")
     def handleApply(self, action):
         data, errors = self.extractData()
         if errors:
