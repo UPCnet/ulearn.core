@@ -149,3 +149,14 @@ msgstr ""
 "Abierta: pública (la ve todo el mundo) y te puedes suscribir y describirte.\n"
 "Cerrada: solo puede suscribirte el propietario de la comunidad, pero puedes desuscribirte.\n"
 "Organizada: solo puede suscribirte un administrador y no puedes desuscribirte."
+
+#. Default: "Stats"
+#: ../../../../../../ulearn.theme/ulearn/theme/portlets/stats.py:33
+#: ../../../../../../ulearn.theme/ulearn/theme/portlets/templates/stats.pt:4
+msgid "stats"
+msgstr "Estadísticas"
+
+#. Default: "Stats"
+#: ../../../../../../ulearn.theme/ulearn/theme/portlets/templates/stats.pt:17
+msgid "Comments"
+msgstr "Comentarios"
