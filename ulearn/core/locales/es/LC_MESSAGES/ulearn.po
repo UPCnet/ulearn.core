@@ -150,3 +150,99 @@ msgstr ""
 "Cerrada: solo puede suscribirte el propietario de la comunidad, pero puedes desuscribirte.\n"
 "Organizada: solo puede suscribirte un administrador y no puedes desuscribirte."
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# ______traducciones que faltan_______
+
+
+#. Default: "Tancada"
+msgid "Closed"
+msgstr ""
+
+msgstr ""
+
+#: ../../../../../../ulearn.theme/ulearn/theme/portlets/templates/buttonbar.pt:13
+msgid "Entrada"
+msgstr ""
+
+#. Default: "Oberta"
+msgid "Open"
+msgstr ""
+
+#. Default: "Organitzativa"
+msgid "Organizative"
+msgstr ""
+
+#. Default: "Communities"
+#: ../../../../../../ulearn.theme/ulearn/theme/browser/views_templates/communities.pt:21
+msgid "allcommunities"
+msgstr ""
+
+#. Default: "Button bar"
+#: ../../../../../../ulearn.theme/ulearn/theme/portlets/homebuttonbar.py:26
+msgid "buttonbar"
+msgstr ""
+
+#. Default: "Comments portlet"
+#: ../../../../../../ulearn.theme/ulearn/theme/portlets/comments.py:29
+msgid "comments"
+msgstr ""
+
+#. Default: "Comunidades"
+#: ../../../../../../ulearn.theme/ulearn/theme/portlets/communities.py:29
+#: ../../../../../../ulearn.theme/ulearn/theme/portlets/templates/communities.pt:4
+msgid "communities"
+msgstr ""
+
+#. Default: "Oberta: Pública (la veu tothom) i et pots subscriure i desubscriure't. \nTancada: Només et pot subscriure algú i et pots desubscriure't. \nOrganitzativa: Només et pot subscriure un administrador i no et pots desubscriure't."
+msgid "community_type_description"
+msgstr ""
+
+#. Default: "Edita la comunitat"
+msgid "editcommunity"
+msgstr ""
+
+#. Default: "Go to the campus"
+#: ../../../../../../ulearn.theme/ulearn/theme/portlets/templates/communities.pt:40
+msgid "gotocampus"
+msgstr ""
+
+#. Default: "Most valued portlet"
+#: ../../../../../../ulearn.theme/ulearn/theme/portlets/mostvalued.py:29
+msgid "mostvalued"
+msgstr ""
+
+#. Default: "User profile"
+#: ../../../../../../ulearn.theme/ulearn/theme/portlets/profile.py:36
+msgid "profile"
+msgstr ""
+
+#. Default: "Stats"
+#: ../../../../../../ulearn.theme/ulearn/theme/portlets/stats.py:33
+#: ../../../../../../ulearn.theme/ulearn/theme/portlets/templates/stats.pt:4
+msgid "stats"
+msgstr ""
+
+#. Default: "Thinnkers portlet"
+#: ../../../../../../ulearn.theme/ulearn/theme/portlets/thinnkers.py:34
+msgid "thinnkers"
+msgstr ""
+
+#. Default: "Calendar portlet"
+#: ../../../../../../ulearn.theme/ulearn/theme/portlets/calendar.py:33
+msgid "ulearncalendar"
+msgstr ""
