@@ -79,7 +79,7 @@ msgstr "contraseña"
 #. Default: "See more communities"
 #: ../../../../../../ulearn.theme/ulearn/theme/portlets/templates/communities.pt:35
 msgid "seemore"
-msgstr "Más comunidades"
+msgstr "Ver más comunidades"
 
 #. Default: "Create a new community"
 #: ../../../../../../ulearn.theme/ulearn/theme/portlets/templates/communities.pt:49
@@ -160,3 +160,35 @@ msgstr "Estadísticas"
 #: ../../../../../../ulearn.theme/ulearn/theme/portlets/templates/stats.pt:17
 msgid "Comments"
 msgstr "Comentarios"
+
+#: ../../../../../../ulearn.theme/ulearn/theme/portlets/templates/buttonbar.pt:13
+msgid "Entrada"
+msgstr "Entrada"
+
+#. Default: "Communities"
+#: ../../../../../../ulearn.theme/ulearn/theme/browser/views_templates/communities.pt:21
+msgid "allcommunities"
+msgstr "Comunidades"
+
+#. Default: "Comments portlet"
+#: ../../../../../../ulearn.theme/ulearn/theme/portlets/comments.py:29
+msgid "comments"
+msgstr "comentarios"
+
+#. Default: "Comunidades"
+#: ../../../../../../ulearn.theme/ulearn/theme/portlets/communities.py:29
+#: ../../../../../../ulearn.theme/ulearn/theme/portlets/templates/communities.pt:4
+msgid "communities"
+msgstr "Comunidades"
+
+#. Default: "Edita la comunitat"
+msgid "editcommunity"
+msgstr "Editar la comunidad"
+
+#. Default: "Go to the campus"
+#: ../../../../../../ulearn.theme/ulearn/theme/portlets/templates/communities.pt:40
+msgid "gotocampus"
+msgstr "Ir al campus"
+
+msgid "not_events_for_today"
+msgstr "Hoy no hay eventos"
