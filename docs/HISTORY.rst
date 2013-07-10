@@ -1,11 +1,11 @@
 Changelog
 =========
 
-1.0b5 (unreleased)
+1.0b5 (2013-07-10)
 ------------------
 
-- Nothing changed yet.
-
+ * Delete community subscriber. [Victor Fernandez de Alba]
+ * Traducciones [Corina Riba]
 
 1.0b4 (2013-07-08)
 ------------------
