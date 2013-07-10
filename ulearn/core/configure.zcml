@@ -6,7 +6,7 @@
     xmlns:monkey="http://namespaces.plone.org/monkey"
     xmlns:browser="http://namespaces.zope.org/browser"
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
-    i18n_domain="ulearn.core">
+    i18n_domain="ulearn">
 
     <includeDependencies package="." />
 

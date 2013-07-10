@@ -11,6 +11,7 @@ from zope.component.hooks import getSite
 from zope.lifecycleevent import ObjectModifiedEvent
 from zope.app.container.interfaces import IObjectAddedEvent
 from zope.lifecycleevent.interfaces import IObjectModifiedEvent
+from zope.lifecycleevent.interfaces import IObjectRemovedEvent
 from zope.schema.interfaces import IContextSourceBinder
 from zope.schema.vocabulary import SimpleVocabulary
 from AccessControl import getSecurityManager
@@ -457,3 +458,15 @@ def edit_community(community, event):
 
     # Update unsubscribed user permissions
     community.manage_delLocalRoles(unsubscribe)
+
+
+@grok.subscribe(ICommunity, IObjectRemovedEvent)
+def delete_community(community, event):
+    registry = queryUtility(IRegistry)
+    maxui_settings = registry.forInterface(IMAXUISettings)
+
+    maxclient = MaxClient(maxui_settings.max_server, maxui_settings.oauth_server)
+    maxclient.setActor(maxui_settings.max_restricted_username)
+    maxclient.setToken(maxui_settings.max_restricted_token)
+
+    maxclient.deleteContext(event.object.absolute_url())
