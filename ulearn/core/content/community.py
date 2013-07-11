@@ -241,7 +241,7 @@ class communityAdder(form.SchemaForm):
         # Redirect back to the front page with a status message
 
         IStatusMessage(self.request).addStatusMessage(
-            u"La comunitat {} ha estat creada.".format(nom),
+            _(u"La comunitat {} ha estat creada.").format(nom),
             u"info"
         )
 
@@ -301,7 +301,7 @@ class communityEdit(form.SchemaForm):
         notify(ObjectModifiedEvent(self.context))
 
         IStatusMessage(self.request).addStatusMessage(
-            u"La comunitat {} ha estat modificada.".format(nom),
+            _(u"La comunitat {} ha estat modificada.").format(nom),
             u"info"
         )
 
@@ -354,12 +354,12 @@ def initialize_community(community, event):
         community.manage_setLocalRoles(guest, ['Reader', 'Contributor'])
 
     # Create default content containers
-    documents = createContentInContainer(community, 'Folder', title=u"Documents", checkConstraints=False)
-    links = createContentInContainer(community, 'Folder', title=u"Enllaços", checkConstraints=False)
-    photos = createContentInContainer(community, 'Folder', title=u"Fotos", checkConstraints=False)
+    documents = createContentInContainer(community, 'Folder', title=_(u"Documents"), checkConstraints=False)
+    links = createContentInContainer(community, 'Folder', title=_(u"Enllaços"), checkConstraints=False)
+    photos = createContentInContainer(community, 'Folder', title=_(u"Fotos"), checkConstraints=False)
 
     # Create the default events container
-    events = createContentInContainer(community, 'Folder', title=u"Esdeveniments", checkConstraints=False)
+    events = createContentInContainer(community, 'Folder', title=_(u"Esdeveniments"), checkConstraints=False)
 
     # Set default view layout
     documents.setLayout('folder_summary_view')
