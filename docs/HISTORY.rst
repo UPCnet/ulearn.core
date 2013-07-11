@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.0b6 (unreleased)
+1.0b6 (2013-07-11)
 ------------------
 
  * Traducciones [Corina Riba]
