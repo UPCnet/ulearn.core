@@ -35,8 +35,8 @@ msgstr "Cambios guardados"
 msgid "Closed"
 msgstr "Cerrada"
 
-#: ../../../../ulearn.core/ulearn/core/content/community.py:304
-msgid "comunitat_modificada."
+#: ../../../../ulearn.core/ulearn/core/content/community.py:315
+msgid "comunitat_modificada"
 msgstr "La comunidad ${comunitat} ha sido modificada."
 
 #: ../../../../ulearn.core/ulearn/core/content/community.py:362
