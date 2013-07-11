@@ -240,10 +240,17 @@ class communityAdder(form.SchemaForm):
 
         # Redirect back to the front page with a status message
 
-        IStatusMessage(self.request).addStatusMessage(
-            _(u"La comunitat {} ha estat creada.").format(nom),
-            u"info"
-        )
+        # IStatusMessage(self.request).addStatusMessage(
+        #     _(u'La comunitat {} ha estat creada.').format(nom),
+        #     u"info"
+        # )
+
+        msgid = _(u"comunitat_creada", default=u'La comunitat ${comunitat} ha estat creada.', mapping={u"comunitat": nom})
+
+        translated = self.context.translate(msgid)
+
+        messages = IStatusMessage(self.request)
+        messages.addStatusMessage(translated, type="info")
 
         self.request.response.redirect(new_comunitat.absolute_url())
 
@@ -300,10 +307,17 @@ class communityEdit(form.SchemaForm):
 
         notify(ObjectModifiedEvent(self.context))
 
-        IStatusMessage(self.request).addStatusMessage(
-            _(u"La comunitat {} ha estat modificada.").format(nom),
-            u"info"
-        )
+        # IStatusMessage(self.request).addStatusMessage(
+        #     _(u'La comunitat {} ha estat modificada.').format(nom),
+        #     u"info"
+        # )
+
+        msgid = _(u"comunitat_modificada", default=u'La comunitat ${comunitat} ha estat modificada.', mapping={u"comunitat": nom})
+
+        translated = self.context.translate(msgid)
+
+        messages = IStatusMessage(self.request)
+        messages.addStatusMessage(translated, type="info")
 
         self.request.response.redirect(self.context.absolute_url())
 

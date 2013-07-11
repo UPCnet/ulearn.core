@@ -36,16 +36,16 @@ msgid "Closed"
 msgstr "Cerrada"
 
 #: ../../../../ulearn.core/ulearn/core/content/community.py:304
-msgid "La comunitat {} ha estat modificada."
-msgstr "La comunidad {} ha sido modificada."
+msgid "comunitat_modificada."
+msgstr "La comunidad ${comunitat} ha sido modificada."
 
 #: ../../../../ulearn.core/ulearn/core/content/community.py:362
 msgid "Esdeveniments"
 msgstr "Eventos"
 
 #: ../../../../ulearn.core/ulearn/core/content/community.py:244
-msgid "La comunitat {} ha estat creada."
-msgstr "La comunidad {} ha sido creada."
+msgid "comunitat_creada"
+msgstr "La comunidad ${comunitat} ha sido creada."
 
 #. Default: "Comentaris"
 #: ../../../../ulearn.theme/ulearn/theme/portlets/templates/stats.pt:73
@@ -93,7 +93,7 @@ msgstr "Edición cancelada"
 
 #: ../../../../ulearn.core/ulearn/core/content/community.py:276
 msgid "Edita la comunitat"
-msgstr "Editar la comunidad"
+msgstr "Guardar"
 
 #: ../../../../ulearn.core/ulearn/core/content/community.py:106
 msgid "El hashtag (per exemple: #ulearn) que utilitzarà aquesta comunitat"
