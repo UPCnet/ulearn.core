@@ -4,8 +4,8 @@ Changelog
 1.0b6 (unreleased)
 ------------------
 
-- Nothing changed yet.
-
+ * Traducciones [Corina Riba]
+ * Script generea .mo [Corina Riba]
 
 1.0b5 (2013-07-10)
 ------------------
