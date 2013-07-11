@@ -1,11 +1,17 @@
 Changelog
 =========
 
-1.0b6 (unreleased)
+1.0b7 (unreleased)
 ------------------
 
 - Nothing changed yet.
 
+
+1.0b6 (2013-07-11)
+------------------
+
+ * Traducciones [Corina Riba]
+ * Script generea .mo [Corina Riba]
 
 1.0b5 (2013-07-10)
 ------------------
