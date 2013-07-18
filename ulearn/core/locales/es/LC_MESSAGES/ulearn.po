@@ -39,7 +39,19 @@ msgstr "Cerrada"
 msgid "comunitat_modificada"
 msgstr "La comunidad ${comunitat} ha sido modificada."
 
-#: ../../../../ulearn.core/ulearn/core/content/community.py:362
+#: ../../../../ulearn.core/ulearn/core/content/community.py:371
+msgid "Documents"
+msgstr "Documentos"
+
+#: ../../../../ulearn.core/ulearn/core/content/community.py:372
+msgid "Enllaços"
+msgstr "Enlaces"
+
+#: ../../../../ulearn.core/ulearn/core/content/community.py:373
+msgid "Fotos"
+msgstr "Fotos"
+
+#: ../../../../ulearn.core/ulearn/core/content/community.py:376
 msgid "Esdeveniments"
 msgstr "Eventos"
 
@@ -49,7 +61,6 @@ msgstr "La comunidad ${comunitat} ha sido creada."
 
 #. Default: "Comentaris"
 #: ../../../../ulearn.theme/ulearn/theme/portlets/templates/stats.pt:73
-#, fuzzy
 msgid "Comments"
 msgstr "Comentarios"
 
@@ -81,7 +92,7 @@ msgstr "Documentos"
 
 #: ../../../../ulearn.core/ulearn/core/browser/views.py:46
 msgid "Durada de la reunió"
-msgstr "Duración de la reunión"
+msgstr "Duración de la sesión"
 
 #: ../../../../ulearn.core/ulearn/core/controlpanel.py:83
 msgid "Edit cancelled"
@@ -110,7 +121,7 @@ msgstr "Eventos"
 
 #: ../../../../ulearn.core/ulearn/core/browser/views.py:130
 msgid "Hi ha hagut algun problema i la reunió virtual no ha estat creada."
-msgstr "Ha habido algún problema y la reunión virtual no se ha creado"
+msgstr "Ha habido algún problema y la sesión virtual no se ha creado"
 
 #: ../../../../ulearn.core/ulearn/core/content/community.py:99
 msgid "Imatge"
@@ -122,7 +133,7 @@ msgstr "Imagen que define la comunidad"
 
 #: ../../../../ulearn.core/ulearn/core/browser/views.py:47
 msgid "Indiqueu durada de la reunió."
-msgstr "Indica la dureción de la reunión"
+msgstr "Indica la duración de la sesión"
 
 #: ../../../../ulearn.core/ulearn/core/browser/views.py:66
 msgid "Indiqueu el nombre total d'assistents previstos."
@@ -134,7 +145,7 @@ msgstr "Indica la fecha de inicio de la reserva"
 
 #: ../../../../ulearn.core/ulearn/core/browser/views.py:35
 msgid "Indiqueu la descripció de la reunió virtual."
-msgstr "Indica la descripción de la reunión virtual"
+msgstr "Indica la descripción de la sesión virtual"
 
 #: ../../../../ulearn.core/ulearn/core/browser/views.py:59
 msgid "Invitats espectadors"
@@ -146,11 +157,11 @@ msgstr "La descripción de la comunidad"
 
 #: ../../../../ulearn.core/ulearn/core/browser/views.py:97
 msgid "La reunió no es pot crear perquè l'usuari no te informat la adreca de correu electrònic."
-msgstr "La reunión no se puede crear porque el usuario no tiene informada la dirección de correo electrónico"
+msgstr "La sesión no se puede crear porque el usuario no tiene informada la dirección de correo electrónico"
 
 #: ../../../../ulearn.core/ulearn/core/browser/views.py:125
 msgid "La reunió virtual ha estat creada."
-msgstr "La reunión virtual ha sido creada"
+msgstr "La sesión virtual ha sido creada"
 
 #. Default: "Enllaços"
 #: ../../../../ulearn.theme/ulearn/theme/browser/viewlets_templates/folderbar.pt:37
@@ -164,11 +175,11 @@ msgstr "Lista de las personas suscritas a esta comunidad"
 
 #: ../../../../ulearn.core/ulearn/core/browser/views.py:60
 msgid "Llista d'emails dels convidats ESPECTADORS, separats per comes."
-msgstr "Lista de correos de los invitados ESPECTADORES, separados por comas."
+msgstr "Lista de direcciones de correo electrónico de los invitados ESPECTADORES separadas por comas."
 
 #: ../../../../ulearn.core/ulearn/core/browser/views.py:54
 msgid "Llista d'emails dels convidats MODERADORS, separats per comes."
-msgstr "Lista de correos de los invitados MODERADORES, separados por comas."
+msgstr "Lista de direcciones de correo electrónico de los invitados MODERADORES separadas por comas."
 
 #: ../../../../ulearn.core/ulearn/core/content/community.py:71
 msgid "Nom"
@@ -180,7 +191,7 @@ msgstr "Nombre de la comunidad"
 
 #: ../../../../ulearn.core/ulearn/core/browser/views.py:34
 msgid "Nom de la reunió"
-msgstr "Nombre de la reunión"
+msgstr "Nombre de la sesión"
 
 #: ../../../../ulearn.core/ulearn/core/browser/views.py:65
 msgid "Nombre de convidats total"
@@ -233,12 +244,12 @@ msgstr "Comunidades"
 #. Default: "Button bar"
 #: ../../../../ulearn.theme/ulearn/theme/portlets/homebuttonbar.py:26
 msgid "buttonbar"
-msgstr ""
+msgstr "Botonera"
 
 #. Default: "URL del campus"
 #: ../../../../ulearn.core/ulearn/core/controlpanel.py:19
 msgid "campus_url"
-msgstr "dirección web del campus"
+msgstr "Dirección web del campus"
 
 #. Default: "Comments portlet"
 #: ../../../../ulearn.theme/ulearn/theme/portlets/comments.py:29
@@ -261,12 +272,17 @@ msgstr ""
 #. Default: "Create a new community"
 #: ../../../../ulearn.theme/ulearn/theme/portlets/templates/communities.pt:54
 msgid "createcommunity"
-msgstr "Crear una nueva comunidad"
+msgstr "Crear una comunidad"
 
 #. Default: "eConnect"
 #: ../../../../ulearn.theme/ulearn/theme/portlets/econnect.py:19
 msgid "econnect"
-msgstr "eConnect"
+msgstr "Trabajo en grupo"
+
+#. Default: "Web collaboration"
+#: ../../../../ulearn.theme/ulearn/theme/portlets/templates/econnect.pt:8
+msgid "web_collaboration"
+msgstr "Crear una sesión"
 
 #. Default: "Editar la comunidad"
 msgid "editcommunity"
@@ -275,7 +291,7 @@ msgstr "Editar la comunidad"
 #. Default: "Go to the campus"
 #: ../../../../ulearn.theme/ulearn/theme/portlets/templates/communities.pt:44
 msgid "gotocampus"
-msgstr "Ir al campus"
+msgstr "Ver mis cursos del Campus"
 
 #. Default: "Afegiu la URL del campus associat a aquestes comunitats."
 #: ../../../../ulearn.core/ulearn/core/controlpanel.py:21
@@ -340,7 +356,7 @@ msgstr "Hoy no hay eventos"
 #. Default: "Create a new event"
 #: ../../../../ulearn.theme/ulearn/theme/portlets/templates/calendar.pt:97
 msgid "newevent"
-msgstr "Crear un nuevo evento"
+msgstr "Crear un evento"
 
 #. Default: "contrasenya"
 #: ../../../../ulearn.theme/ulearn/theme/skins/ulearntheme_custom/login_form.cpt:193
@@ -355,7 +371,7 @@ msgstr "Perfil de usuario"
 #. Default: "Cerca"
 #: ../../../../ulearn.theme/ulearn/theme/browser/views_templates/communities.pt:25
 msgid "search_communities"
-msgstr "Buscar"
+msgstr "Buscar comunidades..."
 
 #. Default: "See more communities"
 #: ../../../../ulearn.theme/ulearn/theme/portlets/templates/communities.pt:37
@@ -377,3 +393,4 @@ msgstr "thinnkers"
 #: ../../../../ulearn.theme/ulearn/theme/portlets/calendar.py:33
 msgid "ulearncalendar"
 msgstr "Calendario uLearn"
+

@@ -84,7 +84,7 @@ class reservaBBB(form.SchemaForm):
         self.actions['save'].addClass('context')
         self.actions['cancel'].addClass('standalone')
 
-    @button.buttonAndHandler(_(u'Crea la comunitat'), name="save")
+    @button.buttonAndHandler(_(u'Save'), name="save")
     def handleApply(self, action):
         portal = getSite()
         pm = getToolByName(portal, 'portal_membership')
