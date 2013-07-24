@@ -158,6 +158,12 @@ class View(grok.View):
     def portal(self):
         return getSite()
 
+    def is_user_subscribed(self):
+        pm = getToolByName(self.context, "portal_membership")
+        current_user = pm.getAuthenticatedMember().getUserName()
+        return current_user in self.context.subscribed or \
+            current_user == self.context.Creator()
+
 
 class ToggleFavorite(grok.View):
     grok.context(ICommunity)
@@ -185,6 +191,7 @@ class ToggleSubscribe(grok.View):
         if community.community_type == u'Open' or community.community_type == u'Closed':
             if current_user in community.subscribed:
                 community.subscribed.remove(current_user)
+                IFavorite(community).remove(current_user)
             else:
                 community.subscribed.append(current_user)
 
@@ -367,6 +374,10 @@ def initialize_community(community, event):
     for guest in community.subscribed:
         community.manage_setLocalRoles(guest, ['Reader', 'Contributor'])
 
+    # If the community is of the type "Open", then allow any auth user to see it
+    if community.community_type == u'Open':
+        community.manage_setLocalRoles('AuthenticatedUsers', ['Reader'])
+
     # Create default content containers
     documents = createContentInContainer(community, 'Folder', title=_(u"Documents"), checkConstraints=False)
     links = createContentInContainer(community, 'Folder', title=_(u"Enllaços"), checkConstraints=False)
@@ -453,6 +464,12 @@ def edit_community(community, event):
     maxclient = MaxClient(maxui_settings.max_server, maxui_settings.oauth_server)
     maxclient.setActor(maxui_settings.max_restricted_username)
     maxclient.setToken(maxui_settings.max_restricted_token)
+
+    # If the community is of the type "Open", then allow any auth user to see it
+    if community.community_type == u'Open':
+        community.manage_setLocalRoles('AuthenticatedUsers', ['Reader'])
+    elif community.community_type == u'Closed':
+        community.manage_delLocalRoles(['AuthenticatedUsers'])
 
     # Update the subscribed users
     for guest in community.subscribed:

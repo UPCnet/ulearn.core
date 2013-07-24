@@ -4,7 +4,7 @@
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
       lang="en"
       metal:use-macro="context/main_template/macros/master"
-      i18n:domain="plone.app.dexterity">
+      i18n:domain="ulearn">
 
 <head>
   <div metal:fill-slot="javascript_head_slot" tal:omit-tag="">
@@ -24,6 +24,26 @@
 <metal:main fill-slot="main">
 
   <metal:content-core define-macro="main">
+
+    <div id="subscribealert" class="alert alert-info" role="alert"
+         tal:condition="not: view/is_user_subscribed">
+      <button data-dismiss="alert" class="close" type="button">×</button>
+      <p>
+      <strong i18n:translate="info">
+                Info
+      </strong>
+      <tal:msg i18n:translate="community_open_and_no_subscribed">
+        This community is open but you are not currently subscribed.
+      </tal:msg>
+      </p>
+      <p>
+        <a class="btn btn-info" href="#"
+           tal:attributes="data-community string:${context/absolute_url};
+                           data-name context/Title">
+            Subscribe
+        </a>
+      </p>
+    </div>
 
     <div class="tab-pane active" id="maxui-widget-container"></div>
 
