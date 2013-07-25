@@ -1,10 +1,10 @@
 Changelog
 =========
 
-1.0b8 (unreleased)
+1.0b8 (2013-07-25)
 ------------------
 
-- Nothing changed yet.
+ * Missing compile mos [Victor Fernandez de Alba]
 
 
 1.0b7 (2013-07-25)
