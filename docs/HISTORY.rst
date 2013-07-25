@@ -1,11 +1,11 @@
 Changelog
 =========
 
-1.0b7 (unreleased)
+1.0b7 (2013-07-25)
 ------------------
 
-- Nothing changed yet.
-
+ * Various fixes [Victor Fernandez de Alba]
+ * traducciones [Corina Riba]
 
 1.0b6 (2013-07-11)
 ------------------
