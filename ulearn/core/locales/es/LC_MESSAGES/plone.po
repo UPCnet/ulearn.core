@@ -47,15 +47,15 @@ msgstr ""
 
 #: ../../../../ulearn.core/ulearn/core/content/community.py:77
 msgid "Descripció"
-msgstr ""
+msgstr "Descripción"
 
 #: ../../../../ulearn.core/ulearn/core/profiles/default/types/File.xml
 msgid "Document"
-msgstr ""
+msgstr "Documento"
 
 #: ../../../../ulearn.core/ulearn/core/content/community.py:371
 msgid "Documents"
-msgstr ""
+msgstr "Documentos"
 
 #: ../../../../ulearn.core/ulearn/core/browser/views.py:46
 msgid "Durada de la reunió"

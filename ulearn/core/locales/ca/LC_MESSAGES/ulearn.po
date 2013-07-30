@@ -58,10 +58,6 @@ msgstr "Data d'inici"
 msgid "Descripció"
 msgstr "Descripció"
 
-#: ../../../../../../ulearn.theme/ulearn/theme/browser/viewlets_templates/folderbar.pt:26
-msgid "Documents"
-msgstr "Documents"
-
 #. Default: "Duración de la reunión"
 #: ../../../../ulearn.core/ulearn/core/browser/views.py:46
 msgid "Durada de la reunió"
@@ -89,6 +85,7 @@ msgid "Entrada"
 msgstr "Entrada"
 
 #: ../../../../ulearn.core/ulearn/core/content/community.py:371
+#: ../../../../../../ulearn.theme/ulearn/theme/browser/viewlets_templates/folderbar.pt:26
 msgid "Documents"
 msgstr "Documents"
 
@@ -403,3 +400,32 @@ msgstr "Calendari uLearn"
 #: ../../../../ulearn.theme/ulearn/theme/portlets/templates/econnect.pt:8
 msgid "web_collaboration"
 msgstr "crear una sesión"
+
+msgid "not_subscribed_to_any_community"
+msgstr "Encara no estas subscrit a cap comunitat."
+
+msgid "go_to_community_view"
+msgstr "Consulta les comunitats disponibles."
+
+# Traducciones .js
+
+msgid "Error when removing community"
+msgstr "Error a l'esborrar la comunitat"
+
+msgid "Successfully removed"
+msgstr "Esborrat correctamente"
+
+msgid "Si cliqueu aquí, esborrareu la comunitat "
+msgstr "Si cliqueu aquí, esborrareu la comunitat "
+
+msgid "Voleu subscrivir-vos a la comunitat "
+msgstr "Voleu subscrivir-vos a la comunitat "
+
+msgid "Error when (un)subscribing to the community"
+msgstr "Error en l'eliminar o crear la subscripció a la comunitat"
+
+msgid "Successfully unsubscribed"
+msgstr "Subscripció eliminada correctament"
+
+msgid "Successfully subscribed"
+msgstr "Us heu subscrit correctament"

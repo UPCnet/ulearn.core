@@ -39,10 +39,6 @@ msgstr "Cerrada"
 msgid "comunitat_modificada"
 msgstr "La comunidad ${comunitat} ha sido modificada."
 
-#: ../../../../ulearn.core/ulearn/core/content/community.py:371
-msgid "Documents"
-msgstr "Documentos"
-
 #: ../../../../ulearn.core/ulearn/core/content/community.py:372
 msgid "Enllaços"
 msgstr "Enlaces"
@@ -64,7 +60,6 @@ msgstr "La comunidad ${comunitat} ha sido creada."
 msgid "Comments"
 msgstr "Comentarios"
 
-#: ../../../../ulearn.core/ulearn/core/profiles/default/types/ulearn.community.xml:
 msgid "Comunitat"
 msgstr "Comunidad"
 
@@ -87,6 +82,7 @@ msgstr "Descripción"
 
 #: ../../../../ulearn.theme/ulearn/theme/browser/viewlets_templates/folderbar.pt:26
 #: ../../../../ulearn.theme/ulearn/theme/portlets/templates/stats.pt:17
+#: ../../../../ulearn.core/ulearn/core/content/community.py:371
 msgid "Documents"
 msgstr "Documentos"
 
@@ -95,11 +91,8 @@ msgid "Durada de la reunió"
 msgstr "Duración de la sesión"
 
 #: ../../../../ulearn.core/ulearn/core/controlpanel.py:83
-msgid "Edit cancelled"
-msgstr "Edición cancelada"
-
 #: ../../../../ulearn.core/ulearn/core/browser/views.py:138
-msgid "Edit cancelled."
+msgid "Edit cancelled"
 msgstr "Edición cancelada"
 
 #: ../../../../ulearn.core/ulearn/core/content/community.py:276
@@ -233,7 +226,7 @@ msgstr "Configuración uLearn"
 
 #: ../../../../ulearn.core/ulearn/core/profiles/default/types/ulearn.community.xml
 msgid "Una comunitat administrable"
-msgstr ""
+msgstr "Una comunidad administrable"
 
 #. Default: "Comunidades"
 #: ../../../../../../ulearn.theme/ulearn/theme/browser/views_templates/communities.pt:21
@@ -394,3 +387,31 @@ msgstr "thinnkers"
 msgid "ulearncalendar"
 msgstr "Calendario uLearn"
 
+msgid "not_subscribed_to_any_community"
+msgstr "Todavía no estás suscrito a ninguna comunidad."
+
+msgid "go_to_community_view"
+msgstr "Consulta las comunidades disponibles."
+
+# Traducciones .js
+
+msgid "Error when removing community"
+msgstr "Error al mover borrar la comunidad"
+
+msgid "Successfully removed"
+msgstr "Borrado correctamente"
+
+msgid "Si cliqueu aquí, esborrareu la comunitat "
+msgstr "Si se presiona aquí, se borrará la comunidad "
+
+msgid "Voleu subscrivir-vos a la comunitat "
+msgstr "Quieres eliminar la suscripción a la comunidad "
+
+msgid "Error when (un)subscribing to the community"
+msgstr "Error al eliminar o crear la suscripción a la comunidad"
+
+msgid "Successfully unsubscribed"
+msgstr "Suscripción eliminada correctamente"
+
+msgid "Successfully subscribed"
+msgstr "Suscrito correctamente"
