@@ -402,10 +402,10 @@ msgid "Successfully removed"
 msgstr "Borrado correctamente"
 
 msgid "Si cliqueu aquí, esborrareu la comunitat "
-msgstr "Si se presiona aquí, se borrará la comunidad "
+msgstr "¿Seguro que quieres eliminar la comunidad \""
 
 msgid "Voleu subscrivir-vos a la comunitat "
-msgstr "Quieres eliminar la suscripción a la comunidad "
+msgstr "¿Quieres eliminar la suscripción a la comunidad \""
 
 msgid "Error when (un)subscribing to the community"
 msgstr "Error al eliminar o crear la suscripción a la comunidad"
