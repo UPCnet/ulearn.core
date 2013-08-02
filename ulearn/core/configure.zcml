@@ -3,7 +3,6 @@
     xmlns:five="http://namespaces.zope.org/five"
     xmlns:i18n="http://namespaces.zope.org/i18n"
     xmlns:grok="http://namespaces.zope.org/grok"
-    xmlns:monkey="http://namespaces.plone.org/monkey"
     xmlns:browser="http://namespaces.zope.org/browser"
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
     i18n_domain="ulearn">
@@ -22,9 +21,9 @@
     <include file="subscribers.zcml" />
 
     <browser:resource
-        name="cpulearn.jpg"
-        file="cpulearn.jpg"
-        />
+      name="cpulearn.jpg"
+      file="cpulearn.jpg"
+      />
 
     <browser:page
       name="ulearn-controlpanel"
@@ -33,20 +32,11 @@
       permission="cmf.ManagePortal"
       />
 
-    <include package="collective.monkeypatcher" />
-
-    <monkey:patch
-        description="Patch to change the fixed default resize of the member portrait"
-        class="Products.PlonePAS.tools.membership.MembershipTool"
-        original="changeMemberPortrait"
-        replacement=".portrait.changeMemberPortrait"
-        />
-
     <genericsetup:importStep
-        name="ulearn.core.setupstep"
-        title="ulearn.core special import handlers"
-        description=""
-        handler="ulearn.core.setuphandlers.setupVarious" />
+      name="ulearn.core.setupstep"
+      title="ulearn.core special import handlers"
+      description=""
+      handler="ulearn.core.setuphandlers.setupVarious" />
 
     <genericsetup:registerProfile
       name="default"
