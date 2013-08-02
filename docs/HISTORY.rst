@@ -1,17 +1,16 @@
 Changelog
 =========
 
-1.0b9 (unreleased)
+1.0b9 (2013-08-02)
 ------------------
 
-- Nothing changed yet.
-
+ * Transferred all portrait modifications to mrs.max [Victor Fernandez de Alba]
+ * Traducciones [Corina Riba]
 
 1.0b8 (2013-07-25)
 ------------------
 
  * Missing compile mos [Victor Fernandez de Alba]
-
 
 1.0b7 (2013-07-25)
 ------------------
