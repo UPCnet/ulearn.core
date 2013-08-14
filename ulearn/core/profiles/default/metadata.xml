@@ -6,6 +6,7 @@
         <dependency>profile-plone.app.contenttypes:default</dependency>
         <dependency>profile-plone.formwidget.autocomplete:default</dependency>
         <dependency>profile-pas.plugins.preauth:default</dependency>
+        <dependency>profile-pas.plugins.osiris:default</dependency>
         <dependency>profile-mrs.max:default</dependency>
         <dependency>profile-ulearn.theme:default</dependency>
     </dependencies>
