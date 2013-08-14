@@ -227,6 +227,8 @@ class UploadFile(grok.View):
             self.request.response.setHeader("Content-type", "application/json")
             self.request.response.setStatus(401)
             return json.dumps({"Error": "Unauthorized"})
+        finally:
+            self.request.response.setStatus(201)
 
 
 class ToggleFavorite(grok.View):
