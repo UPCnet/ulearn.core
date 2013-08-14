@@ -97,7 +97,7 @@ def Added(content, event):
 
     parts = dict(type=tipus[default_lang].get(content.portal_type, ''),
                  name=content.Title().decode('utf-8') or getattr(getattr(content, 'file', u''), 'filename', u'').decode('utf-8') or getattr(getattr(content, 'image', u''), 'filename', u'').decode('utf-8'),
-                 link=content.absolute_url(),
+                 link='{}/view'.format(content.absolute_url()),
                  un=articles[default_lang].get(content.portal_type, 'un'))
 
     activity_text = {

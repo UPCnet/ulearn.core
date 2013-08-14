@@ -1,4 +1,4 @@
-from  ulearn.core.testing import ULEARN_CORE_FUNCTIONAL_TESTING
+from ulearn.core.testing import ULEARN_CORE_FUNCTIONAL_TESTING
 from plone.testing import layered
 import robotsuite
 import unittest

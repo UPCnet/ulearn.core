@@ -15,6 +15,7 @@ from zope.lifecycleevent.interfaces import IObjectRemovedEvent
 from zope.schema.interfaces import IContextSourceBinder
 from zope.schema.vocabulary import SimpleVocabulary
 from AccessControl import getSecurityManager
+from AccessControl import Unauthorized
 
 from plone.indexer import indexer
 from plone.directives import form
@@ -41,6 +42,9 @@ from mrs.max.browser.controlpanel import IMAXUISettings
 
 from ulearn.core import _
 from ulearn.core.interfaces import IDocumentFolder, ILinksFolder, IPhotosFolder, IEventsFolder
+
+from wildcard.foldercontents.interfaces import IDXFileFactory
+import json
 
 
 @grok.provider(IContextSourceBinder)
@@ -163,6 +167,66 @@ class View(grok.View):
         current_user = pm.getAuthenticatedMember().getUserName()
         return current_user in self.context.subscribed or \
             current_user == self.context.Creator()
+
+
+class UploadFile(grok.View):
+    grok.context(ICommunity)
+    grok.name('upload')
+
+    def canEditCommunity(self):
+        return checkPermission('cmf.RequestReview', self.context)
+
+    @memoize_contextless
+    def portal_url(self):
+        return self.portal().absolute_url()
+
+    @memoize_contextless
+    def portal(self):
+        return getSite()
+
+    def is_user_subscribed(self):
+        pm = getToolByName(self.context, "portal_membership")
+        current_user = pm.getAuthenticatedMember().getUserName()
+        return current_user in self.context.subscribed or \
+            current_user == self.context.Creator()
+
+    def get_images_folder(self):
+        for obj in self.context.objectIds():
+            if IPhotosFolder.providedBy(self.context[obj]):
+                return self.context[obj]
+
+    def get_documents_folder(self):
+        for obj in self.context.objectIds():
+            if IDocumentFolder.providedBy(self.context[obj]):
+                return self.context[obj]
+
+    def render(self):
+        if not 'multipart/form-data' in self.request['CONTENT_TYPE'] and \
+           len(self.request.form.keys()) != 1:
+            self.request.response.setHeader("Content-type", "application/json")
+            self.request.response.setStatus(400)
+            return json.dumps({"Error": "Not supported upload method"})
+
+        file_key = self.request.form.keys()[0]
+        input_file = self.request.form[file_key]
+        filename = input_file.filename
+
+        ctr = getToolByName(self.context, 'content_type_registry')
+        type_ = ctr.findTypeName(filename.lower(), '', '') or 'File'
+        if type_ == 'File':
+            container = self.get_documents_folder()
+        else:
+            container = self.get_images_folder()
+
+        content_type = input_file.headers['content-type']
+        factory = IDXFileFactory(container)
+
+        try:
+            factory(filename, content_type, input_file)
+        except Unauthorized:
+            self.request.response.setHeader("Content-type", "application/json")
+            self.request.response.setStatus(401)
+            return json.dumps({"Error": "Unauthorized"})
 
 
 class ToggleFavorite(grok.View):
@@ -481,7 +545,7 @@ def edit_community(community, event):
 
     # Unsubscribe no longer members from community, taking account of the
     # community creator who is not in the subscribed list
-    subscribed = [user.get('username', '') for user in maxclient.subscribed_to_context(community.absolute_url()).get('items', [])]
+    subscribed = [user.get('username', '') for user in maxclient.subscribed_to_context(community.absolute_url())]
     unsubscribe = [a for a in subscribed if a not in community.subscribed + [community.Creator()]]
 
     for user in unsubscribe:
