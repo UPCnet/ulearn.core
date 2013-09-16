@@ -1,11 +1,13 @@
 Changelog
 =========
 
-1.0b10 (unreleased)
+1.0RC1 (2013-09-16)
 -------------------
 
-- Nothing changed yet.
-
+ * Improve the status of successful upload [Victor Fernandez de Alba]
+ * Fix to hooks, added endpoint for uploading documents, images to community via oauth [Victor Fernandez de Alba]
+ * Added Osiris PAS plugin [Victor Fernandez de Alba]
+ * Updated manifest and ignores to be able to add mos while releasing [Victor Fernandez de Alba]
 
 1.0b9 (2013-08-02)
 ------------------
