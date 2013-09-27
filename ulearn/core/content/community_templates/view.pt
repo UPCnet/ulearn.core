@@ -37,7 +37,7 @@
       </tal:msg>
       </p>
       <p>
-        <a class="btn btn-info" href="#"
+        <a  i18n:translate="subscribe" class="btn btn-info" href="#"
            tal:attributes="data-community string:${context/absolute_url};
                            data-name context/Title">
             Subscribe

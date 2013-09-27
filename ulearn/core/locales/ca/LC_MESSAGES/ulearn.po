@@ -245,7 +245,7 @@ msgstr "Botonera"
 #. Default: "URL del campus"
 #: ../../../../../../ulearn.core/ulearn/core/controlpanel.py:19
 msgid "campus_url"
-msgstr "Adreça web del campus"
+msgstr "Adreça web del Campus"
 
 #. Default: "Comments portlet"
 #: ../../../../../../ulearn.theme/ulearn/theme/portlets/comments.py:29
@@ -297,22 +297,22 @@ msgstr "Veure els meus cursos del Campus"
 #. Default: "Afegiu la URL del campus associat a aquestes comunitats."
 #: ../../../../../../ulearn.core/ulearn/core/controlpanel.py:21
 msgid "help_campus_url"
-msgstr "Afegiu la URL del campus associat a aquestes comunitats."
+msgstr "Afegiu la URL del Campus associat a aquestes comunitats."
 
 #. Default: "Aquest és el llindar del winwin #1."
 #: ../../../../../../ulearn.core/ulearn/core/controlpanel.py:30
 msgid "help_llindar_winwin1"
-msgstr "Aquest és el llindar del winwin #1."
+msgstr "Aquest és el llindar del Winwinn #1."
 
 #. Default: "Aquest és el llindar del winwin #2."
 #: ../../../../../../ulearn.core/ulearn/core/controlpanel.py:39
 msgid "help_llindar_winwin2"
-msgstr "Aquest és el llindar del winwin #2."
+msgstr "Aquest és el llindar del Winwinn #2."
 
 #. Default: "Aquest és el llindar del winwin #3."
 #: ../../../../../../ulearn.core/ulearn/core/controlpanel.py:48
 msgid "help_llindar_winwin3"
-msgstr "Aquest és el llindar del winwin #3."
+msgstr "Aquest és el llindar del Winwinn #3."
 
 #. Default: "Configuració de Ulearn"
 #: ../../../../../../ulearn.core/ulearn/core/controlpanel.py:61
@@ -322,17 +322,17 @@ msgstr "Configuració de uLearn"
 #. Default: "Llindar del winwin 1"
 #: ../../../../../../ulearn.core/ulearn/core/controlpanel.py:28
 msgid "llindar_winwin1"
-msgstr "Llindar del winwin 1"
+msgstr "Llindar del Winwinn 1"
 
 #. Default: "Llindar del winwin 2"
 #: ../../../../../../ulearn.core/ulearn/core/controlpanel.py:37
 msgid "llindar_winwin2"
-msgstr "Llindar del winwin 2"
+msgstr "Llindar del Winwinn 2"
 
 #. Default: "Llindar del winwin 3"
 #: ../../../../../../ulearn.core/ulearn/core/controlpanel.py:46
 msgid "llindar_winwin3"
-msgstr "Llindar del winwin 3"
+msgstr "Llindar del Winwinn 3"
 
 #. Default: "Most valued portlet"
 #: ../../../../../../ulearn.theme/ulearn/theme/portlets/mostvalued.py:29
@@ -407,6 +407,18 @@ msgstr "Encara no estas subscrit a cap comunitat."
 msgid "go_to_community_view"
 msgstr "Consulta les comunitats disponibles."
 
+msgid "community_open_and_no_subscribed"
+msgstr "Aquesta comunitat és oberta, però actualment no hi estàs subscrit"
+
+msgid "subscribe"
+msgstr "Subscriure"
+
+msgid "help_twitter"
+msgstr "Introdueix el teu nom d'usuari de Twitter"
+
+msgid "label_twitter"
+msgstr "Usuari de Twitter"
+
 # Traducciones .js
 
 msgid "Error when removing community"
@@ -420,6 +432,9 @@ msgstr "Si cliqueu aquí, esborrareu la comunitat "
 
 msgid "Voleu subscrivir-vos a la comunitat "
 msgstr "Voleu subscrivir-vos a la comunitat "
+
+msgid "Voleu desubscrivir-vos de la comunitat "
+msgstr "Voleu desubscrivir-vos de la comunitat "
 
 msgid "Error when (un)subscribing to the community"
 msgstr "Error en l'eliminar o crear la subscripció a la comunitat"

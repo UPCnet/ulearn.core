@@ -61,12 +61,12 @@ class IReservaBBB(form.Schema):
         required=True
     )
 
-    carrega = schema.Choice(
-        title=_(u"Nombre de convidats total"),
-        description=_(u"Indiqueu el nombre total d'assistents previstos."),
-        values=range(2, 26),
-        required=True
-    )
+    # carrega = schema.Choice(
+    #     title=_(u"Nombre de convidats total"),
+    #     description=_(u"Indiqueu el nombre total d'assistents previstos."),
+    #     values=range(2, 26),
+    #     required=True
+    # )
 
 
 class reservaBBB(form.SchemaForm):
@@ -108,10 +108,13 @@ class reservaBBB(form.SchemaForm):
         str_invitats_convidats = data.get('invitats_convidats').replace(' ', '')
         str_invitats_espectadors = data.get('invitats_espectadors').replace(' ', '')
 
+        guests=data.get('invitats_convidats')
+        session_load = len(guests.split(','))
+
         payload = dict(servidor=BBB_SERVER,
                        inici=str_start_date,
                        durada=data.get('durada'),
-                       carrega=data.get('carrega'),
+                       carrega= session_load,
                        descripcio=data.get('descripcio'),
                        owner=user_email,
                        invited_rw=str_invitats_convidats,

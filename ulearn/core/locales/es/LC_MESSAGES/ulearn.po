@@ -224,7 +224,7 @@ msgstr "Twitter hashtag"
 msgid "Ulearn settings"
 msgstr "Configuración uLearn"
 
-#: ../../../../ulearn.core/ulearn/core/profiles/default/types/ulearn.community.xml
+#: ../../../../ulearn.core/ulearn/core/profiles/default/types/ulearn.community.xml:
 msgid "Una comunitat administrable"
 msgstr "Una comunidad administrable"
 
@@ -242,7 +242,7 @@ msgstr "Botonera"
 #. Default: "URL del campus"
 #: ../../../../ulearn.core/ulearn/core/controlpanel.py:19
 msgid "campus_url"
-msgstr "Dirección web del campus"
+msgstr "Dirección web del Campus"
 
 #. Default: "Comments portlet"
 #: ../../../../ulearn.theme/ulearn/theme/portlets/comments.py:29
@@ -289,22 +289,22 @@ msgstr "Ver mis cursos del Campus"
 #. Default: "Afegiu la URL del campus associat a aquestes comunitats."
 #: ../../../../ulearn.core/ulearn/core/controlpanel.py:21
 msgid "help_campus_url"
-msgstr "Añadir la URL del campus asociado a esta comunidad."
+msgstr "Añadir la URL del Campus asociado a esta comunidad."
 
 #. Default: "Aquest és el llindar del winwin #1."
 #: ../../../../ulearn.core/ulearn/core/controlpanel.py:30
 msgid "help_llindar_winwin1"
-msgstr "Este es el umbral del winwin #1"
+msgstr "Este es el umbral del Winwinn #1"
 
 #. Default: "Aquest és el llindar del winwin #2."
 #: ../../../../ulearn.core/ulearn/core/controlpanel.py:39
 msgid "help_llindar_winwin2"
-msgstr "Este es el umbral del winwin #2"
+msgstr "Este es el umbral del Winwinn #2"
 
 #. Default: "Aquest és el llindar del winwin #3."
 #: ../../../../ulearn.core/ulearn/core/controlpanel.py:48
 msgid "help_llindar_winwin3"
-msgstr "Este es el umbral del winwin #3"
+msgstr "Este es el umbral del Winwinn #3"
 
 #. Default: "Configuració de Ulearn"
 #: ../../../../ulearn.core/ulearn/core/controlpanel.py:61
@@ -314,17 +314,17 @@ msgstr "Configuración de uLearn"
 #. Default: "Llindar del winwin 1"
 #: ../../../../ulearn.core/ulearn/core/controlpanel.py:28
 msgid "llindar_winwin1"
-msgstr "Umbral del winwin #1"
+msgstr "Umbral del Winwinn #1"
 
 #. Default: "Llindar del winwin 2"
 #: ../../../../ulearn.core/ulearn/core/controlpanel.py:37
 msgid "llindar_winwin2"
-msgstr "Umbral del winwin #2"
+msgstr "Umbral del Winwinn #2"
 
 #. Default: "Llindar del winwin 3"
 #: ../../../../ulearn.core/ulearn/core/controlpanel.py:46
 msgid "llindar_winwin3"
-msgstr "Umbral del winwin #3"
+msgstr "Umbral del Winwinn #3"
 
 #. Default: "Most valued portlet"
 #: ../../../../ulearn.theme/ulearn/theme/portlets/mostvalued.py:29
@@ -393,10 +393,22 @@ msgstr "Todavía no estás suscrito a ninguna comunidad."
 msgid "go_to_community_view"
 msgstr "Consulta las comunidades disponibles."
 
+msgid "community_open_and_no_subscribed"
+msgstr "Esta comunidad es abierta, pero actualmente no estás suscrito"
+
+msgid "subscribe"
+msgstr "Suscribir"
+
+msgid "Fill in your Twitter username."
+msgstr "Introduce tu nombre de usuario de Twitter"
+
+msgid "Twitter username"
+msgstr "Usuario de Twitter"
+
 # Traducciones .js
 
 msgid "Error when removing community"
-msgstr "Error al mover borrar la comunidad"
+msgstr "Error al borrar la comunidad"
 
 msgid "Successfully removed"
 msgstr "Borrado correctamente"
@@ -405,7 +417,10 @@ msgid "Si cliqueu aquí, esborrareu la comunitat "
 msgstr "¿Seguro que quieres eliminar la comunidad \""
 
 msgid "Voleu subscrivir-vos a la comunitat "
-msgstr "¿Quieres eliminar la suscripción a la comunidad \""
+msgstr "¿Quieres suscribirte a la comunidad "
+
+msgid "Voleu desubscrivir-vos de la comunitat "
+msgstr "¿Quieres eliminar la suscripción a la comunidad "
 
 msgid "Error when (un)subscribing to the community"
 msgstr "Error al eliminar o crear la suscripción a la comunidad"
