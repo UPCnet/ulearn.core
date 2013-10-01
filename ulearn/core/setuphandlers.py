@@ -5,6 +5,7 @@ from Products.CMFCore.utils import getToolByName
 from genweb.core.interfaces import IHomePage
 
 import logging
+import transaction
 
 PROFILE_ID = 'profile-ulearn.core:default'
 # Specify the indexes you want, with ('index_name', 'index_type')
@@ -85,3 +86,5 @@ def setupVarious(context):
     # Set the default page to the homepage view
     portal.setDefaultPage('homepage')
     portal['front-page'].manage_setLocalRoles('AuthenticatedUsers', ['Reader'])
+
+    transaction.commit()
