@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.0RC2 (unreleased)
+1.0RC2 (2013-10-01)
 -------------------
 
  * Traduccions i càlcul convidats sessió [Corina Riba]
