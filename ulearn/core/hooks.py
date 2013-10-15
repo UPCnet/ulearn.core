@@ -43,9 +43,9 @@ def communityAdded(content, event):
     maxclient.setToken(oauth_token)
 
     activity_text = {
-        'ca': 'He creat una nova comunitat: {}',
-        'es': 'He creado una comunidad nueva: {}',
-        'en': 'I\'ve just created a new community: {}',
+        'ca': u'He creat una nova comunitat: {}',
+        'es': u'He creado una comunidad nueva: {}',
+        'en': u'I\'ve just created a new community: {}',
     }
 
     maxclient.addActivity(activity_text[default_lang].format(content.Title().decode('utf-8')), contexts=[content.absolute_url(), ])
