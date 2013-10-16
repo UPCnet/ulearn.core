@@ -58,7 +58,7 @@ class IReservaBBB(form.Schema):
     invitats_espectadors = schema.TextLine(
         title=_(u"Invitats espectadors"),
         description=_(u"Llista d'emails dels convidats ESPECTADORS, separats per comes."),
-        required=True
+        required=False
     )
 
     # carrega = schema.Choice(
@@ -122,13 +122,19 @@ class reservaBBB(form.SchemaForm):
 
         req = requests.post(BBB_ENDPOINT, data=payload)
 
-        # Redirect back to the front page with a status message
-        if req.text:
-            IStatusMessage(self.request).addStatusMessage(
-                _(u"La reunió virtual ha estat creada."),
-                u"info"
-            )
-        else:
+        try:
+            # Redirect back to the front page with a status message
+            if int(req.text) > 0:
+                IStatusMessage(self.request).addStatusMessage(
+                    _(u"La reunió virtual ha estat creada."),
+                    u"info"
+                )
+            else:
+                IStatusMessage(self.request).addStatusMessage(
+                    _(u"Hi ha hagut algun problema i la reunió virtual no ha estat creada."),
+                    u"info"
+                )
+        except:
             IStatusMessage(self.request).addStatusMessage(
                 _(u"Hi ha hagut algun problema i la reunió virtual no ha estat creada."),
                 u"info"
