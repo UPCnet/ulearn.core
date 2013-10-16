@@ -278,7 +278,7 @@ msgstr "La comunitat ${comunitat} ha estat modificada."
 #. Default: "Create a new community"
 #: ../../../../../../ulearn.theme/ulearn/theme/portlets/templates/communities.pt:49
 msgid "createcommunity"
-msgstr "Crear una comunidad"
+msgstr "Crear una comunitat"
 
 #. Default: "eConnect"
 #: ../../../../ulearn.theme/ulearn/theme/portlets/econnect.py:19
@@ -342,7 +342,7 @@ msgstr "Més valorats"
 #. Default: "My communities"
 #: ../../../../../../ulearn.theme/ulearn/theme/portlets/templates/buttonbar.pt:24
 msgid "my_communities"
-msgstr "Mis comunidades"
+msgstr "Les meves comunitats"
 
 #. Default: "Create a new event"
 #: ../../../../ulearn.theme/ulearn/theme/portlets/templates/calendar.pt:97
@@ -399,7 +399,7 @@ msgstr "Calendari uLearn"
 #. Default: "Web collaboration"
 #: ../../../../ulearn.theme/ulearn/theme/portlets/templates/econnect.pt:8
 msgid "web_collaboration"
-msgstr "crear una sesión"
+msgstr "Crear una sessió"
 
 msgid "not_subscribed_to_any_community"
 msgstr "Encara no estas subscrit a cap comunitat."

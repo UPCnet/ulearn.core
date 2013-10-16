@@ -1,11 +1,17 @@
 Changelog
 =========
 
-1.0RC3 (unreleased)
+1.0RC4 (unreleased)
 -------------------
 
 - Nothing changed yet.
 
+
+1.0RC3 (2013-10-15)
+-------------------
+
+* Complete translations, fix hooks for community creation. [Victor Fernandez de Alba]
+* Return mo to gitignore list [Victor Fernandez de Alba]
 
 1.0RC2 (2013-10-01)
 -------------------
