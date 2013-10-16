@@ -25,8 +25,8 @@ class IReservaBBB(form.Schema):
 
         http://corronco.upc.edu:8088/webservices/addReservationNotification.php?
         servidor =corronco&inici=2013-04-02-13&durada=13&carrega=10&descripcio=D
-        escripcio&owner=u suari.creador@upcnet.es&invited_rw=moderator1%40upcnet
-        .es%2Cmoderator2%40upcnet.es&invited_ro=invited1%40upcnet.es%2Cinvited2%
+        escripcio&owner=u suari.creador@upcnet.es&invite_rw=moderator1%40upcnet
+        .es%2Cmoderator2%40upcnet.es&invite_ro=invited1%40upcnet.es%2Cinvited2%
         40gmail.com   --> exemple
     """
 
@@ -108,17 +108,17 @@ class reservaBBB(form.SchemaForm):
         str_invitats_convidats = data.get('invitats_convidats').replace(' ', '')
         str_invitats_espectadors = data.get('invitats_espectadors').replace(' ', '')
 
-        guests=data.get('invitats_convidats')
+        guests = data.get('invitats_convidats')
         session_load = len(guests.split(','))
 
         payload = dict(servidor=BBB_SERVER,
                        inici=str_start_date,
                        durada=data.get('durada'),
-                       carrega= session_load,
-                       descripcio=data.get('descripcio'),
+                       carrega=session_load,
+                       descripcio=data.get('nom_reunio'),
                        owner=user_email,
-                       invited_rw=str_invitats_convidats,
-                       invited_ro=str_invitats_espectadors,)
+                       invite_rw=str_invitats_convidats,
+                       invite_ro=str_invitats_espectadors,)
 
         req = requests.post(BBB_ENDPOINT, data=payload)
 
