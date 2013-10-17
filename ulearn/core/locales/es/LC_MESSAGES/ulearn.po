@@ -196,7 +196,7 @@ msgstr "Abierta"
 
 #: ../../../../ulearn.core/ulearn/core/content/community.py:61
 msgid "Organizative"
-msgstr "Organizada"
+msgstr "Organizativa"
 
 #. Default: "Fotos"
 #: ../../../../ulearn.theme/ulearn/theme/browser/viewlets_templates/folderbar.pt:48
@@ -430,3 +430,9 @@ msgstr "Suscripción eliminada correctamente"
 
 msgid "Successfully subscribed"
 msgstr "Suscrito correctamente"
+
+msgid "Create new meeting space"
+msgstr "Crear un espacio de reuniones"
+
+msgid "Meetings space"
+msgstr "Espacio de reuniones"

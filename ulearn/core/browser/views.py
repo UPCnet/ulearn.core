@@ -77,6 +77,8 @@ class reservaBBB(form.SchemaForm):
     schema = IReservaBBB
     ignoreContext = True
 
+    label = _(u"Create new meeting space")
+
     def update(self):
         super(reservaBBB, self).update()
         self.request.set('disable_border', True)

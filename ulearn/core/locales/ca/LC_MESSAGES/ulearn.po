@@ -444,3 +444,9 @@ msgstr "Subscripció eliminada correctament"
 
 msgid "Successfully subscribed"
 msgstr "Us heu subscrit correctament"
+
+msgid "Create new meeting space"
+msgstr "Crea un espai de reunions"
+
+msgid "Meetings space"
+msgstr "Espai de reunions"
