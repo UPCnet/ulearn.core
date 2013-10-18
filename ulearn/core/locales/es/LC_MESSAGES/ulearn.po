@@ -432,7 +432,7 @@ msgid "Successfully subscribed"
 msgstr "Suscrito correctamente"
 
 msgid "Create new meeting space"
-msgstr "Crear un espacio de reuniones"
+msgstr "Crear una reunión online"
 
 msgid "Meetings space"
-msgstr "Espacio de reuniones"
+msgstr "Reuniones online"
