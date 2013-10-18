@@ -1,11 +1,14 @@
 Changelog
 =========
 
-1.0RC4 (unreleased)
+1.0RC4 (2013-10-18)
 -------------------
 
-- Nothing changed yet.
-
+* New translations [Victor Fernandez de Alba]
+* Fix some views and add some translations [Victor Fernandez de Alba]
+* Adjusts to BBB form [Victor Fernandez de Alba]
+* Merge branch 'master' of github.com:UPCnet/ulearn.core [Victor Fernandez de Alba]
+* CAnvis BB [Victor Fernandez de Alba]
 
 1.0RC3 (2013-10-15)
 -------------------
