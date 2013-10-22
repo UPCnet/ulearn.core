@@ -90,9 +90,9 @@ def Added(content, event):
     }
 
     tipus = {
-        'ca': dict(Document=u'document', File=u'document', Image=u'foto', Link=u'enllaç'),
-        'es': dict(Document=u'documento', File=u'documento', Image=u'foto', Link=u'enlace'),
-        'en': dict(Document=u'document', File=u'document', Image=u'photo', Link=u'link'),
+        'ca': dict(Document=u'document', File=u'document', Image=u'foto', Link=u'enllaç', Event=u'esdeveniment'),
+        'es': dict(Document=u'documento', File=u'documento', Image=u'foto', Link=u'enlace', Event=u'evento'),
+        'en': dict(Document=u'document', File=u'document', Image=u'photo', Link=u'link', Event=u'event'),
     }
 
     parts = dict(type=tipus[default_lang].get(content.portal_type, ''),

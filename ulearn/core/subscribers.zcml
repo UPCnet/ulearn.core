@@ -29,4 +29,10 @@
              zope.app.container.interfaces.IObjectAddedEvent"
         />
 
+    <subscriber
+        handler=".hooks.Added"
+        for="plone.app.contenttypes.interfaces.IEvent
+             zope.app.container.interfaces.IObjectAddedEvent"
+        />
+
 </configure>

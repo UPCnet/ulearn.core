@@ -419,6 +419,11 @@ def initialize_community(community, event):
                          community_permissions
                          )
 
+    # Update twitter hashtag
+    maxclient.modifyContext(community.absolute_url(),
+                            dict(twitterHashtag=community.twitter_hashtag,
+                                 tags=['[COMMUNITY]']))
+
     # Subscribe owner
     maxclient.subscribe(url=community.absolute_url(), username=community.Creator())
 
@@ -445,12 +450,12 @@ def initialize_community(community, event):
         community.manage_setLocalRoles('AuthenticatedUsers', ['Reader'])
 
     # Create default content containers
-    documents = createContentInContainer(community, 'Folder', title=_(u"Documents"), checkConstraints=False)
-    links = createContentInContainer(community, 'Folder', title=_(u"Enllaços"), checkConstraints=False)
-    photos = createContentInContainer(community, 'Folder', title=_(u"Fotos"), checkConstraints=False)
+    documents = createContentInContainer(community, 'Folder', title=community.translate(_(u"Documents")), checkConstraints=False)
+    links = createContentInContainer(community, 'Folder', title=community.translate(_(u"Enllaços")), checkConstraints=False)
+    photos = createContentInContainer(community, 'Folder', title=community.translate(_(u"Fotos")), checkConstraints=False)
 
     # Create the default events container
-    events = createContentInContainer(community, 'Folder', title=_(u"Esdeveniments"), checkConstraints=False)
+    events = createContentInContainer(community, 'Folder', title=community.translate(_(u"Esdeveniments")), checkConstraints=False)
 
     # Set default view layout
     documents.setLayout('folder_summary_view')
@@ -552,6 +557,10 @@ def edit_community(community, event):
 
     for user in unsubscribe:
         maxclient.unsubscribe(url=community.absolute_url(), username=user)
+
+    # Update twitter hashtag
+    maxclient.modifyContext(community.absolute_url(),
+                            dict(twitterHashtag=community.twitter_hashtag))
 
     # Update unsubscribed user permissions
     community.manage_delLocalRoles(unsubscribe)
