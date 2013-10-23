@@ -1,11 +1,10 @@
 Changelog
 =========
 
-1.0RC5 (unreleased)
+1.0RC5 (2013-10-23)
 -------------------
 
-- Nothing changed yet.
-
+* subscribers and hooks [Victor Fernandez de Alba]
 
 1.0RC4 (2013-10-18)
 -------------------
