@@ -3,29 +3,33 @@ AVAILABLE_BADGES = [
     {
         "displayName": "Profile completed",
         "id": "profilecomplete",
+        "class": "1",
         "png": "",
-        "icon": "trophy",
+        "icon": "user",
         "awarded": False
     },
     {
         "displayName": "Winwin 1",
         "id": "winwin1",
+        "class": "2",
         "png": "",
-        "icon": "certificate",
+        "icon": "thumbs-up",
         "awarded": False
     },
     {
         "displayName": "Winwin 2",
         "id": "winwin2",
+        "class": "3",
         "png": "",
-        "icon": "star",
+        "icon": "trophy",
         "awarded": False
     },
     {
         "displayName": "Winwin 3",
         "id": "winwin3",
+        "class": "1",
         "png": "",
-        "icon": "flag",
+        "icon": "thumbs-up",
         "awarded": False
     },
 ]
