@@ -4,7 +4,7 @@ AVAILABLE_BADGES = [
         "displayName": "Profile completed",
         "id": "profilecomplete",
         "class": "1",
-        "png": "",
+        "png": "badge1",
         "icon": "user",
         "awarded": False
     },
@@ -12,7 +12,7 @@ AVAILABLE_BADGES = [
         "displayName": "Winwin 1",
         "id": "winwin1",
         "class": "2",
-        "png": "",
+        "png": "badge2",
         "icon": "thumbs-up",
         "awarded": False
     },
@@ -20,7 +20,7 @@ AVAILABLE_BADGES = [
         "displayName": "Winwin 2",
         "id": "winwin2",
         "class": "3",
-        "png": "",
+        "png": "badge3",
         "icon": "trophy",
         "awarded": False
     },
@@ -28,7 +28,7 @@ AVAILABLE_BADGES = [
         "displayName": "Winwin 3",
         "id": "winwin3",
         "class": "1",
-        "png": "",
+        "png": "badge1",
         "icon": "thumbs-up",
         "awarded": False
     },

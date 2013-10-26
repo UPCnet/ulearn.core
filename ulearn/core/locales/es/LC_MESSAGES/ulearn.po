@@ -51,6 +51,10 @@ msgstr "Fotos"
 msgid "Esdeveniments"
 msgstr "Eventos"
 
+#: ../../../../ulearn.core/ulearn/core/content/community.py:310
+msgid "comunitat_existeix"
+msgstr "La comunidad ${comunitat} ya existe, por favor elija otro nombre."
+
 #: ../../../../ulearn.core/ulearn/core/content/community.py:244
 msgid "comunitat_creada"
 msgstr "La comunidad ${comunitat} ha sido creada."

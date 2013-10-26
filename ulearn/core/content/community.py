@@ -300,32 +300,40 @@ class communityAdder(form.SchemaForm):
         community_type = data['community_type']
         twitter_hashtag = data['twitter_hashtag']
 
-        new_comunitat = createContentInContainer(
-            self.context,
-            'ulearn.community',
-            title=nom,
-            description=description,
-            subscribed=subscribed,
-            image=image,
-            community_type=community_type,
-            twitter_hashtag=twitter_hashtag,
-            checkConstraints=False)
+        portal = getSite()
+        pc = getToolByName(portal, 'portal_catalog')
+        result = pc.unrestrictedSearchResults(portal_type='ulearn.community', Title=nom)
 
-        # Redirect back to the front page with a status message
+        if result:
+            msgid = _(u"comunitat_existeix", default=u'La comunitat ${comunitat} ja existeix, si us plau, escolliu un altre nom.', mapping={u"comunitat": nom})
 
-        # IStatusMessage(self.request).addStatusMessage(
-        #     _(u'La comunitat {} ha estat creada.').format(nom),
-        #     u"info"
-        # )
+            translated = self.context.translate(msgid)
 
-        msgid = _(u"comunitat_creada", default=u'La comunitat ${comunitat} ha estat creada.', mapping={u"comunitat": nom})
+            messages = IStatusMessage(self.request)
+            messages.addStatusMessage(translated, type="info")
 
-        translated = self.context.translate(msgid)
+            self.request.response.redirect('{}/++add++ulearn.community'.format(portal.absolute_url()))
+        else:
+            new_comunitat = createContentInContainer(
+                self.context,
+                'ulearn.community',
+                title=nom,
+                description=description,
+                subscribed=subscribed,
+                image=image,
+                community_type=community_type,
+                twitter_hashtag=twitter_hashtag,
+                checkConstraints=False)
 
-        messages = IStatusMessage(self.request)
-        messages.addStatusMessage(translated, type="info")
+            # Redirect back to the front page with a status message
+            msgid = _(u"comunitat_creada", default=u'La comunitat ${comunitat} ha estat creada.', mapping={u"comunitat": nom})
 
-        self.request.response.redirect(new_comunitat.absolute_url())
+            translated = self.context.translate(msgid)
+
+            messages = IStatusMessage(self.request)
+            messages.addStatusMessage(translated, type="info")
+
+            self.request.response.redirect(new_comunitat.absolute_url())
 
 
 class communityEdit(form.SchemaForm):
@@ -367,32 +375,42 @@ class communityEdit(form.SchemaForm):
         community_type = data['community_type']
         twitter_hashtag = data['twitter_hashtag']
 
-        # Set new values in community
-        self.context.title = nom
-        self.context.description = description
-        self.context.subscribed = subscribed
-        self.context.community_type = community_type
-        self.context.twitter_hashtag = twitter_hashtag
-        if image:
-            self.context.image = image
+        portal = getSite()
+        pc = getToolByName(portal, 'portal_catalog')
+        result = pc.unrestrictedSearchResults(portal_type='ulearn.community', Title=nom)
 
-        self.context.reindexObject()
+        if result:
+            msgid = _(u"comunitat_existeix", default=u'La comunitat ${comunitat} ja existeix, si us plau, escolliu un altre nom.', mapping={u"comunitat": nom})
 
-        notify(ObjectModifiedEvent(self.context))
+            translated = self.context.translate(msgid)
 
-        # IStatusMessage(self.request).addStatusMessage(
-        #     _(u'La comunitat {} ha estat modificada.').format(nom),
-        #     u"info"
-        # )
+            messages = IStatusMessage(self.request)
+            messages.addStatusMessage(translated, type="info")
 
-        msgid = _(u"comunitat_modificada", default=u'La comunitat ${comunitat} ha estat modificada.', mapping={u"comunitat": nom})
+            self.request.response.redirect('{}/edit'.format(self.context.absolute_url()))
 
-        translated = self.context.translate(msgid)
+        else:
+            # Set new values in community
+            self.context.title = nom
+            self.context.description = description
+            self.context.subscribed = subscribed
+            self.context.community_type = community_type
+            self.context.twitter_hashtag = twitter_hashtag
+            if image:
+                self.context.image = image
 
-        messages = IStatusMessage(self.request)
-        messages.addStatusMessage(translated, type="info")
+            self.context.reindexObject()
 
-        self.request.response.redirect(self.context.absolute_url())
+            notify(ObjectModifiedEvent(self.context))
+
+            msgid = _(u"comunitat_modificada", default=u'La comunitat ${comunitat} ha estat modificada.', mapping={u"comunitat": nom})
+
+            translated = self.context.translate(msgid)
+
+            messages = IStatusMessage(self.request)
+            messages.addStatusMessage(translated, type="info")
+
+            self.request.response.redirect(self.context.absolute_url())
 
 
 @grok.subscribe(ICommunity, IObjectAddedEvent)
@@ -450,12 +468,12 @@ def initialize_community(community, event):
         community.manage_setLocalRoles('AuthenticatedUsers', ['Reader'])
 
     # Create default content containers
-    documents = createContentInContainer(community, 'Folder', title=community.translate(_(u"Documents")), checkConstraints=False)
-    links = createContentInContainer(community, 'Folder', title=community.translate(_(u"Enllaços")), checkConstraints=False)
-    photos = createContentInContainer(community, 'Folder', title=community.translate(_(u"Fotos")), checkConstraints=False)
+    documents = createContentInContainer(community, 'Folder', title=community.translate(_(u"Documents")), id='documents', checkConstraints=False)
+    links = createContentInContainer(community, 'Folder', title=community.translate(_(u"Enllaços")), id='links', checkConstraints=False)
+    photos = createContentInContainer(community, 'Folder', title=community.translate(_(u"Fotos")), id='photos', checkConstraints=False)
 
     # Create the default events container
-    events = createContentInContainer(community, 'Folder', title=community.translate(_(u"Esdeveniments")), checkConstraints=False)
+    events = createContentInContainer(community, 'Folder', title=community.translate(_(u"Esdeveniments")), id='events', checkConstraints=False)
 
     # Set default view layout
     documents.setLayout('folder_summary_view')
