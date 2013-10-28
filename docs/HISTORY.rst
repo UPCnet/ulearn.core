@@ -1,11 +1,10 @@
 Changelog
 =========
 
-1.0RC7 (unreleased)
+1.0RC7 (2013-10-28)
 -------------------
 
-- Nothing changed yet.
-
+* New badge definition [Victor Fernandez de Alba]
 
 1.0RC6 (2013-10-28)
 -------------------
