@@ -28,7 +28,7 @@ AVAILABLE_BADGES = [
         "displayName": "Winwin 3",
         "id": "winwin3",
         "class": "1",
-        "png": "badge1",
+        "png": "badge4",
         "icon": "thumbs-up",
         "awarded": False
     },
