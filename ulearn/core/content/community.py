@@ -379,7 +379,7 @@ class communityEdit(form.SchemaForm):
         pc = getToolByName(portal, 'portal_catalog')
         result = pc.unrestrictedSearchResults(portal_type='ulearn.community', Title=nom)
 
-        if result:
+        if result and self.context.title != nom:
             msgid = _(u"comunitat_existeix", default=u'La comunitat ${comunitat} ja existeix, si us plau, escolliu un altre nom.', mapping={u"comunitat": nom})
 
             translated = self.context.translate(msgid)

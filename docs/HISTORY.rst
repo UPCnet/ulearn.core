@@ -1,11 +1,12 @@
 Changelog
 =========
 
-1.0RC6 (unreleased)
+1.0RC6 (2013-10-28)
 -------------------
 
-- Nothing changed yet.
-
+* Migration for the unified folder names. [Victor Fernandez de Alba]
+* New badges. Prevent users to add and edit Title communities with an existing one. [Victor Fernandez de Alba]
+* New badges definition [Victor Fernandez de Alba]
 
 1.0RC5 (2013-10-23)
 -------------------
