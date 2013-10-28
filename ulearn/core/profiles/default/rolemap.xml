@@ -7,5 +7,15 @@
       <role name="WebMaster"/>
       <role name="Contributor"/>
     </permission>
+    <permission name="Delete objects" acquire="True">
+      <role name="Owner"/>
+      <role name="Manager"/>
+      <role name="Editor"/>
+      <role name="Contributor"/>
+    </permission>
+    <permission name="Plone Site Setup: Users and Groups" acquire="True">
+      <role name="Manager"/>
+      <role name="WebMaster"/>
+    </permission>
   </permissions>
 </rolemap>
