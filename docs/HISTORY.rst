@@ -1,6 +1,12 @@
 Changelog
 =========
 
+1.0RC9 (unreleased)
+-------------------
+
+- Nothing changed yet.
+
+
 1.0RC8 (2013-10-29)
 -------------------
 
