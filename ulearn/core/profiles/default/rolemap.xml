@@ -17,5 +17,14 @@
       <role name="Manager"/>
       <role name="WebMaster"/>
     </permission>
+    <permission name="Plone Site Setup: Overview" acquire="True">
+      <role name="Manager"/>
+      <role name="WebMaster"/>
+    </permission>
+    <permission name="Plone Site Setup: uLearn" acquire="True">
+      <role name="Manager"/>
+      <role name="Site Administrator"/>
+      <role name="WebMaster"/>
+    </permission>
   </permissions>
 </rolemap>

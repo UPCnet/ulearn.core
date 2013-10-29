@@ -14,6 +14,12 @@
       title="Ulearn: Add Community"
       />
 
+    <permission id="ulearn.core.setup"
+                title="Plone Site Setup: uLearn">
+      <role name="Manager"/>
+      <role name="Site Administrator"/>
+    </permission>
+
     <grok:grok package="." />
 
     <i18n:registerTranslations directory="locales" />
@@ -29,7 +35,7 @@
       name="ulearn-controlpanel"
       for="Products.CMFPlone.interfaces.IPloneSiteRoot"
       class=".controlpanel.UlearnControlPanel"
-      permission="cmf.ManagePortal"
+      permission="ulearn.core.setup"
       />
 
     <genericsetup:importStep
