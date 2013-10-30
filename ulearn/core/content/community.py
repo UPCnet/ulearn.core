@@ -439,8 +439,10 @@ def initialize_community(community, event):
 
     # Update twitter hashtag
     maxclient.modifyContext(community.absolute_url(),
-                            dict(twitterHashtag=community.twitter_hashtag,
-                                 tags=['[COMMUNITY]']))
+                            dict(twitterHashtag=community.twitter_hashtag))
+
+    # Update community tag
+    maxclient.add_tags_to_context(community.absolute_url(), ['[COMMUNITY]'])
 
     # Subscribe owner
     maxclient.subscribe(url=community.absolute_url(), username=community.Creator())

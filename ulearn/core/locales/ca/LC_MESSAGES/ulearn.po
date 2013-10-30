@@ -446,7 +446,7 @@ msgid "Successfully subscribed"
 msgstr "Us heu subscrit correctament"
 
 msgid "Create new meeting space"
-msgstr "Crea un espai de reunions"
+msgstr "Crea una reunió online"
 
 msgid "Meetings space"
-msgstr "Espai de reunions"
+msgstr "Reunions online"
