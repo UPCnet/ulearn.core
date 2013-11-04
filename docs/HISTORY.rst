@@ -1,11 +1,11 @@
 Changelog
 =========
 
-1.0RC9 (unreleased)
+1.0RC9 (2013-11-04)
 -------------------
 
-- Nothing changed yet.
-
+* Setup parametrization of new sites [Victor Fernandez de Alba]
+* Update community tag to [COMMUNITY] [Victor Fernandez de Alba]
 
 1.0RC8 (2013-10-29)
 -------------------
