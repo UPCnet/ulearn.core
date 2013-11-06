@@ -470,9 +470,14 @@ def initialize_community(community, event):
         community.manage_setLocalRoles('AuthenticatedUsers', ['Reader'])
 
     # Create default content containers
-    documents = createContentInContainer(community, 'Folder', title=community.translate(_(u"Documents")), id='documents', checkConstraints=False)
-    links = createContentInContainer(community, 'Folder', title=community.translate(_(u"Enllaços")), id='links', checkConstraints=False)
-    photos = createContentInContainer(community, 'Folder', title=community.translate(_(u"Fotos")), id='photos', checkConstraints=False)
+    documents = createContentInContainer(community, 'Folder', title='documents', checkConstraints=False)
+    links = createContentInContainer(community, 'Folder', title='links', checkConstraints=False)
+    photos = createContentInContainer(community, 'Folder', title='photos', checkConstraints=False)
+
+    # Set the correct title, translated
+    documents.setTitle(community.translate(_(u"Documents")))
+    links.setTitle(community.translate(_(u"Enllaços")))
+    photos.setTitle(community.translate(_(u"Fotos")))
 
     # Create the default events container
     events = createContentInContainer(community, 'Folder', title=community.translate(_(u"Esdeveniments")), id='events', checkConstraints=False)
