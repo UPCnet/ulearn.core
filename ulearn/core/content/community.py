@@ -472,15 +472,16 @@ def initialize_community(community, event):
     # Create default content containers
     documents = createContentInContainer(community, 'Folder', title='documents', checkConstraints=False)
     links = createContentInContainer(community, 'Folder', title='links', checkConstraints=False)
-    photos = createContentInContainer(community, 'Folder', title='photos', checkConstraints=False)
+    photos = createContentInContainer(community, 'Folder', title='media', checkConstraints=False)
 
     # Set the correct title, translated
     documents.setTitle(community.translate(_(u"Documents")))
     links.setTitle(community.translate(_(u"Enllaços")))
     photos.setTitle(community.translate(_(u"Fotos")))
 
-    # Create the default events container
-    events = createContentInContainer(community, 'Folder', title=community.translate(_(u"Esdeveniments")), id='events', checkConstraints=False)
+    # Create the default events container and set title
+    events = createContentInContainer(community, 'Folder', title='events', checkConstraints=False)
+    events.setTitle(community.translate(_(u"Esdeveniments")))
 
     # Set default view layout
     documents.setLayout('folder_summary_view')
