@@ -1,11 +1,11 @@
 Changelog
 =========
 
-1.0RC10 (unreleased)
---------------------
+1.0 (2013-11-07)
+----------------
 
-- Nothing changed yet.
-
+* Fix folder creation (2) [Victor Fernandez de Alba]
+* Fix community folder creation [Victor Fernandez de Alba]
 
 1.0RC9 (2013-11-04)
 -------------------
