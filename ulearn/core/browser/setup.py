@@ -43,8 +43,8 @@ class setupHomePage(grok.View):
 
         target_manager = queryUtility(IPortletManager, name='genweb.portlets.HomePortletManager3', context=frontpage)
         target_manager_assignments = getMultiAdapter((frontpage, target_manager), IPortletAssignmentMapping)
-        target_manager_assignments['max'] = maxAssignment()
         target_manager_assignments['buttons'] = homebuttonbarAssignment()
+        target_manager_assignments['max'] = maxAssignment()
 
         portletManager = getUtility(IPortletManager, 'genweb.portlets.HomePortletManager3')
         spanstorage = getMultiAdapter((frontpage, portletManager), ISpanStorage)
