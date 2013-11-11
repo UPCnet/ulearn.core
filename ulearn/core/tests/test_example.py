@@ -21,5 +21,6 @@ class TestExample(unittest.TestCase):
         """
         pid = 'ulearn.core'
         installed = [p['id'] for p in self.qi_tool.listInstalledProducts()]
+        import ipdb;ipdb.set_trace()
         self.assertTrue(pid in installed,
                         'package appears not to have been installed')

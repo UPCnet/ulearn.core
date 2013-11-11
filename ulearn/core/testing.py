@@ -22,8 +22,11 @@ class UlearncoreLayer(PloneSandboxLayer):
             context=configurationContext
         )
 
-        # Install products that use an old-style initialize() function
-        #z2.installProduct(app, 'Products.PloneFormGen')
+        # prepare installing plone.app.contenttypes
+        z2.installProduct(app, 'Products.DateRecurringIndex')
+
+        # Needed to make p.a.iterate permissions available as g.core needs them
+        import plone.app.iterate.permissions
 
 #    def tearDownZope(self, app):
 #        # Uninstall products installed above

@@ -83,6 +83,14 @@ def setupVarious(context):
         frontpage.language = pl.getDefaultLanguage()
         frontpage.reindexObject()
         logger.info("DX default content site setup successfully.")
+    elif not front_page:
+        frontpage = createContentInContainer(portal, 'Document', title=u"front-page", checkConstraints=False)
+        alsoProvides(frontpage, IHomePage)
+        frontpage.exclude_from_nav = True
+        frontpage.language = pl.getDefaultLanguage()
+        frontpage.reindexObject()
+        logger.info("DX default content site setup successfully.")
+
     # Set the default page to the homepage view
     portal.setDefaultPage('homepage')
     portal['front-page'].manage_setLocalRoles('AuthenticatedUsers', ['Reader'])

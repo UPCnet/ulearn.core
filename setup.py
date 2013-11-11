@@ -30,13 +30,14 @@ setup(name='ulearn.core',
       zip_safe=False,
       install_requires=[
           'setuptools',
+          'genweb.core',
           'ulearn.theme',
           'mrs.max',
           'pas.plugins.osiris',
           'plone.app.dexterity',
           'plone.app.contenttypes',
       ],
-      extras_require={'test': ['plone.app.testing']},
+      extras_require={'test': ['plone.app.testing', 'Products.PloneLDAP']},
       entry_points="""
       # -*- Entry points: -*-
       [z3c.autoinclude.plugin]
