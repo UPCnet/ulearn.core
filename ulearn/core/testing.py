@@ -3,6 +3,10 @@ from plone.app.testing import applyProfile
 from plone.app.testing import PLONE_FIXTURE
 from plone.app.testing import IntegrationTesting
 from plone.app.testing import FunctionalTesting
+from plone.app.testing import TEST_USER_ID
+from plone.app.testing import setRoles
+from plone.app.testing import login
+from plone.app.testing import logout
 
 from plone.testing import z2
 
@@ -34,6 +38,17 @@ class UlearncoreLayer(PloneSandboxLayer):
 
     def setUpPloneSite(self, portal):
         applyProfile(portal, 'ulearn.core:default')
+
+        portal.acl_users.userFolderAddUser('admin',
+                                           'secret',
+                                           ['Manager'],
+                                           [])
+        portal.acl_users.userFolderAddUser('user', 'secret', ['Member'], [])
+        portal.acl_users.userFolderAddUser('poweruser', 'secret', ['Member', 'WebMaster'], [])
+        login(portal, 'admin')
+        portal.portal_workflow.setDefaultChain("genweb_intranet")
+        logout()
+        # setRoles(portal, TEST_USER_ID, ['Manager'])
 
 ULEARN_CORE_FIXTURE = UlearncoreLayer()
 ULEARN_CORE_INTEGRATION_TESTING = IntegrationTesting(

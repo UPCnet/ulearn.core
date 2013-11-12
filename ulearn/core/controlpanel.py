@@ -22,7 +22,9 @@ class IUlearnControlPanelSettings(model.Schema):
 
     model.fieldset('Specific',
                   _(u'Specific'),
-                  fields=['main_color', 'secondary_color', 'maxui_form_bg',
+                  fields=['main_color', 'secondary_color', 'background_property',
+                          'buttons_color_primary', 'buttons_color_secondary',
+                          'maxui_form_bg',
                           'alt_gradient_start_color', 'alt_gradient_end_color'])
 
     campus_url = schema.TextLine(
@@ -61,22 +63,13 @@ class IUlearnControlPanelSettings(model.Schema):
         default=u"500",
     )
 
-    apply_alternate_theme = schema.Bool(
-        title=_(u"apply_alternate_theme",
-                default=u"Aplicar colors alternatius?"),
-        description=_(u"help_apply_alternate_theme",
-                default=u"Aplicar els colors alternatius definits a continuació."),
-        required=False,
-        default=False,
-    )
-
     main_color = schema.TextLine(
         title=_(u"main_color",
                 default=u"Color principal"),
         description=_(u"help_main_color",
                 default=u"Aquest és el color principal de l'espai."),
-        required=False,
-        default=u"#017000",
+        required=True,
+        default=u"#f58d3d",
     )
 
     secondary_color = schema.TextLine(
@@ -84,8 +77,8 @@ class IUlearnControlPanelSettings(model.Schema):
                 default=u"Color secundari"),
         description=_(u"help_secondary_color",
                 default=u"Aquest és el color secundari de l'espai."),
-        required=False,
-        default=u"#24A33B",
+        required=True,
+        default=u"#f58d3d",
     )
 
     maxui_form_bg = schema.TextLine(
@@ -93,8 +86,8 @@ class IUlearnControlPanelSettings(model.Schema):
                 default=u"Color del fons del widget de MAX."),
         description=_(u"help_maxui_form_bg",
                 default=u"Aquest és el color del fons del widget de MAX."),
-        required=False,
-        default=u"#DEDED6",
+        required=True,
+        default=u"#34495c",
     )
 
     alt_gradient_start_color = schema.TextLine(
@@ -102,8 +95,8 @@ class IUlearnControlPanelSettings(model.Schema):
                 default=u"Color inicial dels gradients."),
         description=_(u"help_alt_gradient_start_color",
                 default=u"Aquest és el color inicial dels gradients."),
-        required=False,
-        default=u"#27B040",
+        required=True,
+        default=u"#f58d3d",
     )
 
     alt_gradient_end_color = schema.TextLine(
@@ -111,8 +104,35 @@ class IUlearnControlPanelSettings(model.Schema):
                 default=u"Color final dels gradients"),
         description=_(u"help_alt_gradient_end_color",
                 default=u"Aquest és el color final dels gradients."),
-        required=False,
-        default=u"#229A38",
+        required=True,
+        default=u"#f58d3d",
+    )
+
+    background_property = schema.TextLine(
+        title=_(u"background_property",
+                default=u"Color de fons global"),
+        description=_(u"help_background_property",
+                default=u"Aquest és el color de fons global o la propietat corresponent."),
+        required=True,
+        default=u"#eae9e4",
+    )
+
+    buttons_color_primary = schema.TextLine(
+        title=_(u"buttons_color_primary",
+                default=u"Color primari dels botons"),
+        description=_(u"help_buttons_color_primary",
+                default=u"Aquest és el color primari dels botons."),
+        required=True,
+        default=u"#34495E",
+    )
+
+    buttons_color_secondary = schema.TextLine(
+        title=_(u"buttons_color_secondary",
+                default=u"Color secundari dels botons"),
+        description=_(u"help_buttons_color_secondary",
+                default=u"Aquest és el color secundari dels botons."),
+        required=True,
+        default=u"#34495E",
     )
 
 

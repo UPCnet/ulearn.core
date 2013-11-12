@@ -37,7 +37,10 @@ setup(name='ulearn.core',
           'plone.app.dexterity',
           'plone.app.contenttypes',
       ],
-      extras_require={'test': ['plone.app.testing', 'Products.PloneLDAP']},
+      extras_require={'test': ['plone.app.testing',
+                               'Products.PloneLDAP',
+                               'plone.app.testing[robot]>=4.2.2',
+                               'httpretty']},
       entry_points="""
       # -*- Entry points: -*-
       [z3c.autoinclude.plugin]

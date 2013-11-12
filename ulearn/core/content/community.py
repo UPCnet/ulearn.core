@@ -552,6 +552,13 @@ def initialize_community(community, event):
     blacklist = getMultiAdapter((events, right_manager), ILocalPortletAssignmentManager)
     blacklist.setBlacklistStatus(CONTEXT_CATEGORY, True)
 
+    # Reindex all created objects
+    community.reindexObject()
+    documents.reindexObject()
+    links.reindexObject()
+    photos.reindexObject()
+    events.reindexObject()
+
 
 @grok.subscribe(ICommunity, IObjectModifiedEvent)
 def edit_community(community, event):
@@ -590,6 +597,9 @@ def edit_community(community, event):
 
     # Update unsubscribed user permissions
     community.manage_delLocalRoles(unsubscribe)
+
+    # Reindex all operations in object
+    community.reindexObject()
 
 
 @grok.subscribe(ICommunity, IObjectRemovedEvent)

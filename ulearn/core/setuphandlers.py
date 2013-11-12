@@ -93,6 +93,9 @@ def setupVarious(context):
 
     # Set the default page to the homepage view
     portal.setDefaultPage('homepage')
-    portal['front-page'].manage_setLocalRoles('AuthenticatedUsers', ['Reader'])
 
+    # Allow connected users to view the homepage by allowing them either on
+    # Plone site and in the front-page (HomePortlets placeholder)
+    portal.manage_setLocalRoles('AuthenticatedUsers', ['Reader'])
+    portal['front-page'].manage_setLocalRoles('AuthenticatedUsers', ['Reader'])
     transaction.commit()
