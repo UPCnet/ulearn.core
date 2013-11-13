@@ -1,5 +1,8 @@
 import unittest2 as unittest
 from AccessControl import Unauthorized
+from zope.event import notify
+from zope.lifecycleevent import ObjectModifiedEvent
+
 from plone.app.testing import login
 from plone.app.testing import logout
 from plone.app.testing import setRoles
@@ -163,4 +166,46 @@ class TestExample(unittest.TestCase):
         pc = getToolByName(self.portal, 'portal_catalog')
 
         self.assertEquals(len(pc.searchResults(portal_type='Event')), 1)
-        # self.assertRaises(Unauthorized, self.portal.restrictedTraverse, 'community-test/events/test-event')
+
+    def test_events_visibility_open_communities_switch_to_closed(self):
+        nom = u'community-test'
+        description = 'Blabla'
+        subscribed = []
+        image = None
+        community_type = 'Open'
+        twitter_hashtag = 'helou'
+
+        login(self.portal, 'poweruser')
+
+        self.portal.invokeFactory('ulearn.community', 'community-test',
+                                 title=nom,
+                                 description=description,
+                                 subscribed=subscribed,
+                                 image=image,
+                                 community_type=community_type,
+                                 twitter_hashtag=twitter_hashtag)
+
+        new_comunitat = self.portal['community-test']
+
+        new_comunitat['events'].invokeFactory('Event', 'test-event', title="Da event")
+        logout()
+
+        login(self.portal, 'user')
+
+        pc = getToolByName(self.portal, 'portal_catalog')
+
+        self.assertEquals(len(pc.searchResults(portal_type='Event')), 1)
+
+        logout()
+
+        login(self.portal, 'poweruser')
+
+        new_comunitat.community_type = 'Closed'
+        notify(ObjectModifiedEvent(new_comunitat))
+
+        logout()
+
+        login(self.portal, 'user')
+
+        self.assertFalse(pc.searchResults(portal_type='Event'))
+        self.assertRaises(Unauthorized, self.portal.restrictedTraverse, 'community-test/events/test-event')

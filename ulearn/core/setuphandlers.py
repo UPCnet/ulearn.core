@@ -98,4 +98,9 @@ def setupVarious(context):
     # Plone site and in the front-page (HomePortlets placeholder)
     portal.manage_setLocalRoles('AuthenticatedUsers', ['Reader'])
     portal['front-page'].manage_setLocalRoles('AuthenticatedUsers', ['Reader'])
+
+    # Delete original 'Events' folder for not to colision with the community ones
+    if getattr(portal, 'events', False):
+        portal.manage_delObjects('events')
+
     transaction.commit()

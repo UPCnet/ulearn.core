@@ -600,6 +600,7 @@ def edit_community(community, event):
 
     # Reindex all operations in object
     community.reindexObject()
+    community.reindexObjectSecurity()
 
 
 @grok.subscribe(ICommunity, IObjectRemovedEvent)

@@ -23,6 +23,7 @@ class IUlearnControlPanelSettings(model.Schema):
     model.fieldset('Specific',
                   _(u'Specific'),
                   fields=['main_color', 'secondary_color', 'background_property',
+                          'background_color',
                           'buttons_color_primary', 'buttons_color_secondary',
                           'maxui_form_bg',
                           'alt_gradient_start_color', 'alt_gradient_end_color'])
@@ -112,6 +113,15 @@ class IUlearnControlPanelSettings(model.Schema):
         title=_(u"background_property",
                 default=u"Color de fons global"),
         description=_(u"help_background_property",
+                default=u"Aquest és la propietat de CSS de background."),
+        required=True,
+        default=u"transparent",
+    )
+
+    background_color = schema.TextLine(
+        title=_(u"background_color",
+                default=u"Color de fons global"),
+        description=_(u"help_background_color",
                 default=u"Aquest és el color de fons global o la propietat corresponent."),
         required=True,
         default=u"#eae9e4",
