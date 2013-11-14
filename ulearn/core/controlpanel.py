@@ -1,13 +1,32 @@
 # -*- coding: utf-8 -*-
+from five import grok
 from zope import schema
 from z3c.form import button
+from zope.schema.interfaces import IContextSourceBinder
+from zope.schema.vocabulary import SimpleVocabulary
+from zope.schema.interfaces import IVocabularyFactory
 
 from plone.supermodel import model
+from plone.directives import dexterity
 from plone.app.registry.browser import controlpanel
 
 from Products.statusmessages.interfaces import IStatusMessage
 
 from ulearn.core import _
+
+
+class availableLanguages(object):
+    grok.implements(IVocabularyFactory)
+
+    def __call__(self, context):
+        terms = []
+        terms.append(SimpleVocabulary.createTerm(u'Català', 'ca', _(u'Català')))
+        terms.append(SimpleVocabulary.createTerm(u'Castellà', 'es', _(u'Castellà')))
+        terms.append(SimpleVocabulary.createTerm(u'English', 'en', _(u'English')))
+
+        return SimpleVocabulary(terms)
+
+grok.global_utility(availableLanguages, name=u"ulearn.core.language")
 
 
 class IUlearnControlPanelSettings(model.Schema):
@@ -27,6 +46,10 @@ class IUlearnControlPanelSettings(model.Schema):
                           'buttons_color_primary', 'buttons_color_secondary',
                           'maxui_form_bg',
                           'alt_gradient_start_color', 'alt_gradient_end_color'])
+
+    model.fieldset('UPCnet only',
+                  _(u'UPCnet only'),
+                  fields=['language'])
 
     campus_url = schema.TextLine(
         title=_(u"campus_url",
@@ -111,7 +134,7 @@ class IUlearnControlPanelSettings(model.Schema):
 
     background_property = schema.TextLine(
         title=_(u"background_property",
-                default=u"Color de fons global"),
+                default=u"Propietat de fons global"),
         description=_(u"help_background_property",
                 default=u"Aquest és la propietat de CSS de background."),
         required=True,
@@ -143,6 +166,17 @@ class IUlearnControlPanelSettings(model.Schema):
                 default=u"Aquest és el color secundari dels botons."),
         required=True,
         default=u"#34495E",
+    )
+
+    dexterity.write_permission(language='zope2.ViewManagementScreens')
+    language = schema.Choice(
+        title=_(u"language",
+                default=u"Idioma de l'espai"),
+        description=_(u"help_language",
+                default=u"Aquest és l'idioma de l'espai, que es configura quan el paquet es reinstala."),
+        required=True,
+        values=['ca', 'es', 'en'],
+        default='es',
     )
 
 

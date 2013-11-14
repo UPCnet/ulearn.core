@@ -1,22 +1,8 @@
 from five import grok
-from Acquisition import aq_parent
-from Acquisition import aq_inner
-from zope.component import queryUtility
-from zope.component import getUtility
-from zope.component import getMultiAdapter
 from zope.component.hooks import getSite
-
-from plone.portlets.interfaces import IPortletManager
-from plone.portlets.interfaces import IPortletAssignmentMapping
 
 from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.interfaces import IPloneSiteRoot
-from Products.PloneLDAP.factory import manage_addPloneLDAPMultiPlugin
-from Products.LDAPUserFolder.LDAPUserFolder import LDAPUserFolder
-from Products.PluggableAuthService.interfaces.plugins import IUserAdderPlugin
-from Products.PlonePAS.interfaces.group import IGroupManagement
-
-from genweb.portlets.browser.manager import ISpanStorage
 
 import inspect
 import importlib

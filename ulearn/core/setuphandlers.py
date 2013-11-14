@@ -1,8 +1,16 @@
 # -*- coding: utf-8 -*-
 from zope.interface import alsoProvides
+from zope.component import queryUtility
+from zope.component import getMultiAdapter
+from plone.registry.interfaces import IRegistry
 from plone.dexterity.utils import createContentInContainer
+from plone.portlets.interfaces import IPortletManager
+from plone.portlets.interfaces import IPortletAssignmentMapping
+
 from Products.CMFCore.utils import getToolByName
+
 from genweb.core.interfaces import IHomePage
+from ulearn.core.controlpanel import IUlearnControlPanelSettings
 
 import logging
 import transaction
@@ -99,8 +107,36 @@ def setupVarious(context):
     portal.manage_setLocalRoles('AuthenticatedUsers', ['Reader'])
     portal['front-page'].manage_setLocalRoles('AuthenticatedUsers', ['Reader'])
 
+    # Set mailhost
+    mh = getToolByName(portal, 'MailHost')
+    mh.smtp_host = 'localhost'
+    portal.email_from_name = 'uLearn Administrator'
+    portal.email_from_address = 'no-reply@upcnet.es'
+
     # Delete original 'Events' folder for not to colision with the community ones
     if getattr(portal, 'events', False):
         portal.manage_delObjects('events')
+
+    # Add portlets programatically as it seems that there is some bug in the
+    # portlets.xml GS when reinstalling the right column
+    target_manager = queryUtility(IPortletManager, name='plone.rightcolumn', context=portal)
+    target_manager_assignments = getMultiAdapter((portal, target_manager), IPortletAssignmentMapping)
+
+    if 'stats' not in target_manager_assignments.keys():
+        from ulearn.theme.portlets.calendar import Assignment as calendarAssignment
+        from ulearn.theme.portlets.stats import Assignment as statsAssignment
+        from ulearn.theme.portlets.econnect import Assignment as econnectAssignment
+
+        target_manager_assignments['calendar'] = calendarAssignment()
+        target_manager_assignments['stats'] = statsAssignment()
+        target_manager_assignments['econnect'] = econnectAssignment()
+
+    # Recall the last language set for this instance in case of reinstall
+    registry = queryUtility(IRegistry)
+    settings = registry.forInterface(IUlearnControlPanelSettings)
+
+    pl = getToolByName(portal, 'portal_languages')
+    pl.setDefaultLanguage(settings.language)
+    pl.supported_langs = [settings.language, ]
 
     transaction.commit()

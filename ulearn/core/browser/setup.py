@@ -11,16 +11,26 @@ from plone.portlets.interfaces import IPortletAssignmentMapping
 
 from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.interfaces import IPloneSiteRoot
-from Products.PloneLDAP.factory import manage_addPloneLDAPMultiPlugin
-from Products.LDAPUserFolder.LDAPUserFolder import LDAPUserFolder
 from Products.PluggableAuthService.interfaces.plugins import IUserAdderPlugin
 from Products.PlonePAS.interfaces.group import IGroupManagement
 
 from genweb.portlets.browser.manager import ISpanStorage
 
+import pkg_resources
+
+try:
+    pkg_resources.get_distribution('Products.PloneLDAP')
+except pkg_resources.DistributionNotFound:
+    HAS_LDAP = False
+else:
+    HAS_LDAP = True
+    from Products.PloneLDAP.factory import manage_addPloneLDAPMultiPlugin
+    from Products.LDAPUserFolder.LDAPUserFolder import LDAPUserFolder
+
 
 class setupHomePage(grok.View):
     grok.context(IPloneSiteRoot)
+    grok.require('zope2.ViewManagementScreens')
 
     def render(self):
         portal = getSite()
@@ -59,6 +69,7 @@ class setupHomePage(grok.View):
 
 class setupLDAPExterns(grok.View):
     grok.context(IPloneSiteRoot)
+    grok.require('zope2.ViewManagementScreens')
 
     def render(self):
         portal = getSite()
@@ -116,3 +127,17 @@ class setupLDAPExterns(grok.View):
         #     pass
 
         return 'Done.'
+
+
+class ldapkillah(grok.View):
+    grok.context(IPloneSiteRoot)
+    grok.require('zope2.ViewManagementScreens')
+
+    def render(self):
+        portal = getSite()
+
+        if getattr(portal.acl_users, 'ldapUPC', None):
+            portal.acl_users.manage_delObjects('ldapUPC')
+
+        if getattr(portal.acl_users, 'ldapexterns', None):
+            portal.acl_users.manage_delObjects('ldapexterns')
