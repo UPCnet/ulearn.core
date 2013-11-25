@@ -8,6 +8,7 @@ from zope.component.hooks import getSite
 
 from plone.portlets.interfaces import IPortletManager
 from plone.portlets.interfaces import IPortletAssignmentMapping
+from plone.dexterity.utils import createContentInContainer
 
 from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.interfaces import IPloneSiteRoot
@@ -141,3 +142,15 @@ class ldapkillah(grok.View):
 
         if getattr(portal.acl_users, 'ldapexterns', None):
             portal.acl_users.manage_delObjects('ldapexterns')
+
+
+class memberFolderSetup(grok.View):
+    grok.context(IPloneSiteRoot)
+    grok.require('zope2.ViewManagementScreens')
+
+    def render(self):
+        portal = getSite()
+        if not getattr(portal, 'users', None):
+            users_folder = createContentInContainer(portal, 'Folder', title='users', checkConstraints=False)
+            users_folder.setDefaultPage('member_search_form')
+            portal.manage_delObjects('Members')
