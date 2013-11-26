@@ -77,8 +77,8 @@ msgid "Edita la comunitat"
 msgstr "Desa"
 
 #: ../../../../../../ulearn.core/ulearn/core/content/community.py:105
-msgid "El hashtag (per exemple: #ulearn) que utilitzarà aquesta comunitat"
-msgstr "El hashtag (per exemple: #ulearn) que utilitzarà aquesta comunitat"
+msgid "El hashtag (per exemple: ulearn) que utilitzarà aquesta comunitat. No cal afegir el "#"."
+msgstr "El hashtag (per exemple: ulearn) que utilitzarà aquesta comunitat. No cal afegir el "#"."
 
 #: ../../../../../../ulearn.theme/ulearn/theme/portlets/templates/buttonbar.pt:13
 msgid "Entrada"

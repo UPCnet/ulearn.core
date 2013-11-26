@@ -1,11 +1,12 @@
 Changelog
 =========
 
-1.2 (unreleased)
+1.2 (2013-11-26)
 ----------------
 
-- Nothing changed yet.
-
+* New helper for create member user folder [Victor Fernandez de Alba]
+* add infrae.rest to build [Victor Fernandez de Alba]
+* Complete site setup and control panel [Victor Fernandez de Alba]
 
 1.1 (2013-11-14)
 ----------------

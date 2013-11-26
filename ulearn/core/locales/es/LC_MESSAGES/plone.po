@@ -74,8 +74,8 @@ msgid "Edita la comunitat"
 msgstr ""
 
 #: ../../../../ulearn.core/ulearn/core/content/community.py:106
-msgid "El hashtag (per exemple: #ulearn) que utilitzarà aquesta comunitat"
-msgstr ""
+msgid "El hashtag (per exemple: ulearn) que utilitzarà aquesta comunitat. No cal afegir el "#"."
+msgstr "El hashtag (por ejemplo: ulearn) que utilizará esta comunidad. No hace falta añadir el "#"."
 
 #: ../../../../ulearn.core/ulearn/core/content/community.py:372
 msgid "Enllaços"

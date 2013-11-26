@@ -107,7 +107,7 @@ class ICommunity(form.Schema):
 
     twitter_hashtag = schema.TextLine(
         title=_(u"Twitter hashtag"),
-        description=_(u"El hashtag (per exemple: #ulearn) que utilitzarà aquesta comunitat"),
+        description=_(u'El hashtag (per exemple: ulearn) que utilitzarà aquesta comunitat. No cal afegir el "#".'),
         required=False
     )
 
