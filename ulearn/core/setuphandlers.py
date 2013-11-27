@@ -2,6 +2,7 @@
 from zope.interface import alsoProvides
 from zope.component import queryUtility
 from zope.component import getMultiAdapter
+from zope.component.hooks import getSite
 from plone.registry.interfaces import IRegistry
 from plone.dexterity.utils import createContentInContainer
 from plone.portlets.interfaces import IPortletManager
@@ -117,20 +118,6 @@ def setupVarious(context):
     if getattr(portal, 'events', False):
         portal.manage_delObjects('events')
 
-    # Add portlets programatically as it seems that there is some bug in the
-    # portlets.xml GS when reinstalling the right column
-    target_manager = queryUtility(IPortletManager, name='plone.rightcolumn', context=portal)
-    target_manager_assignments = getMultiAdapter((portal, target_manager), IPortletAssignmentMapping)
-
-    if 'stats' not in target_manager_assignments.keys():
-        from ulearn.theme.portlets.calendar import Assignment as calendarAssignment
-        from ulearn.theme.portlets.stats import Assignment as statsAssignment
-        from ulearn.theme.portlets.econnect import Assignment as econnectAssignment
-
-        target_manager_assignments['calendar'] = calendarAssignment()
-        target_manager_assignments['stats'] = statsAssignment()
-        target_manager_assignments['econnect'] = econnectAssignment()
-
     # Recall the last language set for this instance in case of reinstall
     registry = queryUtility(IRegistry)
     settings = registry.forInterface(IUlearnControlPanelSettings)
@@ -138,5 +125,26 @@ def setupVarious(context):
     pl = getToolByName(portal, 'portal_languages')
     pl.setDefaultLanguage(settings.language)
     pl.supported_langs = [settings.language, ]
+
+    # Add portlets programatically as it seems that there is some bug in the
+    # portlets.xml GS when reinstalling the right column
+    portal = getSite()
+    target_manager = queryUtility(IPortletManager, name='plone.rightcolumn', context=portal)
+    target_manager_assignments = getMultiAdapter((portal, target_manager), IPortletAssignmentMapping)
+
+    if 'calendar' not in target_manager_assignments.keys() or \
+       'stats' not in target_manager_assignments.keys() or \
+       'econnect' not in target_manager_assignments.keys():
+        # purge existing portlets
+        for portlet in target_manager_assignments.keys():
+            del target_manager_assignments[portlet]
+
+        from ulearn.theme.portlets.calendar import Assignment as calendarAssignment
+        from ulearn.theme.portlets.stats import Assignment as statsAssignment
+        from ulearn.theme.portlets.econnect import Assignment as econnectAssignment
+
+        target_manager_assignments['calendar'] = calendarAssignment()
+        target_manager_assignments['stats'] = statsAssignment()
+        target_manager_assignments['econnect'] = econnectAssignment()
 
     transaction.commit()
