@@ -440,3 +440,24 @@ msgstr "Crear una reunión online"
 
 msgid "Meetings space"
 msgstr "Reuniones online"
+
+msgid "first_name"
+msgstr "Nombre"
+
+msgid "last_name"
+msgstr "Apellidos"
+
+msgid "company"
+msgstr "Compañía"
+
+msgid "area"
+msgstr "Area"
+
+msgid "department"
+msgstr "Departamento"
+
+msgid "center"
+msgstr "Centro"
+
+msgid "function"
+msgstr "Función"
