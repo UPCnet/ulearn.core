@@ -20,7 +20,7 @@ def searchUsersFunction(context, request, searchString):
 
     pc = getToolByName(context, 'portal_catalog')
     if ICommunity.providedBy(context):
-        visible = context.subscribed_users
+        visible = context.subscribed
     else:
         my_communities = pc.searchResults(subscribed_users='admin')
         visible = [user for community in my_communities for user in community.subscribed_users]
