@@ -14,6 +14,11 @@
       title="Ulearn: Add Community"
       />
 
+    <permission 
+      id="ulearn.addOportunitat"
+      title="Ulearn: Add Oportunitat"
+      />
+
     <permission id="ulearn.core.setup"
                 title="Plone Site Setup: uLearn">
       <role name="Manager"/>
@@ -38,6 +43,7 @@
       permission="ulearn.core.setup"
       />
 
+    
     <genericsetup:importStep
       name="ulearn.core.setupstep"
       title="ulearn.core special import handlers"
