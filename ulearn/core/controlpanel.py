@@ -47,6 +47,10 @@ class IUlearnControlPanelSettings(model.Schema):
                           'maxui_form_bg',
                           'alt_gradient_start_color', 'alt_gradient_end_color'])
 
+    model.fieldset('VIPs',
+                  _(u'VIPs'),
+                  fields=['vip_users'])
+
     model.fieldset('UPCnet only',
                   _(u'UPCnet only'),
                   fields=['language'])
@@ -179,6 +183,13 @@ class IUlearnControlPanelSettings(model.Schema):
         default='es',
     )
 
+    vip_users = schema.List(
+        title=_(u"vip_users"),
+        description=_(u"Llista amb les persones VIPs que no han de sortir a les cerques i estan restringides a les demés."),
+        value_type=schema.TextLine(),
+        required=False,
+        default=[])
+
 
 class UlearnControlPanelSettingsForm(controlpanel.RegistryEditForm):
     """ Ulearn settings form """
@@ -202,6 +213,9 @@ class UlearnControlPanelSettingsForm(controlpanel.RegistryEditForm):
             self.status = self.formErrorsMessage
             return
         self.applyChanges(data)
+
+        # XXX:TODO On save, send vip_user list to MAX
+
         IStatusMessage(self.request).addStatusMessage(_(u"Changes saved"),
                                                       "info")
         self.context.REQUEST.RESPONSE.redirect("@@ulearn-controlpanel")
