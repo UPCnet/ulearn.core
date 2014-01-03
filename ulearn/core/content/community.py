@@ -36,6 +36,7 @@ from Products.CMFPlone.interfaces.constrains import ISelectableConstrainTypes
 
 from genweb.core.adapters.favorites import IFavorite
 from genweb.core.widgets.token_input_widget import UsersTokenInputFieldWidget
+from genweb.core.widgets.select2_user_widget import Select2UserInputFieldWidget
 
 from maxclient import MaxClient
 from mrs.max.browser.controlpanel import IMAXUISettings
@@ -91,7 +92,7 @@ class ICommunity(form.Schema):
         default=u'Closed'
     )
 
-    form.widget(subscribed=UsersTokenInputFieldWidget)
+    form.widget(subscribed=Select2UserInputFieldWidget)
     subscribed = schema.List(
         title=_(u"Subscrits"),
         description=_(u"Llista amb les persones subscrites"),

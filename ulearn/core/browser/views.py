@@ -1,17 +1,25 @@
 # -*- coding: utf-8 -*-
 from five import grok
 from zope import schema
+from itertools import chain
 from z3c.form import button
+from zope.interface import Interface
 from zope.component.hooks import getSite
+from zope.component import getMultiAdapter
+from zope.component import queryUtility
 
 from plone.directives import form
+from plone.registry.interfaces import IRegistry
 
 from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.interfaces import IPloneSiteRoot
 from Products.statusmessages.interfaces import IStatusMessage
 
 from ulearn.core import _
+from ulearn.core.controlpanel import IUlearnControlPanelSettings
+from ulearn.theme.browser.interfaces import IUlearnTheme
 
+import json
 import requests
 
 BBB_ENDPOINT = 'http://corronco.upc.edu:8088/webservices/addReservationNotification.php'
@@ -149,3 +157,33 @@ class reservaBBB(form.SchemaForm):
         IStatusMessage(self.request).addStatusMessage(_(u"Edit cancelled."), type="info")
         self.request.response.redirect(self.context.absolute_url())
         return ''
+
+
+class AjaxUserSearch(grok.View):
+    grok.context(Interface)
+    grok.name('genweb.ajaxusersearch')
+    grok.require('genweb.authenticated')
+    grok.layer(IUlearnTheme)
+
+    def render(self):
+        self.request.response.setHeader("Content-type", "application/json")
+        query = self.request.form.get('q', '')
+        results = dict(more=False, results=[])
+        registry = queryUtility(IRegistry)
+        settings = registry.forInterface(IUlearnControlPanelSettings)
+
+        if query:
+            portal = getSite()
+            hunter = getMultiAdapter((portal, self.request), name='pas_search')
+            fulluserinfo = hunter.merge(chain(*[hunter.searchUsers(**{field: query}) for field in ['name', 'fullname']]), 'userid')
+            values = [dict(id=userinfo.get('login'), text=u'{} ({})'.format(userinfo.get('title'), userinfo.get('login'))) for userinfo in fulluserinfo]
+
+            if settings.vip_users:
+                if query in settings.vip_users:
+                    # Fa falta?
+                    pass
+
+            results['results'] = values
+            return json.dumps(results)
+        else:
+            return json.dumps({"error": "No query found"})
