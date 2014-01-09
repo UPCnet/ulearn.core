@@ -175,7 +175,7 @@ class AjaxUserSearch(grok.View):
         if query:
             portal = getSite()
             hunter = getMultiAdapter((portal, self.request), name='pas_search')
-            fulluserinfo = hunter.merge(chain(*[hunter.searchUsers(**{field: query}) for field in ['name', 'fullname']]), 'userid')
+            fulluserinfo = hunter.merge(chain(*[hunter.searchUsers(**{field: query}) for field in ['fullname', 'name']]), 'userid')
             values = [dict(id=userinfo.get('login'), text=u'{} ({})'.format(userinfo.get('title'), userinfo.get('login'))) for userinfo in fulluserinfo]
 
             if settings.vip_users:
