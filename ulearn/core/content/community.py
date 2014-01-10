@@ -92,9 +92,27 @@ class ICommunity(form.Schema):
         default=u'Closed'
     )
 
+    form.widget(readers=Select2UserInputFieldWidget)
+    readers = schema.List(
+        title=_(u"Lectors"),
+        description=_(u"Llista amb les persones subscrites amb permís de lectura"),
+        value_type=schema.TextLine(),
+        required=False,
+        missing_value=[])
+
+    # We maintain the subscribed field for backwards compatibility,
+    # understanding that it refers to users with read/write permissions
     form.widget(subscribed=Select2UserInputFieldWidget)
     subscribed = schema.List(
-        title=_(u"Subscrits"),
+        title=_(u"Escriptors"),
+        description=_(u"Llista amb les persones subscrites amb permís d'escriptura"),
+        value_type=schema.TextLine(),
+        required=False,
+        missing_value=[])
+
+    form.widget(owners=Select2UserInputFieldWidget)
+    owners = schema.List(
+        title=_(u"Propietaris"),
         description=_(u"Llista amb les persones subscrites"),
         value_type=schema.TextLine(),
         required=False,
@@ -127,7 +145,7 @@ def subscribed_items(context):
     """Create a catalogue indexer, registered as an adapter, which can
     populate the ``context.subscribed`` value count it and index.
     """
-    return len(context.subscribed) + 1  # Add one in favor of the Creator
+    return len(list(set(context.readers + context.subscribed + context.owners + [context.Creator()])))
 grok.global_adapter(subscribed_items, name='subscribed_items')
 
 
@@ -136,7 +154,7 @@ def subscribed_users(context):
     """Create a catalogue indexer, registered as an adapter, which can
     populate the ``context.subscribed`` value count it and index.
     """
-    return context.subscribed + [context.Creator()]  # Add the Creator
+    return list(set(context.readers + context.subscribed + context.owners + [context.Creator()]))  # Add the Creator
 grok.global_adapter(subscribed_users, name='subscribed_users')
 
 
@@ -428,9 +446,9 @@ def initialize_community(community, event):
     if community.community_type == u'Open':
         community_permissions = dict(read='subscribed', write='subscribed', subscribe='public')
     elif community.community_type == u'Closed':
-        community_permissions = dict(read='subscribed', write='subscribed', subscribe='restricted', unsubscribe='public')
+        community_permissions = dict(read='subscribed', write='restricted', subscribe='restricted', unsubscribe='public')
     elif community.community_type == u'Organizative':
-        community_permissions = dict(read='subscribed', write='subscribed', subscribe='restricted')
+        community_permissions = dict(read='subscribed', write='restricted', subscribe='restricted')
 
     # Add context for the community on MAX server
     maxclient.addContext(community.absolute_url(),
@@ -570,17 +588,30 @@ def edit_community(community, event):
     maxclient.setActor(maxui_settings.max_restricted_username)
     maxclient.setToken(maxui_settings.max_restricted_token)
 
+    # Determine the kind of security the community should have provided the type
+    # of community
+    if community.community_type == u'Open':
+        community_permissions = dict(read='subscribed', write='subscribed', subscribe='public')
+    elif community.community_type == u'Closed':
+        community_permissions = dict(read='subscribed', write='restricted', subscribe='restricted', unsubscribe='public')
+    elif community.community_type == u'Organizative':
+        community_permissions = dict(read='subscribed', write='restricted', subscribe='restricted')
+
+    # Update community permissions on MAX
+    maxclient.modifyContext(community.absolute_url(),
+                            dict(permissions=community_permissions))
+
     # If the community is of the type "Open", then allow any auth user to see it
     if community.community_type == u'Open':
         community.manage_setLocalRoles('AuthenticatedUsers', ['Reader'])
     elif community.community_type == u'Closed':
         community.manage_delLocalRoles(['AuthenticatedUsers'])
 
-    # Update the subscribed users
+    # Update the subscribed users on MAX
     for guest in community.subscribed:
         maxclient.subscribe(url=community.absolute_url(), username=guest)
 
-    # Update subscribed user permissions
+    # Update subscribed user permissions on uLearn
     for guest in community.subscribed:
         community.manage_setLocalRoles(guest, ['Reader', 'Contributor'])
 
