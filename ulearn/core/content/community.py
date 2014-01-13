@@ -35,7 +35,7 @@ from Products.statusmessages.interfaces import IStatusMessage
 from Products.CMFPlone.interfaces.constrains import ISelectableConstrainTypes
 
 from genweb.core.adapters.favorites import IFavorite
-from genweb.core.widgets.token_input_widget import UsersTokenInputFieldWidget
+from genweb.core.widgets.select2_user_widget import SelectWidgetConverter
 from genweb.core.widgets.select2_user_widget import Select2UserInputFieldWidget
 
 from maxclient import MaxClient
@@ -314,7 +314,9 @@ class communityAdder(form.SchemaForm):
 
         nom = data['title']
         description = data['description']
+        readers = data['readers']
         subscribed = data['subscribed']
+        owners = data['owners']
         image = data['image']
         community_type = data['community_type']
         twitter_hashtag = data['twitter_hashtag']
@@ -338,7 +340,9 @@ class communityAdder(form.SchemaForm):
                 'ulearn.community',
                 title=nom,
                 description=description,
+                readers=readers,
                 subscribed=subscribed,
+                owners=owners,
                 image=image,
                 community_type=community_type,
                 twitter_hashtag=twitter_hashtag,
@@ -377,8 +381,14 @@ class communityEdit(form.SchemaForm):
         self.widgets["community_type"].value = [self.ctype_map[self.context.community_type]]
         self.widgets["twitter_hashtag"].value = self.context.twitter_hashtag
 
-        tlc = TextLinesConverter(self.fields['subscribed'].field, self.widgets["subscribed"])
-        self.widgets["subscribed"].value = tlc.toWidgetValue(self.context.subscribed)
+        converter = SelectWidgetConverter(self.fields['readers'].field, self.widgets["readers"])
+        self.widgets["readers"].value = converter.toWidgetValue(self.context.readers)
+
+        converter = SelectWidgetConverter(self.fields['subscribed'].field, self.widgets["subscribed"])
+        self.widgets["subscribed"].value = converter.toWidgetValue(self.context.subscribed)
+
+        converter = SelectWidgetConverter(self.fields['owners'].field, self.widgets["owners"])
+        self.widgets["owners"].value = converter.toWidgetValue(self.context.owners)
 
     @button.buttonAndHandler(_(u'Edita la comunitat'), name="save")
     def handleApply(self, action):
@@ -389,7 +399,9 @@ class communityEdit(form.SchemaForm):
 
         nom = data['title']
         description = data['description']
+        readers = data['readers']
         subscribed = data['subscribed']
+        owners = data['owners']
         image = data['image']
         community_type = data['community_type']
         twitter_hashtag = data['twitter_hashtag']
@@ -412,7 +424,9 @@ class communityEdit(form.SchemaForm):
             # Set new values in community
             self.context.title = nom
             self.context.description = description
+            self.context.readers = readers
             self.context.subscribed = subscribed
+            self.context.owners = owners
             self.context.community_type = community_type
             self.context.twitter_hashtag = twitter_hashtag
             if image:
@@ -463,14 +477,22 @@ def initialize_community(community, event):
     # Update community tag
     maxclient.add_tags_to_context(community.absolute_url(), ['[COMMUNITY]'])
 
-    # Subscribe owner
+    # Subscribe the creator user and add it as writter
     maxclient.subscribe(url=community.absolute_url(), username=community.Creator())
+    maxclient.grant_permission(url=community.absolute_url(), username=community.Creator(), permission='write')
 
-    # Subscribe the invited users
-    for guest in community.subscribed:
-        maxclient.subscribe(url=community.absolute_url(), username=guest)
+    # Subscribe the invited users and grant them permission
+    for reader in community.readers:
+        maxclient.subscribe(url=community.absolute_url(), username=reader)
+        maxclient.grant_permission(url=community.absolute_url(), username=reader, permission='read')
+    for writter in community.subscribed:
+        maxclient.subscribe(url=community.absolute_url(), username=writter)
+        maxclient.grant_permission(url=community.absolute_url(), username=writter, permission='write')
+    for owner in community.owners:
+        maxclient.subscribe(url=community.absolute_url(), username=owner)
+        maxclient.grant_permission(url=community.absolute_url(), username=owner, permission='write')
 
-    # Favorite the owner to this community
+    # Auto-favorite the creator user to this community
     IFavorite(community).add(community.Creator())
 
     # Change workflow to intranet
@@ -480,9 +502,15 @@ def initialize_community(community, event):
     # Disable Inheritance
     community.__ac_local_roles_block__ = True
 
-    # Set permissions
-    for guest in community.subscribed:
-        community.manage_setLocalRoles(guest, ['Reader', 'Contributor'])
+    # Set uLearn permissions
+    for reader in community.readers:
+        community.manage_setLocalRoles(reader, ['Reader'])
+
+    for writter in community.subscribed:
+        community.manage_setLocalRoles(writter, ['Reader', 'Contributor', 'Editor'])
+
+    for owner in community.owners:
+        community.manage_setLocalRoles(owner, ['Reader', 'Contributor', 'Editor', 'Owner'])
 
     # If the community is of the type "Open", then allow any auth user to see it
     if community.community_type == u'Open':
@@ -583,10 +611,18 @@ def initialize_community(community, event):
 def edit_community(community, event):
     registry = queryUtility(IRegistry)
     maxui_settings = registry.forInterface(IMAXUISettings)
-
+    print 'modified event!'
     maxclient = MaxClient(maxui_settings.max_server, maxui_settings.oauth_server)
     maxclient.setActor(maxui_settings.max_restricted_username)
     maxclient.setToken(maxui_settings.max_restricted_token)
+
+    # Get current MAX context information
+    context_current_info = maxclient.get_context(url=community.absolute_url())
+
+    if context_current_info.get('twitterHashtag', None) != community.twitter_hashtag:
+        # Update twitter hashtag
+        maxclient.modifyContext(community.absolute_url(),
+                                dict(twitterHashtag=community.twitter_hashtag))
 
     # Determine the kind of security the community should have provided the type
     # of community
@@ -597,9 +633,21 @@ def edit_community(community, event):
     elif community.community_type == u'Organizative':
         community_permissions = dict(read='subscribed', write='restricted', subscribe='restricted')
 
-    # Update community permissions on MAX
-    maxclient.modifyContext(community.absolute_url(),
-                            dict(permissions=community_permissions))
+    if context_current_info.get('permissions', '') != community_permissions:
+        # Update community permissions on MAX
+        maxclient.modifyContext(community.absolute_url(),
+                                dict(permissions=community_permissions))
+
+    # Update/Subscribe the invited users and grant them permission on MAX
+    for reader in community.readers:
+        maxclient.subscribe(url=community.absolute_url(), username=reader)
+        maxclient.grant_permission(url=community.absolute_url(), username=reader, permission='read')
+    for writter in community.subscribed:
+        maxclient.subscribe(url=community.absolute_url(), username=writter)
+        maxclient.grant_permission(url=community.absolute_url(), username=writter, permission='write')
+    for owner in community.owners:
+        maxclient.subscribe(url=community.absolute_url(), username=owner)
+        maxclient.grant_permission(url=community.absolute_url(), username=owner, permission='write')
 
     # If the community is of the type "Open", then allow any auth user to see it
     if community.community_type == u'Open':
@@ -607,25 +655,24 @@ def edit_community(community, event):
     elif community.community_type == u'Closed':
         community.manage_delLocalRoles(['AuthenticatedUsers'])
 
-    # Update the subscribed users on MAX
-    for guest in community.subscribed:
-        maxclient.subscribe(url=community.absolute_url(), username=guest)
-
     # Update subscribed user permissions on uLearn
-    for guest in community.subscribed:
-        community.manage_setLocalRoles(guest, ['Reader', 'Contributor'])
+    for reader in community.readers:
+        community.manage_setLocalRoles(reader, ['Reader'])
+
+    for writter in community.subscribed:
+        community.manage_setLocalRoles(writter, ['Reader', 'Contributor', 'Editor'])
+
+    for owner in community.owners:
+        community.manage_setLocalRoles(owner, ['Reader', 'Contributor', 'Editor', 'Owner'])
 
     # Unsubscribe no longer members from community, taking account of the
     # community creator who is not in the subscribed list
+    all_subscribers = list(set(community.readers + community.subscribed + community.owners + [community.Creator()]))
     subscribed = [user.get('username', '') for user in maxclient.subscribed_to_context(community.absolute_url())]
-    unsubscribe = [a for a in subscribed if a not in community.subscribed + [community.Creator()]]
+    unsubscribe = [a for a in subscribed if a not in all_subscribers]
 
     for user in unsubscribe:
         maxclient.unsubscribe(url=community.absolute_url(), username=user)
-
-    # Update twitter hashtag
-    maxclient.modifyContext(community.absolute_url(),
-                            dict(twitterHashtag=community.twitter_hashtag))
 
     # Update unsubscribed user permissions
     community.manage_delLocalRoles(unsubscribe)
