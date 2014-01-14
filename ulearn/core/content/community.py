@@ -184,8 +184,29 @@ class View(grok.View):
     def is_user_subscribed(self):
         pm = getToolByName(self.context, "portal_membership")
         current_user = pm.getAuthenticatedMember().getUserName()
-        return current_user in self.context.subscribed or \
+        return current_user in self.context.readers or \
+            current_user in self.context.subscribed or \
+            current_user in self.context.owners or \
             current_user == self.context.Creator()
+
+    def show_community_open_but_not_subscribed(self):
+        if self.context.community_type == 'Open' and \
+           not self.is_user_subscribed():
+            return True
+        else:
+            return False
+
+    def show_community_open_subscribed_readonly(self):
+        pm = getToolByName(self.context, "portal_membership")
+        current_user = pm.getAuthenticatedMember().getUserName()
+        if self.context.community_type == 'Open' and \
+           current_user in self.context.readers and \
+           not current_user in self.context.owners and \
+           not current_user in self.context.subscribed and \
+           not current_user == self.context.Creator():
+            return True
+        else:
+            return False
 
 
 class UploadFile(grok.View):
@@ -285,7 +306,31 @@ class ToggleSubscribe(grok.View):
             return True
 
         elif community.community_type == u'Organizative':
-            # You shouldn't been doing this...
+            # Bad, bad guy... You shouldn't been trying this...
+            return False
+
+
+class UpgradeSubscribe(grok.View):
+    grok.context(ICommunity)
+    grok.name('upgrade-subscribe')
+
+    def render(self):
+        community = self.context
+        pm = getToolByName(self.context, "portal_membership")
+        current_user = pm.getAuthenticatedMember().getUserName()
+
+        if community.community_type == u'Open':
+            if current_user in community.readers:
+                community.readers.remove(current_user)
+                community.subscribed.append(current_user)
+                community.reindexObject()
+                notify(ObjectModifiedEvent(community))
+                return True
+            else:
+                return False
+
+        elif community.community_type == u'Organizative':
+            # Bad, bad guy... You shouldn't been trying this...
             return False
 
 
@@ -670,7 +715,9 @@ def edit_community(community, event):
     all_subscribers = list(set(community.readers + community.subscribed + community.owners + [community.Creator()]))
     subscribed = [user.get('username', '') for user in maxclient.subscribed_to_context(community.absolute_url())]
     unsubscribe = [a for a in subscribed if a not in all_subscribers]
-
+    print all_subscribers
+    print subscribed
+    print unsubscribe
     for user in unsubscribe:
         maxclient.unsubscribe(url=community.absolute_url(), username=user)
 

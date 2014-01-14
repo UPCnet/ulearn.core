@@ -409,6 +409,12 @@ msgstr "Introduce tu nombre de usuario de Twitter"
 msgid "Twitter username"
 msgstr "Usuario de Twitter"
 
+msgid "community_open_and_subscribed_but_readonly"
+msgstr "Esta es una comunidad abierta, pero actualmente solo tienes permisos de lectura. Si quieres tener permisos de editor, actualiza tu subscripción."
+
+msgid "upgrade_subscription"
+msgstr "Actualiza"
+
 # Traducciones .js
 
 msgid "Error when removing community"

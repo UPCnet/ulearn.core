@@ -419,6 +419,12 @@ msgstr "Introdueix el teu nom d'usuari de Twitter"
 msgid "label_twitter"
 msgstr "Usuari de Twitter"
 
+msgid "community_open_and_subscribed_but_readonly"
+msgstr "Aquesta comunitat és oberta, però actualment només tens permisos de lectura. Si vols tenir permisos d'editor, actualitza la teva subscripció."
+
+msgid "upgrade_subscription"
+msgstr "Actualitza"
+
 # Traducciones .js
 
 msgid "Error when removing community"
