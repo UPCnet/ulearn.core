@@ -104,8 +104,8 @@ msgid "Edita la comunitat"
 msgstr "Guardar"
 
 #: ../../../../ulearn.core/ulearn/core/content/community.py:106
-msgid "El hashtag (per exemple: ulearn) que utilitzarà aquesta comunitat. No cal afegir el "#"."
-msgstr "El hashtag (por ejemplo: ulearn) que utilizará esta comunidad. No hace falta añadir el "#"."
+msgid "hashtag_help"
+msgstr "El hashtag (por ejemplo: ulearn) que utilizará esta comunidad. No hace falta añadir el '#'."
 
 #: ../../../../ulearn.theme/ulearn/theme/portlets/templates/buttonbar.pt:13
 msgid "Entrada"
@@ -262,9 +262,9 @@ msgstr "Comunidades"
 #: ../../../../ulearn.core/ulearn/core/content/community.py:84
 msgid "community_type_description"
 msgstr ""
-"Abierta: pública (la ve todo el mundo) y te puedes suscribir y describirte.\n"
-"Cerrada: solo puede suscribirte el propietario de la comunidad, pero puedes desuscribirte.\n"
-"Organizada: solo puede suscribirte un administrador y no puedes desuscribirte."
+"Abierta: pública (la ve todo el mundo) y te puedes suscribir y desuscribirte.<br/>"
+"Cerrada: solo puede suscribirte el propietario de la comunidad, pero puedes desuscribirte.<br/>"
+#"Organizada: solo puede suscribirte un administrador y no puedes desuscribirte."
 
 #. Default: "Create a new community"
 #: ../../../../ulearn.theme/ulearn/theme/portlets/templates/communities.pt:54
@@ -414,6 +414,24 @@ msgstr "Esta es una comunidad abierta, pero actualmente solo tienes permisos de 
 
 msgid "upgrade_subscription"
 msgstr "Actualiza"
+
+msgid "Readers"
+msgstr "Lectores"
+
+msgid "Editors"
+msgstr "Editores"
+
+msgid "Owners"
+msgstr "Propietarios"
+
+msgid "Subscribed people with read-only permissions"
+msgstr "Lista de las personas suscritas con permiso de lectura"
+
+msgid "Subscribed people with editor permissions"
+msgstr "Lista de las personas suscritas con permiso de edición"
+
+msgid "Subscribed people with owner permissions"
+msgstr "Lista de las personas propietarias de la comunidad"
 
 # Traducciones .js
 

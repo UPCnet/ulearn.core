@@ -7,10 +7,12 @@ from zope.schema.vocabulary import SimpleVocabulary
 from zope.schema.interfaces import IVocabularyFactory
 
 from plone.supermodel import model
-from plone.directives import dexterity
+from plone.directives import dexterity, form
 from plone.app.registry.browser import controlpanel
 
 from Products.statusmessages.interfaces import IStatusMessage
+
+from genweb.core.widgets.select2_user_widget import Select2UserInputFieldWidget
 
 from ulearn.core import _
 
@@ -183,6 +185,7 @@ class IUlearnControlPanelSettings(model.Schema):
         default='es',
     )
 
+    form.widget(vip_users=Select2UserInputFieldWidget)
     vip_users = schema.List(
         title=_(u"vip_users"),
         description=_(u"Llista amb les persones VIPs que no han de sortir a les cerques i estan restringides a les demés."),

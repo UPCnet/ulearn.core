@@ -94,8 +94,8 @@ class ICommunity(form.Schema):
 
     form.widget(readers=Select2UserInputFieldWidget)
     readers = schema.List(
-        title=_(u"Lectors"),
-        description=_(u"Llista amb les persones subscrites amb permís de lectura"),
+        title=_(u"Readers"),
+        description=_(u"Subscribed people with read-only permissions"),
         value_type=schema.TextLine(),
         required=False,
         missing_value=[])
@@ -104,16 +104,16 @@ class ICommunity(form.Schema):
     # understanding that it refers to users with read/write permissions
     form.widget(subscribed=Select2UserInputFieldWidget)
     subscribed = schema.List(
-        title=_(u"Escriptors"),
-        description=_(u"Llista amb les persones subscrites amb permís d'escriptura"),
+        title=_(u"Editors"),
+        description=_(u"Subscribed people with editor permissions"),
         value_type=schema.TextLine(),
         required=False,
         missing_value=[])
 
     form.widget(owners=Select2UserInputFieldWidget)
     owners = schema.List(
-        title=_(u"Propietaris"),
-        description=_(u"Llista amb les persones subscrites"),
+        title=_(u"Owners"),
+        description=_(u"Subscribed people with owner permissions"),
         value_type=schema.TextLine(),
         required=False,
         missing_value=[])
@@ -126,7 +126,7 @@ class ICommunity(form.Schema):
 
     twitter_hashtag = schema.TextLine(
         title=_(u"Twitter hashtag"),
-        description=_(u'El hashtag (per exemple: ulearn) que utilitzarà aquesta comunitat. No cal afegir el "#".'),
+        description=_(u'hashtag_help'),
         required=False
     )
 
@@ -145,7 +145,7 @@ def subscribed_items(context):
     """Create a catalogue indexer, registered as an adapter, which can
     populate the ``context.subscribed`` value count it and index.
     """
-    return len(list(set(context.readers + context.subscribed + context.owners + [context.Creator()])))
+    return len(list(set(context.readers + context.subscribed + context.owners)))
 grok.global_adapter(subscribed_items, name='subscribed_items')
 
 
@@ -154,7 +154,7 @@ def subscribed_users(context):
     """Create a catalogue indexer, registered as an adapter, which can
     populate the ``context.subscribed`` value count it and index.
     """
-    return list(set(context.readers + context.subscribed + context.owners + [context.Creator()]))  # Add the Creator
+    return list(set(context.readers + context.subscribed + context.owners))
 grok.global_adapter(subscribed_users, name='subscribed_users')
 
 
@@ -186,8 +186,7 @@ class View(grok.View):
         current_user = pm.getAuthenticatedMember().getUserName()
         return current_user in self.context.readers or \
             current_user in self.context.subscribed or \
-            current_user in self.context.owners or \
-            current_user == self.context.Creator()
+            current_user in self.context.owners
 
     def show_community_open_but_not_subscribed(self):
         if self.context.community_type == 'Open' and \
@@ -202,8 +201,7 @@ class View(grok.View):
         if self.context.community_type == 'Open' and \
            current_user in self.context.readers and \
            not current_user in self.context.owners and \
-           not current_user in self.context.subscribed and \
-           not current_user == self.context.Creator():
+           not current_user in self.context.subscribed:
             return True
         else:
             return False
@@ -227,8 +225,9 @@ class UploadFile(grok.View):
     def is_user_subscribed(self):
         pm = getToolByName(self.context, "portal_membership")
         current_user = pm.getAuthenticatedMember().getUserName()
-        return current_user in self.context.subscribed or \
-            current_user == self.context.Creator()
+        return current_user in self.context.readers or \
+            current_user in self.context.subscribed or \
+            current_user in self.context.owners
 
     def get_images_folder(self):
         for obj in self.context.objectIds():
@@ -500,6 +499,9 @@ def initialize_community(community, event):
     maxclient.setActor(maxui_settings.max_restricted_username)
     maxclient.setToken(maxui_settings.max_restricted_token)
 
+    # Add creator to owners field
+    community.owners.append(community.Creator())
+
     # Determine the kind of security the community should have provided the type
     # of community
     if community.community_type == u'Open':
@@ -521,10 +523,6 @@ def initialize_community(community, event):
 
     # Update community tag
     maxclient.add_tags_to_context(community.absolute_url(), ['[COMMUNITY]'])
-
-    # Subscribe the creator user and add it as writter
-    maxclient.subscribe(url=community.absolute_url(), username=community.Creator())
-    maxclient.grant_permission(url=community.absolute_url(), username=community.Creator(), permission='write')
 
     # Subscribe the invited users and grant them permission
     for reader in community.readers:
@@ -710,14 +708,11 @@ def edit_community(community, event):
     for owner in community.owners:
         community.manage_setLocalRoles(owner, ['Reader', 'Contributor', 'Editor', 'Owner'])
 
-    # Unsubscribe no longer members from community, taking account of the
-    # community creator who is not in the subscribed list
-    all_subscribers = list(set(community.readers + community.subscribed + community.owners + [community.Creator()]))
+    # Unsubscribe no longer members from community
+    all_subscribers = list(set(community.readers + community.subscribed + community.owners))
     subscribed = [user.get('username', '') for user in maxclient.subscribed_to_context(community.absolute_url())]
     unsubscribe = [a for a in subscribed if a not in all_subscribers]
-    print all_subscribers
-    print subscribed
-    print unsubscribe
+
     for user in unsubscribe:
         maxclient.unsubscribe(url=community.absolute_url(), username=user)
 
