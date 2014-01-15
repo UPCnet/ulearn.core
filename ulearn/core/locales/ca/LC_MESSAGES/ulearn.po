@@ -474,3 +474,6 @@ msgstr "Llista amb les persones subscrites amb permís d'edició"
 
 msgid "Subscribed people with owner permissions"
 msgstr "Llista amb les persones propietàries de la comunitat"
+
+msgid "seemoreusers"
+msgstr "Veure més usuaris"

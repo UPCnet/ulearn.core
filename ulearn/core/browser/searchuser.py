@@ -22,7 +22,7 @@ def searchUsersFunction(context, request, searchString):
     if ICommunity.providedBy(context):
         visible = context.subscribed
     else:
-        my_communities = pc.searchResults(subscribed_users='admin')
+        my_communities = pc.searchResults(subscribed_users=mtool.getAuthenticatedMember().getId())
         visible = [user for community in my_communities for user in community.subscribed_users]
 
     # Filter by community
@@ -41,8 +41,8 @@ def searchUsersFunction(context, request, searchString):
                 'email': user.getProperty('email'),
                 'telefon': user.getProperty('telefon'),
                 'foto': str(mtool.getPersonalPortrait(user.id)),
-                'url': site.absolute_url() + '/author/' + user.id
-                })
+                'url': site.absolute_url() + '/profile/' + user.id
+            })
 
     len_usuaris = len(usersDict)
     if len_usuaris > 20:
