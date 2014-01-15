@@ -32,7 +32,7 @@ def searchUsersFunction(context, request, searchString):
     usersDict = []
     for user in userResults:
         # if is in any of my communities
-        if user.id in visible:
+        if user is not None and user.id in visible:
             usersDict.append({
                 'id': user.id,
                 'username': user.getProperty('fullname'),
