@@ -13,6 +13,7 @@ def searchUsersFunction(context, request, searchString):
     ignore = []
     mtool = getToolByName(context, 'portal_membership')
     searchView = getMultiAdapter((aq_inner(context), request), name='pas_search')
+    # Si cal, per performance "max_results":20
     userResults = searchView.merge(chain(*[searchView.searchUsers(**{field: searchString}) for field in ['name', 'fullname', 'email', 'twitter_username', 'ubicacio', 'location']]), 'userid')
     userResults = [mtool.getMemberById(u['id']) for u in userResults if u['id'] not in ignore]
 
