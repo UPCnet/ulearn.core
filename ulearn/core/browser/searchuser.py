@@ -20,7 +20,7 @@ def searchUsersFunction(context, request, searchString):
     else:
         # We are in root object
         my_communities = pc.searchResults(subscribed_users=mtool.getAuthenticatedMember().getId())
-        visible = [user for community in my_communities for user in community.subscribed_users]
+        visible = list(set([user for community in my_communities for user in community.subscribed_users]))
 
     if searchString:
         searchView = getMultiAdapter((aq_inner(context), request), name='pas_search')

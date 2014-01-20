@@ -489,4 +489,4 @@ msgid "seemoreusers"
 msgstr "Ver más usuarios"
 
 msgid "people"
-msgstr "Persones"
+msgstr "Personas"

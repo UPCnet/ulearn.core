@@ -477,3 +477,6 @@ msgstr "Llista amb les persones propietàries de la comunitat"
 
 msgid "seemoreusers"
 msgstr "Veure més usuaris"
+
+msgid "people"
+msgstr "Persones"

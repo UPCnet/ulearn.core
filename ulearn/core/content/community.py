@@ -98,7 +98,8 @@ class ICommunity(form.Schema):
         description=_(u"Subscribed people with read-only permissions"),
         value_type=schema.TextLine(),
         required=False,
-        missing_value=[])
+        missing_value=[],
+        default=[])
 
     # We maintain the subscribed field for backwards compatibility,
     # understanding that it refers to users with read/write permissions
@@ -108,7 +109,8 @@ class ICommunity(form.Schema):
         description=_(u"Subscribed people with editor permissions"),
         value_type=schema.TextLine(),
         required=False,
-        missing_value=[])
+        missing_value=[],
+        default=[])
 
     form.widget(owners=Select2UserInputFieldWidget)
     owners = schema.List(
@@ -116,7 +118,8 @@ class ICommunity(form.Schema):
         description=_(u"Subscribed people with owner permissions"),
         value_type=schema.TextLine(),
         required=False,
-        missing_value=[])
+        missing_value=[],
+        default=[])
 
     image = NamedBlobImage(
         title=_(u"Imatge"),
