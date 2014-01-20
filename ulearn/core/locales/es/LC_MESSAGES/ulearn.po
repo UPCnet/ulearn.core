@@ -234,7 +234,6 @@ msgstr "Una comunidad administrable"
 
 #. Default: "Comunidades"
 #: ../../../../../../ulearn.theme/ulearn/theme/browser/views_templates/communities.pt:21
-#, fuzzy
 msgid "allcommunities"
 msgstr "Comunidades"
 
@@ -488,3 +487,6 @@ msgstr "Función"
 
 msgid "seemoreusers"
 msgstr "Ver más usuarios"
+
+msgid "people"
+msgstr "Persones"
