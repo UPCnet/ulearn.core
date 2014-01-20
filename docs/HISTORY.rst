@@ -1,11 +1,31 @@
 Changelog
 =========
 
-1.3 (unreleased)
+1.3 (2014-01-20)
 ----------------
 
-- Nothing changed yet.
-
+* Las fixes to search views [Victor Fernandez de Alba]
+* Some adjustments [Victor Fernandez de Alba]
+* Add guard [Victor Fernandez de Alba]
+* Fix several bugs [Victor Fernandez de Alba]
+* Last work on permissions [Victor Fernandez de Alba]
+* Last bugs on implementation of advanced permissions on communities [Victor Fernandez de Alba]
+* End scission on three fields of the permission on communities [Victor Fernandez de Alba]
+* Fix BBB form. WIP new permissions on communities field. [Victor Fernandez de Alba]
+* change the preference of the search fields favoring fullname over login name [Victor Fernandez de Alba]
+* Merge pull request #1 from UPCnet/iskra [Víctor Fernández de Alba]
+* Search Users Feature [Víctor Fernández de Alba]
+* Apply new widget to field [Victor Fernandez de Alba]
+* New VIP users field on control panel [Victor Fernandez de Alba]
+* Oportunitats d'innovació [Ramon Navarro Bosch]
+* visible users on communities [Ramon Navarro Bosch]
+* Update translations [Victor Fernandez de Alba]
+* Missing uploads tests, WIP [Victor Fernandez de Alba]
+* Function to search users [Ramon Navarro Bosch]
+* Adding telèfon [Ramon Navarro Bosch]
+* Search User backend [Ramon Navarro Bosch]
+* Adding a field of ubicació on User schema [Ramon Navarro Bosch]
+* Improve setuphandlers on initial portlet creation and subsequent reinstalls [Victor Fernandez de Alba]
 
 1.2 (2013-11-26)
 ----------------
