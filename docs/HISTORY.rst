@@ -1,11 +1,11 @@
 Changelog
 =========
 
-1.4 (unreleased)
+1.4 (2014-01-21)
 ----------------
 
-- Nothing changed yet.
-
+* new i18n [Victor Fernandez de Alba]
+* Unique search user on root [Victor Fernandez de Alba]
 
 1.3 (2014-01-20)
 ----------------
