@@ -490,3 +490,6 @@ msgstr "Ver más usuarios"
 
 msgid "people"
 msgstr "Personas"
+
+msgid "use_the_search_input_to_find_more_people"
+msgstr "Usa el buscador para encontrar personas. Mostrando 20 de"

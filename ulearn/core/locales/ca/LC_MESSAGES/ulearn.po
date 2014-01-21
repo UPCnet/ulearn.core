@@ -480,3 +480,6 @@ msgstr "Veure més usuaris"
 
 msgid "people"
 msgstr "Persones"
+
+msgid "use_the_search_input_to_find_more_people"
+msgstr "Utilitza el cercador per trobar persones. Mostrant 20 de"
