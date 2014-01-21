@@ -486,7 +486,7 @@ msgid "function"
 msgstr "Función"
 
 msgid "seemoreusers"
-msgstr "Ver más usuarios"
+msgstr "Ver más personas"
 
 msgid "people"
 msgstr "Personas"
