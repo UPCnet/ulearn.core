@@ -1,13 +1,14 @@
 from five import grok
 from zope.component.hooks import getSite
 
-from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.interfaces import IPloneSiteRoot
 
 import inspect
 import importlib
 
-MODULES_TO_INSPECT = ['ulearn.core.browser.setup', 'ulearn.core.browser.migrations']
+MODULES_TO_INSPECT = ['genweb.core.browser.setup',
+                      'ulearn.core.browser.setup',
+                      'ulearn.core.browser.migrations']
 
 
 class clouseau(grok.View):
