@@ -3,6 +3,8 @@ from zope.component.hooks import getSite
 
 from Products.CMFPlone.interfaces import IPloneSiteRoot
 
+from ulearn.theme.browser.interfaces import IUlearnTheme
+
 import inspect
 import importlib
 
@@ -13,6 +15,7 @@ MODULES_TO_INSPECT = ['genweb.core.browser.setup',
 
 class clouseau(grok.View):
     grok.context(IPloneSiteRoot)
+    grok.layer(IUlearnTheme)
 
     def get_templates(self):
         portal = getSite()
