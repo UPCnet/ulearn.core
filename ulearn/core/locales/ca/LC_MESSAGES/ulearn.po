@@ -481,5 +481,8 @@ msgstr "Veure més persones"
 msgid "people"
 msgstr "Persones"
 
-msgid "use_the_search_input_to_find_more_people"
-msgstr "Utilitza el cercador per trobar persones. Mostrant 20 de"
+msgid "use_the_search_input_to_find_more_people1"
+msgstr "Utilitza el cercador per trobar persones. Mostrant "
+
+msgid "use_the_search_input_to_find_more_people2"
+msgstr " de 20."

@@ -9,7 +9,7 @@ from ulearn.core.content.community import ICommunity
 import random
 
 
-def searchUsersFunction(context, request, searchString):
+def searchUsersFunction(context, request, searchString, user_properties=None):
     ignore = []
     mtool = getToolByName(context, 'portal_membership')
 
@@ -38,16 +38,24 @@ def searchUsersFunction(context, request, searchString):
     for user in userResults:
         # if is in any of my communities
         if user is not None and user.id in visible:
-            usersDict.append({
-                'id': user.id,
-                'username': user.getProperty('fullname', ''),
-                'ubicacio': user.getProperty('ubicacio', ''),
-                'location': user.getProperty('location', ''),
-                'email': user.getProperty('email', ''),
-                'telefon': user.getProperty('telefon', ''),
-                'foto': str(mtool.getPersonalPortrait(user.id)),
-                'url': site.absolute_url() + '/profile/' + user.id
-            })
+            if user_properties:
+                user_dict = {}
+                for user_property in user_properties:
+                    user_dict.update({user_property: user.getProperty(user_property, '')})
+                user_dict.update(dict(foto=str(mtool.getPersonalPortrait(user.id))))
+                user_dict.update(dict(url=site.absolute_url() + '/profile/' + user.id))
+                usersDict.append(user_dict)
+            else:
+                usersDict.append({
+                    'id': user.id,
+                    'fullname': user.getProperty('fullname', ''),
+                    'ubicacio': user.getProperty('ubicacio', ''),
+                    'location': user.getProperty('location', ''),
+                    'email': user.getProperty('email', ''),
+                    'telefon': user.getProperty('telefon', ''),
+                    'foto': str(mtool.getPersonalPortrait(user.id)),
+                    'url': site.absolute_url() + '/profile/' + user.id
+                })
 
     len_usuaris = len(usersDict)
     if len_usuaris > 20:

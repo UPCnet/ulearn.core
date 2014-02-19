@@ -37,14 +37,14 @@ class UlearnUserSchema(object):
 
 class ULearnUserDataPanelAdapter(EnhancedUserDataPanelAdapter):
     def get_ubicacio(self):
-        return self.context.getProperty('ubicacio', '')
+        return self._getProperty('ubicacio')
 
     def set_ubicacio(self, value):
         return self.context.setMemberProperties({'ubicacio': value})
     ubicacio = property(get_ubicacio, set_ubicacio)
 
     def get_telefon(self):
-        return self.context.getProperty('telefon', '')
+        return self._getProperty('telefon')
 
     def set_telefon(self, value):
         return self.context.setMemberProperties({'telefon': value})
