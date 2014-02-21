@@ -99,6 +99,10 @@ def setupVarious(context):
         frontpage.language = pl.getDefaultLanguage()
         frontpage.reindexObject()
         logger.info("DX default content site setup successfully.")
+    else:
+        alsoProvides(front_page, IHomePage)
+        front_page.language = pl.getDefaultLanguage()
+        front_page.reindexObject()
 
     # Set the default page to the homepage view
     portal.setDefaultPage('homepage')
