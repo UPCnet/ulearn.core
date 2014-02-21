@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from five import grok
 from zope import schema
+from zope.component import getUtility
 from z3c.form import button
 from zope.schema.interfaces import IContextSourceBinder
 from zope.schema.vocabulary import SimpleVocabulary
@@ -15,6 +16,7 @@ from Products.statusmessages.interfaces import IStatusMessage
 from genweb.core.widgets.select2_user_widget import Select2UserInputFieldWidget
 
 from ulearn.core import _
+from mrs.max.utilities import IMAXClient
 
 
 class availableLanguages(object):
@@ -217,7 +219,22 @@ class UlearnControlPanelSettingsForm(controlpanel.RegistryEditForm):
             return
         self.applyChanges(data)
 
-        # XXX:TODO On save, send vip_user list to MAX
+        if data.get('vip_users', False):
+            maxclient, settings = getUtility(IMAXClient)()
+            maxclient.setActor(settings.max_restricted_username)
+            maxclient.setToken(settings.max_restricted_token)
+
+            current_vips = maxclient.getSecurity()
+            current_vips = current_vips[0].get('roles').get('VIP', ['', ])
+
+            un_vip = [a for a in current_vips if a not in data.get('vip_users')]
+            for user in un_vip:
+                maxclient.revoke_security_role(user, 'VIP')
+
+            make_vip = [vip for vip in data.get('vip_users') if vip not in current_vips]
+
+            for user in make_vip:
+                maxclient.grant_security_role(user, 'VIP')
 
         IStatusMessage(self.request).addStatusMessage(_(u"Changes saved"),
                                                       "info")
