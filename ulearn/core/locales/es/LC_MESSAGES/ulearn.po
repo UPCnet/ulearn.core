@@ -380,11 +380,6 @@ msgstr "Ver más comunidades"
 msgid "stats"
 msgstr "Estadísticas"
 
-#. Default: "Thinnkers portlet"
-#: ../../../../ulearn.theme/ulearn/theme/portlets/thinnkers.py:34
-msgid "thinnkers"
-msgstr "thinnkers"
-
 #. Default: "Calendar portlet"
 #: ../../../../ulearn.theme/ulearn/theme/portlets/calendar.py:33
 msgid "ulearncalendar"
@@ -490,6 +485,9 @@ msgstr "Ver más personas"
 
 msgid "people"
 msgstr "Personas"
+
+msgid "thinnkers"
+msgstr "Thinnkers"
 
 msgid "use_the_search_input_to_find_more_people1"
 msgstr "Usa el buscador para encontrar personas. Mostrando "

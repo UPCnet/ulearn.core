@@ -481,6 +481,9 @@ msgstr "Veure més persones"
 msgid "people"
 msgstr "Persones"
 
+msgid "thinnkers"
+msgstr "Thinnkers"
+
 msgid "use_the_search_input_to_find_more_people1"
 msgstr "Utilitza el cercador per trobar persones. Mostrant "
 

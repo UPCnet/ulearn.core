@@ -397,3 +397,9 @@ msgstr ""
 
 msgid "hashtag_help"
 msgstr "The Twitter hashtag related to this community. There is no need to include the symbol '#'."
+
+msgid "people"
+msgstr "People"
+
+msgid "thinnkers"
+msgstr "Thinnkers"

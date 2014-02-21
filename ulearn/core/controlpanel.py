@@ -40,7 +40,7 @@ class IUlearnControlPanelSettings(model.Schema):
 
     model.fieldset('General',
                   _(u'General'),
-                  fields=['campus_url', 'threshold_winwin1', 'threshold_winwin2',
+                  fields=['campus_url', 'people_literal', 'threshold_winwin1', 'threshold_winwin2',
                           'threshold_winwin3'])
 
     model.fieldset('Specific',
@@ -194,6 +194,13 @@ class IUlearnControlPanelSettings(model.Schema):
         value_type=schema.TextLine(),
         required=False,
         default=[])
+
+    people_literal = schema.Choice(
+        title=_(u"vip_users"),
+        description=_(u"Llista amb les persones VIPs que no han de sortir a les cerques i estan restringides a les demés."),
+        values=['thinnkers', 'people'],
+        required=False,
+        default='people')
 
 
 class UlearnControlPanelSettingsForm(controlpanel.RegistryEditForm):

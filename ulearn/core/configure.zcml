@@ -14,7 +14,7 @@
       title="Ulearn: Add Community"
       />
 
-    <permission 
+    <permission
       id="ulearn.addOportunitat"
       title="Ulearn: Add Oportunitat"
       />
@@ -43,7 +43,7 @@
       permission="ulearn.core.setup"
       />
 
-    
+
     <genericsetup:importStep
       name="ulearn.core.setupstep"
       title="ulearn.core special import handlers"
@@ -55,6 +55,14 @@
       title="ulearn.core"
       directory="profiles/default"
       description="Installs the ulearn.core package"
+      provides="Products.GenericSetup.interfaces.EXTENSION"
+      />
+
+    <genericsetup:registerProfile
+      name="uninstall"
+      title="Uninstall ulearn.core"
+      directory="profiles/uninstall"
+      description="Uninstall base setup for ulearn."
       provides="Products.GenericSetup.interfaces.EXTENSION"
       />
 
