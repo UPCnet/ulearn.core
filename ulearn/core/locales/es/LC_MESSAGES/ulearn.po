@@ -459,6 +459,46 @@ msgstr "Crear una reunión online"
 msgid "Meetings space"
 msgstr "Reuniones online"
 
+msgid "seemoreusers"
+msgstr "Ver más personas"
+
+msgid "people"
+msgstr "Personas"
+
+msgid "thinnkers"
+msgstr "Thinnkers"
+
+msgid "use_the_search_input_to_find_more_people1"
+msgstr "Usa el buscador para encontrar personas. Mostrando "
+
+msgid "use_the_search_input_to_find_more_people2"
+msgstr " de 20."
+
+## Search users
+
+msgid "search_users"
+msgstr "Buscar personas"
+
+## Generali profile
+
+msgid "help_portrait"
+msgstr "Para agregar su foto, haz clic en el botón 'Navegar' y selecciona una foto tuya."
+
+msgid "label_biography"
+msgstr "Biografía / Curriculum Vitae"
+
+msgid "help_biography"
+msgstr "Una pequeña reseña de quién eres y qué haces."
+
+msgid "help_homepage"
+msgstr "La URL para su página personal externa, si tiene una."
+
+msgid "label_ubicacio"
+msgstr "Ubicación"
+
+msgid "help_ubicacio"
+msgstr "Tu ubicación dentro de la compañía y/o ubicación geográfica."
+
 msgid "first_name"
 msgstr "Nombre"
 
@@ -479,18 +519,3 @@ msgstr "Centro"
 
 msgid "function"
 msgstr "Función"
-
-msgid "seemoreusers"
-msgstr "Ver más personas"
-
-msgid "people"
-msgstr "Personas"
-
-msgid "thinnkers"
-msgstr "Thinnkers"
-
-msgid "use_the_search_input_to_find_more_people1"
-msgstr "Usa el buscador para encontrar personas. Mostrando "
-
-msgid "use_the_search_input_to_find_more_people2"
-msgstr " de 20."
