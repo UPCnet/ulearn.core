@@ -1,11 +1,16 @@
 Changelog
 =========
 
-1.6 (unreleased)
+1.6 (2014-02-24)
 ----------------
 
-- Nothing changed yet.
-
+* i18n [Victor Fernandez de Alba]
+* Uninstall profile, thinnkers literal conditional, new i18n. [Victor Fernandez de Alba]
+* Inform of the vip users to the MAX server [Victor Fernandez de Alba]
+* Fix setuphandlers [Victor Fernandez de Alba]
+* Extend the userschema properly [Victor Fernandez de Alba]
+* Move some helpful methods into the g.core [Victor Fernandez de Alba]
+* Transfer setup views to genweb [Victor Fernandez de Alba]
 
 1.5 (2014-01-21)
 ----------------
