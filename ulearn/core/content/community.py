@@ -665,10 +665,11 @@ def edit_community(community, event):
     # Get current MAX context information
     context_current_info = maxclient.get_context(url=community.absolute_url())
 
-    if context_current_info.get('twitterHashtag', None) != community.twitter_hashtag:
-        # Update twitter hashtag
-        maxclient.modifyContext(community.absolute_url(),
-                                dict(twitterHashtag=community.twitter_hashtag))
+    if context_current_info:
+        if context_current_info.get('twitterHashtag', None) != community.twitter_hashtag:
+            # Update twitter hashtag
+            maxclient.modifyContext(community.absolute_url(),
+                                    dict(twitterHashtag=community.twitter_hashtag))
 
     # Determine the kind of security the community should have provided the type
     # of community
@@ -679,10 +680,11 @@ def edit_community(community, event):
     elif community.community_type == u'Organizative':
         community_permissions = dict(read='subscribed', write='restricted', subscribe='restricted')
 
-    if context_current_info.get('permissions', '') != community_permissions:
-        # Update community permissions on MAX
-        maxclient.modifyContext(community.absolute_url(),
-                                dict(permissions=community_permissions))
+    if context_current_info:
+        if context_current_info.get('permissions', '') != community_permissions:
+            # Update community permissions on MAX
+            maxclient.modifyContext(community.absolute_url(),
+                                    dict(permissions=community_permissions))
 
     # Update/Subscribe the invited users and grant them permission on MAX
     for reader in community.readers:
