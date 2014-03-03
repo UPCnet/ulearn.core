@@ -553,5 +553,5 @@ msgstr "Configuración uLearn"
 msgid "Visibility"
 msgstr "Visibilidad"
 
-msgid "Llista amb les persones que no han de sortir a les cerques i que tenen accés restringit per les demés persones.""
+msgid "Llista amb les persones que no han de sortir a les cerques i que tenen accés restringit per les demés persones."
 msgstr "Lista con las persona que no deben salir en las búsquedas y que tienen acceso restringido por parte de las demás personas."
