@@ -58,8 +58,8 @@ def searchUsersFunction(context, request, searchString, user_properties=None):
                 })
 
     len_usuaris = len(usersDict)
-    if len_usuaris > 20:
-        escollits = random.sample(range(len(usersDict)), 20)
+    if len_usuaris > 100:
+        escollits = random.sample(range(len(usersDict)), 100)
         llista = []
         for escollit in escollits:
             llista.append(usersDict[escollit])
