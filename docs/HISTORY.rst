@@ -1,10 +1,10 @@
 Changelog
 =========
 
-1.9 (unreleased)
+1.9 (2014-03-03)
 ----------------
 
-- Nothing changed yet.
+* Fix i18n.
 
 
 1.8 (2014-03-03)
