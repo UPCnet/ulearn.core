@@ -1,11 +1,10 @@
 Changelog
 =========
 
-1.10 (unreleased)
+1.10 (2014-03-03)
 -----------------
 
-- Nothing changed yet.
-
+* Change limit on big_data search user viz [Victor Fernandez de Alba]
 
 1.9 (2014-03-03)
 ----------------
