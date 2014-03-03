@@ -1,11 +1,12 @@
 Changelog
 =========
 
-1.7 (unreleased)
+1.7 (2014-03-03)
 ----------------
 
-- Nothing changed yet.
-
+* Add setup for timezone of p.a.event. Fix controlpanel i18n [Victor Fernandez de Alba]
+* Add tests for calendar [Victor Fernandez de Alba]
+* Add guard in case there is no MAX server configured [Victor Fernandez de Alba]
 
 1.6 (2014-02-24)
 ----------------
