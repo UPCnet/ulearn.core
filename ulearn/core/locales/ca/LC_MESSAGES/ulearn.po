@@ -475,17 +475,50 @@ msgstr "Llista amb les persones subscrites amb permís d'edició"
 msgid "Subscribed people with owner permissions"
 msgstr "Llista amb les persones propietàries de la comunitat"
 
-msgid "seemoreusers"
+msgid "seemoreusers_persones"
 msgstr "Veure més persones"
 
-msgid "people"
+msgid "seemoreusers_thinnkers"
+msgstr "Veure més thinnkers"
+
+msgid "seemoreusers_participants"
+msgstr "Veure més participants"
+
+msgid "persones"
 msgstr "Persones"
 
 msgid "thinnkers"
 msgstr "Thinnkers"
 
+msgid "participants"
+msgstr "Participants"
+
+msgid "entrades"
+msgstr "entrades"
+
+msgid "people_literal"
+msgstr "Literals identificació de persones"
+
 msgid "use_the_search_input_to_find_more_people1"
-msgstr "Utilitza el cercador per trobar persones. Mostrant "
+msgstr "Utilitza el cercador per trobar persones. "
 
 msgid "use_the_search_input_to_find_more_people2"
+msgstr "Mostrant "
+
+msgid "use_the_search_input_to_find_more_people3"
 msgstr " de 20."
+
+msgid "seemoreevents"
+msgstr "Veure més esdeveniments"
+
+msgid "search_content"
+msgstr "Cerca en el contingut"
+
+msgid "no_visibles"
+msgstr "Persones no visibles"
+
+msgid "uLearn settings"
+msgstr "Configuració uLearn"
+
+msgid "Visibility"
+msgstr "Visibilitat"

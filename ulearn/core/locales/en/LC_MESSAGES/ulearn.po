@@ -398,8 +398,32 @@ msgstr ""
 msgid "hashtag_help"
 msgstr "The Twitter hashtag related to this community. There is no need to include the symbol '#'."
 
-msgid "people"
+msgid "seemoreusers_persones"
+msgstr "See more people"
+
+msgid "seemoreusers_thinnkers"
+msgstr "See more thinnkers"
+
+msgid "seemoreusers_participants"
+msgstr "See more participants"
+
+msgid "persones"
 msgstr "People"
 
 msgid "thinnkers"
 msgstr "Thinnkers"
+
+msgid "participants"
+msgstr "Participants"
+
+msgid "entrades"
+msgstr "posts"
+
+msgid "search_content"
+msgstr "Search for content"
+
+msgid "no_visibles"
+msgstr "No visible people"
+
+msgid "Llista amb les persones que no han de sortir a les cerques i que tenen accés restringit per les demés persones.""
+msgstr "People with restricted access by other persons. They do not show in searches."

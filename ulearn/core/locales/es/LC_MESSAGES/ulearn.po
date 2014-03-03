@@ -459,20 +459,41 @@ msgstr "Crear una reunión online"
 msgid "Meetings space"
 msgstr "Reuniones online"
 
-msgid "seemoreusers"
+msgid "seemoreusers_persones"
 msgstr "Ver más personas"
 
-msgid "people"
+msgid "seemoreusers_thinnkers"
+msgstr "Ver más thinnkers"
+
+msgid "seemoreusers_participants"
+msgstr "Ver más participantes"
+
+msgid "persones"
 msgstr "Personas"
 
 msgid "thinnkers"
 msgstr "Thinnkers"
 
+msgid "participants"
+msgstr "Participantes"
+
+msgid "entrades"
+msgstr "entradas"
+
+msgid "people_literal"
+msgstr "Literales de identificación de persones"
+
 msgid "use_the_search_input_to_find_more_people1"
-msgstr "Usa el buscador para encontrar personas. Mostrando "
+msgstr "Usa el buscador para encontrar personas. "
 
 msgid "use_the_search_input_to_find_more_people2"
+msgstr "Mostrando "
+
+msgid "use_the_search_input_to_find_more_people3"
 msgstr " de 20."
+
+msgid "search_content"
+msgstr "Busca en el contenido"
 
 ## Search users
 
@@ -519,3 +540,18 @@ msgstr "Centro"
 
 msgid "function"
 msgstr "Función"
+
+msgid "seemoreevents"
+msgstr "Veure més esdeveniments"
+
+msgid "no_visibles"
+msgstr "Personas no visibles"
+
+msgid "uLearn settings"
+msgstr "Configuración uLearn"
+
+msgid "Visibility"
+msgstr "Visibilidad"
+
+msgid "Llista amb les persones que no han de sortir a les cerques i que tenen accés restringit per les demés persones.""
+msgstr "Lista con las persona que no deben salir en las búsquedas y que tienen acceso restringido por parte de las demás personas."

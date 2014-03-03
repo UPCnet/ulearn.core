@@ -14,6 +14,7 @@ from genweb.core.interfaces import IHomePage
 from ulearn.core.controlpanel import IUlearnControlPanelSettings
 
 import logging
+import plone.api
 import transaction
 
 PROFILE_ID = 'profile-ulearn.core:default'
@@ -150,5 +151,9 @@ def setupVarious(context):
         target_manager_assignments['calendar'] = calendarAssignment()
         target_manager_assignments['stats'] = statsAssignment()
         target_manager_assignments['econnect'] = econnectAssignment()
+
+    # Set default TimeZone (p.a.event)
+    plone.api.portal.set_registry_record('plone.app.event.portal_timezone', 'Europe/Madrid')
+    plone.api.portal.set_registry_record('plone.app.event.first_weekday', 0)
 
     transaction.commit()

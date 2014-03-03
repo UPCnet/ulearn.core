@@ -51,8 +51,8 @@ class IUlearnControlPanelSettings(model.Schema):
                           'maxui_form_bg',
                           'alt_gradient_start_color', 'alt_gradient_end_color'])
 
-    model.fieldset('VIPs',
-                  _(u'VIPs'),
+    model.fieldset('Visibility',
+                  _(u'Visibility'),
                   fields=['vip_users'])
 
     model.fieldset('UPCnet only',
@@ -189,18 +189,18 @@ class IUlearnControlPanelSettings(model.Schema):
 
     form.widget(vip_users=Select2UserInputFieldWidget)
     vip_users = schema.List(
-        title=_(u"vip_users"),
-        description=_(u"Llista amb les persones VIPs que no han de sortir a les cerques i estan restringides a les demés."),
+        title=_(u"no_visibles"),
+        description=_(u"Llista amb les persones que no han de sortir a les cerques i que tenen accés restringit per les demés persones."),
         value_type=schema.TextLine(),
         required=False,
         default=[])
 
     people_literal = schema.Choice(
-        title=_(u"vip_users"),
-        description=_(u"Llista amb les persones VIPs que no han de sortir a les cerques i estan restringides a les demés."),
-        values=['thinnkers', 'people'],
+        title=_(u"people_literal"),
+        description=_(u"Literals que identifiquen als usuaris de les comunitats i les seves aportacions."),
+        values=['thinnkers', 'persones', 'participants'],
         required=False,
-        default='people')
+        default='persones')
 
 
 class UlearnControlPanelSettingsForm(controlpanel.RegistryEditForm):
