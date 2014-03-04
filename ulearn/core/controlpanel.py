@@ -210,7 +210,7 @@ class UlearnControlPanelSettingsForm(controlpanel.RegistryEditForm):
     id = "UlearnControlPanelSettingsForm"
     label = _(u"Ulearn settings")
     description = _(u"help_ulearn_settings_editform",
-                    default=u"Configuració de Ulearn")
+                    default=u"uLearn configuration registry.")
 
     def updateFields(self):
         super(UlearnControlPanelSettingsForm, self).updateFields()

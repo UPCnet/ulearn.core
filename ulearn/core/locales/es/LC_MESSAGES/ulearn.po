@@ -226,7 +226,7 @@ msgstr "Twitter hashtag"
 
 #: ../../../../ulearn.core/ulearn/core/controlpanel.py:60
 msgid "Ulearn settings"
-msgstr "Configuración uLearn"
+msgstr "Configuración de uLearn"
 
 #: ../../../../ulearn.core/ulearn/core/profiles/default/types/ulearn.community.xml:
 msgid "Una comunitat administrable"
@@ -481,7 +481,7 @@ msgid "entrades"
 msgstr "entradas"
 
 msgid "people_literal"
-msgstr "Literales de identificación de persones"
+msgstr "Literales de identificación de personas"
 
 msgid "use_the_search_input_to_find_more_people1"
 msgstr "Usa el buscador para encontrar personas. "
@@ -490,7 +490,7 @@ msgid "use_the_search_input_to_find_more_people2"
 msgstr "Mostrando "
 
 msgid "use_the_search_input_to_find_more_people3"
-msgstr " de 20."
+msgstr " de 100."
 
 msgid "search_content"
 msgstr "Busca en el contenido"
@@ -554,4 +554,13 @@ msgid "Visibility"
 msgstr "Visibilidad"
 
 msgid "Llista amb les persones que no han de sortir a les cerques i que tenen accés restringit per les demés persones."
-msgstr "Lista con las persona que no deben salir en las búsquedas y que tienen acceso restringido por parte de las demás personas."
+msgstr "Lista con las personas que no deben salir en las búsquedas y que tienen acceso restringido por parte de las demás."
+
+msgid "Specific"
+msgstr "Específico"
+
+msgid "help_ulearn_settings_editform"
+msgstr "Registro de configuración de uLearn."
+
+msgid "Literals que identifiquen als usuaris de les comunitats i les seves aportacions."
+msgstr "Literales que identifican a los usuarios de las comunidades y sus aportaciones."

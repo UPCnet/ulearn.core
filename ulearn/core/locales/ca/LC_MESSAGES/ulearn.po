@@ -226,7 +226,7 @@ msgstr "Twitter hashtag"
 
 #: ../../../../../../ulearn.core/ulearn/core/controlpanel.py:60
 msgid "Ulearn settings"
-msgstr "Configuració uLearn"
+msgstr "Configuració de uLearn"
 
 #: ../../../../../../ulearn.core/ulearn/core/profiles/default/types/ulearn.community.xml:00
 msgid "Una comunitat administrable"
@@ -497,7 +497,7 @@ msgid "entrades"
 msgstr "entrades"
 
 msgid "people_literal"
-msgstr "Literals identificació de persones"
+msgstr "Literals d'identificació de persones"
 
 msgid "use_the_search_input_to_find_more_people1"
 msgstr "Utilitza el cercador per trobar persones. "
@@ -506,7 +506,7 @@ msgid "use_the_search_input_to_find_more_people2"
 msgstr "Mostrant "
 
 msgid "use_the_search_input_to_find_more_people3"
-msgstr " de 20."
+msgstr " de 100."
 
 msgid "seemoreevents"
 msgstr "Veure més esdeveniments"
@@ -522,3 +522,9 @@ msgstr "Configuració uLearn"
 
 msgid "Visibility"
 msgstr "Visibilitat"
+
+msgid "Specific"
+msgstr "Específic"
+
+msgid "help_ulearn_settings_editform"
+msgstr "Registre de configuració d'uLearn."
