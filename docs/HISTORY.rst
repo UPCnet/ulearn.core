@@ -1,11 +1,10 @@
 Changelog
 =========
 
-1.11 (unreleased)
+1.11 (2014-03-04)
 -----------------
 
-- Nothing changed yet.
-
+* Update i18n [Victor Fernandez de Alba]
 
 1.10 (2014-03-03)
 -----------------
