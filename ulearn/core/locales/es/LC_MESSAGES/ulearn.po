@@ -542,7 +542,7 @@ msgid "function"
 msgstr "Función"
 
 msgid "seemoreevents"
-msgstr "Veure més esdeveniments"
+msgstr "Ver más eventos"
 
 msgid "no_visibles"
 msgstr "Personas no visibles"
