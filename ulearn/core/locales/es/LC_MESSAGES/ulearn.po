@@ -554,8 +554,7 @@ msgid "Visibility"
 msgstr "Visibilidad"
 
 msgid "Llista amb les persones que no han de sortir a les cerques i que tenen accés restringit per les demés persones."
-<<<<<<< HEAD
-msgstr "Lista con las persona que no deben salir en las búsquedas y que tienen acceso restringido por parte de las demás personas."
+msgstr "Lista con las persona que no deben salir en las búsquedas y que tienen acceso restringido por parte de las demás."
 
 msgid "search_text"
 msgstr "Búsqueda por texto"
@@ -565,8 +564,6 @@ msgstr "Búsqueda por categorías"
 
 msgid "use_the_search_input_to_find_objects_with_tags"
 msgstr "Búsqueda por texto y/o categorías"
-=======
-msgstr "Lista con las personas que no deben salir en las búsquedas y que tienen acceso restringido por parte de las demás."
 
 msgid "Specific"
 msgstr "Específico"
@@ -576,4 +573,3 @@ msgstr "Registro de configuración de uLearn."
 
 msgid "Literals que identifiquen als usuaris de les comunitats i les seves aportacions."
 msgstr "Literales que identifican a los usuarios de las comunidades y sus aportaciones."
->>>>>>> 8ff7cfe391efe0f0389548a999e05efd549ff0fe

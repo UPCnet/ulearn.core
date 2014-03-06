@@ -523,7 +523,6 @@ msgstr "Configuració uLearn"
 msgid "Visibility"
 msgstr "Visibilitat"
 
-<<<<<<< HEAD
 msgid "search_text"
 msgstr "Cerca per text"
 
@@ -532,10 +531,9 @@ msgstr "Cerca per categories"
 
 msgid "use_the_search_input_to_find_objects_with_tags"
 msgstr "Cerca per text i/o categories"
-=======
+
 msgid "Specific"
 msgstr "Específic"
 
 msgid "help_ulearn_settings_editform"
 msgstr "Registre de configuració d'uLearn."
->>>>>>> 8ff7cfe391efe0f0389548a999e05efd549ff0fe
