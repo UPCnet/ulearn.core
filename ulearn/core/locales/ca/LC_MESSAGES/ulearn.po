@@ -522,3 +522,12 @@ msgstr "Configuració uLearn"
 
 msgid "Visibility"
 msgstr "Visibilitat"
+
+msgid "search_text"
+msgstr "Cerca per text"
+
+msgid "search_tags"
+msgstr "Cerca per categories"
+
+msgid "use_the_search_input_to_find_objects_with_tags"
+msgstr "Cerca per text i/o categories"

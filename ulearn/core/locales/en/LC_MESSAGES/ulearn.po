@@ -427,3 +427,12 @@ msgstr "No visible people"
 
 msgid "Llista amb les persones que no han de sortir a les cerques i que tenen accés restringit per les demés persones."
 msgstr "People with restricted access by other persons. They do not show in searches."
+
+msgid "search_text"
+msgstr "Search by text"
+
+msgid "search_tags"
+msgstr "Search by categories"
+
+msgid "use_the_search_input_to_find_objects_with_tags"
+msgstr "Search by text and/or categories"
