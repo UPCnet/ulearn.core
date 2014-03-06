@@ -1,15 +1,42 @@
 # -*- encoding: utf-8 -*-
-from zope.component import getMultiAdapter
+from zope.component import getMultiAdapter, getUtility
 from Acquisition import aq_inner
 from Products.CMFCore.utils import getToolByName
 from itertools import chain
 from Products.CMFPlone.utils import normalizeString
 from zope.component.hooks import getSite
+
+from mrs.max.utilities import IMAXClient
 from ulearn.core.content.community import ICommunity
+
+import plone.api
 import random
 
 
-def searchUsersFunction(context, request, searchString, user_properties=None):
+def searchUsersFunction(context, request, search_string, user_properties=None):
+    current_user = plone.api.user.get_current()
+    oauth_token = current_user.getProperty('oauth_token', '')
+
+    maxclient, settings = getUtility(IMAXClient)()
+    maxclient.setActor(current_user.getId())
+    maxclient.setToken(oauth_token)
+
+    maxclient.people.get(qs={'username': search_string})
+
+
+    len_usuaris = len(usersDict)
+    if len_usuaris > 100:
+        escollits = random.sample(range(len(usersDict)), 100)
+        llista = []
+        for escollit in escollits:
+            llista.append(usersDict[escollit])
+        return {'content': llista, 'length': len_usuaris, 'big': True}
+    else:
+        return {'content': usersDict, 'length': len_usuaris, 'big': False}
+
+
+
+def searchUsersFunction_old(context, request, searchString, user_properties=None):
     ignore = []
     mtool = getToolByName(context, 'portal_membership')
 

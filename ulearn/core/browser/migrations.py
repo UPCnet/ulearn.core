@@ -70,7 +70,7 @@ def createMAXUser(username):
     maxclient.setToken(settings.max_restricted_token)
 
     try:
-        result = maxclient.addUser(username)
+        result = maxclient.people[username].post()
 
         if result[0]:
             if result[1] == 201:

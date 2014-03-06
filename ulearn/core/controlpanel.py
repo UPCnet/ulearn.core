@@ -231,17 +231,17 @@ class UlearnControlPanelSettingsForm(controlpanel.RegistryEditForm):
             maxclient.setActor(settings.max_restricted_username)
             maxclient.setToken(settings.max_restricted_token)
 
-            current_vips = maxclient.getSecurity()
-            current_vips = current_vips[0].get('roles').get('VIP', ['', ])
+            current_vips = maxclient.admin.security.get()
+            current_vips = current_vips[0].get('roles').get('NonVisible', ['', ])
 
             un_vip = [a for a in current_vips if a not in data.get('vip_users')]
             for user in un_vip:
-                maxclient.revoke_security_role(user, 'VIP')
+                maxclient.admin.security.roles['NonVisible'].users[user].delete()
 
             make_vip = [vip for vip in data.get('vip_users') if vip not in current_vips]
 
             for user in make_vip:
-                maxclient.grant_security_role(user, 'VIP')
+                maxclient.admin.security.roles['NonVisible'].users[user].post()
 
         IStatusMessage(self.request).addStatusMessage(_(u"Changes saved"),
                                                       "info")
