@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from hashlib import sha1
+
 from five import grok
 from zope import schema
 from z3c.form import button
@@ -168,6 +170,15 @@ def community_type(context):
     """
     return context.community_type
 grok.global_adapter(community_type, name='community_type')
+
+
+@indexer(ICommunity)
+def community_hash(context):
+    """Create a catalogue indexer, registered as an adapter, which can
+    populate the ``community_hash`` value count it and index.
+    """
+    return sha1(context.absolute_url()).hexdigest()
+grok.global_adapter(community_hash, name='community_hash')
 
 
 class View(grok.View):
