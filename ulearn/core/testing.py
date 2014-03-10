@@ -1,3 +1,4 @@
+from zope.component import getUtility
 from plone.app.testing import PloneSandboxLayer
 from plone.app.testing import applyProfile
 from plone.app.testing import PLONE_FIXTURE
@@ -11,6 +12,18 @@ from plone.app.testing import logout
 from plone.testing import z2
 
 from zope.configuration import xmlconfig
+
+from mrs.max.utilities import IMAXClient
+from mrs.max.utilities import set_user_oauth_token
+
+
+def setup_max(restricted, password):
+    maxclient, settings = getUtility(IMAXClient)()
+    token = maxclient.getToken(restricted, password)
+    settings.max_restricted_username = restricted
+    settings.max_restricted_token = token
+
+    set_user_oauth_token(restricted, token)
 
 
 class UlearncoreLayer(PloneSandboxLayer):
@@ -39,13 +52,12 @@ class UlearncoreLayer(PloneSandboxLayer):
     def setUpPloneSite(self, portal):
         applyProfile(portal, 'ulearn.core:default')
 
-        portal.acl_users.userFolderAddUser('admin',
-                                           'secret',
-                                           ['Manager'],
-                                           [])
+        portal.acl_users.userFolderAddUser('admin', 'secret', ['Manager'], [])
         portal.acl_users.userFolderAddUser('user', 'secret', ['Member'], [])
         portal.acl_users.userFolderAddUser('poweruser', 'secret', ['Member', 'WebMaster'], [])
+        portal.acl_users.userFolderAddUser('usuari.iescude', 'secret', ['Member'], [])
         login(portal, 'admin')
+        setup_max(u'usuari.iescude', 'holahola')
         portal.portal_workflow.setDefaultChain("genweb_intranet")
         logout()
         # setRoles(portal, TEST_USER_ID, ['Manager'])

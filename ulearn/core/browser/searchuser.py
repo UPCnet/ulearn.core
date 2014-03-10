@@ -14,6 +14,7 @@ import random
 
 
 def searchUsersFunction(context, request, search_string, user_properties=None):
+    portal = getSite()
     current_user = plone.api.user.get_current()
     oauth_token = current_user.getProperty('oauth_token', '')
 
@@ -21,19 +22,48 @@ def searchUsersFunction(context, request, search_string, user_properties=None):
     maxclient.setActor(current_user.getId())
     maxclient.setToken(oauth_token)
 
-    maxclient.people.get(qs={'username': search_string})
+    max_results = maxclient.people.get(qs={'username': search_string})
 
+    searchView = getMultiAdapter((aq_inner(context), request), name='pas_search')
+    plone_results = searchView.merge(chain(*[searchView.searchUsers(**{field: search_string}) for field in ['name', 'fullname', 'email', 'twitter_username', 'ubicacio', 'location']]), 'userid')
 
-    len_usuaris = len(usersDict)
+    merged_results = list(set([plone_user['userid'] for plone_user in plone_results]) &
+                          set([max_user['username'] for max_user in max_results]))
+
+    pm = plone.api.portal.get_tool(name='portal_membership')
+    users = [pm.getMemberById(user) for user in merged_results]
+
+    users_profile = []
+    for user in users:
+        if user is not None:
+            if user_properties:
+                user_dict = {}
+                for user_property in user_properties:
+                    user_dict.update({user_property: user.getProperty(user_property, '')})
+                user_dict.update(dict(foto=str(pm.getPersonalPortrait(user.id))))
+                user_dict.update(dict(url=portal.absolute_url() + '/profile/' + user.id))
+                users_profile.append(user_dict)
+            else:
+                users_profile.append({
+                    'id': user.id,
+                    'fullname': user.getProperty('fullname', ''),
+                    'ubicacio': user.getProperty('ubicacio', ''),
+                    'location': user.getProperty('location', ''),
+                    'email': user.getProperty('email', ''),
+                    'telefon': user.getProperty('telefon', ''),
+                    'foto': str(pm.getPersonalPortrait(user.id)),
+                    'url': portal.absolute_url() + '/profile/' + user.id
+                })
+
+    len_usuaris = len(users_profile)
     if len_usuaris > 100:
-        escollits = random.sample(range(len(usersDict)), 100)
+        escollits = random.sample(range(len(users_profile)), 100)
         llista = []
         for escollit in escollits:
-            llista.append(usersDict[escollit])
+            llista.append(users_profile[escollit])
         return {'content': llista, 'length': len_usuaris, 'big': True}
     else:
-        return {'content': usersDict, 'length': len_usuaris, 'big': False}
-
+        return {'content': users_profile, 'length': len_usuaris, 'big': False}
 
 
 def searchUsersFunction_old(context, request, searchString, user_properties=None):
