@@ -48,6 +48,7 @@ from ulearn.core.interfaces import IDocumentFolder, ILinksFolder, IPhotosFolder,
 
 from wildcard.foldercontents.interfaces import IDXFileFactory
 import json
+import mimetypes
 
 
 @grok.provider(IContextSourceBinder)
@@ -271,7 +272,7 @@ class UploadFile(grok.View):
         else:
             container = self.get_images_folder()
 
-        content_type = input_file.headers['content-type']
+        content_type = mimetypes.guess_type(filename)[0] or ""
         factory = IDXFileFactory(container)
 
         try:

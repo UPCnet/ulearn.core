@@ -12,6 +12,7 @@ from plone.app.testing import logout
 from plone.testing import z2
 
 from zope.configuration import xmlconfig
+from zope.interface import alsoProvides
 
 from mrs.max.utilities import IMAXClient
 from mrs.max.utilities import set_user_oauth_token
