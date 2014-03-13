@@ -38,7 +38,9 @@ def searchUsersFunction(context, request, search_string, user_properties=None):
 
             users = [pm.getMemberById(user) for user in merged_results]
         else:
-            users = plone.api.user.get_users()
+            plone_results = [userinfo.get('login') for userinfo in portal.acl_users.mutable_properties.enumerateUsers()]
+            users = [pm.getMemberById(user) for user in plone_results]
+
             if nonvisibles:
                 filtered = []
                 for user in users:
