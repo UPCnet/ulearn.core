@@ -63,3 +63,35 @@ class TestUploads(unittest.TestCase):
 
         self.assertEqual(res.status_code, 201)
         self.assertTrue('avatar.png' in community['media'].objectIds())
+
+    def test_upload_file_to_community_corner_mimetipes(self):
+        community = self.create_test_community()
+        avatar_file = open(os.path.join(os.path.dirname(__file__), "avatar.png"), "rb")
+        files = {'file': ('avatar', avatar_file)}
+
+        res = requests.post('{}/{}/upload'.format(self.portal.absolute_url(), community.id), headers=self.oauth2Header(self.username, self.token), files=files)
+
+        transaction.commit()
+
+        self.assertEqual(res.status_code, 201)
+        self.assertTrue('avatar' in community['documents'].objectIds())
+
+        avatar_file = open(os.path.join(os.path.dirname(__file__), "avatar.png"), "rb")
+        files = {'file': ('avatar.pdf', avatar_file)}
+
+        res = requests.post('{}/{}/upload'.format(self.portal.absolute_url(), community.id), headers=self.oauth2Header(self.username, self.token), files=files)
+
+        transaction.commit()
+
+        self.assertEqual(res.status_code, 201)
+        self.assertTrue('avatar.pdf' in community['documents'].objectIds())
+
+        avatar_file = open(os.path.join(os.path.dirname(__file__), "avatar.png"), "rb")
+        files = {'file': ('avatar.odt', avatar_file)}
+
+        res = requests.post('{}/{}/upload'.format(self.portal.absolute_url(), community.id), headers=self.oauth2Header(self.username, self.token), files=files)
+
+        transaction.commit()
+
+        self.assertEqual(res.status_code, 201)
+        self.assertTrue('avatar.odt' in community['documents'].objectIds())
