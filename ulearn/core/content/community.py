@@ -299,6 +299,8 @@ class ToggleFavorite(grok.View):
 
 
 class ToggleSubscribe(grok.View):
+    """ Toggle subscription in an Open or Closed community. """
+
     grok.context(ICommunity)
     grok.name('toggle-subscribe')
 
@@ -308,9 +310,10 @@ class ToggleSubscribe(grok.View):
         current_user = pm.getAuthenticatedMember().getUserName()
 
         if community.community_type == u'Open' or community.community_type == u'Closed':
-            if current_user in community.subscribed:
-                community.subscribed.remove(current_user)
-                IFavorite(community).remove(current_user)
+            if self.user_is_subscribed(current_user, community):
+                self.remove_user_from_subscriptions(current_user, community)
+                if current_user in IFavorite(community).get():
+                    IFavorite(community).remove(current_user)
             else:
                 community.subscribed.append(current_user)
 
@@ -322,8 +325,21 @@ class ToggleSubscribe(grok.View):
             # Bad, bad guy... You shouldn't been trying this...
             return False
 
+    def user_is_subscribed(self, user, community):
+        return user in community.readers + community.subscribed + community.owners
+
+    def remove_user_from_subscriptions(self, user, community):
+        if user in community.readers:
+            community.readers.remove(user)
+        if user in community.subscribed:
+            community.subscribed.remove(user)
+        if user in community.owners:
+            community.owners.remove(user)
+
 
 class UpgradeSubscribe(grok.View):
+    """ Upgrade subscription from reader to editor in an open community. """
+
     grok.context(ICommunity)
     grok.name('upgrade-subscribe')
 

@@ -1,10 +1,11 @@
 # -*- encoding: utf-8 -*-
-from zope.component import getMultiAdapter, getUtility
 from Acquisition import aq_inner
-from Products.CMFCore.utils import getToolByName
 from itertools import chain
-from Products.CMFPlone.utils import normalizeString
 from zope.component.hooks import getSite
+from zope.component import getMultiAdapter, getUtility
+from Products.CMFCore.utils import getToolByName
+from Products.CMFPlone.utils import normalizeString
+from Products.CMFPlone.interfaces import IPloneSiteRoot
 
 from mrs.max.utilities import IMAXClient
 from ulearn.core.content.community import ICommunity
@@ -15,6 +16,10 @@ import random
 
 def searchUsersFunction(context, request, search_string, user_properties=None):
     portal = getSite()
+    pm = plone.api.portal.get_tool(name='portal_membership')
+    nonvisibles = plone.api.portal.get_registry_record(name="ulearn.core.controlpanel.IUlearnControlPanelSettings.nonvisibles")
+    searchView = getMultiAdapter((aq_inner(context), request), name='pas_search')
+
     current_user = plone.api.user.get_current()
     oauth_token = current_user.getProperty('oauth_token', '')
 
@@ -22,16 +27,38 @@ def searchUsersFunction(context, request, search_string, user_properties=None):
     maxclient.setActor(current_user.getId())
     maxclient.setToken(oauth_token)
 
-    max_results = maxclient.people.get(qs={'username': search_string})
+    if IPloneSiteRoot.providedBy(context):
+        if search_string:
+            max_results = maxclient.people.get(qs={'username': search_string})
 
-    searchView = getMultiAdapter((aq_inner(context), request), name='pas_search')
-    plone_results = searchView.merge(chain(*[searchView.searchUsers(**{field: search_string}) for field in ['name', 'fullname', 'email', 'twitter_username', 'ubicacio', 'location']]), 'userid')
+            plone_results = searchView.merge(chain(*[searchView.searchUsers(**{field: search_string}) for field in ['name', 'fullname', 'email', 'twitter_username', 'ubicacio', 'location']]), 'userid')
 
-    merged_results = list(set([plone_user['userid'] for plone_user in plone_results]) &
-                          set([max_user['username'] for max_user in max_results]))
+            merged_results = list(set([plone_user['userid'] for plone_user in plone_results]) &
+                                  set([max_user['username'] for max_user in max_results]))
 
-    pm = plone.api.portal.get_tool(name='portal_membership')
-    users = [pm.getMemberById(user) for user in merged_results]
+            users = [pm.getMemberById(user) for user in merged_results]
+        else:
+            users = plone.api.user.get_users()
+            if nonvisibles:
+                filtered = []
+                for user in users:
+                    if user.id not in nonvisibles:
+                        filtered.append(user)
+                users = filtered
+
+    if ICommunity.providedBy(context):
+        if search_string:
+            max_users = maxclient.contexts[context.absolute_url()].subscriptions.get(qs={'username': search_string})
+
+            plone_results = searchView.merge(chain(*[searchView.searchUsers(**{field: search_string}) for field in ['name', 'fullname', 'email', 'twitter_username', 'ubicacio', 'location']]), 'userid')
+
+            merged_results = list(set([plone_user['userid'] for plone_user in plone_results]) &
+                                  set([max_user['username'] for max_user in max_results]))
+
+            users = [pm.getMemberById(user) for user in merged_results]
+        else:
+            max_users = maxclient.contexts[context.absolute_url()].subscriptions.get()
+            users = [pm.getMemberById(user.get('username')) for user in max_users]
 
     users_profile = []
     for user in users:

@@ -53,7 +53,7 @@ class IUlearnControlPanelSettings(model.Schema):
 
     model.fieldset('Visibility',
                   _(u'Visibility'),
-                  fields=['vip_users'])
+                  fields=['nonvisibles'])
 
     model.fieldset('UPCnet only',
                   _(u'UPCnet only'),
@@ -187,8 +187,8 @@ class IUlearnControlPanelSettings(model.Schema):
         default='es',
     )
 
-    form.widget(vip_users=Select2UserInputFieldWidget)
-    vip_users = schema.List(
+    form.widget(nonvisibles=Select2UserInputFieldWidget)
+    nonvisibles = schema.List(
         title=_(u"no_visibles"),
         description=_(u"Llista amb les persones que no han de sortir a les cerques i que tenen accés restringit per les demés persones."),
         value_type=schema.TextLine(),
@@ -226,7 +226,7 @@ class UlearnControlPanelSettingsForm(controlpanel.RegistryEditForm):
             return
         self.applyChanges(data)
 
-        if data.get('vip_users', False):
+        if data.get('nonvisibles', False):
             maxclient, settings = getUtility(IMAXClient)()
             maxclient.setActor(settings.max_restricted_username)
             maxclient.setToken(settings.max_restricted_token)
@@ -234,11 +234,11 @@ class UlearnControlPanelSettingsForm(controlpanel.RegistryEditForm):
             current_vips = maxclient.admin.security.get()
             current_vips = current_vips[0].get('roles').get('NonVisible', ['', ])
 
-            un_vip = [a for a in current_vips if a not in data.get('vip_users')]
+            un_vip = [a for a in current_vips if a not in data.get('nonvisibles')]
             for user in un_vip:
                 maxclient.admin.security.roles['NonVisible'].users[user].delete()
 
-            make_vip = [vip for vip in data.get('vip_users') if vip not in current_vips]
+            make_vip = [vip for vip in data.get('nonvisibles') if vip not in current_vips]
 
             for user in make_vip:
                 maxclient.admin.security.roles['NonVisible'].users[user].post()

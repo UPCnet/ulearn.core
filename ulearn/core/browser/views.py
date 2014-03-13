@@ -178,8 +178,8 @@ class AjaxUserSearch(grok.View):
             fulluserinfo = hunter.merge(chain(*[hunter.searchUsers(**{field: query}) for field in ['fullname', 'name']]), 'userid')
             values = [dict(id=userinfo.get('login'), text=u'{} ({})'.format(userinfo.get('title'), userinfo.get('login'))) for userinfo in fulluserinfo]
 
-            if settings.vip_users:
-                if query in settings.vip_users:
+            if settings.nonvisibles:
+                if query in settings.nonvisibles:
                     # Fa falta?
                     pass
 
