@@ -1,18 +1,15 @@
 # -*- coding: utf-8 -*-
 from five import grok
 from Acquisition import aq_chain
-from zope.component import queryUtility
+from zope.component import getUtility
+
 from zope.component.hooks import getSite
 from zope.app.container.interfaces import IObjectAddedEvent
 
-from plone.registry.interfaces import IRegistry
-
-
 from Products.CMFCore.utils import getToolByName
 
-from maxclient import MaxClient
 from ulearn.core.content.community import ICommunity
-from mrs.max.browser.controlpanel import IMAXUISettings
+from mrs.max.utilities import IMAXClient
 
 
 @grok.subscribe(ICommunity, IObjectAddedEvent)
@@ -30,15 +27,11 @@ def communityAdded(content, event):
     else:
         member = pm.getAuthenticatedMember()
 
-    registry = queryUtility(IRegistry)
-    settings = registry.forInterface(IMAXUISettings, check=False)
-    effective_grant_type = settings.oauth_grant_type
-
     username = member.getUserName()
     memberdata = pm.getMemberById(username)
     oauth_token = memberdata.getProperty('oauth_token', None)
 
-    maxclient = MaxClient(url=settings.max_server, oauth_server=settings.oauth_server, grant_type=effective_grant_type)
+    maxclient, settings = getUtility(IMAXClient)()
     maxclient.setActor(username)
     maxclient.setToken(oauth_token)
 
@@ -48,7 +41,8 @@ def communityAdded(content, event):
         'en': u'I\'ve just created a new community: {}',
     }
 
-    maxclient.addActivity(activity_text[default_lang].format(content.Title().decode('utf-8')), contexts=[content.absolute_url(), ])
+    maxclient.people[username].activities.post(object_content=activity_text[default_lang].format(content.Title().decode('utf-8')), contexts=[dict(url=content.absolute_url(), objectType="context")])
+    # maxclient.addActivity(activity_text[default_lang].format(content.Title().decode('utf-8')), contexts=[content.absolute_url(), ])
 
 
 def Added(content, event):
@@ -59,27 +53,24 @@ def Added(content, event):
     pl = getToolByName(portal, "portal_languages")
     default_lang = pl.getDefaultLanguage()
 
-    if pm.isAnonymousUser():  # the user has not logged in
-        username = ''
-        return
-    else:
-        member = pm.getAuthenticatedMember()
-
-    registry = queryUtility(IRegistry)
-    settings = registry.forInterface(IMAXUISettings, check=False)
-    effective_grant_type = settings.oauth_grant_type
-
-    username = member.getUserName()
-    memberdata = pm.getMemberById(username)
-    oauth_token = memberdata.getProperty('oauth_token', None)
-
     community = findContainerCommunity(content)
 
     if not community:
         # For some reason the file we are creating is not inside a community
         return
 
-    maxclient = MaxClient(url=settings.max_server, oauth_server=settings.oauth_server, grant_type=effective_grant_type)
+    if pm.isAnonymousUser():  # the user has not logged in
+        username = ''
+        return
+    else:
+        member = pm.getAuthenticatedMember()
+
+    username = member.getUserName()
+    memberdata = pm.getMemberById(username)
+    oauth_token = memberdata.getProperty('oauth_token', None)
+
+    maxclient, settings = getUtility(IMAXClient)()
+
     maxclient.setActor(username)
     maxclient.setToken(oauth_token)
 
@@ -106,7 +97,15 @@ def Added(content, event):
         'en': u'I\'ve added {un} {type} "{name}" a {link}',
     }
 
-    maxclient.addActivity(activity_text[default_lang].format(**parts), contexts=[community.absolute_url(), ])
+    if (content.portal_type == 'Image' or
+       content.portal_type == 'File') and \
+       content.description:
+        activity_text = content.description
+
+        maxclient.people[username].activities.post(object_content=activity_text, contexts=[dict(url=community.absolute_url(), objectType="context")])
+    else:
+        maxclient.people[username].activities.post(object_content=activity_text[default_lang].format(**parts), contexts=[dict(url=community.absolute_url(), objectType="context")])
+        # maxclient.addActivity(activity_text[default_lang].format(**parts), contexts=[community.absolute_url(), ])
 
 
 def findContainerCommunity(content):

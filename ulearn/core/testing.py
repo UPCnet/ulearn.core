@@ -56,7 +56,7 @@ class UlearncoreLayer(PloneSandboxLayer):
         portal.acl_users.userFolderAddUser('admin', 'secret', ['Manager'], [])
         portal.acl_users.userFolderAddUser('user', 'secret', ['Member'], [])
         portal.acl_users.userFolderAddUser('poweruser', 'secret', ['Member', 'WebMaster'], [])
-        portal.acl_users.userFolderAddUser('usuari.iescude', 'secret', ['Member'], [])
+        portal.acl_users.userFolderAddUser('usuari.iescude', 'secret', ['Member', 'WebMaster'], [])
         login(portal, 'admin')
         setup_max(u'usuari.iescude', 'holahola')
         portal.portal_workflow.setDefaultChain("genweb_intranet")
