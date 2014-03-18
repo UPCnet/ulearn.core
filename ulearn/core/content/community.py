@@ -281,7 +281,7 @@ class UploadFile(grok.View):
         factory = IDXFileFactory(container)
 
         try:
-            factory(filename, content_type, input_file, activity_text)
+            factory(filename, content_type, input_file, activity_text, self.request)
             self.request.response.setStatus(201)
         except Unauthorized:
             self.request.response.setHeader("Content-type", "application/json")

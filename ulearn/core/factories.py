@@ -1,7 +1,7 @@
 import transaction
 from thread import allocate_lock
 
-from zope.component import getUtility
+from zope.component import getMultiAdapter
 from zope.component import adapts
 from zope.container.interfaces import INameChooser
 from zope.lifecycleevent import ObjectModifiedEvent
@@ -32,7 +32,7 @@ class DXFileFactory(object):
     def __init__(self, context):
         self.context = context
 
-    def __call__(self, name, content_type, data, description):
+    def __call__(self, name, content_type, data, title, request):
         # contextual import to prevent ImportError
         from plone.dexterity.utils import createContentInContainer
 
@@ -40,6 +40,7 @@ class DXFileFactory(object):
         type_ = ctr.findTypeName(name.lower(), '', '') or 'File'
 
         name = name.decode("utf8")
+        title = title.decode("utf8")
 
         chooser = INameChooser(self.context)
 
@@ -47,7 +48,11 @@ class DXFileFactory(object):
         # when uploading multiple files
         upload_lock.acquire()
 
-        newid = chooser.chooseName(name, self.context.aq_parent)
+        def trim_title(title):
+            pview = getMultiAdapter((self.context, request), name='plone')
+            return pview.cropText(title, 40)
+
+        newid = chooser.chooseName(title, self.context.aq_parent)
         try:
             transaction.begin()
 
@@ -62,7 +67,7 @@ class DXFileFactory(object):
                 obj = createContentInContainer(self.context,
                                                type_,
                                                id=newid,
-                                               description=description,
+                                               title=trim_title(title),
                                                file=file)
             elif 'Image' in type_:
                 image = NamedBlobImage(data=data.read(),
@@ -71,10 +76,10 @@ class DXFileFactory(object):
                 obj = createContentInContainer(self.context,
                                                type_,
                                                id=newid,
-                                               description=description,
+                                               title=trim_title(title),
                                                image=image)
 
-            obj.title = name
+            # obj.title = name
             obj.reindexObject()
             transaction.commit()
 
