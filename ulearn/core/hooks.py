@@ -100,7 +100,7 @@ def Added(content, event):
     if (content.portal_type == 'Image' or
        content.portal_type == 'File') and \
        content.description:
-        activity_text = content.description
+        activity_text = u'{} {}'.format(content.title, u'{}/view'.format(content.absolute_url()))
 
         maxclient.people[username].activities.post(object_content=activity_text, contexts=[dict(url=community.absolute_url(), objectType="context")])
     else:
