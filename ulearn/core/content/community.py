@@ -18,6 +18,7 @@ from zope.schema.interfaces import IContextSourceBinder
 from zope.schema.vocabulary import SimpleVocabulary
 from AccessControl import getSecurityManager
 from AccessControl import Unauthorized
+from ZPublisher.HTTPRequest import FileUpload
 
 from plone.indexer import indexer
 from plone.directives import form
@@ -46,7 +47,7 @@ from mrs.max.browser.controlpanel import IMAXUISettings
 from ulearn.core import _
 from ulearn.core.interfaces import IDocumentFolder, ILinksFolder, IPhotosFolder, IEventsFolder
 
-from wildcard.foldercontents.interfaces import IDXFileFactory
+from ulearn.core.interfaces import IDXFileFactory
 import json
 import mimetypes
 
@@ -261,9 +262,13 @@ class UploadFile(grok.View):
             self.request.response.setStatus(400)
             return json.dumps({"Error": "Not supported upload method"})
 
-        file_key = self.request.form.keys()[0]
+        for key in self.request.form.keys():
+            if isinstance(self.request.form[key], FileUpload):
+                file_key = key
+
         input_file = self.request.form[file_key]
         filename = input_file.filename
+        activity_text = self.request.get('activity', '')
 
         ctr = getToolByName(self.context, 'content_type_registry')
         type_ = ctr.findTypeName(filename.lower(), '', '') or 'File'
@@ -276,7 +281,7 @@ class UploadFile(grok.View):
         factory = IDXFileFactory(container)
 
         try:
-            factory(filename, content_type, input_file)
+            factory(filename, content_type, input_file, activity_text, self.request)
             self.request.response.setStatus(201)
         except Unauthorized:
             self.request.response.setHeader("Content-type", "application/json")

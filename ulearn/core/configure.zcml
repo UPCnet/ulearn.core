@@ -43,6 +43,7 @@
       permission="ulearn.core.setup"
       />
 
+    <adapter factory=".factories.DXFileFactory" />
 
     <genericsetup:importStep
       name="ulearn.core.setupstep"

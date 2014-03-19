@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import unittest2 as unittest
 
 from zope.component import getUtility
@@ -39,7 +40,7 @@ class TestUploads(unittest.TestCase):
         image = None
         community_type = 'Open'
         twitter_hashtag = 'helou'
-        login(self.portal, 'poweruser')
+        login(self.portal, 'usuari.iescude')
         self.portal.invokeFactory('ulearn.community', 'community-test',
                                  title=nom,
                                  description=description,
@@ -95,3 +96,43 @@ class TestUploads(unittest.TestCase):
 
         self.assertEqual(res.status_code, 201)
         self.assertTrue('avatar.odt' in community['documents'].objectIds())
+
+    def test_upload_file_to_community_corner_cases(self):
+        community = self.create_test_community()
+        avatar_file = open(os.path.join(os.path.dirname(__file__), "avatar.png"), "rb")
+        files = {'file': ('avatar amb espais', avatar_file)}
+
+        res = requests.post('{}/{}/upload'.format(self.portal.absolute_url(), community.id), headers=self.oauth2Header(self.username, self.token), files=files)
+
+        transaction.commit()
+
+        self.assertEqual(res.status_code, 201)
+        self.assertTrue('avatar-amb-espais' in community['documents'].objectIds())
+
+    def test_upload_file_to_community_with_parameters(self):
+        community = self.create_test_community()
+        activity_data = {"activity": "This is my fancy file"}
+        avatar_file = open(os.path.join(os.path.dirname(__file__), "avatar.png"), "rb")
+        files = {'file': ('avatar.png', avatar_file)}
+
+        res = requests.post('{}/{}/upload'.format(self.portal.absolute_url(), community.id), headers=self.oauth2Header(self.username, self.token), files=files, data=activity_data)
+
+        transaction.commit()
+
+        self.assertEqual(res.status_code, 201)
+        self.assertTrue('avatar.png' in community['media'].objectIds())
+        self.assertTrue(community['media']['avatar.png'].title, activity_data)
+
+    def test_upload_file_to_community_with_parameters_with_strange_chars(self):
+        community = self.create_test_community()
+        activity_data = {"activity": u"This is my fancy file ç à"}
+        avatar_file = open(os.path.join(os.path.dirname(__file__), "avatar.png"), "rb")
+        files = {'file': ('avatar.png', avatar_file)}
+
+        res = requests.post('{}/{}/upload'.format(self.portal.absolute_url(), community.id), headers=self.oauth2Header(self.username, self.token), files=files, data=activity_data)
+
+        transaction.commit()
+
+        self.assertEqual(res.status_code, 201)
+        self.assertTrue('avatar.png' in community['media'].objectIds())
+        self.assertEqual(community['media']['avatar.png'].title, activity_data['activity'])

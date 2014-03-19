@@ -1,4 +1,5 @@
 from zope.interface import Interface
+from zope.filerepresentation.interfaces import IFileFactory
 
 
 class IDocumentFolder(Interface):
@@ -15,3 +16,8 @@ class IPhotosFolder(Interface):
 
 class IEventsFolder(Interface):
     """ Marker for events folder """
+
+
+class IDXFileFactory(IFileFactory):
+    """ adapter factory for DX types
+    """
