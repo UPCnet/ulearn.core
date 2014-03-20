@@ -535,6 +535,9 @@ msgstr "Area"
 msgid "department"
 msgstr "Departamento"
 
+msgid "division"
+msgstr "División"
+
 msgid "center"
 msgstr "Centro"
 

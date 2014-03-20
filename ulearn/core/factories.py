@@ -68,6 +68,7 @@ class DXFileFactory(object):
                                                type_,
                                                id=newid,
                                                title=trim_title(title),
+                                               description=title,
                                                file=file)
             elif 'Image' in type_:
                 image = NamedBlobImage(data=data.read(),
@@ -77,6 +78,7 @@ class DXFileFactory(object):
                                                type_,
                                                id=newid,
                                                title=trim_title(title),
+                                               description=title,
                                                image=image)
 
             # obj.title = name
