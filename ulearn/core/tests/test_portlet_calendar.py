@@ -17,6 +17,8 @@ from zope.component.hooks import setSite
 
 import unittest2 as unittest
 
+import transaction
+
 TZNAME = "Europe/Vienna"
 
 
@@ -40,11 +42,11 @@ class RendererTest(unittest.TestCase):
     def create_test_community(self):
         nom = u'community-test'
         description = 'Blabla'
-        subscribed = []
+        subscribed = ['usuari.iescude']
         image = None
         community_type = 'Open'
         twitter_hashtag = 'helou'
-        login(self.portal, 'poweruser')
+        login(self.portal, 'usuari.iescude')
         self.portal.invokeFactory('ulearn.community', 'community-test',
                                  title=nom,
                                  description=description,
@@ -53,6 +55,9 @@ class RendererTest(unittest.TestCase):
                                  community_type=community_type,
                                  twitter_hashtag=twitter_hashtag)
         logout()
+
+        # transaction.commit()  # This is for not conflict with each other
+        # TODO: Do the teardown properly
         return self.portal['community-test']
 
     def create_event(self, context, day, start, end, event_id='e1'):
@@ -60,7 +65,7 @@ class RendererTest(unittest.TestCase):
         start = localized_now().replace(day=now.day + day, hour=now.hour + start)
         end = localized_now().replace(day=now.day + day, hour=now.hour + end)
 
-        login(self.portal, 'poweruser')
+        login(self.portal, 'usuari.iescude')
         context.events.invokeFactory('Event', event_id, start=start, end=end, timezone=TZNAME, whole_day=False)
         logout()
         return context.events[event_id]
@@ -86,7 +91,7 @@ class RendererTest(unittest.TestCase):
         event = self.create_event(test_community, 0, 2, 3)
 
         portlet = self.renderer(context=test_community, assignment=portlet_calendar.Assignment())
-        login(self.portal, 'poweruser')
+        login(self.portal, 'usuari.iescude')
         portlet.update()
         rd = portlet.render()
 
@@ -101,7 +106,7 @@ class RendererTest(unittest.TestCase):
         event = self.create_event(test_community, 1, 2, 3)
 
         portlet = self.renderer(context=test_community, assignment=portlet_calendar.Assignment())
-        login(self.portal, 'poweruser')
+        login(self.portal, 'usuari.iescude')
         portlet.update()
         rd = portlet.render()
 
@@ -117,7 +122,7 @@ class RendererTest(unittest.TestCase):
         event_must_not_show = self.create_event(test_community, 0, 4, 5, event_id='e2')
 
         portlet = self.renderer(context=test_community, assignment=portlet_calendar.Assignment())
-        login(self.portal, 'poweruser')
+        login(self.portal, 'usuari.iescude')
         portlet.update()
         rd = portlet.render()
 
@@ -133,7 +138,7 @@ class RendererTest(unittest.TestCase):
         event_must_show = self.create_event(test_community, 0, 4, 5, event_id='e2')
 
         portlet = self.renderer(context=test_community, assignment=portlet_calendar.Assignment())
-        login(self.portal, 'poweruser')
+        login(self.portal, 'usuari.iescude')
         portlet.update()
         rd = portlet.render()
 

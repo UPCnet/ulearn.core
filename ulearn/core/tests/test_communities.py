@@ -2,20 +2,17 @@ import unittest2 as unittest
 from AccessControl import Unauthorized
 from zope.event import notify
 from zope.lifecycleevent import ObjectModifiedEvent
+from zope.component import getUtility
 
 from plone.app.testing import login
 from plone.app.testing import logout
 from plone.app.testing import setRoles
 from plone.app.testing import TEST_USER_ID
 
-from plone.dexterity.utils import createContentInContainer
-
 from Products.CMFCore.utils import getToolByName
 
+from mrs.max.utilities import IMAXClient
 from ulearn.core.testing import ULEARN_CORE_INTEGRATION_TESTING
-
-import httpretty
-import re
 
 
 class TestExample(unittest.TestCase):
@@ -26,6 +23,10 @@ class TestExample(unittest.TestCase):
         self.app = self.layer['app']
         self.portal = self.layer['portal']
         self.qi_tool = getToolByName(self.portal, 'portal_quickinstaller')
+
+        maxclient, settings = getUtility(IMAXClient)()
+        self.username = settings.max_restricted_username
+        self.token = settings.max_restricted_token
 
     def test_product_is_installed(self):
         """ Validate that our products GS profile has been run and the product
@@ -41,37 +42,14 @@ class TestExample(unittest.TestCase):
         self.assertTrue(self.portal.get_local_roles()[0][0], 'AuthenticatedUsers')
 
     def test_community_creation(self):
-        # httpretty.enable()
-        # httpretty.register_uri(
-        #     httpretty.GET,
-        #     re.compile("https://max.upc.edu/.*"),
-        #     body='{"success": false}',
-        #     status=200,
-        #     content_type='text/json',
-        # )
-        # httpretty.register_uri(
-        #     httpretty.PUT,
-        #     re.compile("https://max.upc.edu/.*"),
-        #     body='{"success": false}',
-        #     status=200,
-        #     content_type='text/json',
-        # )
-        # httpretty.register_uri(
-        #     httpretty.POST,
-        #     re.compile("https://max.upc.edu/.*"),
-        #     body='{"success": false}',
-        #     status=200,
-        #     content_type='text/json',
-        # )
-
         nom = u'community-test'
         description = 'Blabla'
-        subscribed = []
+        subscribed = ['usuari.iescude']
         image = None
         community_type = 'Closed'
         twitter_hashtag = 'helou'
 
-        login(self.portal, 'poweruser')
+        login(self.portal, 'usuari.iescude')
 
         self.portal.invokeFactory('ulearn.community', 'community-test',
                                  title=nom,
@@ -86,13 +64,11 @@ class TestExample(unittest.TestCase):
         logout()
 
         self.assertTrue(new_comunitat.objectIds(), ['documents', 'links', 'media', 'events'])
-        # httpretty.disable()
-        # httpretty.reset()
 
     def test_community_creation_not_allowed(self):
         nom = u'community-test'
         description = 'Blabla'
-        subscribed = []
+        subscribed = ['usuari.iescude']
         image = None
         community_type = 'Closed'
         twitter_hashtag = 'helou'
@@ -111,12 +87,12 @@ class TestExample(unittest.TestCase):
     def test_events_visibility(self):
         nom = u'community-test'
         description = 'Blabla'
-        subscribed = []
+        subscribed = ['usuari.iescude']
         image = None
         community_type = 'Closed'
         twitter_hashtag = 'helou'
 
-        login(self.portal, 'poweruser')
+        login(self.portal, 'usuari.iescude')
 
         self.portal.invokeFactory('ulearn.community', 'community-test',
                                  title=nom,
@@ -141,12 +117,12 @@ class TestExample(unittest.TestCase):
     def test_events_visibility_open_communities(self):
         nom = u'community-test'
         description = 'Blabla'
-        subscribed = []
+        subscribed = ['usuari.iescude']
         image = None
         community_type = 'Open'
         twitter_hashtag = 'helou'
 
-        login(self.portal, 'poweruser')
+        login(self.portal, 'usuari.iescude')
 
         self.portal.invokeFactory('ulearn.community', 'community-test',
                                  title=nom,
@@ -170,12 +146,12 @@ class TestExample(unittest.TestCase):
     def test_events_visibility_open_communities_switch_to_closed(self):
         nom = u'community-test'
         description = 'Blabla'
-        subscribed = []
+        subscribed = ['usuari.iescude']
         image = None
         community_type = 'Open'
         twitter_hashtag = 'helou'
 
-        login(self.portal, 'poweruser')
+        login(self.portal, 'usuari.iescude')
 
         self.portal.invokeFactory('ulearn.community', 'community-test',
                                  title=nom,
@@ -198,7 +174,7 @@ class TestExample(unittest.TestCase):
 
         logout()
 
-        login(self.portal, 'poweruser')
+        login(self.portal, 'usuari.iescude')
 
         new_comunitat.community_type = 'Closed'
         notify(ObjectModifiedEvent(new_comunitat))
