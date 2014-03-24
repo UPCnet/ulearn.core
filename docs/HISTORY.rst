@@ -1,11 +1,29 @@
 Changelog
 =========
 
-1.13 (unreleased)
+1.13 (2014-03-24)
 -----------------
 
-- Nothing changed yet.
-
+* Go away with the p.a.e. translations [Victor Fernandez de Alba]
+* Be more safe doing things [Victor Fernandez de Alba]
+* Fix tests [Victor Fernandez de Alba]
+* End creation of file from WS [Victor Fernandez de Alba]
+* Merge branch 'master' of github.com:UPCnet/ulearn.core [Victor Fernandez de Alba]
+* Add link to hook from upload files from app [Victor Fernandez de Alba]
+* Merge branch 'master' of github.com:UPCnet/ulearn.core [Corina Riba]
+* Traducciones ca es [Corina Riba]
+* Upload with parameters to the title [Victor Fernandez de Alba]
+* Capture the activity related to an file/image upload. Set new factories for them and modify hook. [Victor Fernandez de Alba]
+* More upload tests [Victor Fernandez de Alba]
+* Added test for upload files [Victor Fernandez de Alba]
+* Search users finished [Victor Fernandez de Alba]
+* Deprecate oportunity type. Fix some views, complete user search [Victor Fernandez de Alba]
+* Tests for search users [Victor Fernandez de Alba]
+* New index by hash community [Victor Fernandez de Alba]
+* Migrate to MaxClient RESTish and rethink user directory [Victor Fernandez de Alba]
+* Solucionar errors merge traduccions [Pilar Marinas]
+* Solucionar errors merge traduccions [Pilar Marinas]
+* Afegida vista searchContentTags a Folder i traduccions [Pilar Marinas]
 
 1.12 (2014-03-04)
 -----------------
