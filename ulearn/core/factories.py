@@ -52,7 +52,11 @@ class DXFileFactory(object):
             pview = getMultiAdapter((self.context, request), name='plone')
             return pview.cropText(title, 40)
 
-        newid = chooser.chooseName(title, self.context.aq_parent)
+        if title:
+            newid = chooser.chooseName(title, self.context.aq_parent)
+        else:
+            newid = chooser.chooseName(name, self.context.aq_parent)
+
         try:
             transaction.begin()
 
