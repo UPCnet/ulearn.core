@@ -1,11 +1,10 @@
 Changelog
 =========
 
-1.14 (unreleased)
+1.14 (2014-03-25)
 -----------------
 
-- Nothing changed yet.
-
+* Take new directory back as MAX does not reflect yet the last changes. [Victor Fernandez de Alba]
 
 1.13 (2014-03-24)
 -----------------
