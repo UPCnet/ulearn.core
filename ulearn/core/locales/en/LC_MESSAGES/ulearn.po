@@ -436,3 +436,9 @@ msgstr "Search by categories"
 
 msgid "use_the_search_input_to_find_objects_with_tags"
 msgstr "Search by text and/or categories"
+
+msgid "search"
+msgstr "Search"
+
+msgid "search_tags"
+msgstr "Search by tags"

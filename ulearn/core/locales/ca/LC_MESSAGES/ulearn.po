@@ -537,3 +537,9 @@ msgstr "Específic"
 
 msgid "help_ulearn_settings_editform"
 msgstr "Registre de configuració d'uLearn."
+
+msgid "search"
+msgstr "Cerca"
+
+msgid "search_tags"
+msgstr "Filtra per etiquetes"
