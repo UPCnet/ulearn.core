@@ -1,11 +1,10 @@
 Changelog
 =========
 
-1.15 (unreleased)
+1.15 (2014-04-02)
 -----------------
 
-- Nothing changed yet.
-
+* Traduccions [Pilar Marinas]
 
 1.14 (2014-03-25)
 -----------------
