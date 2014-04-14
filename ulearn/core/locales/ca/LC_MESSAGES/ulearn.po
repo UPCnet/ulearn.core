@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GenWebUPC\n"
 "POT-Creation-Date: 2013-07-17 11:11+0000\n"
-"PO-Revision-Date: 2010-06-04 11:20+0100\n"
+"PO-Revision-Date: 2014-04-14 11:20+0100\n"
 "Last-Translator: Corina Riba <corina.riba@upcnet.es>\n"
 "Language-Team: Plone Team@UPCnet <plone.team@upcnet.es>\n"
 "MIME-Version: 1.0\n"
@@ -543,3 +543,9 @@ msgstr "Cerca"
 
 msgid "search_tags"
 msgstr "Filtra per etiquetes"
+
+msgid "label_telefon"
+msgstr "Telèfon"
+
+msgid "help_telefon"
+msgstr "Contacte telefònic"
