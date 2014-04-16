@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GenWebUPC\n"
 "POT-Creation-Date: 2013-07-11 09:52+0000\n"
-"PO-Revision-Date: 2013-07-09 11:35+0100\n"
+"PO-Revision-Date: 2014-04-14 11:35+0100\n"
 "Last-Translator: Corina Riba <corina.riba@upcnet.es>\n"
 "Language-Team: Plone Team@UPCnet <plone.team@upcnet.es>\n"
 "MIME-Version: 1.0\n"
@@ -588,3 +588,9 @@ msgstr "Si se activa esta casilla, se notificará la actividad de esta comunidad
 
 msgid "Notify activity via push"
 msgstr "Notificar actividad via 'push'"
+
+msgid "label_telefon"
+msgstr "Teléfono"
+
+msgid "help_telefon"
+msgstr "Contacto telefónico"

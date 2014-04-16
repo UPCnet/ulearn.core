@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GenWebUPC\n"
 "POT-Creation-Date: 2013-07-17 11:11+0000\n"
-"PO-Revision-Date: 2010-06-04 11:35+0100\n"
+"PO-Revision-Date: 2014-04-14 11:35+0100\n"
 "Last-Translator: Roberto Diaz <roberto.diaz@upcnet.es>\n"
 "Language-Team: Plone Team@UPCnet <>\n"
 "MIME-Version: 1.0\n"
@@ -448,3 +448,9 @@ msgstr "points"
 
 msgid "notify_activity_via_push_help"
 msgstr "If selected, the activity of this community will be notified via push to the mobile devices of the subscribed users into the UPCnet uTalk app."
+
+msgid "label_telefon"
+msgstr "Phone"
+
+msgid "help_telefon"
+msgstr "Contact by phone"
