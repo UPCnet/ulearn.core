@@ -137,6 +137,12 @@ class ICommunity(form.Schema):
         required=False
     )
 
+    notify_activity_via_push = schema.Bool(
+        title=_(u"Notify activity via push"),
+        description=_(u'notify_activity_via_push_help'),
+        required=False
+    )
+
 
 @indexer(ICommunity)
 def imageFilename(context):
@@ -399,6 +405,7 @@ class communityAdder(form.SchemaForm):
         image = data['image']
         community_type = data['community_type']
         twitter_hashtag = data['twitter_hashtag']
+        notify_activity_via_push = data['notify_activity_via_push']
 
         portal = getSite()
         pc = getToolByName(portal, 'portal_catalog')
@@ -425,6 +432,7 @@ class communityAdder(form.SchemaForm):
                 image=image,
                 community_type=community_type,
                 twitter_hashtag=twitter_hashtag,
+                notify_activity_via_push=notify_activity_via_push,
                 checkConstraints=False)
 
             # Redirect back to the front page with a status message
@@ -459,6 +467,7 @@ class communityEdit(form.SchemaForm):
         self.widgets["description"].value = self.context.description
         self.widgets["community_type"].value = [self.ctype_map[self.context.community_type]]
         self.widgets["twitter_hashtag"].value = self.context.twitter_hashtag
+        self.widgets["notify_activity_via_push"].value = self.context.notify_activity_via_push
 
         converter = SelectWidgetConverter(self.fields['readers'].field, self.widgets["readers"])
         self.widgets["readers"].value = converter.toWidgetValue(self.context.readers)
@@ -484,6 +493,7 @@ class communityEdit(form.SchemaForm):
         image = data['image']
         community_type = data['community_type']
         twitter_hashtag = data['twitter_hashtag']
+        notify_activity_via_push = data['notify_activity_via_push']
 
         portal = getSite()
         pc = getToolByName(portal, 'portal_catalog')
@@ -508,6 +518,8 @@ class communityEdit(form.SchemaForm):
             self.context.owners = owners
             self.context.community_type = community_type
             self.context.twitter_hashtag = twitter_hashtag
+            self.context.notify_activity_via_push = notify_activity_via_push
+
             if image:
                 self.context.image = image
 

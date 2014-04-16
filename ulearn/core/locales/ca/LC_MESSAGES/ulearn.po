@@ -543,3 +543,12 @@ msgstr "Cerca"
 
 msgid "search_tags"
 msgstr "Filtra per etiquetes"
+
+msgid "points"
+msgstr "punts"
+
+msgid "notify_activity_via_push_help"
+msgstr "Si s'activa aquesta opció, es notificarà l'activitat d'aquesta comunitat a tots els usuaris que hi estiguin subscrits als seus dispositius mòbils a través de notificacions 'push' de l'aplicació UPCnet uTalk."
+
+msgid "Notify activity via push"
+msgstr "Notificar activitat via 'push'"

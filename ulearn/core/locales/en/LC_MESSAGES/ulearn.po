@@ -442,3 +442,9 @@ msgstr "Search"
 
 msgid "search_tags"
 msgstr "Search by tags"
+
+msgid "points"
+msgstr "points"
+
+msgid "notify_activity_via_push_help"
+msgstr "If selected, the activity of this community will be notified via push to the mobile devices of the subscribed users into the UPCnet uTalk app."

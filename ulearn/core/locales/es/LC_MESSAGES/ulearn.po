@@ -579,3 +579,12 @@ msgstr "Literales que identifican a los usuarios de las comunidades y sus aporta
 
 msgid "search"
 msgstr "Busca"
+
+msgid "points"
+msgstr "puntos"
+
+msgid "notify_activity_via_push_help"
+msgstr "Si se activa esta casilla, se notificará la actividad de esta comunidad a todos los usuarios subscritos a ella en sus dispositivos móviles a través de notificaciones 'push' de la aplicación UPCnet uTalk."
+
+msgid "Notify activity via push"
+msgstr "Notificar actividad via 'push'"
