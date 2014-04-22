@@ -41,7 +41,7 @@ from genweb.core.adapters.favorites import IFavorite
 from genweb.core.widgets.select2_user_widget import SelectWidgetConverter
 from genweb.core.widgets.select2_user_widget import Select2UserInputFieldWidget
 
-from maxclient import MaxClient
+from maxclient.rest import MaxClient
 from mrs.max.browser.controlpanel import IMAXUISettings
 
 from ulearn.core import _
@@ -559,28 +559,31 @@ def initialize_community(community, event):
         community_permissions = dict(read='subscribed', write='restricted', subscribe='restricted')
 
     # Add context for the community on MAX server
-    maxclient.addContext(community.absolute_url(),
-                         community.title,
-                         community_permissions
-                         )
+    maxclient.contexts.post(
+        url=community.absolute_url(),
+        displayName=community.title,
+        permissions=community_permissions,
+        notifications=community.notify_activity_via_push,
+    )
 
     # Update twitter hashtag
-    maxclient.modifyContext(community.absolute_url(),
-                            dict(twitterHashtag=community.twitter_hashtag))
+    maxclient.contexts[community.absolute_url()].put(
+        twitterHashtag=community.twitter_hashtag
+    )
 
     # Update community tag
-    maxclient.add_tags_to_context(community.absolute_url(), ['[COMMUNITY]'])
+    maxclient.contexts[community.absolute_url()].tags.put(data=['[COMMUNITY]'])
 
     # Subscribe the invited users and grant them permission
     for reader in community.readers:
-        maxclient.subscribe(url=community.absolute_url(), username=reader)
-        maxclient.grant_permission(url=community.absolute_url(), username=reader, permission='read')
+        maxclient.people[reader].subscriptions.post(object_url=community.absolute_url())
+        maxclient.contexts[community.absolute_url()].permissions[reader]['read'].put()
     for writter in community.subscribed:
-        maxclient.subscribe(url=community.absolute_url(), username=writter)
-        maxclient.grant_permission(url=community.absolute_url(), username=writter, permission='write')
+        maxclient.people[writter].subscriptions.post(object_url=community.absolute_url())
+        maxclient.contexts[community.absolute_url()].permissions[writter]['write'].put()
     for owner in community.owners:
-        maxclient.subscribe(url=community.absolute_url(), username=owner)
-        maxclient.grant_permission(url=community.absolute_url(), username=owner, permission='write')
+        maxclient.people[owner].subscriptions.post(object_url=community.absolute_url())
+        maxclient.contexts[community.absolute_url()].permissions[owner]['write'].put()
 
     # Auto-favorite the creator user to this community
     IFavorite(community).add(community.Creator())
@@ -707,13 +710,7 @@ def edit_community(community, event):
     maxclient.setToken(maxui_settings.max_restricted_token)
 
     # Get current MAX context information
-    context_current_info = maxclient.get_context(url=community.absolute_url())
-
-    if context_current_info:
-        if context_current_info.get('twitterHashtag', None) != community.twitter_hashtag:
-            # Update twitter hashtag
-            maxclient.modifyContext(community.absolute_url(),
-                                    dict(twitterHashtag=community.twitter_hashtag))
+    context_current_info = maxclient.contexts[community.absolute_url()].get()
 
     # Determine the kind of security the community should have provided the type
     # of community
@@ -724,22 +721,35 @@ def edit_community(community, event):
     elif community.community_type == u'Organizative':
         community_permissions = dict(read='subscribed', write='restricted', subscribe='restricted')
 
+    # collect updated properties
+    properties_to_update = {}
     if context_current_info:
+        if context_current_info.get('twitterHashtag', None) != community.twitter_hashtag:
+            properties_to_update['twitterHashtag'] = community.twitter_hashtag
+
         if context_current_info.get('permissions', '') != community_permissions:
-            # Update community permissions on MAX
-            maxclient.modifyContext(community.absolute_url(),
-                                    dict(permissions=community_permissions))
+            properties_to_update['permissions'] = community_permissions
+
+        if context_current_info.get('displayName', '') != community.title:
+            properties_to_update['displayName'] = community.title
+
+        if context_current_info.get('notifications', '') != community.notify_activity_via_push:
+            properties_to_update['notifications'] = community.notify_activity_via_push
+
+    # update context properties that have changed
+    if properties_to_update:
+        maxclient.contexts[community.absolute_url()].put(**properties_to_update)
 
     # Update/Subscribe the invited users and grant them permission on MAX
     for reader in community.readers:
-        maxclient.subscribe(url=community.absolute_url(), username=reader)
-        maxclient.grant_permission(url=community.absolute_url(), username=reader, permission='read')
+        maxclient.people[reader].subscriptions.post(object_url=community.absolute_url())
+        maxclient.contexts[community.absolute_url()].permissions[reader]['read'].put()
     for writter in community.subscribed:
-        maxclient.subscribe(url=community.absolute_url(), username=writter)
-        maxclient.grant_permission(url=community.absolute_url(), username=writter, permission='write')
+        maxclient.people[writter].subscriptions.post(object_url=community.absolute_url())
+        maxclient.contexts[community.absolute_url()].permissions[writter]['write'].put()
     for owner in community.owners:
-        maxclient.subscribe(url=community.absolute_url(), username=owner)
-        maxclient.grant_permission(url=community.absolute_url(), username=owner, permission='write')
+        maxclient.people[owner].subscriptions.post(object_url=community.absolute_url())
+        maxclient.contexts[community.absolute_url()].permissions[owner]['write'].put()
 
     # If the community is of the type "Open", then allow any auth user to see it
     if community.community_type == u'Open':
@@ -759,11 +769,11 @@ def edit_community(community, event):
 
     # Unsubscribe no longer members from community
     all_subscribers = list(set(community.readers + community.subscribed + community.owners))
-    subscribed = [user.get('username', '') for user in maxclient.subscribed_to_context(community.absolute_url())]
+    subscribed = [user.get('username', '') for user in maxclient.contexts[community.absolute_url()].subscriptions.get()]
     unsubscribe = [a for a in subscribed if a not in all_subscribers]
 
     for user in unsubscribe:
-        maxclient.unsubscribe(url=community.absolute_url(), username=user)
+        maxclient.people[user].subscriptions[community.absolute_url()].delete()
 
     # Update unsubscribed user permissions
     community.manage_delLocalRoles(unsubscribe)
@@ -782,4 +792,4 @@ def delete_community(community, event):
     maxclient.setActor(maxui_settings.max_restricted_username)
     maxclient.setToken(maxui_settings.max_restricted_token)
 
-    maxclient.deleteContext(event.object.absolute_url())
+    maxclient.contexts[event.object.absolute_url()].delete()
