@@ -21,3 +21,11 @@ class IEventsFolder(Interface):
 class IDXFileFactory(IFileFactory):
     """ adapter factory for DX types
     """
+
+
+class IAppImage(Interface):
+    """ Marker to identify content type Image uploaded via an app """
+
+
+class IAppFile(Interface):
+    """ Marker to identify content type File uploaded via an app """

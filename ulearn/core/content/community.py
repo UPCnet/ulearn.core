@@ -45,7 +45,10 @@ from maxclient.rest import MaxClient
 from mrs.max.browser.controlpanel import IMAXUISettings
 
 from ulearn.core import _
-from ulearn.core.interfaces import IDocumentFolder, ILinksFolder, IPhotosFolder, IEventsFolder
+from ulearn.core.interfaces import IDocumentFolder
+from ulearn.core.interfaces import ILinksFolder
+from ulearn.core.interfaces import IPhotosFolder
+from ulearn.core.interfaces import IEventsFolder
 
 from ulearn.core.interfaces import IDXFileFactory
 import json
@@ -287,8 +290,9 @@ class UploadFile(grok.View):
         factory = IDXFileFactory(container)
 
         try:
-            factory(filename, content_type, input_file, activity_text, self.request)
+            thefile = factory(filename, content_type, input_file, activity_text, self.request)
             self.request.response.setStatus(201)
+            return json.dumps({"uploadURL": thefile.absolute_url(), "thumbURL": "{}/@@images/image/mini".format(thefile.absolute_url())})
         except Unauthorized:
             self.request.response.setHeader("Content-type", "application/json")
             self.request.response.setStatus(401)

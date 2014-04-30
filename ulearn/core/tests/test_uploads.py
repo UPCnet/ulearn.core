@@ -8,6 +8,7 @@ from plone.app.testing import logout
 from Products.CMFCore.utils import getToolByName
 
 from ulearn.core.testing import ULEARN_CORE_FUNCTIONAL_TESTING
+from ulearn.core.interfaces import IAppImage
 from mrs.max.utilities import IMAXClient
 
 import requests
@@ -63,7 +64,10 @@ class TestUploads(unittest.TestCase):
         transaction.commit()
 
         self.assertEqual(res.status_code, 201)
+        self.assertTrue('thumbURL' in res.json())
+        self.assertTrue('uploadURL' in res.json())
         self.assertTrue('avatar.png' in community['media'].objectIds())
+        IAppImage.providedBy(community['media']['avatar.png'])
 
     def test_upload_file_to_community_corner_mimetipes(self):
         community = self.create_test_community()

@@ -59,7 +59,6 @@ class DXFileFactory(object):
 
         try:
             transaction.begin()
-
             # Try to determine which kind of NamedBlob we need
             # This will suffice for standard p.a.contenttypes File/Image
             # and any other custom type that would have 'File' or 'Image' in
@@ -69,21 +68,24 @@ class DXFileFactory(object):
                                      filename=unicode(data.filename),
                                      contentType=content_type)
                 obj = createContentInContainer(self.context,
-                                               type_,
+                                               'AppFile',
                                                id=newid,
                                                title=trim_title(title),
                                                description=title,
-                                               file=file)
+                                               file=file,
+                                               checkConstraints=False)
             elif 'Image' in type_:
                 image = NamedBlobImage(data=data.read(),
                                        filename=unicode(data.filename),
                                        contentType=content_type)
+
                 obj = createContentInContainer(self.context,
-                                               type_,
+                                               'AppImage',
                                                id=newid,
                                                title=trim_title(title),
                                                description=title,
-                                               image=image)
+                                               image=image,
+                                               checkConstraints=False)
 
             # obj.title = name
             obj.reindexObject()

@@ -8,7 +8,10 @@ from zope.app.container.interfaces import IObjectAddedEvent
 
 from Products.CMFCore.utils import getToolByName
 
+from ulearn.core.interfaces import IAppImage
+from ulearn.core.interfaces import IAppFile
 from ulearn.core.content.community import ICommunity
+
 from mrs.max.utilities import IMAXClient
 
 
@@ -55,8 +58,11 @@ def Added(content, event):
 
     community = findContainerCommunity(content)
 
-    if not community:
+    if not community or \
+       IAppFile.providedBy(content) or \
+       IAppImage.providedBy(content):
         # For some reason the file we are creating is not inside a community
+        # or the content is created externaly through apps via the upload ws
         return
 
     if pm.isAnonymousUser():  # the user has not logged in
