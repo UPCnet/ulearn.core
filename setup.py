@@ -42,6 +42,7 @@ setup(name='ulearn.core',
       extras_require={'test': ['plone.app.testing',
                                'Products.PloneLDAP',
                                'plone.app.testing[robot]>=4.2.2',
+                               'plone.app.robotframework[debug]',
                                'httpretty']},
       entry_points="""
       # -*- Entry points: -*-
