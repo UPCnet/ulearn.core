@@ -157,4 +157,7 @@ def setupVarious(context):
     plone.api.portal.set_registry_record('plone.app.event.portal_timezone', 'Europe/Madrid')
     plone.api.portal.set_registry_record('plone.app.event.first_weekday', 0)
 
+    # Unset validate e-mail as we want the users to be created right the way
+    portal.validate_email = False
+
     transaction.commit()
