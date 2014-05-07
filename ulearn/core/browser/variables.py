@@ -20,6 +20,7 @@ window._MAXUI.profile_url = '%(profile_url)s'
 window._MAXUI.contexts = '%(contexts)s';
 window._MAXUI.activitySource = '%(activitySource)s';
 window._MAXUI.language = '%(language)s';
+window._MAXUI.hidePostboxOnTimeline = false;
 """
 
 
