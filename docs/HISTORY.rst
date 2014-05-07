@@ -1,11 +1,19 @@
 Changelog
 =========
 
-1.16 (unreleased)
+1.16 (2014-05-07)
 -----------------
 
-- Nothing changed yet.
-
+* Add new instantiation option for not to show post box on timeline [Victor Fernandez de Alba]
+* Updated robot test boilerplate [Victor Fernandez de Alba]
+* Not force email the user on user creation [Victor Fernandez de Alba]
+* Complete upload ws to match the new contract [Victor Fernandez de Alba]
+* Make fullname be required to avoid LDAP error, redefine all schema on ulearn. [Victor Fernandez de Alba]
+* include notifications check on create/update [Carles Bruguera]
+* Make a single requests for all updates [Carles Bruguera]
+* Upgrade to use rest maxclient [Carles Bruguera]
+* New community check for enable push notifications. [Victor Fernandez de Alba]
+* Traduccions perfil usuari [Pilar Marinas]
 
 1.15 (2014-04-02)
 -----------------
