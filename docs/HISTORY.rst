@@ -1,11 +1,10 @@
 Changelog
 =========
 
-1.17 (unreleased)
+1.17 (2014-05-08)
 -----------------
 
-- Nothing changed yet.
-
+* Turn on the new directory features and improvements [Victor Fernandez de Alba]
 
 1.16 (2014-05-07)
 -----------------
