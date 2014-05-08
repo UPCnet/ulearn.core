@@ -14,7 +14,7 @@ import plone.api
 import random
 
 
-def searchUsersFunction_new(context, request, search_string, user_properties=None):
+def searchUsersFunction(context, request, search_string, user_properties=None):
     portal = getSite()
     pm = plone.api.portal.get_tool(name='portal_membership')
     nonvisibles = plone.api.portal.get_registry_record(name="ulearn.core.controlpanel.IUlearnControlPanelSettings.nonvisibles")
@@ -95,7 +95,7 @@ def searchUsersFunction_new(context, request, search_string, user_properties=Non
         return {'content': users_profile, 'length': len_usuaris, 'big': False}
 
 
-def searchUsersFunction(context, request, searchString, user_properties=None):
+def searchUsersFunction_old(context, request, searchString, user_properties=None):
     ignore = []
     mtool = getToolByName(context, 'portal_membership')
 
