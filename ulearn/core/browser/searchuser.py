@@ -59,7 +59,10 @@ def searchUsersFunction(context, request, search_string, user_properties=None):
 
             users = [pm.getMemberById(user) for user in merged_results]
         else:
-            max_users = maxclient.contexts[context.absolute_url()].subscriptions.get()
+            maxclientrestricted, settings = getUtility(IMAXClient)()
+            maxclientrestricted.setActor(settings.max_restricted_username)
+            maxclientrestricted.setToken(settings.max_restricted_token)
+            max_users = maxclientrestricted.contexts[context.absolute_url()].subscriptions.get()
             users = [pm.getMemberById(user.get('username')) for user in max_users]
 
     users_profile = []

@@ -116,7 +116,12 @@ class reservaBBB(form.SchemaForm):
 
         str_start_date = data.get('start_date').isoformat().replace('T', '-')[:-6]
         str_invitats_convidats = data.get('invitats_convidats', '').replace(' ', '')
-        str_invitats_espectadors = data.get('invitats_espectadors', '').replace(' ', '')
+
+        # Guard because the invitats_espectadors field is not required
+        if data.get('invitats_espectadors', False):
+            str_invitats_espectadors = data.get('invitats_espectadors', '').replace(' ', '')
+        else:
+            str_invitats_espectadors = ''
 
         guests = data.get('invitats_convidats')
         session_load = len(guests.split(','))
