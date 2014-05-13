@@ -1,11 +1,10 @@
 Changelog
 =========
 
-1.18 (unreleased)
+1.18 (2014-05-13)
 -----------------
 
-- Nothing changed yet.
-
+* Fix bugs [Victor Fernandez de Alba]
 
 1.17 (2014-05-08)
 -----------------
