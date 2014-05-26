@@ -1,56 +1,51 @@
 # -*- coding: utf-8 -*-
-from hashlib import sha1
-
+from AccessControl import Unauthorized
+from AccessControl import getSecurityManager
 from five import grok
-from zope import schema
 from z3c.form import button
-from zope.event import notify
-from zope.component import queryUtility
-from zope.interface import alsoProvides
-from zope.security import checkPermission
-from zope.component import getMultiAdapter
-from zope.component.hooks import getSite
-from zope.lifecycleevent import ObjectModifiedEvent
+from zope import schema
 from zope.app.container.interfaces import IObjectAddedEvent
+from zope.component import getMultiAdapter
+from zope.component import queryUtility
+from zope.component.hooks import getSite
+from zope.event import notify
+from zope.interface import Interface
+from zope.interface import alsoProvides
+from zope.lifecycleevent import ObjectModifiedEvent
 from zope.lifecycleevent.interfaces import IObjectModifiedEvent
 from zope.lifecycleevent.interfaces import IObjectRemovedEvent
 from zope.schema.interfaces import IContextSourceBinder
 from zope.schema.vocabulary import SimpleVocabulary
-from AccessControl import getSecurityManager
-from AccessControl import Unauthorized
-from ZPublisher.HTTPRequest import FileUpload
-
-from plone.indexer import indexer
-from plone.directives import form
-from plone.memoize.view import memoize_contextless
-from plone.namedfile.field import NamedBlobImage
-from plone.portlets.constants import CONTEXT_CATEGORY
-from plone.portlets.interfaces import IPortletManager
-from plone.portlets.interfaces import IPortletAssignmentMapping
-from plone.portlets.interfaces import ILocalPortletAssignmentManager
-from plone.z3cform.textlines.textlines import TextLinesConverter
-from plone.registry.interfaces import IRegistry
-from plone.dexterity.utils import createContentInContainer
+from zope.security import checkPermission
 
 from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.interfaces import IPloneSiteRoot
-from Products.statusmessages.interfaces import IStatusMessage
 from Products.CMFPlone.interfaces.constrains import ISelectableConstrainTypes
+from plone.dexterity.utils import createContentInContainer
+from plone.directives import form
+from plone.indexer import indexer
+from plone.memoize.view import memoize_contextless
+from plone.namedfile.field import NamedBlobImage
+from plone.portlets.constants import CONTEXT_CATEGORY
+from plone.portlets.interfaces import ILocalPortletAssignmentManager
+from plone.portlets.interfaces import IPortletManager
+from plone.registry.interfaces import IRegistry
 
+from Products.statusmessages.interfaces import IStatusMessage
+from ZPublisher.HTTPRequest import FileUpload
 from genweb.core.adapters.favorites import IFavorite
-from genweb.core.widgets.select2_user_widget import SelectWidgetConverter
 from genweb.core.widgets.select2_user_widget import Select2UserInputFieldWidget
-
+from genweb.core.widgets.select2_user_widget import SelectWidgetConverter
+from hashlib import sha1
 from maxclient.rest import MaxClient
 from mrs.max.browser.controlpanel import IMAXUISettings
-
 from ulearn.core import _
+from ulearn.core.interfaces import IDXFileFactory
 from ulearn.core.interfaces import IDocumentFolder
+from ulearn.core.interfaces import IEventsFolder
 from ulearn.core.interfaces import ILinksFolder
 from ulearn.core.interfaces import IPhotosFolder
-from ulearn.core.interfaces import IEventsFolder
 
-from ulearn.core.interfaces import IDXFileFactory
 import json
 import mimetypes
 
@@ -73,6 +68,12 @@ def availableCommunityTypes(context):
         terms.append(SimpleVocabulary.createTerm(u'Organizative', 'organizative', _(u'Organizative')))
 
     return SimpleVocabulary(terms)
+
+
+class IInitializedCommunity(Interface):
+    """
+        A Community that has been succesfully initialized
+    """
 
 
 class ICommunity(form.Schema):
@@ -703,9 +704,17 @@ def initialize_community(community, event):
     photos.reindexObject()
     events.reindexObject()
 
+    # Mark community as initialitzated, to avoid  previous
+    #folder creations to trigger modify event
+    alsoProvides(community, IInitializedCommunity)
+
 
 @grok.subscribe(ICommunity, IObjectModifiedEvent)
 def edit_community(community, event):
+    # Skip community modification if community is in creation state
+    if not IInitializedCommunity.providedBy(community):
+        return
+
     registry = queryUtility(IRegistry)
     maxui_settings = registry.forInterface(IMAXUISettings)
 
