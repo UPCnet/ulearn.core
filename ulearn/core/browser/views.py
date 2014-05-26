@@ -28,7 +28,8 @@ BBB_SERVER = 'corronco'
 
 class IReservaBBB(form.Schema):
     """ Form for BBB reservation - Paràmetres: Servidor, Data inici, Durada,
-        Descripció, Creador, Carrega, Invitats Convidats, Invitats Moderadors
+        Descripció, Creador, Carrega, Invitats Convidats, Invitats Moderadors,
+        Language
         Retorna: ID Reserva (permesa), 0 (no permesa).
 
         http://corronco.upc.edu:8088/webservices/addReservationNotification.php?
@@ -98,6 +99,8 @@ class reservaBBB(form.SchemaForm):
     def handleApply(self, action):
         portal = getSite()
         pm = getToolByName(portal, 'portal_membership')
+        lt = getToolByName(portal, 'portal_languages')
+
         userid = pm.getAuthenticatedMember()
 
         user_email = userid.getProperty('email', '')
@@ -133,7 +136,8 @@ class reservaBBB(form.SchemaForm):
                        descripcio=data.get('nom_reunio'),
                        owner=user_email,
                        invite_rw=str_invitats_convidats,
-                       invite_ro=str_invitats_espectadors,)
+                       invite_ro=str_invitats_espectadors,
+                       lang=lt.getDefaultLanguage())
 
         req = requests.post(BBB_ENDPOINT, data=payload)
 
