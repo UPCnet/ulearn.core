@@ -1,11 +1,11 @@
 Changelog
 =========
 
-1.19 (unreleased)
+1.19 (2014-05-26)
 -----------------
 
-- Nothing changed yet.
-
+* BBB language option [Victor Fernandez de Alba]
+* Avoid modify event to be triggered on creation [Carles Bruguera]
 
 1.18 (2014-05-13)
 -----------------
