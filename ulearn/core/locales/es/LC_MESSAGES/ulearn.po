@@ -109,7 +109,7 @@ msgstr "El hashtag (por ejemplo: ulearn) que utilizará esta comunidad. No hace 
 
 #: ../../../../ulearn.theme/ulearn/theme/portlets/templates/buttonbar.pt:13
 msgid "Entrada"
-msgstr "Entrada"
+msgstr "Stream"
 
 #. Default: "Esdeveniments"
 #: ../../../../ulearn.theme/ulearn/theme/browser/viewlets_templates/folderbar.pt:60
@@ -571,8 +571,8 @@ msgstr "Búsqueda por texto y/o categorías"
 msgid "Specific"
 msgstr "Específico"
 
-msgid "help_ulearn_settings_editform"
-msgstr "Registro de configuración de uLearn."
+#msgid "help_ulearn_settings_editform"
+#msgstr "Registro de configuración de uLearn."
 
 msgid "Literals que identifiquen als usuaris de les comunitats i les seves aportacions."
 msgstr "Literales que identifican a los usuarios de las comunidades y sus aportaciones."

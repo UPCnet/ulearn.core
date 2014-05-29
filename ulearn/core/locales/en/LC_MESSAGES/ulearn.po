@@ -23,217 +23,217 @@ msgstr "Have you forgotten your password?"
 #. Default: "Activitat"
 #: ../../../../../../ulearn.theme/ulearn/theme/browser/viewlets_templates/folderbar.pt:15
 msgid "Activity"
-msgstr ""
+msgstr "Activity"
 
 #: ../../../../../../ulearn.core/ulearn/core/controlpanel.py:81
 msgid "Cancel"
-msgstr ""
+msgstr "Cancel"
 
 #: ../../../../../../ulearn.core/ulearn/core/controlpanel.py:77
 msgid "Changes saved"
-msgstr ""
+msgstr "Changes saved"
 
 #: ../../../../../../ulearn.core/ulearn/core/content/community.py:53
 msgid "Closed"
-msgstr ""
+msgstr "Closed"
 
 #. Default: "Comentaris"
 #: ../../../../ulearn.theme/ulearn/theme/portlets/templates/stats.pt:73
 msgid "Comments"
-msgstr ""
+msgstr "Comments"
 
 #: ../../../../../../ulearn.core/ulearn/core/profiles/default/types/ulearn.community.xml
 msgid "Comunitat"
-msgstr ""
+msgstr "Community"
 
 #. Default: "Invitados moderadores"
 #: ../../../../ulearn.core/ulearn/core/browser/views.py:53
 msgid "Convidats moderadors"
-msgstr ""
+msgstr "Invited moderator"
 
 #: ../../../../../../ulearn.core/ulearn/core/content/community.py:174
 msgid "Crea la comunitat"
-msgstr ""
+msgstr "Create community"
 
 #. Default: "Fecha de inicio"
 #: ../../../../ulearn.core/ulearn/core/browser/views.py:40
 msgid "Data d'inici"
-msgstr ""
+msgstr "Start Date"
 
 #: ../../../../../../ulearn.core/ulearn/core/content/community.py:76
 msgid "Descripció"
-msgstr ""
+msgstr "Description"
 
 #: ../../../../../../ulearn.theme/ulearn/theme/browser/viewlets_templates/folderbar.pt:26
 msgid "Documents"
-msgstr ""
+msgstr "Documents"
 
 #. Default: "Duración de la reunión"
 #: ../../../../ulearn.core/ulearn/core/browser/views.py:46
 msgid "Durada de la reunió"
-msgstr ""
+msgstr "Duration of the meeting"
 
 #: ../../../../../../ulearn.core/ulearn/core/controlpanel.py:83
 msgid "Edit cancelled"
-msgstr ""
+msgstr "Editing canceled"
 
 #. Default: "Edición cancelada"
 #: ../../../../ulearn.core/ulearn/core/browser/views.py:138
 msgid "Edit cancelled."
-msgstr ""
+msgstr "Editing canceled"
 
 #: ../../../../../../ulearn.core/ulearn/core/content/community.py:219
 msgid "Edita la comunitat"
-msgstr ""
+msgstr "Save"
 
 #: ../../../../../../ulearn.core/ulearn/core/content/community.py:105
-msgid "El hashtag (per exemple: ulearn) que utilitzarà aquesta comunitat. No cal afegir el "#"."
-msgstr ""
+#msgid "hashtag_help"
+#msgstr "The hashtag (for example: ulearn) will use this community. No need to add the "#"."
 
 #: ../../../../../../ulearn.theme/ulearn/theme/portlets/templates/buttonbar.pt:13
 msgid "Entrada"
-msgstr ""
+msgstr "Stream"
 
 #. Default: "Eventos"
 #: ../../../../ulearn.core/ulearn/core/content/community.py:362
 msgid "Esdeveniments"
-msgstr ""
+msgstr "Events"
 
 #. Default: "Esdeveniments"
 #: ../../../../../../ulearn.theme/ulearn/theme/browser/viewlets_templates/folderbar.pt:60
 msgid "Events"
-msgstr ""
+msgstr "Events"
 
 #. Default: "Ha habido algún problema y la reunión virtual no se ha creado"
 #: ../../../../ulearn.core/ulearn/core/browser/views.py:130
 msgid "Hi ha hagut algun problema i la reunió virtual no ha estat creada."
-msgstr ""
+msgstr "There has been a problem and the virtual session not created."
 
 #: ../../../../../../ulearn.core/ulearn/core/content/community.py:98
 msgid "Imatge"
-msgstr ""
+msgstr "Image"
 
 #: ../../../../../../ulearn.core/ulearn/core/content/community.py:99
 msgid "Imatge que defineix la comunitat"
-msgstr ""
+msgstr "Image that defines the community"
 
 #. Default: "Indica la dureción de la reunión"
 #: ../../../../ulearn.core/ulearn/core/browser/views.py:47
 msgid "Indiqueu durada de la reunió."
-msgstr ""
+msgstr "Indicate duration of the meeting."
 
 #. Default: "Indica el número total de asistentes previstos"
 #: ../../../../ulearn.core/ulearn/core/browser/views.py:66
 msgid "Indiqueu el nombre total d'assistents previstos."
-msgstr ""
+msgstr "Indicate the number of attendees expected."
 
 #. Default: "Indica la fecha de inicio de la reserva"
 #: ../../../../ulearn.core/ulearn/core/browser/views.py:41
 msgid "Indiqueu la data d'inici de la reserva."
-msgstr ""
+msgstr "Indicate the start date of the booking."
 
 #. Default: "Indica la descripción de la reunión virtual"
 #: ../../../../ulearn.core/ulearn/core/browser/views.py:35
 msgid "Indiqueu la descripció de la reunió virtual."
-msgstr ""
+msgstr "Indicate the description of the virtual session."
 
 #. Default: "Invitados espectadores"
 #: ../../../../ulearn.core/ulearn/core/browser/views.py:59
 msgid "Invitats espectadors"
-msgstr ""
+msgstr "Invited viewers"
 
 #: ../../../../../../ulearn.core/ulearn/core/content/community.py:77
 msgid "La descripció de la comunitat"
-msgstr ""
+msgstr "The description of the community"
 
 #. Default: "La reunión no se puede crear porque el usuario no tiene informada la dirección de correo electrónico"
 #: ../../../../ulearn.core/ulearn/core/browser/views.py:97
 msgid "La reunió no es pot crear perquè l'usuari no te informat la adreca de correu electrònic."
-msgstr ""
+msgstr "The virtual session can not be created because the user has not informed the e-mail address."
 
 #. Default: "La reunión virtual ha sido creada"
 #: ../../../../ulearn.core/ulearn/core/browser/views.py:125
 msgid "La reunió virtual ha estat creada."
-msgstr ""
+msgstr "The virtual session has been created."
 
 #. Default: "Enllaços"
 #: ../../../../../../ulearn.theme/ulearn/theme/browser/viewlets_templates/folderbar.pt:37
 msgid "Links"
-msgstr ""
+msgstr "Links"
 
 #: ../../../../../../ulearn.core/ulearn/core/content/community.py:92
 msgid "Llista amb les persones subscrites"
-msgstr ""
+msgstr "List of subscribers"
 
 #. Default: "Lista de correos de los invitados ESPECTADORES, separados por comas."
 #: ../../../../ulearn.core/ulearn/core/browser/views.py:60
 msgid "Llista d'emails dels convidats ESPECTADORS, separats per comes."
-msgstr ""
+msgstr "List emails guest VIEWERS, separated by commas."
 
 #. Default: "Lista de correos de los invitados MODERADORES, separados por comas."
 #: ../../../../ulearn.core/ulearn/core/browser/views.py:54
 msgid "Llista d'emails dels convidats MODERADORS, separats per comes."
-msgstr ""
+msgstr "List emails guest MODERATORS, separated by commas."
 
 #: ../../../../../../ulearn.core/ulearn/core/content/community.py:70
 msgid "Nom"
-msgstr ""
+msgstr "Name"
 
 #: ../../../../../../ulearn.core/ulearn/core/content/community.py:71
 msgid "Nom de la comunitat"
-msgstr ""
+msgstr "Name of community"
 
 #. Default: "Nombre de la reunión"
 #: ../../../../ulearn.core/ulearn/core/browser/views.py:34
 msgid "Nom de la reunió"
-msgstr ""
+msgstr "Name of meeting"
 
 #. Default: "Número total de invitados"
 #: ../../../../ulearn.core/ulearn/core/browser/views.py:65
 msgid "Nombre de convidats total"
-msgstr ""
+msgstr "Total number of guests"
 
 #: ../../../../../../ulearn.core/ulearn/core/content/community.py:54
 msgid "Open"
-msgstr ""
+msgstr "Open"
 
 #: ../../../../../../ulearn.core/ulearn/core/content/community.py:60
 msgid "Organizative"
-msgstr ""
+msgstr "Organizative"
 
 #. Default: "Fotos"
 #: ../../../../../../ulearn.theme/ulearn/theme/browser/viewlets_templates/folderbar.pt:48
 msgid "Photos"
-msgstr ""
+msgstr "Photos"
 
 #: ../../../../../../ulearn.core/ulearn/core/controlpanel.py:70
 msgid "Save"
-msgstr ""
+msgstr "Save"
 
 #: ../../../../../../ulearn.core/ulearn/core/content/community.py:91
 msgid "Subscrits"
-msgstr ""
+msgstr "Subscribed"
 
 #: ../../../../../../ulearn.core/ulearn/core/content/community.py:82
 msgid "Tipus de comunitat"
-msgstr ""
+msgstr "Type of community"
 
 #: ../../../../../../ulearn.core/ulearn/core/content/community.py:104
 msgid "Twitter hashtag"
-msgstr ""
+msgstr "Twitter hashtag"
 
 #: ../../../../../../ulearn.core/ulearn/core/controlpanel.py:60
 msgid "Ulearn settings"
-msgstr ""
+msgstr "Ulearn settings"
 
 #: ../../../../../../ulearn.core/ulearn/core/profiles/default/types/ulearn.community.xml
 msgid "Una comunitat administrable"
-msgstr ""
+msgstr "A community manageable"
 
 #. Default: "Communities"
 #: ../../../../../../ulearn.theme/ulearn/theme/browser/views_templates/communities.pt:21
 msgid "allcommunities"
-msgstr ""
+msgstr "Communities"
 
 #. Default: "Button bar"
 #: ../../../../../../ulearn.theme/ulearn/theme/portlets/homebuttonbar.py:26
@@ -243,157 +243,160 @@ msgstr ""
 #. Default: "URL del campus"
 #: ../../../../../../ulearn.core/ulearn/core/controlpanel.py:19
 msgid "campus_url"
-msgstr ""
+msgstr "Web address of the Campus"
 
 #. Default: "Comments portlet"
 #: ../../../../../../ulearn.theme/ulearn/theme/portlets/comments.py:29
 msgid "comments"
-msgstr ""
+msgstr "comments"
 
 #. Default: "Comunidades"
 #: ../../../../../../ulearn.theme/ulearn/theme/portlets/communities.py:29
 #: ../../../../../../ulearn.theme/ulearn/theme/portlets/templates/communities.pt:4
 msgid "communities"
-msgstr ""
+msgstr "Communities"
 
 #: ../../../../../../ulearn.core/ulearn/core/content/community.py:83
 msgid "community_type_description"
 msgstr ""
+"Open: Public (everyone's voice) and you can subscribe and unsubscribe. \n"
+" Closed: Only you can subscribe to someone and you can unsubscribe. \n"
+" Organizational: Only an administrator you can subscribe and you can unsubscribe."
 
 #. Default: "La comunidad ${comunitat} ha sido creada."
 #: ../../../../ulearn.core/ulearn/core/content/community.py:244
 msgid "comunitat_creada"
-msgstr ""
+msgstr "Community ${comunitat} has been created."
 
 #. Default: "La comunidad ${comunitat} ha sido modificada."
 #: ../../../../ulearn.core/ulearn/core/content/community.py:315
 msgid "comunitat_modificada"
-msgstr ""
+msgstr "Community ${comunitat} has been modified."
 
 #. Default: "Create a new community"
 #: ../../../../../../ulearn.theme/ulearn/theme/portlets/templates/communities.pt:49
 msgid "createcommunity"
-msgstr ""
+msgstr "Create a new community"
 
 #. Default: "eConnect"
 #: ../../../../ulearn.theme/ulearn/theme/portlets/econnect.py:19
 msgid "econnect"
-msgstr ""
+msgstr "eConnect"
 
 #. Default: "Editar la comunidad"
 msgid "editcommunity"
-msgstr ""
+msgstr "Edit Community"
 
 #. Default: "Go to the campus"
 #: ../../../../../../ulearn.theme/ulearn/theme/portlets/templates/communities.pt:40
 msgid "gotocampus"
-msgstr ""
+msgstr "See my courses Campus"
 
 #. Default: "Afegiu la URL del campus associat a aquestes comunitats."
 #: ../../../../../../ulearn.core/ulearn/core/controlpanel.py:21
 msgid "help_campus_url"
-msgstr ""
+msgstr "Add the URL of the campus associated with these communities."
 
 #. Default: "Aquest és el llindar del winwin #1."
 #: ../../../../../../ulearn.core/ulearn/core/controlpanel.py:30
 msgid "help_llindar_winwin1"
-msgstr ""
+msgstr "This is the threshold of Winwin #1."
 
 #. Default: "Aquest és el llindar del winwin #2."
 #: ../../../../../../ulearn.core/ulearn/core/controlpanel.py:39
 msgid "help_llindar_winwin2"
-msgstr ""
+msgstr "This is the threshold of Winwin #2."
 
 #. Default: "Aquest és el llindar del winwin #3."
 #: ../../../../../../ulearn.core/ulearn/core/controlpanel.py:48
 msgid "help_llindar_winwin3"
-msgstr ""
+msgstr "This is the threshold of Winwin #3."
 
 #. Default: "Configuració de Ulearn"
 #: ../../../../../../ulearn.core/ulearn/core/controlpanel.py:61
 msgid "help_ulearn_settings_editform"
-msgstr ""
+msgstr "Settings Ulearn"
 
 #. Default: "Llindar del winwin 1"
 #: ../../../../../../ulearn.core/ulearn/core/controlpanel.py:28
 msgid "llindar_winwin1"
-msgstr ""
+msgstr "Threshold Winwinn 1"
 
 #. Default: "Llindar del winwin 2"
 #: ../../../../../../ulearn.core/ulearn/core/controlpanel.py:37
 msgid "llindar_winwin2"
-msgstr ""
+msgstr "Threshold Winwinn 2"
 
 #. Default: "Llindar del winwin 3"
 #: ../../../../../../ulearn.core/ulearn/core/controlpanel.py:46
 msgid "llindar_winwin3"
-msgstr ""
+msgstr "Threshold Winwinn 3"
 
 #. Default: "Most valued portlet"
 #: ../../../../../../ulearn.theme/ulearn/theme/portlets/mostvalued.py:29
 msgid "mostvalued"
-msgstr ""
+msgstr "Most valued"
 
 #. Default: "My communities"
 #: ../../../../../../ulearn.theme/ulearn/theme/portlets/templates/buttonbar.pt:24
 msgid "my_communities"
-msgstr ""
+msgstr "My communities"
 
 #. Default: "Create a new event"
 #: ../../../../ulearn.theme/ulearn/theme/portlets/templates/calendar.pt:97
 msgid "newevent"
-msgstr ""
+msgstr "Create a new event"
 
 #. Default: "nom.usuari"
 #: ../../../../ulearn.theme/ulearn/theme/skins/ulearntheme_custom/login_form.cpt:178
 msgid "nom_usuari"
-msgstr ""
+msgstr "name.surname"
 
 #. Default: "There are not events today"
 #: ../../../../ulearn.theme/ulearn/theme/portlets/templates/calendar.pt:21
 msgid "not_events_for_today"
-msgstr ""
+msgstr "There are not events today"
 
 #. Default: "contrasenya"
 #: ../../../../ulearn.theme/ulearn/theme/skins/ulearntheme_custom/login_form.cpt:193
 msgid "password"
-msgstr ""
+msgstr "password"
 
 #. Default: "User profile"
 #: ../../../../../../ulearn.theme/ulearn/theme/portlets/profile.py:36
 msgid "profile"
-msgstr ""
+msgstr "User profile"
 
 #. Default: "Cerca"
 #: ../../../../ulearn.theme/ulearn/theme/browser/views_templates/communities.pt:25
 msgid "search_communities"
-msgstr ""
+msgstr "Search"
 
 #. Default: "See more communities"
 #: ../../../../../../ulearn.theme/ulearn/theme/portlets/templates/communities.pt:35
 msgid "seemore"
-msgstr ""
+msgstr "See more communities"
 
 #. Default: "Stats"
 #: ../../../../../../ulearn.theme/ulearn/theme/portlets/stats.py:33
 #: ../../../../../../ulearn.theme/ulearn/theme/portlets/templates/stats.pt:4
 msgid "stats"
-msgstr ""
+msgstr "Stats"
 
 #. Default: "Thinnkers portlet"
 #: ../../../../../../ulearn.theme/ulearn/theme/portlets/thinnkers.py:34
-msgid "thinnkers"
-msgstr ""
+#msgid "thinnkers"
+#msgstr "Thinnkers portlet"
 
 #. Default: "Calendar portlet"
 #: ../../../../../../ulearn.theme/ulearn/theme/portlets/calendar.py:33
 msgid "ulearncalendar"
-msgstr ""
+msgstr "Calendar uLearn"
 
 #. Default: "Web collaboration"
 #: ../../../../ulearn.theme/ulearn/theme/portlets/templates/econnect.pt:8
 msgid "web_collaboration"
-msgstr ""
+msgstr "Create a session"
 
 msgid "hashtag_help"
 msgstr "The Twitter hashtag related to this community. There is no need to include the symbol '#'."
@@ -431,8 +434,8 @@ msgstr "People with restricted access by other persons. They do not show in sear
 msgid "search_text"
 msgstr "Search by text"
 
-msgid "search_tags"
-msgstr "Search by categories"
+#msgid "search_tags"
+#msgstr "Search by categories"
 
 msgid "use_the_search_input_to_find_objects_with_tags"
 msgstr "Search by text and/or categories"
@@ -454,3 +457,10 @@ msgstr "Phone"
 
 msgid "help_telefon"
 msgstr "Contact by phone"
+
+msgid "agenda"
+msgstr "Events"
+
+#: ../../../../ulearn.core/ulearn/core/content/community.py:310
+msgid "comunitat_existeix"
+msgstr "Community ${comunitat} already exists, please choose a different name."

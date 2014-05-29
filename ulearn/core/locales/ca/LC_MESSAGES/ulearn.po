@@ -82,7 +82,7 @@ msgstr "El hashtag (per exemple: ulearn) que utilitzarà aquesta comunitat. No c
 
 #: ../../../../../../ulearn.theme/ulearn/theme/portlets/templates/buttonbar.pt:13
 msgid "Entrada"
-msgstr "Entrada"
+msgstr "Stream"
 
 #: ../../../../ulearn.core/ulearn/core/content/community.py:371
 #: ../../../../../../ulearn.theme/ulearn/theme/browser/viewlets_templates/folderbar.pt:26
@@ -388,8 +388,8 @@ msgstr "Estadístiques"
 
 #. Default: "Thinnkers portlet"
 #: ../../../../../../ulearn.theme/ulearn/theme/portlets/thinnkers.py:34
-msgid "thinnkers"
-msgstr "Thinnkers portlet"
+#msgid "thinnkers"
+#msgstr "Thinnkers portlet"
 
 #. Default: "Calendar portlet"
 #: ../../../../../../ulearn.theme/ulearn/theme/portlets/calendar.py:33
@@ -526,8 +526,8 @@ msgstr "Visibilitat"
 msgid "search_text"
 msgstr "Cerca per text"
 
-msgid "search_tags"
-msgstr "Cerca per categories"
+#msgid "search_tags"
+#msgstr "Cerca per categories"
 
 msgid "use_the_search_input_to_find_objects_with_tags"
 msgstr "Cerca per text i/o categories"
@@ -535,8 +535,8 @@ msgstr "Cerca per text i/o categories"
 msgid "Specific"
 msgstr "Específic"
 
-msgid "help_ulearn_settings_editform"
-msgstr "Registre de configuració d'uLearn."
+#msgid "help_ulearn_settings_editform"
+#msgstr "Registre de configuració d'uLearn."
 
 msgid "search"
 msgstr "Cerca"
