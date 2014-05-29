@@ -1,11 +1,10 @@
 Changelog
 =========
 
-1.20 (unreleased)
+1.20 (2014-05-29)
 -----------------
 
-- Nothing changed yet.
-
+* Translations in English [Pilar Marinas]
 
 1.19 (2014-05-26)
 -----------------
