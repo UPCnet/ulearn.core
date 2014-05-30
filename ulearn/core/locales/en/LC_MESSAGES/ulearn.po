@@ -199,7 +199,7 @@ msgstr "Open"
 
 #: ../../../../../../ulearn.core/ulearn/core/content/community.py:60
 msgid "Organizative"
-msgstr "Organizative"
+msgstr "Organisational"
 
 #. Default: "Fotos"
 #: ../../../../../../ulearn.theme/ulearn/theme/browser/viewlets_templates/folderbar.pt:48
@@ -261,7 +261,7 @@ msgid "community_type_description"
 msgstr ""
 "Open: the member can subscribe and unsubscribe from the Community. \n"
 " Closed: Only the Community owner can subscribe members though the member can unsubscribe him/herself. \n"
-" Organizational: Only the Social Network Manager can subscribe members and no member can unsubscribe him/hersef."
+" Organisational: Only the Social Network Manager can subscribe members and no member can unsubscribe him/hersef."
 
 #. Default: "La comunidad ${comunitat} ha sido creada."
 #: ../../../../ulearn.core/ulearn/core/content/community.py:244
@@ -434,11 +434,8 @@ msgstr "People with restricted access by other persons. They do not show in sear
 msgid "search_text"
 msgstr "Search by text"
 
-#msgid "search_tags"
-#msgstr "Search by categories"
-
 msgid "use_the_search_input_to_find_objects_with_tags"
-msgstr "Search by text and/or categories"
+msgstr "Search by text and/or tags"
 
 msgid "search"
 msgstr "Search"
@@ -450,7 +447,7 @@ msgid "points"
 msgstr "points"
 
 msgid "notify_activity_via_push_help"
-msgstr "If selected, the activity of this community will be notified via push to the mobile devices of the subscribed users into the UPCnet uTalk app."
+msgstr "If you click this option, all the activity regarding this community will be notified to all users subscribed through their mobile application UPCnet uTalk via push notification."
 
 msgid "label_telefon"
 msgstr "Phone"
@@ -515,27 +512,6 @@ msgstr "Subscribed members with editor permissions"
 msgid "Subscribed people with owner permissions"
 msgstr "Subscribed members with owner permissions"
 
-msgid "seemoreusers_persones"
-msgstr "See more members"
-
-msgid "seemoreusers_thinnkers"
-msgstr "See more thinkers"
-
-msgid "seemoreusers_participants"
-msgstr "See more participants"
-
-msgid "persones"
-msgstr "Members"
-
-msgid "thinnkers"
-msgstr "Thinkers"
-
-msgid "participants"
-msgstr "Participants"
-
-msgid "entrades"
-msgstr "Activity"
-
 msgid "people_literal"
 msgstr "Members identification"
 
@@ -551,44 +527,14 @@ msgstr "Please use the search engine in order to find more"
 msgid "seemoreevents"
 msgstr "See more events"
 
-msgid "search_content"
-msgstr "Content Search"
-
-msgid "no_visibles"
-msgstr "Non visible members"
-
-msgid "uLearn settings"
-msgstr "uLearn Settings"
-
 msgid "Visibility"
 msgstr "Visibiliyt"
-
-msgid "search_text"
-msgstr "Search by text"
-
-#msgid "search_tags"
-#msgstr "Search by tags"
-
-msgid "use_the_search_input_to_find_objects_with_tags"
-msgstr "Search by text and/or tags"
 
 msgid "Specific"
 msgstr "Specific"
 
 #msgid "help_ulearn_settings_editform"
 #msgstr "Registre de configuració d'uLearn."
-
-msgid "search"
-msgstr "Search"
-
-msgid "search_tags"
-msgstr "Filter by tags"
-
-msgid "points"
-msgstr "points"
-
-msgid "notify_activity_via_push_help"
-msgstr "If you click this option, all the activity regarding this community will be notified to all users subscribed through their mobile application UPCnet uTalk via push notification
 
 msgid "Notify activity via push"
 msgstr "Activate Push notification"
