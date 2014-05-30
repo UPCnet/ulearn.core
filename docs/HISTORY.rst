@@ -1,11 +1,12 @@
 Changelog
 =========
 
-1.21 (unreleased)
+1.21 (2014-05-30)
 -----------------
 
-- Nothing changed yet.
-
+* Traduccions angles [Pilar Marinas]
+* Traduccions angles [Pilar Marinas]
+* Traduccions angles [Pilar Marinas]
 
 1.20 (2014-05-29)
 -----------------
