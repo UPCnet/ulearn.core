@@ -538,3 +538,11 @@ msgstr "Specific"
 
 msgid "Notify activity via push"
 msgstr "Activate Push notification"
+
+#: ../../../../ulearn.core/ulearn/core/content/community.py:372
+msgid "Enllaços"
+msgstr "Links"
+
+#: ../../../../ulearn.core/ulearn/core/content/community.py:373
+msgid "Fotos"
+msgstr "Photos"
