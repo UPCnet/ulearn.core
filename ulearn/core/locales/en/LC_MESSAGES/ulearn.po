@@ -228,7 +228,7 @@ msgstr "Ulearn settings"
 
 #: ../../../../../../ulearn.core/ulearn/core/profiles/default/types/ulearn.community.xml
 msgid "Una comunitat administrable"
-msgstr "A community manageable"
+msgstr "The community can be managed"
 
 #. Default: "Communities"
 #: ../../../../../../ulearn.theme/ulearn/theme/browser/views_templates/communities.pt:21
@@ -259,9 +259,9 @@ msgstr "Communities"
 #: ../../../../../../ulearn.core/ulearn/core/content/community.py:83
 msgid "community_type_description"
 msgstr ""
-"Open: Public (everyone's voice) and you can subscribe and unsubscribe. \n"
-" Closed: Only you can subscribe to someone and you can unsubscribe. \n"
-" Organizational: Only an administrator you can subscribe and you can unsubscribe."
+"Open: the member can subscribe and unsubscribe from the Community. \n"
+" Closed: Only the Community owner can subscribe members though the member can unsubscribe him/herself. \n"
+" Organizational: Only the Social Network Manager can subscribe members and no member can unsubscribe him/hersef."
 
 #. Default: "La comunidad ${comunitat} ha sido creada."
 #: ../../../../ulearn.core/ulearn/core/content/community.py:244
@@ -355,7 +355,7 @@ msgstr "name.surname"
 #. Default: "There are not events today"
 #: ../../../../ulearn.theme/ulearn/theme/portlets/templates/calendar.pt:21
 msgid "not_events_for_today"
-msgstr "There are not events today"
+msgstr "There are no events today"
 
 #. Default: "contrasenya"
 #: ../../../../ulearn.theme/ulearn/theme/skins/ulearntheme_custom/login_form.cpt:193
@@ -464,3 +464,131 @@ msgstr "Events"
 #: ../../../../ulearn.core/ulearn/core/content/community.py:310
 msgid "comunitat_existeix"
 msgstr "Community ${comunitat} already exists, please choose a different name."
+
+# Traducciones .js
+
+msgid "Error when removing community"
+msgstr "Error when removing the community "
+
+msgid "Successfully removed"
+msgstr "Successfully removed"
+
+msgid "Si cliqueu aquí, esborrareu la comunitat "
+msgstr "If you accept, the community will be removed"
+
+msgid "Voleu subscrivir-vos a la comunitat "
+msgstr "Do you want to subscribe to this community? "
+
+msgid "Voleu desubscrivir-vos de la comunitat "
+msgstr "Do you want to unsubscribe to this community?"
+
+msgid "Error when (un)subscribing to the community"
+msgstr "Error when (un)subscribing to the community"
+
+msgid "Successfully unsubscribed"
+msgstr "Successfully unsubscribed"
+
+msgid "Successfully subscribed"
+msgstr "Successfully subscribed"
+
+msgid "Create new meeting space"
+msgstr "Create a new online meeting"
+
+msgid "Meetings space"
+msgstr "Online Meetings"
+
+msgid "Readers"
+msgstr "Readers"
+
+msgid "Editors"
+msgstr "Editors"
+
+msgid "Owners"
+msgstr "Owners"
+
+msgid "Subscribed people with read-only permissions"
+msgstr "Subscribed members with read-only permissions"
+
+msgid "Subscribed people with editor permissions"
+msgstr "Subscribed members with editor permissions"
+
+msgid "Subscribed people with owner permissions"
+msgstr "Subscribed members with owner permissions"
+
+msgid "seemoreusers_persones"
+msgstr "See more members"
+
+msgid "seemoreusers_thinnkers"
+msgstr "See more thinkers"
+
+msgid "seemoreusers_participants"
+msgstr "See more participants"
+
+msgid "persones"
+msgstr "Members"
+
+msgid "thinnkers"
+msgstr "Thinkers"
+
+msgid "participants"
+msgstr "Participants"
+
+msgid "entrades"
+msgstr "Activity"
+
+msgid "people_literal"
+msgstr "Members identification"
+
+msgid "use_the_search_input_to_find_more_people1"
+msgstr "Please use the search engine in order to find a member"
+
+msgid "use_the_search_input_to_find_more_people2"
+msgstr "Please use the search engine in order to find more members"
+
+msgid "use_the_search_input_to_find_more_people3"
+msgstr "Please use the search engine in order to find more"
+
+msgid "seemoreevents"
+msgstr "See more events"
+
+msgid "search_content"
+msgstr "Content Search"
+
+msgid "no_visibles"
+msgstr "Non visible members"
+
+msgid "uLearn settings"
+msgstr "uLearn Settings"
+
+msgid "Visibility"
+msgstr "Visibiliyt"
+
+msgid "search_text"
+msgstr "Search by text"
+
+#msgid "search_tags"
+#msgstr "Search by tags"
+
+msgid "use_the_search_input_to_find_objects_with_tags"
+msgstr "Search by text and/or tags"
+
+msgid "Specific"
+msgstr "Specific"
+
+#msgid "help_ulearn_settings_editform"
+#msgstr "Registre de configuració d'uLearn."
+
+msgid "search"
+msgstr "Search"
+
+msgid "search_tags"
+msgstr "Filter by tags"
+
+msgid "points"
+msgstr "points"
+
+msgid "notify_activity_via_push_help"
+msgstr "If you click this option, all the activity regarding this community will be notified to all users subscribed through their mobile application UPCnet uTalk via push notification
+
+msgid "Notify activity via push"
+msgstr "Activate Push notification"
