@@ -558,3 +558,12 @@ msgstr "Telèfon"
 
 msgid "help_telefon"
 msgstr "Contacte telefònic"
+
+msgid "Discussion"
+msgstr "Debats"
+
+msgid "newdiscussion"
+msgstr "Crea un debat"
+
+msgid "seemorediscussions"
+msgstr "Veure més debats"

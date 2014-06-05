@@ -45,6 +45,7 @@ from ulearn.core.interfaces import IDocumentFolder
 from ulearn.core.interfaces import IEventsFolder
 from ulearn.core.interfaces import ILinksFolder
 from ulearn.core.interfaces import IPhotosFolder
+from ulearn.core.interfaces import IDiscussionFolder
 
 import json
 import mimetypes
@@ -628,17 +629,23 @@ def initialize_community(community, event):
     events = createContentInContainer(community, 'Folder', title='events', checkConstraints=False)
     events.setTitle(community.translate(_(u"Esdeveniments")))
 
+    # Create the default discussion container and set title
+    discussion = createContentInContainer(community, 'Folder', title='discussion', checkConstraints=False)
+    discussion.setTitle(community.translate(_(u"Discussion")))
+
     # Set default view layout
     documents.setLayout('folder_summary_view')
     links.setLayout('folder_summary_view')
     photos.setLayout('folder_summary_view')
     events.setLayout('folder_summary_view')
+    discussion.setLayout('discussion_folder_view')
 
     # Mark them with a marker interface
     alsoProvides(documents, IDocumentFolder)
     alsoProvides(links, ILinksFolder)
     alsoProvides(photos, IPhotosFolder)
     alsoProvides(events, IEventsFolder)
+    alsoProvides(discussion, IDiscussionFolder)
 
     # Set on them the allowable content types
     behavior = ISelectableConstrainTypes(documents)
@@ -657,6 +664,10 @@ def initialize_community(community, event):
     behavior.setConstrainTypesMode(1)
     behavior.setLocallyAllowedTypes(('Event', 'Folder'))
     behavior.setImmediatelyAddableTypes(('Event', 'Folder'))
+    behavior = ISelectableConstrainTypes(discussion)
+    behavior.setConstrainTypesMode(1)
+    behavior.setLocallyAllowedTypes(('ulearn.discussion', 'Folder'))
+    behavior.setImmediatelyAddableTypes(('ulearn.discussion', 'Folder'))
 
     # Change workflow to intranet ** no longer needed
     # portal_workflow.doActionFor(documents, 'publishtointranet')
@@ -697,15 +708,21 @@ def initialize_community(community, event):
     blacklist = getMultiAdapter((events, right_manager), ILocalPortletAssignmentManager)
     blacklist.setBlacklistStatus(CONTEXT_CATEGORY, True)
 
+    # Blacklist the right column portlets on discussion
+    right_manager = queryUtility(IPortletManager, name=u"plone.rightcolumn")
+    blacklist = getMultiAdapter((discussion, right_manager), ILocalPortletAssignmentManager)
+    blacklist.setBlacklistStatus(CONTEXT_CATEGORY, True)
+
     # Reindex all created objects
     community.reindexObject()
     documents.reindexObject()
     links.reindexObject()
     photos.reindexObject()
     events.reindexObject()
+    discussion.reindexObject()
 
     # Mark community as initialitzated, to avoid  previous
-    #folder creations to trigger modify event
+    # folder creations to trigger modify event
     alsoProvides(community, IInitializedCommunity)
 
 
@@ -782,6 +799,8 @@ def edit_community(community, event):
 
     # Unsubscribe no longer members from community
     all_subscribers = list(set(community.readers + community.subscribed + community.owners))
+    # Normalize to lower case all uLearn users
+    all_subscribers = [b.lower() for b in all_subscribers]
     subscribed = [user.get('username', '') for user in maxclient.contexts[community.absolute_url()].subscriptions.get()]
     unsubscribe = [a for a in subscribed if a not in all_subscribers]
 
