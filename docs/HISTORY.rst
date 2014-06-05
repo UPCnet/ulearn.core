@@ -1,11 +1,10 @@
 Changelog
 =========
 
-1.22 (unreleased)
+1.22 (2014-06-05)
 -----------------
 
-- Nothing changed yet.
-
+* New view for migrating all communities for mark them as initialized [Victor Fernandez de Alba]
 
 1.21 (2014-05-30)
 -----------------
