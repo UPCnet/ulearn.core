@@ -81,9 +81,9 @@ def Added(content, event):
     maxclient.setToken(oauth_token)
 
     articles = {
-        'ca': dict(File=u'un', Image=u'una', Link=u'un'),
-        'es': dict(File=u'un', Image=u'una', Link=u'un'),
-        'en': dict(File=u'a', Image=u'an', Link=u'a'),
+        'ca': dict(File=u'un', Image=u'una', Link=u'un', Event=u'un'),
+        'es': dict(File=u'un', Image=u'una', Link=u'un', Event=u'un'),
+        'en': dict(File=u'a', Image=u'an', Link=u'a', Event=u'an'),
     }
 
     tipus = {
