@@ -782,6 +782,8 @@ def edit_community(community, event):
 
     # Unsubscribe no longer members from community
     all_subscribers = list(set(community.readers + community.subscribed + community.owners))
+    # Normalize to lower case all uLearn users
+    all_subscribers = [b.lower() for b in all_subscribers]
     subscribed = [user.get('username', '') for user in maxclient.contexts[community.absolute_url()].subscriptions.get()]
     unsubscribe = [a for a in subscribed if a not in all_subscribers]
 

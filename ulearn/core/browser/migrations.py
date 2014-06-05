@@ -5,6 +5,9 @@ from zope.component import getUtility
 from zope.component import queryUtility
 from zope.component import getMultiAdapter
 from zope.component.hooks import getSite
+from zope.interface import alsoProvides
+from zope.event import notify
+from zope.lifecycleevent import ObjectModifiedEvent
 
 from plone.portlets.interfaces import IPortletManager
 from plone.portlets.interfaces import IPortletAssignmentMapping
@@ -13,11 +16,13 @@ from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.interfaces import IPloneSiteRoot
 
 from ulearn.core.interfaces import IDocumentFolder, ILinksFolder, IPhotosFolder, IEventsFolder
+from ulearn.core.content.community import IInitializedCommunity
 
 from mrs.max.utilities import IMAXClient
 
 from itertools import chain
 import logging
+import plone.api
 
 logger = logging.getLogger(__name__)
 
@@ -102,3 +107,16 @@ class createMAXUserForAllExistingUsers(grok.View):
             userId = user_info['id']
             user = mtool.getMemberById(userId)
             createMAXUser(user.getUserName())
+
+
+class InitializeAllCommunities(grok.View):
+    grok.context(IPloneSiteRoot)
+    grok.require('zope2.ViewManagementScreens')
+
+    def render(self):
+        pc = plone.api.portal.get_tool(name='portal_catalog')
+        results = pc.searchResults(portal_type='ulearn.community')
+        for result in results:
+            community = result.getObject()
+            alsoProvides(community, IInitializedCommunity)
+            notify(ObjectModifiedEvent(community))
