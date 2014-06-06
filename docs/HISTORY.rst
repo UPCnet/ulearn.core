@@ -1,11 +1,10 @@
 Changelog
 =========
 
-1.25 (unreleased)
+1.25 (2014-06-06)
 -----------------
 
-- Nothing changed yet.
-
+* Fix case when user is not valid, continue to process the others [Victor Fernandez de Alba]
 
 1.24 (2014-06-06)
 -----------------
