@@ -1,17 +1,17 @@
 Changelog
 =========
 
-1.24 (unreleased)
+1.24 (2014-06-06)
 -----------------
 
-- Nothing changed yet.
-
+* Guard in case that the lists of subscribed are empty [Victor Fernandez de Alba]
+* More migration [Victor Fernandez de Alba]
 
 1.23 (2014-06-05)
 -----------------
 
-- Nothing changed yet.
-
+* Guard in case that the lists of subscribed are empty [Victor Fernandez de Alba]
+* More migration [Victor Fernandez de Alba]
 
 1.22 (2014-06-05)
 -----------------
