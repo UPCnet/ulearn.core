@@ -48,6 +48,9 @@ from ulearn.core.interfaces import IPhotosFolder
 
 import json
 import mimetypes
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 @grok.provider(IContextSourceBinder)
@@ -754,19 +757,27 @@ def edit_community(community, event):
         maxclient.contexts[community.absolute_url()].put(**properties_to_update)
 
     # Update/Subscribe the invited users and grant them permission on MAX
-    # Guard in case that the lists are empty
-    if community.readers:
-        for reader in community.readers:
+    # Guard in case that the user does not exist or the community does not exist
+    for reader in community.readers:
+        try:
             maxclient.people[reader].subscriptions.post(object_url=community.absolute_url())
             maxclient.contexts[community.absolute_url()].permissions[reader]['read'].put()
-    if community.subscribed:
-        for writter in community.subscribed:
+        except:
+            logger.error('Impossible to subscribe user {} as reader in the {} community.'.format(reader, community.absolute_url()))
+
+    for writter in community.subscribed:
+        try:
             maxclient.people[writter].subscriptions.post(object_url=community.absolute_url())
             maxclient.contexts[community.absolute_url()].permissions[writter]['write'].put()
-    if community.owners:
-        for owner in community.owners:
+        except:
+            logger.error('Impossible to subscribe user {} as editor in the {} community.'.format(writter, community.absolute_url()))
+
+    for owner in community.owners:
+        try:
             maxclient.people[owner].subscriptions.post(object_url=community.absolute_url())
             maxclient.contexts[community.absolute_url()].permissions[owner]['write'].put()
+        except:
+            logger.error('Impossible to subscribe user {} as owner in the {} community.'.format(owner, community.absolute_url()))
 
     # If the community is of the type "Open", then allow any auth user to see it
     if community.community_type == u'Open':
