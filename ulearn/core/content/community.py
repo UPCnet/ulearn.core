@@ -754,15 +754,19 @@ def edit_community(community, event):
         maxclient.contexts[community.absolute_url()].put(**properties_to_update)
 
     # Update/Subscribe the invited users and grant them permission on MAX
-    for reader in community.readers:
-        maxclient.people[reader].subscriptions.post(object_url=community.absolute_url())
-        maxclient.contexts[community.absolute_url()].permissions[reader]['read'].put()
-    for writter in community.subscribed:
-        maxclient.people[writter].subscriptions.post(object_url=community.absolute_url())
-        maxclient.contexts[community.absolute_url()].permissions[writter]['write'].put()
-    for owner in community.owners:
-        maxclient.people[owner].subscriptions.post(object_url=community.absolute_url())
-        maxclient.contexts[community.absolute_url()].permissions[owner]['write'].put()
+    # Guard in case that the lists are empty
+    if community.readers:
+        for reader in community.readers:
+            maxclient.people[reader].subscriptions.post(object_url=community.absolute_url())
+            maxclient.contexts[community.absolute_url()].permissions[reader]['read'].put()
+    if community.subscribed:
+        for writter in community.subscribed:
+            maxclient.people[writter].subscriptions.post(object_url=community.absolute_url())
+            maxclient.contexts[community.absolute_url()].permissions[writter]['write'].put()
+    if community.owners:
+        for owner in community.owners:
+            maxclient.people[owner].subscriptions.post(object_url=community.absolute_url())
+            maxclient.contexts[community.absolute_url()].permissions[owner]['write'].put()
 
     # If the community is of the type "Open", then allow any auth user to see it
     if community.community_type == u'Open':
