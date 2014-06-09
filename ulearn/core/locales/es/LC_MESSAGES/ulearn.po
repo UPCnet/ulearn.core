@@ -594,3 +594,12 @@ msgstr "Teléfono"
 
 msgid "help_telefon"
 msgstr "Contacto telefónico"
+
+msgid "Discussion"
+msgstr "Debates"
+
+msgid "newdiscussion"
+msgstr "Crea un debate"
+
+msgid "seemorediscussions"
+msgstr "Ver más debates"

@@ -18,6 +18,10 @@ class IEventsFolder(Interface):
     """ Marker for events folder """
 
 
+class IDiscussionFolder(Interface):
+    """ Marker for discussion folder """
+
+
 class IDXFileFactory(IFileFactory):
     """ adapter factory for DX types
     """

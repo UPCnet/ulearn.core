@@ -6,17 +6,29 @@ from zope.component import queryUtility
 from zope.component import getMultiAdapter
 from zope.component.hooks import getSite
 from zope.interface import alsoProvides
+<<<<<<< HEAD
 from zope.event import notify
 from zope.lifecycleevent import ObjectModifiedEvent
+=======
+from Products.CMFPlone.interfaces.constrains import ISelectableConstrainTypes
+>>>>>>> debats
 
+from plone.portlets.constants import CONTEXT_CATEGORY
+from plone.portlets.interfaces import ILocalPortletAssignmentManager
 from plone.portlets.interfaces import IPortletManager
 from plone.portlets.interfaces import IPortletAssignmentMapping
+from plone.dexterity.utils import createContentInContainer
 
 from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.interfaces import IPloneSiteRoot
 
 from ulearn.core.interfaces import IDocumentFolder, ILinksFolder, IPhotosFolder, IEventsFolder
+<<<<<<< HEAD
 from ulearn.core.content.community import IInitializedCommunity
+=======
+from ulearn.core.interfaces import IDiscussionFolder
+from ulearn.core import _
+>>>>>>> debats
 
 from mrs.max.utilities import IMAXClient
 
@@ -121,3 +133,38 @@ class InitializeAllCommunities(grok.View):
             logger.error('Community initialized {}'.format(community.absolute_url()))
             alsoProvides(community, IInitializedCommunity)
             notify(ObjectModifiedEvent(community))
+
+
+class CreateDiscussionFolders(grok.View):
+    grok.context(IPloneSiteRoot)
+    grok.require('zope2.ViewManagementScreens')
+
+    def render(self):
+        pc = plone.api.portal.get_tool(name="portal_catalog")
+        communities = pc.searchResults(portal_type="ulearn.community")
+        for community in communities:
+            community = community.getObject()
+            if not 'discussion' in community.objectIds():
+                # Create the default discussion container and set title
+                discussion = createContentInContainer(community, 'Folder', title='discussion', checkConstraints=False)
+                discussion.setTitle(community.translate(_(u"Discussion")))
+
+                discussion.setLayout('discussion_folder_view')
+
+                alsoProvides(discussion, IDiscussionFolder)
+
+                behavior = ISelectableConstrainTypes(discussion)
+                behavior.setConstrainTypesMode(1)
+                behavior.setLocallyAllowedTypes(('ulearn.discussion', 'Folder'))
+                behavior.setImmediatelyAddableTypes(('ulearn.discussion', 'Folder'))
+
+                # Blacklist the right column portlets on discussion
+                right_manager = queryUtility(IPortletManager, name=u"plone.rightcolumn")
+                blacklist = getMultiAdapter((discussion, right_manager), ILocalPortletAssignmentManager)
+                blacklist.setBlacklistStatus(CONTEXT_CATEGORY, True)
+
+                discussion.reindexObject()
+
+                logger.info("Created discussion folder in {}".format(community.absolute_url()))
+
+        return 'Done.'
