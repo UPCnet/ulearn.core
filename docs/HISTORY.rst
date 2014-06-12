@@ -1,11 +1,11 @@
 Changelog
 =========
 
-1.26 (unreleased)
+1.26 (2014-06-12)
 -----------------
 
-- Nothing changed yet.
-
+* Debats feature [Victor Fernandez de Alba]
+* Migration action [Victor Fernandez de Alba]
 
 1.25 (2014-06-06)
 -----------------
