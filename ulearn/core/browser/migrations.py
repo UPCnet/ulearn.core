@@ -6,12 +6,10 @@ from zope.component import queryUtility
 from zope.component import getMultiAdapter
 from zope.component.hooks import getSite
 from zope.interface import alsoProvides
-<<<<<<< HEAD
 from zope.event import notify
 from zope.lifecycleevent import ObjectModifiedEvent
-=======
+
 from Products.CMFPlone.interfaces.constrains import ISelectableConstrainTypes
->>>>>>> debats
 
 from plone.portlets.constants import CONTEXT_CATEGORY
 from plone.portlets.interfaces import ILocalPortletAssignmentManager
@@ -23,12 +21,11 @@ from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.interfaces import IPloneSiteRoot
 
 from ulearn.core.interfaces import IDocumentFolder, ILinksFolder, IPhotosFolder, IEventsFolder
-<<<<<<< HEAD
 from ulearn.core.content.community import IInitializedCommunity
-=======
+
 from ulearn.core.interfaces import IDiscussionFolder
 from ulearn.core import _
->>>>>>> debats
+
 
 from mrs.max.utilities import IMAXClient
 
