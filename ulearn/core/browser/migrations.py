@@ -127,9 +127,10 @@ class InitializeAllCommunities(grok.View):
         results = pc.searchResults(portal_type='ulearn.community')
         for result in results:
             community = result.getObject()
-            logger.error('Community initialized {}'.format(community.absolute_url()))
-            alsoProvides(community, IInitializedCommunity)
-            notify(ObjectModifiedEvent(community))
+            if not IInitializedCommunity.providedBy(community):
+                logger.error('Initializing community {}'.format(community.absolute_url()))
+                alsoProvides(community, IInitializedCommunity)
+                notify(ObjectModifiedEvent(community))
 
 
 class CreateDiscussionFolders(grok.View):
