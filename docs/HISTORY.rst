@@ -1,11 +1,10 @@
 Changelog
 =========
 
-1.28 (unreleased)
+1.28 (2014-06-16)
 -----------------
 
-- Nothing changed yet.
-
+* Improve migration initialized communities [Victor Fernandez de Alba]
 
 1.27 (2014-06-13)
 -----------------
