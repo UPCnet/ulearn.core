@@ -18,6 +18,7 @@ from Products.statusmessages.interfaces import IStatusMessage
 from ulearn.core import _
 from ulearn.core.controlpanel import IUlearnControlPanelSettings
 from ulearn.theme.browser.interfaces import IUlearnTheme
+from datetime import datetime
 
 import json
 import requests
@@ -48,7 +49,8 @@ class IReservaBBB(form.Schema):
     start_date = schema.Datetime(
         title=_(u"Data d'inici"),
         description=_(u"Indiqueu la data d'inici de la reserva."),
-        required=True
+        required=True,
+        default=datetime.now()
     )
 
     durada = schema.Choice(
