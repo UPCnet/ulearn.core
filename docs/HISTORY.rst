@@ -1,11 +1,11 @@
 Changelog
 =========
 
-1.29 (unreleased)
+1.29 (2014-06-16)
 -----------------
 
-- Nothing changed yet.
-
+* F*cking missing limit on query [Victor Fernandez de Alba]
+* Fixes #510399, default time set correctly on add BBB reservation [Victor Fernandez de Alba]
 
 1.28 (2014-06-16)
 -----------------
