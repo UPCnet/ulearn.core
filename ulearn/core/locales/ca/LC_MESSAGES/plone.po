@@ -421,3 +421,8 @@ msgstr ""
 msgid "ulearncalendar"
 msgstr ""
 
+msgid "Add a new discussion item"
+msgstr "Afegir un debat"
+
+msgid "Add a new folder"
+msgstr "Afegir una carpeta"

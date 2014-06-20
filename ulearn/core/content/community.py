@@ -476,7 +476,11 @@ class communityEdit(form.SchemaForm):
         self.widgets["description"].value = self.context.description
         self.widgets["community_type"].value = [self.ctype_map[self.context.community_type]]
         self.widgets["twitter_hashtag"].value = self.context.twitter_hashtag
-        self.widgets["notify_activity_via_push"].value = self.context.notify_activity_via_push
+
+        if self.context.notify_activity_via_push:
+            self.widgets["notify_activity_via_push"].value = ['selected']
+            # Bool widgets should call update() once modified
+            self.widgets["notify_activity_via_push"].update()
 
         converter = SelectWidgetConverter(self.fields['readers'].field, self.widgets["readers"])
         self.widgets["readers"].value = converter.toWidgetValue(self.context.readers)

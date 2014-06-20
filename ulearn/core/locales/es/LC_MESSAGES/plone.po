@@ -403,3 +403,8 @@ msgstr ""
 msgid "event_view"
 msgstr "Ver Evento"
 
+msgid "Add a new discussion item"
+msgstr "Añadir un debate"
+
+msgid "Add a new folder"
+msgstr "Añadir una carpeta"

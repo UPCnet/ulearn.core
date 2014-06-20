@@ -63,7 +63,7 @@ class TestExample(unittest.TestCase):
 
         logout()
 
-        self.assertTrue(new_comunitat.objectIds(), ['documents', 'links', 'media', 'events'])
+        self.assertEquals(new_comunitat.objectIds(), ['documents', 'links', 'media', 'events', 'discussion'])
 
     def test_community_creation_not_allowed(self):
         nom = u'community-test'

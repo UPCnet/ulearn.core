@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <object name="Folder" meta_type="Dexterity FTI" i18n:domain="plone"
    xmlns:i18n="http://xml.zope.org/namespaces/i18n">
+ <property name="description" i18n:translate="">Add a new folder</property>
  <property name="default_view">folder_summary_view</property>
  <property name="view_methods">
   <element value="folder_listing"/>
