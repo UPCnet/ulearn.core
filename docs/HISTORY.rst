@@ -1,11 +1,10 @@
 Changelog
 =========
 
-1.30 (unreleased)
+1.30 (2014-06-20)
 -----------------
 
-- Nothing changed yet.
-
+* Fix discussion CT name, add some i18n and tests failing. Fix boolean on edit for push notifications. [Victor Fernandez de Alba]
 
 1.29 (2014-06-16)
 -----------------
