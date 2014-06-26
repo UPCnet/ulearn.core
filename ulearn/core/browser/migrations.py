@@ -28,6 +28,7 @@ from ulearn.core import _
 
 
 from mrs.max.utilities import IMAXClient
+from maxclient.rest import RequestError
 
 from itertools import chain
 import logging
@@ -84,17 +85,17 @@ def createMAXUser(username):
     maxclient.setToken(settings.max_restricted_token)
 
     try:
-        result = maxclient.people[username].post()
+        maxclient.people[username].post()
 
-        if result[0]:
-            if result[1] == 201:
-                logger.info('MAX user created for user: %s' % username)
-            if result[1] == 200:
-                logger.info('MAX user already created for user: %s' % username)
-        else:
-            logger.error('Error creating MAX user for user: %s' % username)
+        if maxclient.last_response_code == 201:
+            logger.info('MAX user created for user: %s' % username)
+        elif maxclient.last_response_code == 200:
+            logger.info('MAX user already created for user: %s' % username)
+
+    except RequestError:
+        import ipdb;ipdb.set_trace()
     except:
-        logger.error('Could not contact with MAX server.')
+        logger.error('Error creating MAX user for user: %s' % username)
 
 
 class createMAXUserForAllExistingUsers(grok.View):
