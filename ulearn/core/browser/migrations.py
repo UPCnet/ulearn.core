@@ -167,3 +167,28 @@ class CreateDiscussionFolders(grok.View):
                 logger.info("Created discussion folder in {}".format(community.absolute_url()))
 
         return 'Done.'
+
+
+class InitializeVideos(grok.View):
+    grok.context(IPloneSiteRoot)
+    grok.require('zope2.ViewManagementScreens')
+
+    def render(self):
+        pc = plone.api.portal.get_tool(name="portal_catalog")
+        communities = pc.searchResults(portal_type="ulearn.community")
+
+        text = []
+        for community in communities:
+            community = community.getObject()
+            media_folder = community.media
+
+            behavior = ISelectableConstrainTypes(media_folder)
+            behavior.setConstrainTypesMode(1)
+            behavior.setLocallyAllowedTypes(('Image', 'ulearn.video', 'Folder'))
+            behavior.setImmediatelyAddableTypes(('Image', 'ulearn.video', 'Folder'))
+
+            if media_folder.title != 'Media':
+                media_folder.setTitle(community.translate(_(u"Media")))
+
+            text.append('Added type video to {}\n'.format(community.absolute_url()))
+        return ''.join(text)

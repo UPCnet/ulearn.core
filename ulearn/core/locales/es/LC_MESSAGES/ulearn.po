@@ -603,3 +603,6 @@ msgstr "Crea un debate"
 
 msgid "seemorediscussions"
 msgstr "Ver más debates"
+
+msgid "Media"
+msgstr "Media"

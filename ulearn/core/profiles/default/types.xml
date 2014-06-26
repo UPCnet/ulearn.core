@@ -7,4 +7,5 @@
  <object meta_type="Dexterity FTI" name="AppImage" />
  <object meta_type="Dexterity FTI" name="ulearn.community" />
  <object meta_type="Dexterity FTI" name="ulearn.discussion" />
+ <object meta_type="Dexterity FTI" name="ulearn.video" />
 </object>

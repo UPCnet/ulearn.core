@@ -426,3 +426,6 @@ msgstr "Afegir un debat"
 
 msgid "Add a new folder"
 msgstr "Afegir una carpeta"
+
+msgid "Lets you upload a video to the site."
+msgstr "Afegir un video"

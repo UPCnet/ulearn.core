@@ -630,7 +630,7 @@ def initialize_community(community, event):
     # Set the correct title, translated
     documents.setTitle(community.translate(_(u"Documents")))
     links.setTitle(community.translate(_(u"Enllaços")))
-    photos.setTitle(community.translate(_(u"Fotos")))
+    photos.setTitle(community.translate(_(u"Media")))
 
     # Create the default events container and set title
     events = createContentInContainer(community, 'Folder', title='events', checkConstraints=False)

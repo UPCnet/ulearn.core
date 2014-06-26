@@ -14,6 +14,10 @@ from ulearn.core.content.community import ICommunity
 
 from mrs.max.utilities import IMAXClient
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 @grok.subscribe(ICommunity, IObjectAddedEvent)
 def communityAdded(content, event):
@@ -44,8 +48,10 @@ def communityAdded(content, event):
         'en': u'I\'ve just created a new community: {}',
     }
 
-    maxclient.people[username].activities.post(object_content=activity_text[default_lang].format(content.Title().decode('utf-8')), contexts=[dict(url=content.absolute_url(), objectType="context")])
-    # maxclient.addActivity(activity_text[default_lang].format(content.Title().decode('utf-8')), contexts=[content.absolute_url(), ])
+    try:
+        maxclient.people[username].activities.post(object_content=activity_text[default_lang].format(content.Title().decode('utf-8')), contexts=[dict(url=content.absolute_url(), objectType="context")])
+    except:
+        logger.warning('The username {} has been unable to post the default community creation message'.format(username))
 
 
 def Added(content, event):
@@ -108,10 +114,15 @@ def Added(content, event):
        content.description:
         activity_text = u'{} {}'.format(content.title, u'{}/view'.format(content.absolute_url()))
 
-        maxclient.people[username].activities.post(object_content=activity_text, contexts=[dict(url=community.absolute_url(), objectType="context")])
+        try:
+            maxclient.people[username].activities.post(object_content=activity_text, contexts=[dict(url=community.absolute_url(), objectType="context")])
+        except:
+            logger.warning('The username {} has been unable to post the default object creation message'.format(username))
     else:
-        maxclient.people[username].activities.post(object_content=activity_text[default_lang].format(**parts), contexts=[dict(url=community.absolute_url(), objectType="context")])
-        # maxclient.addActivity(activity_text[default_lang].format(**parts), contexts=[community.absolute_url(), ])
+        try:
+            maxclient.people[username].activities.post(object_content=activity_text[default_lang].format(**parts), contexts=[dict(url=community.absolute_url(), objectType="context")])
+        except:
+            logger.warning('The username {} has been unable to post the default object creation message'.format(username))
 
 
 def findContainerCommunity(content):
