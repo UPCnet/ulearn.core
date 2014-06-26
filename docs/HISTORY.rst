@@ -1,11 +1,10 @@
 Changelog
 =========
 
-1.31 (unreleased)
+1.31 (2014-06-26)
 -----------------
 
-- Nothing changed yet.
-
+* Migrate code to rest client [Carles Bruguera]
 
 1.30 (2014-06-20)
 -----------------
