@@ -1,11 +1,10 @@
 Changelog
 =========
 
-1.32 (unreleased)
+1.32 (2014-06-26)
 -----------------
 
-- Nothing changed yet.
-
+* New video CT and related migrations. New related i18n. Improve fails in hooks. [Victor Fernandez de Alba]
 
 1.31 (2014-06-26)
 -----------------
