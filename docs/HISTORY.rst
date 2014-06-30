@@ -1,11 +1,10 @@
 Changelog
 =========
 
-1.33 (unreleased)
+1.33 (2014-06-30)
 -----------------
 
-- Nothing changed yet.
-
+* New widget variables [Victor Fernandez de Alba]
 
 1.32 (2014-06-26)
 -----------------
