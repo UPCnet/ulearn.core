@@ -33,3 +33,7 @@ class IAppImage(Interface):
 
 class IAppFile(Interface):
     """ Marker to identify content type File uploaded via an app """
+
+
+class IVideo(Interface):
+    """ Marker to identify content type Video """

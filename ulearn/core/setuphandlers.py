@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from plone import api
 from zope.interface import alsoProvides
 from zope.component import queryUtility
 from zope.component import getMultiAdapter
@@ -14,7 +15,6 @@ from genweb.core.interfaces import IHomePage
 from ulearn.core.controlpanel import IUlearnControlPanelSettings
 
 import logging
-import plone.api
 import transaction
 
 PROFILE_ID = 'profile-ulearn.core:default'
@@ -139,25 +139,28 @@ def setupVarious(context):
     target_manager_assignments = getMultiAdapter((portal, target_manager), IPortletAssignmentMapping)
 
     if 'calendar' not in target_manager_assignments.keys() or \
-       'stats' not in target_manager_assignments.keys() or \
-       'econnect' not in target_manager_assignments.keys():
+       'stats' not in target_manager_assignments.keys():
         # purge existing portlets
         for portlet in target_manager_assignments.keys():
             del target_manager_assignments[portlet]
 
         from ulearn.theme.portlets.calendar import Assignment as calendarAssignment
         from ulearn.theme.portlets.stats import Assignment as statsAssignment
-        from ulearn.theme.portlets.econnect import Assignment as econnectAssignment
+        # from ulearn.theme.portlets.econnect import Assignment as econnectAssignment
 
         target_manager_assignments['calendar'] = calendarAssignment()
         target_manager_assignments['stats'] = statsAssignment()
-        target_manager_assignments['econnect'] = econnectAssignment()
+        # target_manager_assignments['econnect'] = econnectAssignment()
 
     # Set default TimeZone (p.a.event)
-    plone.api.portal.set_registry_record('plone.app.event.portal_timezone', 'Europe/Madrid')
-    plone.api.portal.set_registry_record('plone.app.event.first_weekday', 0)
+    api.portal.set_registry_record('plone.app.event.portal_timezone', 'Europe/Madrid')
+    api.portal.set_registry_record('plone.app.event.first_weekday', 0)
 
     # Unset validate e-mail as we want the users to be created right the way
     portal.validate_email = False
+
+    # Update types with default action listing
+    site_properties = api.portal.get_tool(name='portal_properties').site_properties
+    site_properties.typesUseViewActionInListings = site_properties.typesUseViewActionInListings + ('ulearn.video',)
 
     transaction.commit()
