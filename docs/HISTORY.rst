@@ -1,11 +1,10 @@
 Changelog
 =========
 
-1.34 (unreleased)
+1.34 (2014-06-30)
 -----------------
 
-- Nothing changed yet.
-
+* Make Video CT more specific by having its own class and Interface [Victor Fernandez de Alba]
 
 1.33 (2014-06-30)
 -----------------
