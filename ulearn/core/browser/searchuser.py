@@ -50,7 +50,7 @@ def searchUsersFunction(context, request, search_string, user_properties=None):
 
     if ICommunity.providedBy(context):
         if search_string:
-            max_users = maxclient.contexts[context.absolute_url()].subscriptions.get(qs={'username': search_string})
+            max_users = maxclient.contexts[context.absolute_url()].subscriptions.get(qs={'username': search_string, 'limit': 0})
 
             plone_results = searchView.merge(chain(*[searchView.searchUsers(**{field: search_string}) for field in ['name', 'fullname', 'email', 'twitter_username', 'ubicacio', 'location']]), 'userid')
 
@@ -62,7 +62,7 @@ def searchUsersFunction(context, request, search_string, user_properties=None):
             maxclientrestricted, settings = getUtility(IMAXClient)()
             maxclientrestricted.setActor(settings.max_restricted_username)
             maxclientrestricted.setToken(settings.max_restricted_token)
-            max_users = maxclientrestricted.contexts[context.absolute_url()].subscriptions.get()
+            max_users = maxclientrestricted.contexts[context.absolute_url()].subscriptions.get(qs={'limit': 0})
             users = [pm.getMemberById(user.get('username')) for user in max_users]
 
     users_profile = []
