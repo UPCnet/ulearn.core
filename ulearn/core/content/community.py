@@ -6,21 +6,22 @@ from z3c.form import button
 from zope import schema
 from zope.app.container.interfaces import IObjectAddedEvent
 from zope.component import getMultiAdapter
+from zope.component import getUtility
 from zope.component import queryUtility
 from zope.component.hooks import getSite
 from zope.event import notify
+from zope.interface import implements
 from zope.interface import Interface
 from zope.interface import alsoProvides
 from zope.lifecycleevent import ObjectModifiedEvent
 from zope.lifecycleevent.interfaces import IObjectModifiedEvent
 from zope.lifecycleevent.interfaces import IObjectRemovedEvent
+from zope.schema.fieldproperty import FieldProperty
 from zope.schema.interfaces import IContextSourceBinder
 from zope.schema.vocabulary import SimpleVocabulary
 from zope.security import checkPermission
 
-from Products.CMFCore.utils import getToolByName
-from Products.CMFPlone.interfaces import IPloneSiteRoot
-from Products.CMFPlone.interfaces.constrains import ISelectableConstrainTypes
+from plone.dexterity.content import Container
 from plone.dexterity.utils import createContentInContainer
 from plone.directives import form
 from plone.indexer import indexer
@@ -31,6 +32,9 @@ from plone.portlets.interfaces import ILocalPortletAssignmentManager
 from plone.portlets.interfaces import IPortletManager
 from plone.registry.interfaces import IRegistry
 
+from Products.CMFCore.utils import getToolByName
+from Products.CMFPlone.interfaces import IPloneSiteRoot
+from Products.CMFPlone.interfaces.constrains import ISelectableConstrainTypes
 from Products.statusmessages.interfaces import IStatusMessage
 from ZPublisher.HTTPRequest import FileUpload
 from genweb.core.adapters.favorites import IFavorite
@@ -39,6 +43,7 @@ from genweb.core.widgets.select2_user_widget import SelectWidgetConverter
 from hashlib import sha1
 from maxclient.rest import MaxClient
 from mrs.max.browser.controlpanel import IMAXUISettings
+from mrs.max.utilities import IMAXClient
 from ulearn.core import _
 from ulearn.core.interfaces import IDXFileFactory
 from ulearn.core.interfaces import IDocumentFolder
@@ -150,6 +155,85 @@ class ICommunity(form.Schema):
         description=_(u'notify_activity_via_push_help'),
         required=False
     )
+
+
+class Community(Container):
+    implements(ICommunity)
+
+    def _get_max_subscribed_to_context(self):
+        """ Get subscribed users from MAX """
+        maxclient, settings = getUtility(IMAXClient)()
+        maxclient.setActor(settings.max_restricted_username)
+        maxclient.setToken(settings.max_restricted_token)
+
+        portal = getSite()
+        wrapped_community = self.__of__(portal)
+        logger.info('Getting subscribed users for {}'.format(wrapped_community.absolute_url()))
+        return [user.get('username', '') for user in maxclient.contexts[wrapped_community.absolute_url()].subscriptions.get(qs={'limit': 0})]
+
+    def _intersect_subscribed_users_by_role(self):
+        """ We assume that the default user role assignment will be editor
+            otherwise noted. So try to map each of the other roles (reader,
+            owner) and if not matched, then assign them to the default (editor)
+        """
+        from zope.globalrequest import getRequest
+        from zope.annotation.interfaces import IAnnotations
+        request = getRequest()
+
+        key = 'cache-subscribed-{}'.format(self.id)
+
+        cache = IAnnotations(request)
+        subscribed = cache.get(key, None)
+        if not subscribed:
+            subscribed = self._get_max_subscribed_to_context()
+            cache[key] = subscribed
+
+        readers = []
+        editors = []
+        owners = []
+        for user in subscribed:
+            if user in self._readers:
+                readers.append[user]
+            elif user in self._owners:
+                owners.append(user)
+            else:
+                editors.append(user)
+
+        return dict(readers=readers, editors=editors, owners=owners)
+
+    _readers = FieldProperty(ICommunity['readers'])
+
+    def get_readers(self):
+        return self._intersect_subscribed_users_by_role()['readers']
+
+    def set_readers(self, value):
+        self._readers = value
+
+    readers = property(get_readers, set_readers)
+
+    _editors = FieldProperty(ICommunity['subscribed'])
+
+    def get_editors(self):
+        # import ipdb;ipdb.set_trace()
+        # if not self.absolute_url():
+        #     return self._editors
+        # else:
+        return self._intersect_subscribed_users_by_role()['editors']
+
+    def set_editors(self, value):
+        self._editors = value
+
+    subscribed = property(get_editors, set_editors)
+
+    _owners = FieldProperty(ICommunity['owners'])
+
+    def get_owners(self):
+        return self._intersect_subscribed_users_by_role()['owners']
+
+    def set_owners(self, value):
+        self._owners = value
+
+    owners = property(get_owners, set_owners)
 
 
 @indexer(ICommunity)
@@ -817,17 +901,17 @@ def edit_community(community, event):
         community.manage_setLocalRoles(owner, ['Reader', 'Contributor', 'Editor', 'Owner'])
 
     # Unsubscribe no longer members from community
-    all_subscribers = list(set(community.readers + community.subscribed + community.owners))
+    # all_subscribers = list(set(community.readers + community.subscribed + community.owners))
     # Normalize to lower case all uLearn users
-    all_subscribers = [b.lower() for b in all_subscribers]
-    subscribed = [user.get('username', '') for user in maxclient.contexts[community.absolute_url()].subscriptions.get(qs={'limit': 0})]
-    unsubscribe = [a for a in subscribed if a not in all_subscribers]
+    # all_subscribers = [b.lower() for b in all_subscribers]
+    # subscribed = [user.get('username', '') for user in maxclient.contexts[community.absolute_url()].subscriptions.get(qs={'limit': 0})]
+    # unsubscribe = [a for a in subscribed if a not in all_subscribers]
 
-    for user in unsubscribe:
-        maxclient.people[user].subscriptions[community.absolute_url()].delete()
+    # for user in unsubscribe:
+    #     maxclient.people[user].subscriptions[community.absolute_url()].delete()
 
     # Update unsubscribed user permissions
-    community.manage_delLocalRoles(unsubscribe)
+    # community.manage_delLocalRoles(unsubscribe)
 
     # Reindex all operations in object
     community.reindexObject()
