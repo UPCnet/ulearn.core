@@ -1,11 +1,10 @@
 Changelog
 =========
 
-1.35 (unreleased)
+1.35 (2014-07-07)
 -----------------
 
-- Nothing changed yet.
-
+* Fix bug in people search [Victor Fernandez de Alba]
 
 1.34 (2014-06-30)
 -----------------
