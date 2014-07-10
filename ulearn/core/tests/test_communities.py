@@ -24,9 +24,30 @@ class TestExample(unittest.TestCase):
         self.portal = self.layer['portal']
         self.qi_tool = getToolByName(self.portal, 'portal_quickinstaller')
 
-        maxclient, settings = getUtility(IMAXClient)()
+        self.maxclient, settings = getUtility(IMAXClient)()
         self.username = settings.max_restricted_username
         self.token = settings.max_restricted_token
+
+        self.maxclient.setActor(settings.max_restricted_username)
+        self.maxclient.setToken(settings.max_restricted_token)
+
+    def create_test_community(self, id='community-test', name=u'community-test', community_type='Closed', readers=[], subscribed=[], owners=[]):
+        login(self.portal, 'usuari.iescude')
+
+        self.portal.invokeFactory('ulearn.community', 'community-test',
+                                 title=name,
+                                 readers=readers,
+                                 subscribed=subscribed,
+                                 owners=owners,
+                                 community_type=community_type,)
+        logout()
+
+        # transaction.commit()  # This is for not conflict with each other
+        # TODO: Do the teardown properly
+        return self.portal['community-test']
+
+    def get_max_subscribed_users(self, community):
+        return [user.get('username', '') for user in self.maxclient.contexts[community.absolute_url()].subscriptions.get(qs={'limit': 0})]
 
     def test_product_is_installed(self):
         """ Validate that our products GS profile has been run and the product
@@ -185,3 +206,18 @@ class TestExample(unittest.TestCase):
 
         self.assertFalse(pc.searchResults(portal_type='Event'))
         self.assertRaises(Unauthorized, self.portal.restrictedTraverse, 'community-test/events/test-event')
+
+    def test_newcommunities_getters_setters(self):
+        readers = [u'victor.fernandez']
+        subscribed = [u'janet.dura']
+        community = self.create_test_community(id='community-test2', readers=readers, subscribed=subscribed)
+
+        max_subs = self.get_max_subscribed_users(community)
+
+        self.assertTrue(readers[0] in max_subs)
+        self.assertTrue(subscribed[0] in max_subs)
+        self.assertTrue(u'usuari.iescude' in max_subs)
+
+        self.assertEqual(readers, community.readers)
+        self.assertEqual(subscribed, community.subscribed)
+        self.assertEqual([u'usuari.iescude'], community.owners)

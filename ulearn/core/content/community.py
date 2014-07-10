@@ -4,15 +4,18 @@ from AccessControl import getSecurityManager
 from five import grok
 from z3c.form import button
 from zope import schema
+from zope.annotation.interfaces import IAnnotations
 from zope.app.container.interfaces import IObjectAddedEvent
 from zope.component import getMultiAdapter
 from zope.component import getUtility
 from zope.component import queryUtility
 from zope.component.hooks import getSite
+from zope.container.interfaces import INameChooser
 from zope.event import notify
 from zope.interface import implements
 from zope.interface import Interface
 from zope.interface import alsoProvides
+from zope.globalrequest import getRequest
 from zope.lifecycleevent import ObjectModifiedEvent
 from zope.lifecycleevent.interfaces import IObjectModifiedEvent
 from zope.lifecycleevent.interfaces import IObjectRemovedEvent
@@ -33,6 +36,7 @@ from plone.portlets.interfaces import IPortletManager
 from plone.registry.interfaces import IRegistry
 
 from Products.CMFCore.utils import getToolByName
+from Products.CMFPlone.utils import safe_unicode
 from Products.CMFPlone.interfaces import IPloneSiteRoot
 from Products.CMFPlone.interfaces.constrains import ISelectableConstrainTypes
 from Products.statusmessages.interfaces import IStatusMessage
@@ -160,24 +164,26 @@ class ICommunity(form.Schema):
 class Community(Container):
     implements(ICommunity)
 
-    def _get_max_subscribed_to_context(self):
-        """ Get subscribed users from MAX """
+    def get_max_client(self):
         maxclient, settings = getUtility(IMAXClient)()
         maxclient.setActor(settings.max_restricted_username)
         maxclient.setToken(settings.max_restricted_token)
 
+        return maxclient
+
+    def _get_max_subscribed_to_context(self):
+        """ Get subscribed users from MAX """
         portal = getSite()
         wrapped_community = self.__of__(portal)
-        logger.info('Getting subscribed users for {}'.format(wrapped_community.absolute_url()))
-        return [user.get('username', '') for user in maxclient.contexts[wrapped_community.absolute_url()].subscriptions.get(qs={'limit': 0})]
+        print('Getting subscribed users for {}'.format(wrapped_community.absolute_url()))
+        return [user.get('username', '') for user in self.get_max_client().contexts[wrapped_community.absolute_url()].subscriptions.get(qs={'limit': 0})]
 
     def _intersect_subscribed_users_by_role(self):
         """ We assume that the default user role assignment will be editor
             otherwise noted. So try to map each of the other roles (reader,
             owner) and if not matched, then assign them to the default (editor)
         """
-        from zope.globalrequest import getRequest
-        from zope.annotation.interfaces import IAnnotations
+
         request = getRequest()
 
         key = 'cache-subscribed-{}'.format(self.id)
@@ -191,9 +197,10 @@ class Community(Container):
         readers = []
         editors = []
         owners = []
+
         for user in subscribed:
             if user in self._readers:
-                readers.append[user]
+                readers.append(user)
             elif user in self._owners:
                 owners.append(user)
             else:
@@ -201,12 +208,63 @@ class Community(Container):
 
         return dict(readers=readers, editors=editors, owners=owners)
 
+    def create_max_context(self):
+        # Determine the kind of security the community should have provided the type
+        # of community
+        if self._ctype == u'Open':
+            community_permissions = dict(read='subscribed', write='subscribed', subscribe='public')
+        elif self._ctype == u'Closed':
+            community_permissions = dict(read='subscribed', write='restricted', subscribe='restricted', unsubscribe='public')
+        elif self._ctype == u'Organizative':
+            community_permissions = dict(read='subscribed', write='restricted', subscribe='restricted')
+
+        if not getattr(self, 'notify_activity_via_push', False):
+            notify_push = False
+        else:
+            notify_push = self.notify_activity_via_push
+
+        portal = getSite()
+        wrapped_community = self.__of__(portal)
+
+        # Add context for the community on MAX server
+        self.get_max_client().contexts.post(
+            url=wrapped_community.absolute_url(),
+            displayName=self.title,
+            permissions=community_permissions,
+            notifications=notify_push,
+        )
+
+    def subscribe_max_user_per_role(self, user, permission):
+        portal = getSite()
+        wrapped_community = self.__of__(portal)
+        maxclient = self.get_max_client()
+        if not getattr(portal, self.id, False):
+            self.create_max_context()
+        maxclient.people[user].subscriptions.post(object_url=wrapped_community.absolute_url())
+        maxclient.contexts[wrapped_community.absolute_url()].permissions[user][permission].put()
+
+    def unsubscribe_user(self, user):
+        portal = getSite()
+        wrapped_community = self.__of__(portal)
+        maxclient = self.get_max_client()
+        maxclient.people[user].subscriptions[wrapped_community.absolute_url()].delete()
+
+    _ctype = FieldProperty(ICommunity['community_type'])
+
     _readers = FieldProperty(ICommunity['readers'])
 
     def get_readers(self):
         return self._intersect_subscribed_users_by_role()['readers']
 
     def set_readers(self, value):
+        print u'\nreader setter: {}'.format(value)
+        subscribe = set(value) - set(self._readers)
+        for user in subscribe:
+            self.subscribe_max_user_per_role(user, 'read')
+
+        unsubscribe = set(self._readers) - set(value)
+        for user in unsubscribe:
+            self.unsubscribe_user(user)
         self._readers = value
 
     readers = property(get_readers, set_readers)
@@ -214,13 +272,16 @@ class Community(Container):
     _editors = FieldProperty(ICommunity['subscribed'])
 
     def get_editors(self):
-        # import ipdb;ipdb.set_trace()
-        # if not self.absolute_url():
-        #     return self._editors
-        # else:
         return self._intersect_subscribed_users_by_role()['editors']
 
     def set_editors(self, value):
+        print u'\neditors setter: {}'.format(value)
+        subscribe = set(value) - set(self._editors)
+        for user in subscribe:
+            self.subscribe_max_user_per_role(user, 'write')
+        unsubscribe = set(self._readers + self._editors) - set(value)
+        for user in unsubscribe:
+            self.unsubscribe_user(user)
         self._editors = value
 
     subscribed = property(get_editors, set_editors)
@@ -231,6 +292,14 @@ class Community(Container):
         return self._intersect_subscribed_users_by_role()['owners']
 
     def set_owners(self, value):
+        import ipdb;ipdb.set_trace()
+        print u'\nowners setter: {}'.format(value)
+        subscribe = set(value) - set(self._owners)
+        for user in subscribe:
+            self.subscribe_max_user_per_role(user, 'write')
+        unsubscribe = set(self._readers + self._editors + self._owners) - set(value)
+        for user in unsubscribe:
+            self.unsubscribe_user(user)
         self._owners = value
 
     owners = property(get_owners, set_owners)
@@ -514,9 +583,12 @@ class communityAdder(form.SchemaForm):
 
             self.request.response.redirect('{}/++add++ulearn.community'.format(portal.absolute_url()))
         else:
-            new_comunitat = createContentInContainer(
-                self.context,
+            nom = safe_unicode(nom)
+            chooser = INameChooser(self.context)
+            newid = chooser.chooseName(nom, self.context.aq_parent)
+            new_comunitat_id = self.context.invokeFactory(
                 'ulearn.community',
+                newid,
                 title=nom,
                 description=description,
                 readers=readers,
@@ -525,9 +597,9 @@ class communityAdder(form.SchemaForm):
                 image=image,
                 community_type=community_type,
                 twitter_hashtag=twitter_hashtag,
-                notify_activity_via_push=notify_activity_via_push,
-                checkConstraints=False)
+                notify_activity_via_push=notify_activity_via_push)
 
+            new_comunitat = self.context[new_comunitat_id]
             # Redirect back to the front page with a status message
             msgid = _(u"comunitat_creada", default=u'La comunitat ${comunitat} ha estat creada.', mapping={u"comunitat": nom})
 
@@ -643,25 +715,25 @@ def initialize_community(community, event):
     maxclient.setActor(maxui_settings.max_restricted_username)
     maxclient.setToken(maxui_settings.max_restricted_token)
 
-    # Add creator to owners field
-    community.owners.append(community.Creator())
+    # Add creator to owners field - Not making use of .append() to force the setter
+    community.owners = list(set(community.owners + [unicode(community.Creator().encode('utf-8'))]))
 
-    # Determine the kind of security the community should have provided the type
-    # of community
-    if community.community_type == u'Open':
-        community_permissions = dict(read='subscribed', write='subscribed', subscribe='public')
-    elif community.community_type == u'Closed':
-        community_permissions = dict(read='subscribed', write='restricted', subscribe='restricted', unsubscribe='public')
-    elif community.community_type == u'Organizative':
-        community_permissions = dict(read='subscribed', write='restricted', subscribe='restricted')
+    # # Determine the kind of security the community should have provided the type
+    # # of community
+    # if community.community_type == u'Open':
+    #     community_permissions = dict(read='subscribed', write='subscribed', subscribe='public')
+    # elif community.community_type == u'Closed':
+    #     community_permissions = dict(read='subscribed', write='restricted', subscribe='restricted', unsubscribe='public')
+    # elif community.community_type == u'Organizative':
+    #     community_permissions = dict(read='subscribed', write='restricted', subscribe='restricted')
 
-    # Add context for the community on MAX server
-    maxclient.contexts.post(
-        url=community.absolute_url(),
-        displayName=community.title,
-        permissions=community_permissions,
-        notifications=community.notify_activity_via_push,
-    )
+    # # Add context for the community on MAX server
+    # maxclient.contexts.post(
+    #     url=community.absolute_url(),
+    #     displayName=community.title,
+    #     permissions=community_permissions,
+    #     notifications=community.notify_activity_via_push,
+    # )
 
     # Update twitter hashtag
     maxclient.contexts[community.absolute_url()].put(
@@ -672,15 +744,15 @@ def initialize_community(community, event):
     maxclient.contexts[community.absolute_url()].tags.put(data=['[COMMUNITY]'])
 
     # Subscribe the invited users and grant them permission
-    for reader in community.readers:
-        maxclient.people[reader].subscriptions.post(object_url=community.absolute_url())
-        maxclient.contexts[community.absolute_url()].permissions[reader]['read'].put()
-    for writter in community.subscribed:
-        maxclient.people[writter].subscriptions.post(object_url=community.absolute_url())
-        maxclient.contexts[community.absolute_url()].permissions[writter]['write'].put()
-    for owner in community.owners:
-        maxclient.people[owner].subscriptions.post(object_url=community.absolute_url())
-        maxclient.contexts[community.absolute_url()].permissions[owner]['write'].put()
+    # for reader in community.readers:
+    #     maxclient.people[reader].subscriptions.post(object_url=community.absolute_url())
+    #     maxclient.contexts[community.absolute_url()].permissions[reader]['read'].put()
+    # for writter in community.subscribed:
+    #     maxclient.people[writter].subscriptions.post(object_url=community.absolute_url())
+    #     maxclient.contexts[community.absolute_url()].permissions[writter]['write'].put()
+    # for owner in community.owners:
+    #     maxclient.people[owner].subscriptions.post(object_url=community.absolute_url())
+    #     maxclient.contexts[community.absolute_url()].permissions[owner]['write'].put()
 
     # Auto-favorite the creator user to this community
     IFavorite(community).add(community.Creator())
@@ -863,26 +935,26 @@ def edit_community(community, event):
 
     # Update/Subscribe the invited users and grant them permission on MAX
     # Guard in case that the user does not exist or the community does not exist
-    for reader in community.readers:
-        try:
-            maxclient.people[reader].subscriptions.post(object_url=community.absolute_url())
-            maxclient.contexts[community.absolute_url()].permissions[reader]['read'].put()
-        except:
-            logger.error('Impossible to subscribe user {} as reader in the {} community.'.format(reader, community.absolute_url()))
+    # for reader in community.readers:
+    #     try:
+    #         maxclient.people[reader].subscriptions.post(object_url=community.absolute_url())
+    #         maxclient.contexts[community.absolute_url()].permissions[reader]['read'].put()
+    #     except:
+    #         logger.error('Impossible to subscribe user {} as reader in the {} community.'.format(reader, community.absolute_url()))
 
-    for writter in community.subscribed:
-        try:
-            maxclient.people[writter].subscriptions.post(object_url=community.absolute_url())
-            maxclient.contexts[community.absolute_url()].permissions[writter]['write'].put()
-        except:
-            logger.error('Impossible to subscribe user {} as editor in the {} community.'.format(writter, community.absolute_url()))
+    # for writter in community.subscribed:
+    #     try:
+    #         maxclient.people[writter].subscriptions.post(object_url=community.absolute_url())
+    #         maxclient.contexts[community.absolute_url()].permissions[writter]['write'].put()
+    #     except:
+    #         logger.error('Impossible to subscribe user {} as editor in the {} community.'.format(writter, community.absolute_url()))
 
-    for owner in community.owners:
-        try:
-            maxclient.people[owner].subscriptions.post(object_url=community.absolute_url())
-            maxclient.contexts[community.absolute_url()].permissions[owner]['write'].put()
-        except:
-            logger.error('Impossible to subscribe user {} as owner in the {} community.'.format(owner, community.absolute_url()))
+    # for owner in community.owners:
+    #     try:
+    #         maxclient.people[owner].subscriptions.post(object_url=community.absolute_url())
+    #         maxclient.contexts[community.absolute_url()].permissions[owner]['write'].put()
+    #     except:
+    #         logger.error('Impossible to subscribe user {} as owner in the {} community.'.format(owner, community.absolute_url()))
 
     # If the community is of the type "Open", then allow any auth user to see it
     if community.community_type == u'Open':
