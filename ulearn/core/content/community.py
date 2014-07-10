@@ -42,7 +42,8 @@ from Products.CMFPlone.interfaces.constrains import ISelectableConstrainTypes
 from Products.statusmessages.interfaces import IStatusMessage
 from ZPublisher.HTTPRequest import FileUpload
 from genweb.core.adapters.favorites import IFavorite
-from genweb.core.widgets.select2_user_widget import Select2UserInputFieldWidget
+from genweb.core.widgets.select2_maxuser_widget import Select2MAXUserInputFieldWidget
+
 from genweb.core.widgets.select2_user_widget import SelectWidgetConverter
 from hashlib import sha1
 from maxclient.rest import MaxClient
@@ -113,7 +114,7 @@ class ICommunity(form.Schema):
         default=u'Closed'
     )
 
-    form.widget(readers=Select2UserInputFieldWidget)
+    form.widget(readers=Select2MAXUserInputFieldWidget)
     readers = schema.List(
         title=_(u"Readers"),
         description=_(u"Subscribed people with read-only permissions"),
@@ -124,7 +125,7 @@ class ICommunity(form.Schema):
 
     # We maintain the subscribed field for backwards compatibility,
     # understanding that it refers to users with read/write permissions
-    form.widget(subscribed=Select2UserInputFieldWidget)
+    form.widget(subscribed=Select2MAXUserInputFieldWidget)
     subscribed = schema.List(
         title=_(u"Editors"),
         description=_(u"Subscribed people with editor permissions"),
@@ -133,7 +134,7 @@ class ICommunity(form.Schema):
         missing_value=[],
         default=[])
 
-    form.widget(owners=Select2UserInputFieldWidget)
+    form.widget(owners=Select2MAXUserInputFieldWidget)
     owners = schema.List(
         title=_(u"Owners"),
         description=_(u"Subscribed people with owner permissions"),
@@ -183,7 +184,6 @@ class Community(Container):
             otherwise noted. So try to map each of the other roles (reader,
             owner) and if not matched, then assign them to the default (editor)
         """
-
         request = getRequest()
 
         key = 'cache-subscribed-{}'.format(self.id)
@@ -242,12 +242,29 @@ class Community(Container):
             self.create_max_context()
         maxclient.people[user].subscriptions.post(object_url=wrapped_community.absolute_url())
         maxclient.contexts[wrapped_community.absolute_url()].permissions[user][permission].put()
+        if permission == 'read':
+            # Make sure the user only gets the read permission by unset the write one
+            # This is the case of the permission roaming user...
+            maxclient.contexts[wrapped_community.absolute_url()].permissions[user][permission].delete()
 
     def unsubscribe_user(self, user):
         portal = getSite()
         wrapped_community = self.__of__(portal)
         maxclient = self.get_max_client()
         maxclient.people[user].subscriptions[wrapped_community.absolute_url()].delete()
+
+    def set_plone_permissions(self, user, role):
+        if role == 'reader':
+            self.manage_setLocalRoles(user, ['Reader', ])
+
+        if role == 'editor':
+            self.manage_setLocalRoles(user, ['Reader', 'Contributor', 'Editor'])
+
+        if role == 'owner':
+            self.manage_setLocalRoles(user, ['Reader', 'Contributor', 'Editor', 'Owner'])
+
+    def unset_plone_permissions(self, user):
+        self.manage_delLocalRoles([user, ])
 
     _ctype = FieldProperty(ICommunity['community_type'])
 
@@ -260,11 +277,16 @@ class Community(Container):
         print u'\nreader setter: {}'.format(value)
         subscribe = set(value) - set(self._readers)
         for user in subscribe:
+            print u'\nreaders subscribing: {}'.format(user)
             self.subscribe_max_user_per_role(user, 'read')
-
+            self.set_plone_permissions(user, 'reader')
         unsubscribe = set(self._readers) - set(value)
         for user in unsubscribe:
-            self.unsubscribe_user(user)
+            if user not in self._editors and \
+               user not in self._owners:
+                print u'\nreaders unsubscribing: {}'.format(user)
+                self.unsubscribe_user(user)
+                self.unset_plone_permissions(user)
         self._readers = value
 
     readers = property(get_readers, set_readers)
@@ -278,10 +300,16 @@ class Community(Container):
         print u'\neditors setter: {}'.format(value)
         subscribe = set(value) - set(self._editors)
         for user in subscribe:
+            print u'\neditors subscribing: {}'.format(user)
             self.subscribe_max_user_per_role(user, 'write')
-        unsubscribe = set(self._readers + self._editors) - set(value)
+            self.set_plone_permissions(user, 'editor')
+        unsubscribe = set(self._editors) - set(value)
         for user in unsubscribe:
-            self.unsubscribe_user(user)
+            if user not in self._readers and \
+               user not in self._owners:
+                print u'\neditors unsubscribing: {}'.format(user)
+                self.unsubscribe_user(user)
+                self.unset_plone_permissions(user)
         self._editors = value
 
     subscribed = property(get_editors, set_editors)
@@ -292,14 +320,19 @@ class Community(Container):
         return self._intersect_subscribed_users_by_role()['owners']
 
     def set_owners(self, value):
-        import ipdb;ipdb.set_trace()
         print u'\nowners setter: {}'.format(value)
         subscribe = set(value) - set(self._owners)
         for user in subscribe:
+            print u'\nowners subscribing: {}'.format(user)
             self.subscribe_max_user_per_role(user, 'write')
-        unsubscribe = set(self._readers + self._editors + self._owners) - set(value)
+            self.set_plone_permissions(user, 'owner')
+        unsubscribe = set(self._owners) - set(value)
         for user in unsubscribe:
-            self.unsubscribe_user(user)
+            if user not in self._readers and \
+               user not in self._editors:
+                print u'\nowners unsubscribing: {}'.format(user)
+                self.unsubscribe_user(user)
+                self.unset_plone_permissions(user)
         self._owners = value
 
     owners = property(get_owners, set_owners)
@@ -963,14 +996,14 @@ def edit_community(community, event):
         community.manage_delLocalRoles(['AuthenticatedUsers'])
 
     # Update subscribed user permissions on uLearn
-    for reader in community.readers:
-        community.manage_setLocalRoles(reader, ['Reader'])
+    # for reader in community.readers:
+    #     community.manage_setLocalRoles(reader, ['Reader'])
 
-    for writter in community.subscribed:
-        community.manage_setLocalRoles(writter, ['Reader', 'Contributor', 'Editor'])
+    # for writter in community.subscribed:
+    #     community.manage_setLocalRoles(writter, ['Reader', 'Contributor', 'Editor'])
 
-    for owner in community.owners:
-        community.manage_setLocalRoles(owner, ['Reader', 'Contributor', 'Editor', 'Owner'])
+    # for owner in community.owners:
+    #     community.manage_setLocalRoles(owner, ['Reader', 'Contributor', 'Editor', 'Owner'])
 
     # Unsubscribe no longer members from community
     # all_subscribers = list(set(community.readers + community.subscribed + community.owners))
