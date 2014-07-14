@@ -10,6 +10,6 @@
   <element value="folder_summary_view"/>
   <element value="folder_tabular_view"/>
   <element value="folder_full_view"/>
-  <element value="searchContentTags"/>
+  <element value="filtered_contents_search_view"/>
  </property>
 </object>
