@@ -40,7 +40,7 @@ class IUlearnControlPanelSettings(model.Schema):
 
     model.fieldset('General',
                   _(u'General'),
-                  fields=['campus_url', 'people_literal', 'threshold_winwin1', 'threshold_winwin2',
+                  fields=['campus_url', 'library_url', 'people_literal', 'threshold_winwin1', 'threshold_winwin2',
                           'threshold_winwin3'])
 
     model.fieldset('Specific',
@@ -64,6 +64,15 @@ class IUlearnControlPanelSettings(model.Schema):
                 default=u"URL del campus"),
         description=_(u"help_campus_url",
                 default=u"Afegiu la URL del campus associat a aquestes comunitats."),
+        required=False,
+        default=u"",
+    )
+
+    library_url = schema.TextLine(
+        title=_(u"library_url",
+                default=u"URL de la biblioteca"),
+        description=_(u"help_library_url",
+                default=u"Afegiu la URL de la biblioteca associada a aquestes comunitats."),
         required=False,
         default=u"",
     )

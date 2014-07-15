@@ -292,10 +292,16 @@ msgstr "Edit Community"
 msgid "gotocampus"
 msgstr "See my courses Campus"
 
+msgid "gotolibrary"
+msgstr "See the library"
+
 #. Default: "Afegiu la URL del campus associat a aquestes comunitats."
 #: ../../../../../../ulearn.core/ulearn/core/controlpanel.py:21
 msgid "help_campus_url"
 msgstr "Add the URL of the campus associated with these communities."
+
+msgid "help_library_url"
+msgstr "Add the URL of the library associated with these communities."
 
 #. Default: "Aquest és el llindar del winwin #1."
 #: ../../../../../../ulearn.core/ulearn/core/controlpanel.py:30
