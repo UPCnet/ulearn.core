@@ -1,11 +1,12 @@
 Changelog
 =========
 
-1.36 (unreleased)
+1.36 (2014-07-15)
 -----------------
 
-- Nothing changed yet.
-
+* New controlpanel option for setting the library URL [Victor Fernandez de Alba]
+* Fix i18n strings and enable filtered_search [Victor Fernandez de Alba]
+* Image retrieving from MAX directly [Victor Fernandez de Alba]
 
 1.35 (2014-07-07)
 -----------------
