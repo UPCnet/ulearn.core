@@ -1,11 +1,10 @@
 Changelog
 =========
 
-1.37 (unreleased)
+1.37 (2014-07-23)
 -----------------
 
-- Nothing changed yet.
-
+* Added new field to the communities for notify comments. Fix control panel add new users to visibles. [Victor Fernandez de Alba]
 
 1.36 (2014-07-15)
 -----------------
