@@ -592,8 +592,14 @@ msgstr "puntos"
 msgid "notify_activity_via_push_help"
 msgstr "Si se activa esta casilla, se notificará la actividad de esta comunidad a todos los usuarios subscritos a ella en sus dispositivos móviles a través de notificaciones 'push' de la aplicación UPCnet uTalk."
 
+msgid "help_notify_activity_via_push_comments_too"
+msgstr "Si se activa esta casilla, se notificará la actividad y los comentarios de esta comunidad a todos los usuarios subscritos a ella en sus dispositivos móviles a través de notificaciones 'push' de la aplicación UPCnet uTalk."
+
 msgid "Notify activity via push"
 msgstr "Notificar actividad via 'push'"
+
+msgid "Notify activity and comments via push"
+msgstr "Notificar actividad y comentarios via 'push'"
 
 msgid "label_telefon"
 msgstr "Teléfono"

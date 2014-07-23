@@ -556,8 +556,14 @@ msgstr "punts"
 msgid "notify_activity_via_push_help"
 msgstr "Si s'activa aquesta opció, es notificarà l'activitat d'aquesta comunitat a tots els usuaris que hi estiguin subscrits als seus dispositius mòbils a través de notificacions 'push' de l'aplicació UPCnet uTalk."
 
+msgid "help_notify_activity_via_push_comments_too"
+msgstr "Si s'activa aquesta opció, es notificarà l'activitat i els comentaris d'aquesta comunitat a tots els usuaris que hi estiguin subscrits als seus dispositius mòbils a través de notificacions 'push' de l'aplicació UPCnet uTalk."
+
 msgid "Notify activity via push"
 msgstr "Notificar activitat via 'push'"
+
+msgid "Notify activity and comments via push"
+msgstr "Notificar activitat i comentaris via 'push'"
 
 msgid "label_telefon"
 msgstr "Telèfon"

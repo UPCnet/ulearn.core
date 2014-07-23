@@ -151,6 +151,12 @@ class ICommunity(form.Schema):
         required=False
     )
 
+    notify_activity_via_push_comments_too = schema.Bool(
+        title=_(u"Notify activity and comments via push"),
+        description=_(u'help_notify_activity_via_push_comments_too'),
+        required=False
+    )
+
 
 @indexer(ICommunity)
 def imageFilename(context):
@@ -415,6 +421,7 @@ class communityAdder(form.SchemaForm):
         community_type = data['community_type']
         twitter_hashtag = data['twitter_hashtag']
         notify_activity_via_push = data['notify_activity_via_push']
+        notify_activity_via_push_comments_too = data['notify_activity_via_push_comments_too']
 
         portal = getSite()
         pc = getToolByName(portal, 'portal_catalog')
@@ -442,6 +449,7 @@ class communityAdder(form.SchemaForm):
                 community_type=community_type,
                 twitter_hashtag=twitter_hashtag,
                 notify_activity_via_push=notify_activity_via_push,
+                notify_activity_via_push_comments_too=notify_activity_via_push_comments_too,
                 checkConstraints=False)
 
             # Redirect back to the front page with a status message
@@ -482,6 +490,11 @@ class communityEdit(form.SchemaForm):
             # Bool widgets should call update() once modified
             self.widgets["notify_activity_via_push"].update()
 
+        if self.context.notify_activity_via_push_comments_too:
+            self.widgets["notify_activity_via_push_comments_too"].value = ['selected']
+            # Bool widgets should call update() once modified
+            self.widgets["notify_activity_via_push_comments_too"].update()
+
         converter = SelectWidgetConverter(self.fields['readers'].field, self.widgets["readers"])
         self.widgets["readers"].value = converter.toWidgetValue(self.context.readers)
 
@@ -507,6 +520,7 @@ class communityEdit(form.SchemaForm):
         community_type = data['community_type']
         twitter_hashtag = data['twitter_hashtag']
         notify_activity_via_push = data['notify_activity_via_push']
+        notify_activity_via_push_comments_too = data['notify_activity_via_push_comments_too']
 
         portal = getSite()
         pc = getToolByName(portal, 'portal_catalog')
@@ -532,6 +546,7 @@ class communityEdit(form.SchemaForm):
             self.context.community_type = community_type
             self.context.twitter_hashtag = twitter_hashtag
             self.context.notify_activity_via_push = notify_activity_via_push
+            self.context.notify_activity_via_push_comments_too = notify_activity_via_push_comments_too
 
             if image:
                 self.context.image = image
@@ -571,12 +586,20 @@ def initialize_community(community, event):
     elif community.community_type == u'Organizative':
         community_permissions = dict(read='subscribed', write='restricted', subscribe='restricted')
 
+    # Determine the value for notifications
+    if community.notify_activity_via_push and community.notify_activity_via_push_comments_too:
+        notifications = 'comments'
+    elif community.notify_activity_via_push and not community.notify_activity_via_push_comments_too:
+        notifications = 'posts'
+    elif not community.notify_activity_via_push and not community.notify_activity_via_push_comments_too:
+        notifications = False
+
     # Add context for the community on MAX server
     maxclient.contexts.post(
         url=community.absolute_url(),
         displayName=community.title,
         permissions=community_permissions,
-        notifications=community.notify_activity_via_push,
+        notifications=notifications,
     )
 
     # Update twitter hashtag
@@ -770,8 +793,16 @@ def edit_community(community, event):
         if context_current_info.get('displayName', '') != community.title:
             properties_to_update['displayName'] = community.title
 
-        if context_current_info.get('notifications', '') != community.notify_activity_via_push:
-            properties_to_update['notifications'] = community.notify_activity_via_push
+        # Determine the value for notifications
+        if community.notify_activity_via_push and community.notify_activity_via_push_comments_too:
+            notifications = 'comments'
+        elif community.notify_activity_via_push and not community.notify_activity_via_push_comments_too:
+            notifications = 'posts'
+        elif not community.notify_activity_via_push and not community.notify_activity_via_push_comments_too:
+            notifications = False
+
+        if context_current_info.get('notifications', '') != notifications:
+            properties_to_update['notifications'] = notifications
 
     # update context properties that have changed
     if properties_to_update:

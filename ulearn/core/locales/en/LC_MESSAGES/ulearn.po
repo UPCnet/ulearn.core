@@ -455,6 +455,9 @@ msgstr "points"
 msgid "notify_activity_via_push_help"
 msgstr "If you click this option, all the activity regarding this community will be notified to all users subscribed through their mobile application UPCnet uTalk via push notification."
 
+msgid "help_notify_activity_via_push_comments_too"
+msgstr "If you click this option, all the activity and comments regarding this community will be notified to all users subscribed through their mobile application UPCnet uTalk via push notification."
+
 msgid "label_telefon"
 msgstr "Phone"
 
