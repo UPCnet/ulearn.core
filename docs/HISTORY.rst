@@ -1,11 +1,10 @@
 Changelog
 =========
 
-1.38 (unreleased)
+1.38 (2014-07-24)
 -----------------
 
-- Nothing changed yet.
-
+* Fix searchuser [Victor Fernandez de Alba]
 
 1.37 (2014-07-23)
 -----------------
