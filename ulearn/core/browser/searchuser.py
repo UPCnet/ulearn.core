@@ -44,8 +44,9 @@ def searchUsersFunction(context, request, search_string, user_properties=None):
             if nonvisibles:
                 filtered = []
                 for user in users:
-                    if user.id not in nonvisibles:
-                        filtered.append(user)
+                    if user is not None:
+                        if user.id not in nonvisibles:
+                            filtered.append(user)
                 users = filtered
 
     if ICommunity.providedBy(context):
@@ -64,6 +65,14 @@ def searchUsersFunction(context, request, search_string, user_properties=None):
             maxclientrestricted.setToken(settings.max_restricted_token)
             max_users = maxclientrestricted.contexts[context.absolute_url()].subscriptions.get(qs={'limit': 0})
             users = [pm.getMemberById(user.get('username')) for user in max_users]
+
+            if nonvisibles:
+                filtered = []
+                for user in users:
+                    if user is not None:
+                        if user.id not in nonvisibles:
+                            filtered.append(user)
+                users = filtered
 
     users_profile = []
     for user in users:
