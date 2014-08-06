@@ -1,4 +1,5 @@
 from five import grok
+from plone import api
 from Acquisition import aq_parent
 from Acquisition import aq_inner
 from zope.component import getUtility
@@ -22,6 +23,7 @@ from Products.CMFPlone.interfaces import IPloneSiteRoot
 
 from ulearn.core.interfaces import IDocumentFolder, ILinksFolder, IPhotosFolder, IEventsFolder
 from ulearn.core.content.community import IInitializedCommunity
+from ulearn.core.content.community import Community
 
 from ulearn.core.interfaces import IDiscussionFolder
 from ulearn.core import _
@@ -32,7 +34,6 @@ from maxclient.rest import RequestError
 
 from itertools import chain
 import logging
-import plone.api
 
 logger = logging.getLogger(__name__)
 
@@ -124,7 +125,7 @@ class InitializeAllCommunities(grok.View):
     grok.require('zope2.ViewManagementScreens')
 
     def render(self):
-        pc = plone.api.portal.get_tool(name='portal_catalog')
+        pc = api.portal.get_tool(name='portal_catalog')
         results = pc.searchResults(portal_type='ulearn.community')
         for result in results:
             community = result.getObject()
@@ -139,7 +140,7 @@ class CreateDiscussionFolders(grok.View):
     grok.require('zope2.ViewManagementScreens')
 
     def render(self):
-        pc = plone.api.portal.get_tool(name="portal_catalog")
+        pc = api.portal.get_tool(name="portal_catalog")
         communities = pc.searchResults(portal_type="ulearn.community")
         for community in communities:
             community = community.getObject()
@@ -174,7 +175,7 @@ class InitializeVideos(grok.View):
     grok.require('zope2.ViewManagementScreens')
 
     def render(self):
-        pc = plone.api.portal.get_tool(name="portal_catalog")
+        pc = api.portal.get_tool(name="portal_catalog")
         communities = pc.searchResults(portal_type="ulearn.community")
 
         text = []
@@ -191,4 +192,31 @@ class InitializeVideos(grok.View):
                 media_folder.setTitle(community.translate(_(u"Media")))
 
             text.append('Added type video to {}\n'.format(community.absolute_url()))
+        return ''.join(text)
+
+
+class MigrateCommunities(grok.View):
+    """ It should be executed on an running instance with no MAX hooks enabled
+        to avoid them to be executed when persisting the new communities objects
+    """
+    grok.context(IPloneSiteRoot)
+    grok.name('migrate_to_new_communities')
+    grok.require('zope2.ViewManagementScreens')
+
+    def render(self):
+        portal = api.portal.get()
+        pc = api.portal.get_tool(name="portal_catalog")
+        communities = pc.searchResults(portal_type="ulearn.community")
+
+        text = []
+        for community_brain in communities:
+            # We assume that there will be only communities in Portal Site Root
+            community = portal[community_brain.id]
+            if community.__class__ != Community:
+                del portal[community_brain.id]
+
+                community.__class__ = Community
+                portal[community.id] = community
+
+            text.append('Migrated community {}\n'.format(community.absolute_url()))
         return ''.join(text)

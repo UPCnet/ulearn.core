@@ -15,7 +15,7 @@
  <property name="schema">ulearn.core.content.community.ICommunity</property>
 
  <!-- class used for content items -->
- <property name="klass">plone.dexterity.content.Container</property>
+ <property name="klass">ulearn.core.content.community.Community</property>
 
  <!-- add permission -->
  <property name="add_permission">ulearn.addCommunity</property>
