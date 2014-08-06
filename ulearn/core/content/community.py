@@ -182,7 +182,7 @@ class Community(Container):
         """ Get subscribed users from MAX """
         portal = getSite()
         wrapped_community = self.__of__(portal)
-        print('Getting subscribed users for {}'.format(wrapped_community.absolute_url()))
+        # print('Getting subscribed users for {}'.format(wrapped_community.absolute_url()))
         return [user.get('username', '') for user in self.get_max_client().contexts[wrapped_community.absolute_url()].subscriptions.get(qs={'limit': 0})]
 
     def _intersect_subscribed_users_by_role(self):
@@ -293,17 +293,17 @@ class Community(Container):
         return self._intersect_subscribed_users_by_role()['readers']
 
     def set_readers(self, value):
-        print u'\nreader setter: {}'.format(value)
+        # print u'\nreader setter: {}'.format(value)
         subscribe = set(value) - set(self._readers)
         for user in subscribe:
-            print u'\nreaders subscribing: {}'.format(user)
+            # print u'\nreaders subscribing: {}'.format(user)
             self.subscribe_max_user_per_role(user, 'read')
             self.set_plone_permissions(user, 'reader')
         unsubscribe = set(self._readers) - set(value)
         for user in unsubscribe:
             if user not in self._editors and \
                user not in self._owners:
-                print u'\nreaders unsubscribing: {}'.format(user)
+                # print u'\nreaders unsubscribing: {}'.format(user)
                 self.unsubscribe_user(user)
                 self.unset_plone_permissions(user)
         self._readers = value
@@ -316,17 +316,17 @@ class Community(Container):
         return self._intersect_subscribed_users_by_role()['editors']
 
     def set_editors(self, value):
-        print u'\neditors setter: {}'.format(value)
+        # print u'\neditors setter: {}'.format(value)
         subscribe = set(value) - set(self._editors)
         for user in subscribe:
-            print u'\neditors subscribing: {}'.format(user)
+            # print u'\neditors subscribing: {}'.format(user)
             self.subscribe_max_user_per_role(user, 'write')
             self.set_plone_permissions(user, 'editor')
         unsubscribe = set(self._editors) - set(value)
         for user in unsubscribe:
             if user not in self._readers and \
                user not in self._owners:
-                print u'\neditors unsubscribing: {}'.format(user)
+                # print u'\neditors unsubscribing: {}'.format(user)
                 self.unsubscribe_user(user)
                 self.unset_plone_permissions(user)
         self._editors = value
@@ -339,17 +339,17 @@ class Community(Container):
         return self._intersect_subscribed_users_by_role()['owners']
 
     def set_owners(self, value):
-        print u'\nowners setter: {}'.format(value)
+        # print u'\nowners setter: {}'.format(value)
         subscribe = set(value) - set(self._owners)
         for user in subscribe:
-            print u'\nowners subscribing: {}'.format(user)
+            # print u'\nowners subscribing: {}'.format(user)
             self.subscribe_max_user_per_role(user, 'write')
             self.set_plone_permissions(user, 'owner')
         unsubscribe = set(self._owners) - set(value)
         for user in unsubscribe:
             if user not in self._readers and \
                user not in self._editors:
-                print u'\nowners unsubscribing: {}'.format(user)
+                # print u'\nowners unsubscribing: {}'.format(user)
                 self.unsubscribe_user(user)
                 self.unset_plone_permissions(user)
         self._owners = value

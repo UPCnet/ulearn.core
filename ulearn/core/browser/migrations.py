@@ -213,10 +213,10 @@ class MigrateCommunities(grok.View):
             # We assume that there will be only communities in Portal Site Root
             community = portal[community_brain.id]
             if community.__class__ != Community:
-                del portal[community_brain.id]
+                portal._delOb(community_brain.id)
 
                 community.__class__ = Community
-                portal[community.id] = community
+                portal._setOb(community.id, community)
 
-            text.append('Migrated community {}\n'.format(community.absolute_url()))
-        return ''.join(text)
+                text.append('Migrated community {}\n'.format(community.absolute_url()))
+        return ''.join(text) + '\nDone!'
