@@ -65,7 +65,7 @@ class TestExample(unittest.TestCase):
     def test_community_creation(self):
         nom = u'community-test'
         description = 'Blabla'
-        subscribed = ['usuari.iescude']
+        subscribed = [u'usuari.iescude']
         image = None
         community_type = 'Closed'
         twitter_hashtag = 'helou'
@@ -89,7 +89,7 @@ class TestExample(unittest.TestCase):
     def test_community_creation_not_allowed(self):
         nom = u'community-test'
         description = 'Blabla'
-        subscribed = ['usuari.iescude']
+        subscribed = [u'usuari.iescude']
         image = None
         community_type = 'Closed'
         twitter_hashtag = 'helou'
@@ -108,7 +108,7 @@ class TestExample(unittest.TestCase):
     def test_events_visibility(self):
         nom = u'community-test'
         description = 'Blabla'
-        subscribed = ['usuari.iescude']
+        subscribed = [u'usuari.iescude']
         image = None
         community_type = 'Closed'
         twitter_hashtag = 'helou'
@@ -138,7 +138,7 @@ class TestExample(unittest.TestCase):
     def test_events_visibility_open_communities(self):
         nom = u'community-test'
         description = 'Blabla'
-        subscribed = ['usuari.iescude']
+        subscribed = [u'usuari.iescude']
         image = None
         community_type = 'Open'
         twitter_hashtag = 'helou'
@@ -167,7 +167,7 @@ class TestExample(unittest.TestCase):
     def test_events_visibility_open_communities_switch_to_closed(self):
         nom = u'community-test'
         description = 'Blabla'
-        subscribed = ['usuari.iescude']
+        subscribed = [u'usuari.iescude']
         image = None
         community_type = 'Open'
         twitter_hashtag = 'helou'

@@ -37,7 +37,7 @@ class TestUploads(unittest.TestCase):
     def create_test_community(self):
         nom = u'community-test'
         description = 'Blabla'
-        subscribed = ['usuari.iescude']
+        subscribed = [u'usuari.iescude']
         image = None
         community_type = 'Open'
         twitter_hashtag = 'helou'
