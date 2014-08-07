@@ -1,11 +1,12 @@
 Changelog
 =========
 
-1.39 (unreleased)
+1.39 (2014-08-07)
 -----------------
 
-- Nothing changed yet.
-
+* Fix tests [Victor Fernandez de Alba]
+* Fix some issues on migrations, remove prints [Victor Fernandez de Alba]
+* Merging with maxsubscriptions feature branch [Victor Fernandez de Alba]
 
 1.38 (2014-07-24)
 -----------------
