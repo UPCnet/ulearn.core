@@ -1,6 +1,7 @@
 import unittest2 as unittest
 from AccessControl import Unauthorized
 from zope.event import notify
+from zope.lifecycleevent import ObjectAddedEvent
 from zope.lifecycleevent import ObjectModifiedEvent
 from zope.component import getUtility
 
@@ -31,10 +32,13 @@ class TestExample(unittest.TestCase):
         self.maxclient.setActor(settings.max_restricted_username)
         self.maxclient.setToken(settings.max_restricted_token)
 
+    def tearDown(self):
+        self.maxclient.contexts['http://nohost/plone/community-test2'].delete()
+
     def create_test_community(self, id='community-test', name=u'community-test', community_type='Closed', readers=[], subscribed=[], owners=[]):
         login(self.portal, 'usuari.iescude')
 
-        self.portal.invokeFactory('ulearn.community', 'community-test',
+        self.portal.invokeFactory('ulearn.community', id,
                                  title=name,
                                  readers=readers,
                                  subscribed=subscribed,
@@ -44,7 +48,7 @@ class TestExample(unittest.TestCase):
 
         # transaction.commit()  # This is for not conflict with each other
         # TODO: Do the teardown properly
-        return self.portal['community-test']
+        return self.portal[id]
 
     def get_max_subscribed_users(self, community):
         return [user.get('username', '') for user in self.maxclient.contexts[community.absolute_url()].subscriptions.get(qs={'limit': 0})]
@@ -220,4 +224,53 @@ class TestExample(unittest.TestCase):
 
         self.assertEqual(readers, community.readers)
         self.assertEqual(subscribed, community.subscribed)
+        self.assertEqual([u'usuari.iescude'], community.owners)
+
+    def test_newcommunities_getters_setters_modify_subscriptions(self):
+        readers = [u'victor.fernandez']
+        subscribed = [u'janet.dura']
+        community = self.create_test_community(id='community-test3', readers=readers, subscribed=subscribed)
+
+        max_subs = self.get_max_subscribed_users(community)
+
+        self.assertTrue(readers[0] in max_subs)
+        self.assertTrue(subscribed[0] in max_subs)
+        self.assertTrue(u'usuari.iescude' in max_subs)
+
+        self.assertEqual(readers, community.readers)
+        self.assertEqual(subscribed, community.subscribed)
+        self.assertEqual([u'usuari.iescude'], community.owners)
+
+        readers_state2 = [u'victor.fernandez', u'janet.dura']
+        subscribed_state2 = []
+
+        community.readers = readers_state2
+        community.subscribed = subscribed_state2
+
+        max_subs_state2 = self.get_max_subscribed_users(community)
+
+        self.assertTrue(readers_state2[0] in max_subs_state2)
+        self.assertTrue(readers_state2[1] in max_subs_state2)
+        self.assertTrue(u'usuari.iescude' in max_subs_state2)
+
+        readers_state3 = []
+        subscribed_state3 = []
+
+        community.readers = readers_state3
+        community.subscribed = subscribed_state3
+
+        max_subs_state3 = self.get_max_subscribed_users(community)
+
+        self.assertEqual([u'usuari.iescude'], max_subs_state3)
+        self.assertEqual(readers_state3, community.readers)
+        self.assertEqual(subscribed_state3, community.subscribed)
+
+    def test_newcommunities_getters_setters_corner1(self):
+        owners = [u'usuari.iescude']
+        community = self.create_test_community(id='community-test4', owners=owners)
+
+        max_subs = self.get_max_subscribed_users(community)
+
+        self.assertTrue(u'usuari.iescude' in max_subs)
+
         self.assertEqual([u'usuari.iescude'], community.owners)

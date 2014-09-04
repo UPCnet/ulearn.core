@@ -147,3 +147,15 @@ class RendererTest(unittest.TestCase):
         self.assertTrue(next_three_events[0].id == event_must_show.id)
         self.assertTrue('e1' in rd and 'e2' in rd)
         logout()
+
+    def test_dayname(self):
+        portlet = self.renderer(context=self.portal, assignment=portlet_calendar.Assignment())
+        login(self.portal, 'usuari.iescude')
+        portlet.update()
+        rd = portlet.render()
+
+        today = portlet.today()
+
+        # self.assertTrue(near_event)
+        # self.assertTrue('e1' in rd)
+        logout()

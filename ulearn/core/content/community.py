@@ -2,6 +2,7 @@
 from AccessControl import Unauthorized
 from AccessControl import getSecurityManager
 from five import grok
+from plone import api
 from z3c.form import button
 from zope import schema
 from zope.annotation.interfaces import IAnnotations
@@ -214,6 +215,15 @@ class Community(Container):
 
         return dict(readers=readers, editors=editors, owners=owners)
 
+    def clear_subscribed_cache(self):
+        request = getRequest()
+        key = 'cache-subscribed-{}'.format(self.id)
+
+        cache = IAnnotations(request)
+        subscribed = cache.get(key, None)
+        if subscribed:
+            del cache[key]
+
     def create_max_context(self):
         # Determine the kind of security the community should have provided the type
         # of community
@@ -257,6 +267,7 @@ class Community(Container):
         portal = getSite()
         wrapped_community = self.__of__(portal)
         maxclient = self.get_max_client()
+
         if not getattr(portal, self.id, False):
             self.create_max_context()
         maxclient.people[user].subscriptions.post(object_url=wrapped_community.absolute_url())
@@ -298,6 +309,7 @@ class Community(Container):
         for user in subscribe:
             # print u'\nreaders subscribing: {}'.format(user)
             self.subscribe_max_user_per_role(user, 'read')
+            self.clear_subscribed_cache()
             self.set_plone_permissions(user, 'reader')
         unsubscribe = set(self._readers) - set(value)
         for user in unsubscribe:
@@ -305,6 +317,7 @@ class Community(Container):
                user not in self._owners:
                 # print u'\nreaders unsubscribing: {}'.format(user)
                 self.unsubscribe_user(user)
+                self.clear_subscribed_cache()
                 self.unset_plone_permissions(user)
         self._readers = value
 
@@ -321,6 +334,7 @@ class Community(Container):
         for user in subscribe:
             # print u'\neditors subscribing: {}'.format(user)
             self.subscribe_max_user_per_role(user, 'write')
+            self.clear_subscribed_cache()
             self.set_plone_permissions(user, 'editor')
         unsubscribe = set(self._editors) - set(value)
         for user in unsubscribe:
@@ -328,6 +342,7 @@ class Community(Container):
                user not in self._owners:
                 # print u'\neditors unsubscribing: {}'.format(user)
                 self.unsubscribe_user(user)
+                self.clear_subscribed_cache()
                 self.unset_plone_permissions(user)
         self._editors = value
 
@@ -344,6 +359,7 @@ class Community(Container):
         for user in subscribe:
             # print u'\nowners subscribing: {}'.format(user)
             self.subscribe_max_user_per_role(user, 'write')
+            self.clear_subscribed_cache()
             self.set_plone_permissions(user, 'owner')
         unsubscribe = set(self._owners) - set(value)
         for user in unsubscribe:
@@ -351,6 +367,7 @@ class Community(Container):
                user not in self._editors:
                 # print u'\nowners unsubscribing: {}'.format(user)
                 self.unsubscribe_user(user)
+                self.clear_subscribed_cache()
                 self.unset_plone_permissions(user)
         self._owners = value
 
@@ -639,6 +656,11 @@ class communityAdder(form.SchemaForm):
             nom = safe_unicode(nom)
             chooser = INameChooser(self.context)
             newid = chooser.chooseName(nom, self.context.aq_parent)
+
+            # Just to be safe in some corner cases, we set the current user as
+            # owner of the community in this point
+            owners = list(set(owners + [unicode(api.user.get_current().id.encode('utf-8'))]))
+
             new_comunitat_id = self.context.invokeFactory(
                 'ulearn.community',
                 newid,
