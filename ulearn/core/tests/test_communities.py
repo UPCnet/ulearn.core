@@ -4,6 +4,7 @@ from zope.event import notify
 from zope.lifecycleevent import ObjectAddedEvent
 from zope.lifecycleevent import ObjectModifiedEvent
 from zope.component import getUtility
+from zope.component import getMultiAdapter
 
 from plone.app.testing import login
 from plone.app.testing import logout
@@ -23,6 +24,7 @@ class TestExample(unittest.TestCase):
     def setUp(self):
         self.app = self.layer['app']
         self.portal = self.layer['portal']
+        self.request = self.layer['request']
         self.qi_tool = getToolByName(self.portal, 'portal_quickinstaller')
 
         self.maxclient, settings = getUtility(IMAXClient)()
@@ -34,6 +36,7 @@ class TestExample(unittest.TestCase):
 
     def tearDown(self):
         self.maxclient.contexts['http://nohost/plone/community-test2'].delete()
+        self.maxclient.contexts['http://nohost/plone/community-test-open'].delete()
 
     def create_test_community(self, id='community-test', name=u'community-test', community_type='Closed', readers=[], subscribed=[], owners=[]):
         login(self.portal, 'usuari.iescude')
@@ -274,3 +277,22 @@ class TestExample(unittest.TestCase):
         self.assertTrue(u'usuari.iescude' in max_subs)
 
         self.assertEqual([u'usuari.iescude'], community.owners)
+
+    def test_open_community_join_getters_setters(self):
+        subscribed = [u'janet.dura']
+        community = self.create_test_community(id='community-test-open', community_type='Open', subscribed=subscribed)
+
+        login(self.portal, 'victor.fernandez')
+
+        toggle_subscribe = getMultiAdapter((community, self.request), name='toggle-subscribe')
+        toggle_subscribe.render()
+
+        max_subs = self.get_max_subscribed_users(community)
+        self.assertTrue(u'victor.fernandez' in max_subs)
+
+        toggle_subscribe.render()
+
+        max_subs = self.get_max_subscribed_users(community)
+        self.assertTrue(u'victor.fernandez' not in max_subs)
+
+        logout()

@@ -172,6 +172,22 @@ class ICommunity(form.Schema):
 class Community(Container):
     implements(ICommunity)
 
+    def add_subscription(self, username, role):
+        if role == 'readers':
+            self.readers = list(set(self.readers + [username, ]))
+        if role == 'subscribed':
+            self.subscribed = list(set(self.subscribed + [username, ]))
+        if role == 'owners':
+            self.owners = list(set(self.owners + [username, ]))
+
+    def remove_subscription(self, username, role):
+        if role == 'readers':
+            self.readers = list(set(self.readers) - set([username, ]))
+        if role == 'subscribed':
+            self.subscribed = list(set(self.subscribed) - set([username, ]))
+        if role == 'owners':
+            self.owners = list(set(self.owners) - set([username, ]))
+
     def get_max_client(self):
         maxclient, settings = getUtility(IMAXClient)()
         maxclient.setActor(settings.max_restricted_username)
@@ -557,7 +573,7 @@ class ToggleSubscribe(grok.View):
                 if current_user in IFavorite(community).get():
                     IFavorite(community).remove(current_user)
             else:
-                community.subscribed.append(current_user)
+                community.add_subscription(unicode(current_user), 'subscribed')
 
             community.reindexObject()
             notify(ObjectModifiedEvent(community))
@@ -573,10 +589,11 @@ class ToggleSubscribe(grok.View):
     def remove_user_from_subscriptions(self, user, community):
         if user in community.readers:
             community.readers.remove(user)
+            community.remove_subscription(unicode(user), 'readers')
         if user in community.subscribed:
-            community.subscribed.remove(user)
+            community.remove_subscription(unicode(user), 'subscribed')
         if user in community.owners:
-            community.owners.remove(user)
+            community.remove_subscription(unicode(user), 'owners')
 
 
 class UpgradeSubscribe(grok.View):
@@ -592,8 +609,8 @@ class UpgradeSubscribe(grok.View):
 
         if community.community_type == u'Open':
             if current_user in community.readers:
-                community.readers.remove(current_user)
-                community.subscribed.append(current_user)
+                community.remove_subscription(unicode(current_user), 'readers')
+                community.add_subscription(unicode(current_user), 'subscribed')
                 community.reindexObject()
                 notify(ObjectModifiedEvent(community))
                 return True
