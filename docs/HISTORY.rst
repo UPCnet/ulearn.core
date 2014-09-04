@@ -1,11 +1,10 @@
 Changelog
 =========
 
-1.40 (unreleased)
+1.40 (2014-09-04)
 -----------------
 
-- Nothing changed yet.
-
+* Fix corner cases for communities getters/setters [Victor Fernandez de Alba]
 
 1.39 (2014-08-07)
 -----------------
