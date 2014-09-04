@@ -1,11 +1,10 @@
 Changelog
 =========
 
-1.41 (unreleased)
+1.41 (2014-09-04)
 -----------------
 
-- Nothing changed yet.
-
+* Fix subscribe to communities [Victor Fernandez de Alba]
 
 1.40 (2014-09-04)
 -----------------
