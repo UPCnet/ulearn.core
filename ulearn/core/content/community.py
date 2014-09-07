@@ -224,9 +224,9 @@ class Community(Container):
         for user in subscribed:
             if user in self._readers:
                 readers.append(user)
-            elif user in self._owners:
+            if user in self._owners:
                 owners.append(user)
-            else:
+            if user in self._editors:
                 editors.append(user)
 
         return dict(readers=readers, editors=editors, owners=owners)
