@@ -1,11 +1,10 @@
 Changelog
 =========
 
-1.42 (unreleased)
+1.42 (2014-09-09)
 -----------------
 
-- Nothing changed yet.
-
+* Fixed error on corner cases [Victor Fernandez de Alba]
 
 1.41 (2014-09-04)
 -----------------
