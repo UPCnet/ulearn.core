@@ -658,7 +658,12 @@ class communityAdder(form.SchemaForm):
 
         portal = getSite()
         pc = getToolByName(portal, 'portal_catalog')
-        result = pc.unrestrictedSearchResults(portal_type='ulearn.community', Title=nom)
+
+        nom = safe_unicode(nom)
+        chooser = INameChooser(self.context)
+        id_normalized = chooser.chooseName(nom, self.context.aq_parent)
+
+        result = pc.unrestrictedSearchResults(portal_type='ulearn.community', id=id_normalized)
 
         if result:
             msgid = _(u"comunitat_existeix", default=u'La comunitat ${comunitat} ja existeix, si us plau, escolliu un altre nom.', mapping={u"comunitat": nom})
@@ -670,17 +675,13 @@ class communityAdder(form.SchemaForm):
 
             self.request.response.redirect('{}/++add++ulearn.community'.format(portal.absolute_url()))
         else:
-            nom = safe_unicode(nom)
-            chooser = INameChooser(self.context)
-            newid = chooser.chooseName(nom, self.context.aq_parent)
-
             # Just to be safe in some corner cases, we set the current user as
             # owner of the community in this point
             owners = list(set(owners + [unicode(api.user.get_current().id.encode('utf-8'))]))
 
             new_comunitat_id = self.context.invokeFactory(
                 'ulearn.community',
-                newid,
+                id_normalized,
                 title=nom,
                 description=description,
                 readers=readers,
