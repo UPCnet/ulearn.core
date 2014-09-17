@@ -286,6 +286,7 @@ class Community(Container):
 
         if not getattr(portal, self.id, False):
             self.create_max_context()
+
         maxclient.people[user].subscriptions.post(object_url=wrapped_community.absolute_url())
         maxclient.contexts[wrapped_community.absolute_url()].permissions[user][permission].put()
         if permission == 'read':
@@ -817,6 +818,14 @@ def initialize_community(community, event):
     maxclient.setActor(maxui_settings.max_restricted_username)
     maxclient.setToken(maxui_settings.max_restricted_token)
 
+    # Fallback for some rare cases when we arrive at this point and the MAX
+    # context is not created. This happens when the community has been created
+    # using the default Dexterity machinery.
+    try:
+        maxclient.contexts[community.absolute_url()].get()
+    except:
+        create_max_context(community)
+
     # Add creator to owners field - Not making use of .append() to force the setter
     community.owners = list(set(community.owners + [unicode(community.Creator().encode('utf-8'))]))
 
@@ -1118,3 +1127,57 @@ def delete_community(community, event):
     maxclient.setToken(maxui_settings.max_restricted_token)
 
     maxclient.contexts[event.object.absolute_url()].delete()
+
+
+def create_max_context(community):
+    maxclient, settings = getUtility(IMAXClient)()
+    maxclient.setActor(settings.max_restricted_username)
+    maxclient.setToken(settings.max_restricted_token)
+
+    # Determine the value for notifications
+    if community.notify_activity_via_push and community.notify_activity_via_push_comments_too:
+        notifications = 'comments'
+    elif community.notify_activity_via_push and not community.notify_activity_via_push_comments_too:
+        notifications = 'posts'
+    elif not community.notify_activity_via_push and not community.notify_activity_via_push_comments_too:
+        notifications = False
+
+    # Determine the kind of security the community should have provided the type
+    # of community
+    if community.community_type == u'Open':
+        community_permissions = dict(read='subscribed', write='subscribed', subscribe='public')
+    elif community.community_type == u'Closed':
+        community_permissions = dict(read='subscribed', write='restricted', subscribe='restricted', unsubscribe='public')
+    elif community.community_type == u'Organizative':
+        community_permissions = dict(read='subscribed', write='restricted', subscribe='restricted')
+
+    # Add context for the community on MAX server
+    maxclient.contexts.post(
+        url=community.absolute_url(),
+        displayName=community.title,
+        permissions=community_permissions,
+        notifications=notifications,
+    )
+
+    # Update/Subscribe the invited users and grant them permission on MAX
+    # Guard in case that the user does not exist or the community does not exist
+    for reader in community.readers:
+        try:
+            maxclient.people[reader].subscriptions.post(object_url=community.absolute_url())
+            maxclient.contexts[community.absolute_url()].permissions[reader]['read'].put()
+        except:
+            logger.error('Impossible to subscribe user {} as reader in the {} community.'.format(reader, community.absolute_url()))
+
+    for writter in community.subscribed:
+        try:
+            maxclient.people[writter].subscriptions.post(object_url=community.absolute_url())
+            maxclient.contexts[community.absolute_url()].permissions[writter]['write'].put()
+        except:
+            logger.error('Impossible to subscribe user {} as editor in the {} community.'.format(writter, community.absolute_url()))
+
+    for owner in community.owners:
+        try:
+            maxclient.people[owner].subscriptions.post(object_url=community.absolute_url())
+            maxclient.contexts[community.absolute_url()].permissions[owner]['write'].put()
+        except:
+            logger.error('Impossible to subscribe user {} as owner in the {} community.'.format(owner, community.absolute_url()))
