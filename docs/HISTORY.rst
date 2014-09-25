@@ -1,11 +1,13 @@
 Changelog
 =========
 
-1.43 (unreleased)
+1.43 (2014-09-25)
 -----------------
 
-- Nothing changed yet.
-
+* Update i18n [Victor Fernandez de Alba]
+* Fallback for some rare cases when we arrive at this point and the MAX context is not created. This happens when the community has been created using the default Dexterity machinery. [Victor Fernandez de Alba]
+* Merge branch 'master' of github.com:UPCnet/ulearn.core [Victor Fernandez de Alba]
+* Fix search for existing communities on creation [Victor Fernandez de Alba]
 
 1.42 (2014-09-09)
 -----------------
