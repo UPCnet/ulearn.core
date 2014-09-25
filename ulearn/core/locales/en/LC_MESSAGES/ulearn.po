@@ -528,10 +528,7 @@ msgid "use_the_search_input_to_find_more_people1"
 msgstr "Please use the search engine in order to find a member"
 
 msgid "use_the_search_input_to_find_more_people2"
-msgstr "Please use the search engine in order to find more members"
-
-msgid "use_the_search_input_to_find_more_people3"
-msgstr "Please use the search engine in order to find more"
+msgstr "Showing 100 out of "
 
 msgid "seemoreevents"
 msgstr "See more events"

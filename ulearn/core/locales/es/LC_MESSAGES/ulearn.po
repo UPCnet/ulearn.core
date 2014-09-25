@@ -493,10 +493,7 @@ msgid "use_the_search_input_to_find_more_people1"
 msgstr "Usa el buscador para encontrar personas. "
 
 msgid "use_the_search_input_to_find_more_people2"
-msgstr "Mostrando "
-
-msgid "use_the_search_input_to_find_more_people3"
-msgstr " de 100."
+msgstr "Mostrando 100 de "
 
 msgid "search_content"
 msgstr "Busca en el contenido"

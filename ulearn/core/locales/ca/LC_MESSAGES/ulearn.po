@@ -509,10 +509,7 @@ msgid "use_the_search_input_to_find_more_people1"
 msgstr "Utilitza el cercador per trobar persones. "
 
 msgid "use_the_search_input_to_find_more_people2"
-msgstr "Mostrant "
-
-msgid "use_the_search_input_to_find_more_people3"
-msgstr " de 100."
+msgstr "Mostrant 100 de "
 
 msgid "seemoreevents"
 msgstr "Veure més esdeveniments"
