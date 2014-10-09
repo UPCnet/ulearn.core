@@ -46,11 +46,16 @@ class Person(REST):
         validation = self.validate()
         if validation is not True:
             return validation
+
+        username = self.params.pop('username')
+        email = self.params.pop('email')
+        password = self.params.pop('password', None)
+
         result = self.create_user(
-            self.params['username'],
-            self.params['email'],
-            password=self.params['password'],
-            fullname=self.params['fullname']
+            username,
+            email,
+            password,
+            **self.params
         )
         self.response.setStatus(result.pop('status'))
         return self.json_response(result)
@@ -67,7 +72,7 @@ class Person(REST):
         self.response.setStatus(204)
         return self.json_response({})
 
-    def create_user(self, username, email, password=None, **properties):
+    def create_user(self, username, email, password, **properties):
         existing_user = plone.api.user.get(username=username)
         maxclient, settings = getUtility(IMAXClient)()
         maxclient.setActor(settings.max_restricted_username)
