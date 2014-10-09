@@ -26,6 +26,7 @@ class Communities(REST):
     placeholder_id = 'community'
 
     grok.adapts(APIRoot, IPloneSiteRoot)
+    grok.require('ulearn.APIAccess')
 
 
 class Community(REST):
@@ -59,7 +60,10 @@ class Subscriptions(REST):
         portal = getSite()
         self.data = self.request.form
 
-        execute_under_special_role(portal, 'Manager', self.update_subscriptions)
+        result = execute_under_special_role(portal, 'Manager', self.update_subscriptions)
+
+        self.response.setStatus(result.pop('status'))
+        return self.json_response(result)
 
     def update_subscriptions(self):
         pc = plone.api.portal.get_tool(name='portal_catalog')
@@ -91,15 +95,24 @@ class Subscriptions(REST):
             for user in owners:
                 maxclient.people[user].post()
 
+            # Convert to unicode as it's required by community setters/getters
+            readers_fixed_list = []
+            for user in readers:
+                readers_fixed_list.append(unicode(user))
+            editors_fixed_list = []
+            for user in editors:
+                editors_fixed_list.append(unicode(user))
+            owners_fixed_list = []
+            for user in owners:
+                owners_fixed_list.append(unicode(user))
+
             community = result[0].getObject()
-            community.readers = readers
-            community.subscribed = editors
-            community.owners = owners
+            community.readers = readers_fixed_list
+            community.subscribed = editors_fixed_list
+            community.owners = owners_fixed_list
 
             notify(ObjectModifiedEvent(community))
 
-            success_response = 'Successfully subscribed...\nreaders:{}\neditors:{}\nowners:{}\n.'.format(readers, editors, owners)
+            success_response = 'Updated community "{}" subscriptions'.format(community.title)
             logger.info(success_response)
-            self.response.setStatus(200)
-
-            return self.json_response({})
+            return {'message': success_response, 'status': 200}

@@ -21,6 +21,14 @@ import logging
 logger = logging.getLogger(__name__)
 
 
+class MethodNotImplemented(Exception):
+    """This method is not implemented in this class
+    """
+    def __init__(self, klass, method):
+        self.args = (klass, method)
+        self.message = '{}.{}'.format(klass, method)
+
+
 def queryRESTComponent(specs, args, name=u'', parent=None, id=_marker, placeholder=None):
     """Query the ZCA for a REST component.
     """
@@ -72,6 +80,8 @@ class REST(REST_BASE):
         if request.method in ALLOWED_REST_METHODS:
             if hasattr(self, request.method):
                 return self, (request.method,)
+            else:
+                raise MethodNotImplemented(str(self.__class__), request.method)
         raise MethodNotAllowed(request.method)
 
     def get_max_client(self):

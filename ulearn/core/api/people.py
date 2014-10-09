@@ -46,14 +46,14 @@ class Person(REST):
         validation = self.validate()
         if validation is not True:
             return validation
-        self.create_user(
+        result = self.create_user(
             self.params['username'],
             self.params['email'],
             password=self.params['password'],
             fullname=self.params['fullname']
         )
-        self.response.setStatus(200)
-        self.json_response({})
+        self.response.setStatus(result.pop('status'))
+        return self.json_response(result)
 
     def DELETE(self):
         """
@@ -83,6 +83,7 @@ class Person(REST):
                 args['password'] = password
             plone.api.user.create(**args)
             maxclient.people[username].put(displayName=properties['fullname'])
+            created = 201
 
         else:
             # Update portal membership user properties
@@ -94,9 +95,13 @@ class Person(REST):
 
             # Update MAX properties
             maxclient.people[username].post()  # Just to make sure user exists (in case it was only on ldap)
+            created = maxclient.last_response_code
             maxclient.people[username].put(displayName=properties['fullname'])
 
-
+        if created == 201:
+            return {'message': 'User {} created'.format(username), 'status': created}
+        else:
+            return {'message': 'User {} updated'.format(username), 'status': created}
 
     def deleteMembers(self, member_ids):
         # this method exists to bypass the 'Manage Users' permission check
