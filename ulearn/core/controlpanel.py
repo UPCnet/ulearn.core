@@ -17,6 +17,10 @@ from genweb.core.widgets.select2_maxuser_widget import Select2MAXUserInputFieldW
 
 from ulearn.core import _
 from mrs.max.utilities import IMAXClient
+from plone.namedfile.field import NamedImage
+from zope.interface import Interface
+from collective.z3cform.datagridfield import DataGridFieldFactory
+from collective.z3cform.datagridfield.registry import DictRow
 
 
 class availableLanguages(object):
@@ -31,6 +35,26 @@ class availableLanguages(object):
         return SimpleVocabulary(terms)
 
 grok.global_utility(availableLanguages, name=u"ulearn.core.language")
+
+
+class ILiteralQuickLinks(form.Schema):
+    language = schema.Choice(
+        title = _(u'Language'),
+        required=True,
+        vocabulary=u"plone.app.vocabularies.SupportedContentLanguages"
+        )
+    text = schema.TextLine(title=_(u"Text"), required=True)
+
+
+class ITableQuickLinks(form.Schema):
+    language = schema.Choice(
+        title = _(u'Language'),
+        required=True,
+        vocabulary=u"plone.app.vocabularies.SupportedContentLanguages"
+        )
+    text = schema.TextLine(title=_(u"Text"), required=True)
+    link = schema.TextLine(title=_(u"Link"), required=True)
+    icon = schema.TextLine(title=_(u"Font Awesome Icon"), required=False)
 
 
 class IUlearnControlPanelSettings(model.Schema):
@@ -58,6 +82,11 @@ class IUlearnControlPanelSettings(model.Schema):
     model.fieldset('UPCnet only',
                   _(u'UPCnet only'),
                   fields=['language'])
+
+    model.fieldset('Quick Links',
+                  _(u'QuickLinks'),
+                  fields=['quicklinks_literal', 'quicklinks_icon', 'quicklinks_table'])
+
 
     campus_url = schema.TextLine(
         title=_(u"campus_url",
@@ -210,6 +239,29 @@ class IUlearnControlPanelSettings(model.Schema):
         values=['thinnkers', 'persones', 'participants'],
         required=False,
         default='persones')
+
+    form.widget(quicklinks_literal=DataGridFieldFactory)
+    quicklinks_literal = schema.List(title=_(u"Text Quick Links"),
+                                     description=_(u"help_quicklinks_literal",
+                                     default=u"Add the text quick links by language"),
+                                     value_type=DictRow(title=_(u"help_quicklinks_literal"),
+                                                        schema=ILiteralQuickLinks))
+
+    quicklinks_icon = schema.TextLine(
+        title=_(u"quicklinks_icon",
+                default=u"icon-link"),
+        description=_(u"help_quicklinks_icon",
+                default=u"Afegiu la icona del Font Awesome que voleu que es mostri"),
+        required=False,
+        default=u"",
+    )
+
+    form.widget(quicklinks_table=DataGridFieldFactory)
+    quicklinks_table = schema.List(title=_(u"QuickLinks"),
+                                   description=_(u"help_quicklinks_table",
+                                   default=u"Add the quick links by language"),
+                                   value_type=DictRow(title=_(u"help_quicklinks_table"),
+                                                      schema=ITableQuickLinks))
 
 
 class UlearnControlPanelSettingsForm(controlpanel.RegistryEditForm):
