@@ -1,5 +1,8 @@
 <?xml version="1.0"?>
 <rolemap>
+  <roles>
+    <role name="Api"/>
+  </roles>
   <permissions>
     <permission name="Ulearn: Add Oportunitat" acquire="True">
       <role name="Editor"/>
@@ -32,6 +35,9 @@
       <role name="Manager"/>
       <role name="Site Administrator"/>
       <role name="WebMaster"/>
+    </permission>
+    <permission name="Ulearn: API Access" acquire="True">
+      <role name="Api"/>
     </permission>
   </permissions>
 </rolemap>

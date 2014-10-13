@@ -552,3 +552,33 @@ msgstr "Links"
 #: ../../../../ulearn.core/ulearn/core/content/community.py:373
 msgid "Fotos"
 msgstr "Photos"
+
+msgid "QuickLinks"
+msgstr "Quick Links"
+
+msgid "help_quicklinks_table"
+msgstr "This table should add direct links we wish"
+
+msgid "Text Quick Links"
+msgstr "Title Quick Links"
+
+msgid "help_quicklinks_literal"
+msgstr "Text that will be the title of quick links"
+
+msgid "quicklinks_icon"
+msgstr "Icon Font Awesome"
+
+msgid "help_quicklinks_icon"
+msgstr "Source Awesome icon next to the title of quick links"
+
+msgid "Language"
+msgstr "Language"
+
+msgid "Text"
+msgstr "Text"
+
+msgid "Link"
+msgstr "Link"
+
+msgid "Font Awesome Icon"
+msgstr "Icon Font Awesome"

@@ -615,3 +615,34 @@ msgstr "Ver más debates"
 
 msgid "Media"
 msgstr "Media"
+
+msgid "QuickLinks"
+msgstr "Enlaces directos"
+
+msgid "help_quicklinks_table"
+msgstr "En esta tabla se han de añadir todos los enlaces directos que queramos mostrar"
+
+msgid "Text Quick Links"
+msgstr "Título enlaces directos"
+
+msgid "help_quicklinks_literal"
+msgstr "Texto que saldrá como título de los enlaces directos"
+
+msgid "quicklinks_icon"
+msgstr "Icono Font Awesome"
+
+msgid "help_quicklinks_icon"
+msgstr "Icono del Font Awesome que aparece al lado del título de enlaces directos"
+
+msgid "Language"
+msgstr "Idioma"
+
+msgid "Text"
+msgstr "Texto"
+
+msgid "Link"
+msgstr "Enlace"
+
+msgid "Font Awesome Icon"
+msgstr "Icono Font Awesome"
+

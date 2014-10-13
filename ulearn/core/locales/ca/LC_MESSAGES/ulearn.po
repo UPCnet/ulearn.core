@@ -579,3 +579,33 @@ msgstr "Veure més debats"
 
 msgid "Media"
 msgstr "Media"
+
+msgid "QuickLinks"
+msgstr "Enllaços directes"
+
+msgid "help_quicklinks_table"
+msgstr "En aquesta taula s'han d'afegir tots els enllaços directes que volem mostrar"
+
+msgid "Text Quick Links"
+msgstr "Títol Enllaços directes"
+
+msgid "help_quicklinks_literal"
+msgstr "Text que sortirà com a títol dels enllaços directes"
+
+msgid "quicklinks_icon"
+msgstr "Icona Font Awesome"
+
+msgid "help_quicklinks_icon"
+msgstr "Icona del Font Awesome que apareix al costat del títol dels enllaços directes"
+
+msgid "Language"
+msgstr "Idioma"
+
+msgid "Text"
+msgstr "Text"
+
+msgid "Link"
+msgstr "Enllaç"
+
+msgid "Font Awesome Icon"
+msgstr "Icona Font Awesome"
