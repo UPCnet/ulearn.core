@@ -13,7 +13,6 @@ from Products.CMFCore.utils import getToolByName
 from ulearn.core.testing import ULEARN_CORE_FUNCTIONAL_TESTING
 
 from mrs.max.utilities import IMAXClient
-from ulearn.core.api.helpers import GET, POST
 from ulearn.core.testing import set_browserlayer
 
 import plone.api
