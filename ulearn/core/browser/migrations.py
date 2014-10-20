@@ -9,6 +9,7 @@ from zope.component.hooks import getSite
 from zope.interface import alsoProvides
 from zope.event import notify
 from zope.lifecycleevent import ObjectModifiedEvent
+from OFS.interfaces import IApplication
 
 from Products.CMFPlone.interfaces.constrains import ISelectableConstrainTypes
 
@@ -17,6 +18,7 @@ from plone.portlets.interfaces import ILocalPortletAssignmentManager
 from plone.portlets.interfaces import IPortletManager
 from plone.portlets.interfaces import IPortletAssignmentMapping
 from plone.dexterity.utils import createContentInContainer
+from plone.subrequest import subrequest
 
 from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.interfaces import IPloneSiteRoot
@@ -24,6 +26,7 @@ from Products.CMFPlone.interfaces import IPloneSiteRoot
 from ulearn.core.interfaces import IDocumentFolder, ILinksFolder, IPhotosFolder, IEventsFolder
 from ulearn.core.content.community import IInitializedCommunity
 from ulearn.core.content.community import Community
+from genweb.core.browser.helpers import listPloneSites
 
 from ulearn.core.interfaces import IDiscussionFolder
 from ulearn.core import _
@@ -220,3 +223,60 @@ class MigrateCommunities(grok.View):
 
                 text.append('Migrated community {}\n'.format(community.absolute_url()))
         return ''.join(text) + '\nDone!'
+
+
+class ReinstalluLearn(grok.View):
+    """ Reinstalls uLearn in the current Plone site. """
+    grok.context(IPloneSiteRoot)
+    grok.name('reinstall_ulearn')
+    grok.require('cmf.ManagePortal')
+
+    def render(self):
+        context = aq_inner(self.context)
+        output = []
+        qi = getToolByName(context, 'portal_quickinstaller')
+
+        if qi.isProductInstalled('ulearn.core'):
+            qi.reinstallProducts(['ulearn.core'])
+            output.append('{}: Successfully reinstalled ulearn.core'.format(context))
+        return '\n'.join(output)
+
+
+class ReinstalluLearnControlPanel(grok.View):
+    """ Reinstalls uLearn in the current Plone site. """
+    grok.context(IPloneSiteRoot)
+    grok.name('reinstall_ulearncontrolpanel')
+    grok.require('cmf.ManagePortal')
+
+    def render(self):
+        context = aq_inner(self.context)
+        output = []
+
+        setup = api.portal.get_tool('portal_setup')
+        profile_id = 'profile-ulearn.core:default'
+        step_id = 'plone.app.registry'
+        setup.runImportStepFromProfile(profile_id, step_id,
+                                       run_dependencies=True, purge_old=None)
+        output.append('{}: Successfully reinstalled ulearn.core control panel'.format(context))
+
+        return '\n'.join(output)
+
+
+class BulkReinstalluLearn(grok.View):
+    """
+        Reinstall genweb.controlpanel in all the Plone instance of this Zope.
+        Useful when added some parameter to the control panel and you want to
+        apply it at the same time in all the existing Plone sites in the Zope.
+    """
+    grok.context(IApplication)
+    grok.name('bulk_reinstall_ulearncontrolpanel')
+    grok.require('cmf.ManagePortal')
+
+    def render(self):
+        context = aq_inner(self.context)
+        plonesites = listPloneSites(context)
+        output = []
+        for plonesite in plonesites:
+            response = subrequest('/'.join(plonesite.getPhysicalPath()) + '/reinstall_ulearncontrolpanel')
+            output.append(response.getBody())
+        return '\n'.join(output)
