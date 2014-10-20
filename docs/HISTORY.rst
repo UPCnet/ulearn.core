@@ -1,11 +1,10 @@
 Changelog
 =========
 
-1.45 (unreleased)
+1.45 (2014-10-20)
 -----------------
 
-- Nothing changed yet.
-
+* Add helper for bulk reinstall of ulearn.core [Victor Fernandez de Alba]
 
 1.44 (2014-10-20)
 -----------------
