@@ -1,11 +1,21 @@
 Changelog
 =========
 
-1.44 (unreleased)
+1.44 (2014-10-20)
 -----------------
 
-- Nothing changed yet.
-
+* New testing [Victor Fernandez de Alba]
+* Invalid import [Carles Bruguera]
+* Merge branch 'master' of github.com:UPCnet/ulearn.core [Victor Fernandez de Alba]
+*  [Victor Fernandez de Alba]
+* Conflicts: [Victor Fernandez de Alba]
+* ulearn/core/profiles/default/metadata.xml [Victor Fernandez de Alba]
+* Not reregister elements that already are registered by genweb.core [Victor Fernandez de Alba]
+* Add Quick Links controlpanel [Pilar Marinas]
+* Separate main properties from the rest [Carles Bruguera]
+* Complete user and communities api [Carles Bruguera]
+* Add api view to support REST endpoints [Carles Bruguera]
+* PloneFormGen [Pilar Marinas]
 
 1.43 (2014-09-25)
 -----------------
