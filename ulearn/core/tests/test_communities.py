@@ -37,6 +37,7 @@ class TestExample(unittest.TestCase):
     def tearDown(self):
         self.maxclient.contexts['http://nohost/plone/community-test2'].delete()
         self.maxclient.contexts['http://nohost/plone/community-test-open'].delete()
+        self.maxclient.contexts['http://nohost/plone/community-test-notify'].delete()
 
     def create_test_community(self, id='community-test', name=u'community-test', community_type='Closed', readers=[], subscribed=[], owners=[]):
         login(self.portal, 'usuari.iescude')
@@ -55,6 +56,9 @@ class TestExample(unittest.TestCase):
 
     def get_max_subscribed_users(self, community):
         return [user.get('username', '') for user in self.maxclient.contexts[community.absolute_url()].subscriptions.get(qs={'limit': 0})]
+
+    def get_max_context_info(self, community):
+        return self.maxclient.contexts[community.absolute_url()].get()
 
     def test_product_is_installed(self):
         """ Validate that our products GS profile has been run and the product
@@ -296,3 +300,25 @@ class TestExample(unittest.TestCase):
         self.assertTrue(u'victor.fernandez' not in max_subs)
 
         logout()
+
+    def test_notify_posts_comments(self):
+        subscribed = [u'janet.dura']
+        community = self.create_test_community(id='community-test-notify', community_type='Open', subscribed=subscribed)
+
+        info = self.get_max_context_info(community)
+
+        self.assertEquals(info['notifications'], False)
+
+        community.notify_activity_via_push = True
+
+        notify(ObjectModifiedEvent(community))
+
+        info = self.get_max_context_info(community)
+        self.assertEquals(info['notifications'], u'posts')
+
+        community.notify_activity_via_push_comments_too = True
+
+        notify(ObjectModifiedEvent(community))
+
+        info = self.get_max_context_info(community)
+        self.assertEquals(info['notifications'], u'comments')

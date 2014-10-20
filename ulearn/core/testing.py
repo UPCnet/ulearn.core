@@ -10,12 +10,15 @@ from plone.app.testing import login
 from plone.app.testing import logout
 
 from plone.testing import z2
+from plone.app.contenttypes.testing import PLONE_APP_CONTENTTYPES_FIXTURE
 
 from zope.configuration import xmlconfig
 from zope.interface import alsoProvides
 
 from mrs.max.utilities import IMAXClient
 from mrs.max.utilities import set_user_oauth_token
+
+from ulearn.theme.browser.interfaces import IUlearnTheme
 
 
 def setup_max(restricted, password):
@@ -27,9 +30,18 @@ def setup_max(restricted, password):
     set_user_oauth_token(restricted, token)
 
 
+def set_browserlayer(request):
+    """Set the BrowserLayer for the request.
+
+    We have to set the browserlayer manually, since importing the profile alone
+    doesn't do it in tests.
+    """
+    alsoProvides(request, IUlearnTheme)
+
+
 class UlearncoreLayer(PloneSandboxLayer):
 
-    defaultBases = (PLONE_FIXTURE,)
+    defaultBases = (PLONE_APP_CONTENTTYPES_FIXTURE, PLONE_FIXTURE,)
 
     def setUpZope(self, app, configurationContext):
         # Load ZCML
@@ -39,9 +51,6 @@ class UlearncoreLayer(PloneSandboxLayer):
             ulearn.core,
             context=configurationContext
         )
-
-        # prepare installing plone.app.contenttypes
-        z2.installProduct(app, 'Products.DateRecurringIndex')
 
         # Needed to make p.a.iterate permissions available as g.core needs them
         import plone.app.iterate.permissions
