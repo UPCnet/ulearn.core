@@ -19,7 +19,7 @@ msgstr ""
 #. Default: "Activitat"
 #: ../../../../ulearn.theme/ulearn/theme/browser/viewlets_templates/folderbar.pt:15
 #: ../../../../ulearn.theme/ulearn/theme/portlets/templates/stats.pt:60
-msgid "Activity"
+msgid "ulearn_activity"
 msgstr "Actividad"
 
 #: ../../../../ulearn.core/ulearn/core/browser/views.py:136
@@ -61,7 +61,7 @@ msgstr "La comunidad ${comunitat} ha sido creada."
 
 #. Default: "Comentaris"
 #: ../../../../ulearn.theme/ulearn/theme/portlets/templates/stats.pt:73
-msgid "Comments"
+msgid "stats_comments"
 msgstr "Comentarios"
 
 msgid "Comunitat"
@@ -87,7 +87,7 @@ msgstr "Descripción"
 #: ../../../../ulearn.theme/ulearn/theme/browser/viewlets_templates/folderbar.pt:26
 #: ../../../../ulearn.theme/ulearn/theme/portlets/templates/stats.pt:17
 #: ../../../../ulearn.core/ulearn/core/content/community.py:371
-msgid "Documents"
+msgid "ulearn_documents"
 msgstr "Documentos"
 
 #: ../../../../ulearn.core/ulearn/core/browser/views.py:46
@@ -163,7 +163,7 @@ msgstr "La sesión virtual ha sido creada"
 #. Default: "Enllaços"
 #: ../../../../ulearn.theme/ulearn/theme/browser/viewlets_templates/folderbar.pt:37
 #: ../../../../ulearn.theme/ulearn/theme/portlets/templates/stats.pt:30
-msgid "Links"
+msgid "ulearn_links"
 msgstr "Enlaces"
 
 #: ../../../../ulearn.core/ulearn/core/content/community.py:93
@@ -613,7 +613,7 @@ msgstr "Crea un debate"
 msgid "seemorediscussions"
 msgstr "Ver más debates"
 
-msgid "Media"
+msgid "ulearn_media"
 msgstr "Media"
 
 msgid "QuickLinks"

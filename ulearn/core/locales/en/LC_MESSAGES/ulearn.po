@@ -22,7 +22,7 @@ msgstr "Have you forgotten your password?"
 
 #. Default: "Activitat"
 #: ../../../../../../ulearn.theme/ulearn/theme/browser/viewlets_templates/folderbar.pt:15
-msgid "Activity"
+msgid "ulearn_activity"
 msgstr "Activity"
 
 #: ../../../../../../ulearn.core/ulearn/core/controlpanel.py:81
@@ -39,7 +39,7 @@ msgstr "Closed"
 
 #. Default: "Comentaris"
 #: ../../../../ulearn.theme/ulearn/theme/portlets/templates/stats.pt:73
-msgid "Comments"
+msgid "stats_comments"
 msgstr "Comments"
 
 #: ../../../../../../ulearn.core/ulearn/core/profiles/default/types/ulearn.community.xml
@@ -65,7 +65,7 @@ msgid "Descripció"
 msgstr "Description"
 
 #: ../../../../../../ulearn.theme/ulearn/theme/browser/viewlets_templates/folderbar.pt:26
-msgid "Documents"
+msgid "ulearn_documents"
 msgstr "Documents"
 
 #. Default: "Duración de la reunión"
@@ -158,8 +158,11 @@ msgstr "The virtual session has been created."
 
 #. Default: "Enllaços"
 #: ../../../../../../ulearn.theme/ulearn/theme/browser/viewlets_templates/folderbar.pt:37
-msgid "Links"
+msgid "ulearn_links"
 msgstr "Links"
+
+msgid "ulearn_media"
+msgstr "Media"
 
 #: ../../../../../../ulearn.core/ulearn/core/content/community.py:92
 msgid "Llista amb les persones subscrites"
