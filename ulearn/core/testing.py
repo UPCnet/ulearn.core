@@ -10,7 +10,6 @@ from plone.app.testing import login
 from plone.app.testing import logout
 
 from plone.testing import z2
-from plone.app.contenttypes.testing import PLONE_APP_CONTENTTYPES_FIXTURE
 
 from zope.configuration import xmlconfig
 from zope.interface import alsoProvides
@@ -18,6 +17,7 @@ from zope.interface import alsoProvides
 from mrs.max.utilities import IMAXClient
 from mrs.max.utilities import set_user_oauth_token
 
+from genweb.core.testing import GENWEBUPC_FIXTURE
 from ulearn.theme.browser.interfaces import IUlearnTheme
 
 
@@ -41,7 +41,7 @@ def set_browserlayer(request):
 
 class UlearncoreLayer(PloneSandboxLayer):
 
-    defaultBases = (PLONE_APP_CONTENTTYPES_FIXTURE, PLONE_FIXTURE,)
+    defaultBases = (GENWEBUPC_FIXTURE, PLONE_FIXTURE,)
 
     def setUpZope(self, app, configurationContext):
         # Load ZCML
