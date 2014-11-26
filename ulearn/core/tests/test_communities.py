@@ -301,6 +301,29 @@ class TestExample(unittest.TestCase):
 
         logout()
 
+    def test_open_community_already_in_MAX_getters_setters(self):
+        subscribed = [u'janet.dura']
+        community = self.create_test_community(id='community-test-open-exist', community_type='Open', subscribed=subscribed)
+
+        login(self.portal, 'victor.fernandez')
+
+        toggle_subscribe = getMultiAdapter((community, self.request), name='toggle-subscribe')
+        toggle_subscribe.render()
+
+        max_subs = self.get_max_subscribed_users(community)
+        self.assertTrue(u'victor.fernandez' in max_subs)
+        self.assertTrue(u'janet.dura' in community.subscribed and u'victor.fernandez' in community.subscribed)
+        self.assertTrue(u'usuari.iescude' in community.owners)
+
+        toggle_subscribe.render()
+
+        max_subs = self.get_max_subscribed_users(community)
+        self.assertTrue(u'victor.fernandez' not in max_subs)
+        self.assertTrue(u'janet.dura' in community.subscribed)
+        self.assertTrue(u'usuari.iescude' in community.owners)
+
+        logout()
+
     def test_notify_posts_comments(self):
         subscribed = [u'janet.dura']
         community = self.create_test_community(id='community-test-notify', community_type='Open', subscribed=subscribed)
