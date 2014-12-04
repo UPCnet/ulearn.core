@@ -654,3 +654,27 @@ msgstr "No inventis la roda!"
 
 msgid "idea_references_description"
 msgstr "Tens alguna referència interessant? Explica'ns antencents, experiències prèvies i/o posa referències d'idees semblants que hagin funcionat (a la UPC o fora)."
+
+msgid "proposal_seconder1"
+msgstr "Nom de la primera persona que secunda la proposta"
+
+msgid "proposal_seconder1_description"
+msgstr "Per tal de formalitzar la proposta necessiteu que dues persones secundin la vostra proposta"
+
+msgid "proposal_seconder2"
+msgstr "Nom de la segona persona que secunda la proposta"
+
+msgid "proposal_seconder2_description"
+msgstr "Per tal de formalitzar la proposta necessiteu que dues persones secundin la vostra proposta"
+
+msgid "proposal_seconder1_mail"
+msgstr "Mail de la primera persona que secunda la proposta"
+
+msgid "proposal_seconder1_mail_description"
+msgstr "Per tal de formalitzar la proposta necessiteu que dues persones secundin la vostra proposta"
+
+msgid "proposal_seconder2_mail"
+msgstr "Mail de la segona persona que secunda la proposta"
+
+msgid "proposal_seconder2_mail_description"
+msgstr "Per tal de formalitzar la proposta necessiteu que dues persones secundin la vostra proposta"
