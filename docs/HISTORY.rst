@@ -1,11 +1,12 @@
 Changelog
 =========
 
-1.47 (unreleased)
+1.47 (2014-12-05)
 -----------------
 
-- Nothing changed yet.
-
+* Translates Nexus24 [Victor Fernandez de Alba]
+* Update testingt [Victor Fernandez de Alba]
+* Updates [Victor Fernandez de Alba]
 
 1.46 (2014-10-22)
 -----------------
