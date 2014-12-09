@@ -1,11 +1,10 @@
 Changelog
 =========
 
-1.48 (unreleased)
+1.48 (2014-12-09)
 -----------------
 
-- Nothing changed yet.
-
+* Fix update permissions for communities [Victor Fernandez de Alba]
 
 1.47 (2014-12-05)
 -----------------
