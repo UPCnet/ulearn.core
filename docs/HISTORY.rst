@@ -1,11 +1,10 @@
 Changelog
 =========
 
-1.49 (unreleased)
+1.49 (2014-12-09)
 -----------------
 
-- Nothing changed yet.
-
+* Fix non-consistent community permissions assignment [Victor Fernandez de Alba]
 
 1.48 (2014-12-09)
 -----------------
