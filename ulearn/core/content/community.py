@@ -1027,11 +1027,11 @@ def edit_community(community, event):
     # Determine the kind of security the community should have provided the type
     # of community
     if community.community_type == u'Open':
-        community_permissions = dict(read='subscribed', write='subscribed', subscribe='public')
+        community_permissions = dict(read='subscribed', write='subscribed', subscribe='public', unsubscribe='public')
     elif community.community_type == u'Closed':
         community_permissions = dict(read='subscribed', write='restricted', subscribe='restricted', unsubscribe='public')
     elif community.community_type == u'Organizative':
-        community_permissions = dict(read='subscribed', write='restricted', subscribe='restricted')
+        community_permissions = dict(read='subscribed', write='restricted', subscribe='restricted', unsubscribe='restricted')
 
     # collect updated properties
     properties_to_update = {}
