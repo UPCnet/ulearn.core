@@ -244,11 +244,11 @@ class Community(Container):
         # Determine the kind of security the community should have provided the type
         # of community
         if self._ctype == u'Open':
-            community_permissions = dict(read='subscribed', write='subscribed', subscribe='public')
+            community_permissions = dict(read='subscribed', write='subscribed', subscribe='public', unsubscribe='public')
         elif self._ctype == u'Closed':
             community_permissions = dict(read='subscribed', write='restricted', subscribe='restricted', unsubscribe='public')
         elif self._ctype == u'Organizative':
-            community_permissions = dict(read='subscribed', write='restricted', subscribe='restricted')
+            community_permissions = dict(read='subscribed', write='restricted', subscribe='restricted', unsubscribe='restricted')
 
         if not getattr(self, 'notify_activity_via_push', False):
             notify_push = False
@@ -1145,11 +1145,11 @@ def create_max_context(community):
     # Determine the kind of security the community should have provided the type
     # of community
     if community.community_type == u'Open':
-        community_permissions = dict(read='subscribed', write='subscribed', subscribe='public')
+        community_permissions = dict(read='subscribed', write='subscribed', subscribe='public', unsubscribe='public')
     elif community.community_type == u'Closed':
         community_permissions = dict(read='subscribed', write='restricted', subscribe='restricted', unsubscribe='public')
     elif community.community_type == u'Organizative':
-        community_permissions = dict(read='subscribed', write='restricted', subscribe='restricted')
+        community_permissions = dict(read='subscribed', write='restricted', subscribe='restricted', unsubscribe='restricted')
 
     # Add context for the community on MAX server
     maxclient.contexts.post(
