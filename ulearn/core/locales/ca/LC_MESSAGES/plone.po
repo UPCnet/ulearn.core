@@ -182,7 +182,7 @@ msgstr "Oberta"
 
 #: ../../../../ulearn.core/ulearn/core/content/community.py:61
 msgid "Organizative"
-msgstr ""
+msgstr "Organitzativa"
 
 #. Default: "Guardar"
 #: ../../../../ulearn.core/ulearn/core/controlpanel.py:70
@@ -211,12 +211,12 @@ msgstr "Hashtag de Twitter"
 
 #: ../../../../ulearn.core/ulearn/core/controlpanel.py:60
 msgid "Ulearn settings"
-msgstr ""
+msgstr "Configuració d'UPCnet uLearn"
 
 #. Default: "Biography"
 #: ../../../../ulearn.theme/ulearn/theme/browser/views_templates/user_profile.pt:96
 msgid "biografia"
-msgstr ""
+msgstr "Biografia"
 
 #. Default: "last modified"
 #: ../../../../ulearn.theme/ulearn/theme/templates/plone.app.contenttypes.plone.app.contenttypes.browser.templates.folder_summary_view.pt:88
@@ -394,7 +394,7 @@ msgstr ""
 #. Default: "User profile"
 #: ../../../../ulearn.theme/ulearn/theme/portlets/profile.py:37
 msgid "profile"
-msgstr ""
+msgstr "perfil"
 
 #. Default: "Stats"
 #: ../../../../ulearn.theme/ulearn/theme/portlets/stats.py:33
@@ -429,3 +429,9 @@ msgstr "Afegir una carpeta"
 
 msgid "Lets you upload a video to the site."
 msgstr "Afegir un video"
+
+msgid "telephone"
+msgstr "Telèfon"
+
+msgid "ubicacio"
+msgstr "Ubicació"

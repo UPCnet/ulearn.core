@@ -411,3 +411,9 @@ msgstr "Añadir una carpeta"
 
 msgid "Lets you upload a video to the site."
 msgstr "Añadir un video"
+
+msgid "telephone"
+msgstr "Teléfono"
+
+msgid "ubicacio"
+msgstr "Ubicación"
