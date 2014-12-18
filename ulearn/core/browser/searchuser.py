@@ -26,17 +26,25 @@ def searchUsersFunction(context, request, search_string, user_properties=None):
     maxclient, settings = getUtility(IMAXClient)()
     maxclient.setActor(current_user.getId())
     maxclient.setToken(oauth_token)
-
     if IPloneSiteRoot.providedBy(context):
         if search_string:
             max_results = maxclient.people.get(qs={'username': search_string})
-
-            plone_results = searchView.merge(chain(*[searchView.searchUsers(**{field: search_string}) for field in ['name', 'fullname', 'email', 'twitter_username', 'ubicacio', 'location']]), 'userid')
-
-            merged_results = list(set([plone_user['userid'] for plone_user in plone_results]) &
-                                  set([max_user['username'] for max_user in max_results]))
-
-            users = [pm.getMemberById(user) for user in merged_results]
+            plone_results = searchView.merge(chain(*[searchView.searchUsers(**{field: search_string}) for field in ['name', 'fullname', 'email', 'twitter_username', 'ubicacio', 'location', 'telefon']]), 'userid')
+            if max_results:
+                merged_results = list(set([plone_user['userid'] for plone_user in plone_results]) &
+                                      set([max_user['username'] for max_user in max_results]))
+                users = [pm.getMemberById(user) for user in merged_results]
+            else:
+                merged_results = []
+                users = []
+                for plone_user in plone_results:
+                    max_results = maxclient.people.get(qs={'username': plone_user['userid']})
+                    merged_results_user = list(set([plone_user['userid']]) &
+                                               set([max_user['username'] for max_user in max_results]))
+                    if merged_results_user != []:
+                        merged_results.append(merged_results_user[0])
+                if merged_results:
+                    users = [pm.getMemberById(user) for user in merged_results]
         else:
             plone_results = [userinfo.get('login') for userinfo in portal.acl_users.mutable_properties.enumerateUsers()]
             users = [pm.getMemberById(user) for user in plone_results]
@@ -51,14 +59,31 @@ def searchUsersFunction(context, request, search_string, user_properties=None):
 
     if ICommunity.providedBy(context):
         if search_string:
-            max_users = maxclient.contexts[context.absolute_url()].subscriptions.get(qs={'username': search_string, 'limit': 0})
+            maxclientrestricted, settings = getUtility(IMAXClient)()
+            maxclientrestricted.setActor(settings.max_restricted_username)
+            maxclientrestricted.setToken(settings.max_restricted_token)
+            max_users = maxclientrestricted.contexts[context.absolute_url()].subscriptions.get(qs={'username': search_string, 'limit': 0})
+            #max_users = maxclient.contexts[context.absolute_url()].subscriptions.get(qs={'username': search_string, 'limit': 0})
 
-            plone_results = searchView.merge(chain(*[searchView.searchUsers(**{field: search_string}) for field in ['name', 'fullname', 'email', 'twitter_username', 'ubicacio', 'location']]), 'userid')
+            plone_results = searchView.merge(chain(*[searchView.searchUsers(**{field: search_string}) for field in ['name', 'fullname', 'email', 'twitter_username', 'ubicacio', 'location', 'telefon']]), 'userid')
 
-            merged_results = list(set([plone_user['userid'] for plone_user in plone_results]) &
-                                  set([max_user['username'] for max_user in max_results]))
+            if max_users:
+                merged_results = list(set([plone_user['userid'] for plone_user in plone_results]) &
+                                      set([max_user['username'] for max_user in max_users]))
 
-            users = [pm.getMemberById(user) for user in merged_results]
+                users = [pm.getMemberById(user) for user in merged_results]
+            else:
+                merged_results = []
+                users = []
+                for plone_user in plone_results:
+                    max_results = maxclientrestricted.contexts[context.absolute_url()].subscriptions.get(qs={'username': plone_user['userid'], 'limit': 0})
+                    merged_results_user = list(set([plone_user['userid']]) &
+                                               set([max_user['username'] for max_user in max_results]))
+                    if merged_results_user != []:
+                        merged_results.append(merged_results_user[0])
+
+                if merged_results:
+                    users = [pm.getMemberById(user) for user in merged_results]
         else:
             maxclientrestricted, settings = getUtility(IMAXClient)()
             maxclientrestricted.setActor(settings.max_restricted_username)

@@ -1,0 +1,15 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:monkey="http://namespaces.plone.org/monkey"
+    i18n_domain="genweb">
+
+    <include package="collective.monkeypatcher" />
+
+    <monkey:patch
+        description="Extended configuration for enumerateUsers"
+        class="Products.PlonePAS.plugins.property.ZODBMutablePropertyProvider"
+        original="enumerateUsers"
+        replacement=".patches.enumerateUsers"
+        />
+
+</configure>
