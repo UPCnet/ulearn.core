@@ -37,6 +37,20 @@ class availableLanguages(object):
 grok.global_utility(availableLanguages, name=u"ulearn.core.language")
 
 
+class communityActivityView(object):
+    grok.implements(IVocabularyFactory)
+
+    def __call__(self, context):
+        terms = []
+        terms.append(SimpleVocabulary.createTerm(u'Darreres activitats', 'darreres_activitats', _(u'Darreres activitats')))
+        terms.append(SimpleVocabulary.createTerm(u'Activitats mes valorades', 'activitats_mes_valorades', _(u'Activitats mes valorades')))
+        terms.append(SimpleVocabulary.createTerm(u'Activitats destacades', 'activitats_destacades', _(u'Activitats destacades')))
+
+        return SimpleVocabulary(terms)
+
+grok.global_utility(communityActivityView, name=u"ulearn.core.activity_view")
+
+
 class ILiteralQuickLinks(form.Schema):
     language = schema.Choice(
         title = _(u'Language'),
@@ -81,7 +95,7 @@ class IUlearnControlPanelSettings(model.Schema):
 
     model.fieldset('UPCnet only',
                   _(u'UPCnet only'),
-                  fields=['language'])
+                  fields=['language', 'activity_view'])
 
     model.fieldset('Quick Links',
                   _(u'QuickLinks'),
@@ -262,6 +276,13 @@ class IUlearnControlPanelSettings(model.Schema):
                                    default=u"Add the quick links by language"),
                                    value_type=DictRow(title=_(u"help_quicklinks_table"),
                                                       schema=ITableQuickLinks))
+
+    activity_view = schema.Choice(
+        title=_(u"activity_view"),
+        description=_(u"help_activity_view"),
+        vocabulary=u"ulearn.core.activity_view",
+        required=True,
+        default=u'Darreres activitats')
 
 
 class UlearnControlPanelSettingsForm(controlpanel.RegistryEditForm):

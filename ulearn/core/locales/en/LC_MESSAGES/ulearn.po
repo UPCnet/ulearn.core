@@ -585,3 +585,18 @@ msgstr "Link"
 
 msgid "Font Awesome Icon"
 msgstr "Icon Font Awesome"
+
+msgid "activity_view"
+msgstr "Display of community activities"
+
+msgid "help_activity_view"
+msgstr "Choose the display of community activities"
+
+msgid "Darreres activitats"
+msgstr "Latest activity"
+
+msgid "Activitats mes valorades"
+msgstr "Most valued activity"
+
+msgid "Activitats destacades"
+msgstr "Important activity"

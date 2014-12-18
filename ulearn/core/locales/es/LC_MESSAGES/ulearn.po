@@ -646,3 +646,17 @@ msgstr "Enlace"
 msgid "Font Awesome Icon"
 msgstr "Icono Font Awesome"
 
+msgid "activity_view"
+msgstr "Visualización Actividades Comunidad"
+
+msgid "help_activity_view"
+msgstr "Elige la visualización de las actividades de la comunidad"
+
+msgid "Darreres activitats"
+msgstr "Últimas actividades"
+
+msgid "Activitats mes valorades"
+msgstr "Actividades más valoradas"
+
+msgid "Activitats destacades"
+msgstr "Actividades destacadas"

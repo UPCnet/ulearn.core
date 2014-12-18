@@ -85,6 +85,17 @@ def availableCommunityTypes(context):
     return SimpleVocabulary(terms)
 
 
+@grok.provider(IContextSourceBinder)
+def communityActivityViews(context):
+    terms = []
+
+    terms.append(SimpleVocabulary.createTerm(u'Darreres activitats', 'darreres_activitats', _(u'Darreres activitats')))
+    terms.append(SimpleVocabulary.createTerm(u'Activitats mes valorades', 'activitats_mes_valorades', _(u'Activitats mes valorades')))
+    terms.append(SimpleVocabulary.createTerm(u'Activitats destacades', 'activitats_destacades', _(u'Activitats destacades')))
+
+    return SimpleVocabulary(terms)
+
+
 class IInitializedCommunity(Interface):
     """
         A Community that has been succesfully initialized
@@ -114,6 +125,13 @@ class ICommunity(form.Schema):
         required=True,
         default=u'Closed'
     )
+
+    activity_view = schema.Choice(
+        title=_(u"activity_view"),
+        description=_(u"help_activity_view"),
+        source=communityActivityViews,
+        required=True,
+        default=u'Darreres activitats')
 
     form.widget(readers=Select2MAXUserInputFieldWidget)
     readers = schema.List(
@@ -653,6 +671,7 @@ class communityAdder(form.SchemaForm):
         owners = data['owners']
         image = data['image']
         community_type = data['community_type']
+        activity_view = data['activity_view']
         twitter_hashtag = data['twitter_hashtag']
         notify_activity_via_push = data['notify_activity_via_push']
         notify_activity_via_push_comments_too = data['notify_activity_via_push_comments_too']
@@ -690,6 +709,7 @@ class communityAdder(form.SchemaForm):
                 owners=owners,
                 image=image,
                 community_type=community_type,
+                activity_view = activity_view,
                 twitter_hashtag=twitter_hashtag,
                 notify_activity_via_push=notify_activity_via_push,
                 notify_activity_via_push_comments_too=notify_activity_via_push_comments_too,
@@ -716,6 +736,7 @@ class communityEdit(form.SchemaForm):
     ignoreContext = True
 
     ctype_map = {u'Closed': 'closed', u'Open': 'open', u'Organizative': 'organizative'}
+    cview_map = {u'Darreres activitats': 'darreres_activitats', u'Activitats mes valorades': 'activitats_mes_valorades', u'Activitats destacades': 'activitats_destacades'}
 
     def update(self):
         super(communityEdit, self).update()
@@ -727,6 +748,7 @@ class communityEdit(form.SchemaForm):
         self.widgets["title"].value = self.context.title
         self.widgets["description"].value = self.context.description
         self.widgets["community_type"].value = [self.ctype_map[self.context.community_type]]
+        self.widgets["activity_view"].value = [self.cview_map[self.context.activity_view]]
         self.widgets["twitter_hashtag"].value = self.context.twitter_hashtag
 
         if self.context.notify_activity_via_push:
@@ -762,6 +784,7 @@ class communityEdit(form.SchemaForm):
         owners = data['owners']
         image = data['image']
         community_type = data['community_type']
+        activity_view = data['activity_view']
         twitter_hashtag = data['twitter_hashtag']
         notify_activity_via_push = data['notify_activity_via_push']
         notify_activity_via_push_comments_too = data['notify_activity_via_push_comments_too']
@@ -788,6 +811,7 @@ class communityEdit(form.SchemaForm):
             self.context.subscribed = subscribed
             self.context.owners = owners
             self.context.community_type = community_type
+            self.context.activity_view = activity_view
             self.context.twitter_hashtag = twitter_hashtag
             self.context.notify_activity_via_push = notify_activity_via_push
             self.context.notify_activity_via_push_comments_too = notify_activity_via_push_comments_too
