@@ -1,11 +1,10 @@
 Changelog
 =========
 
-1.51 (unreleased)
+1.51 (2015-01-15)
 -----------------
 
-- Nothing changed yet.
-
+* Cerca usuaris per telefon i ubicacio [Pilar Marinas]
 
 1.50 (2014-12-10)
 -----------------
