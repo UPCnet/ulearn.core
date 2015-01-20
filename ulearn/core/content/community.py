@@ -394,6 +394,7 @@ class Community(Container):
         for user in subscribe:
             # print u'\nowners subscribing: {}'.format(user)
             self.subscribe_max_user_per_role(user, 'write')
+            self.subscribe_max_user_per_role(user, 'flag')
             self.clear_subscribed_cache()
             self.set_plone_permissions(user, 'owner')
         unsubscribe = set(self._owners) - set(value)

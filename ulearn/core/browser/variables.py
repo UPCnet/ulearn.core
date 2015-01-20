@@ -19,6 +19,7 @@ window._MAXUI.avatar_url = '%(avatar_url)s';
 window._MAXUI.profile_url = '%(profile_url)s'
 window._MAXUI.contexts = '%(contexts)s';
 window._MAXUI.activitySource = '%(activitySource)s';
+window._MAXUI.activitySortView = '%(activitySortView)s';
 window._MAXUI.language = '%(language)s';
 window._MAXUI.hidePostboxOnTimeline = false;
 window._MAXUI.domain = '%(max_domain)s';
@@ -50,6 +51,17 @@ class communityVariables(grok.View):
         pl = getToolByName(self.context, "portal_languages")
         default_lang = pl.getDefaultLanguage()
 
+        activity_views_map = {
+            'Darreres Activitats': 'recent',
+            'Activitats mes valorades': 'likes',
+            'Activitats destacades': 'flagged'
+        }
+
+        try:
+            activity_view = self.context.activity_view
+        except:
+            activity_view = 'darreres_activitats'
+
         return TEMPLATE % dict(
             username=username,
             oauth_token=oauth_token,
@@ -60,6 +72,7 @@ class communityVariables(grok.View):
             profile_url='%s/profile/{0}' % (portal_url),
             contexts=self.context.absolute_url(),
             activitySource='activities',
+            activitySortView=activity_views_map.get(activity_view, 'recent'),
             language=default_lang,
             max_domain=settings.max_domain
         )
