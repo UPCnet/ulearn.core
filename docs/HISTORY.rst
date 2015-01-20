@@ -1,11 +1,12 @@
 Changelog
 =========
 
-1.52 (unreleased)
+1.52 (2015-01-20)
 -----------------
 
-- Nothing changed yet.
-
+* Use activity_view in widget variables [Carles Bruguera]
+* Set flag permission to owners [Carles Bruguera]
+* Selector activitats [Pilar Marinas]
 
 1.51 (2015-01-15)
 -----------------
