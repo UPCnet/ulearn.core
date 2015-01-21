@@ -677,7 +677,7 @@ msgstr "Mail de la segona persona que secunda la proposta"
 
 msgid "proposal_seconder2_mail_description"
 msgstr "Per tal de formalitzar la proposta necessiteu que dues persones secundin la vostra proposta"
-=======
+
 msgid "activity_view"
 msgstr "Visualització Activitats Comunitat"
 
