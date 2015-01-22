@@ -405,6 +405,9 @@ class Community(Container):
                 self.unsubscribe_user(user)
                 self.clear_subscribed_cache()
                 self.unset_plone_permissions(user)
+            else:
+                # User is still reader OR editor so take away the flag permission
+                self.unsubscribe_max_user_per_role(user, 'flag')
         self._owners = value
 
     owners = property(get_owners, set_owners)
