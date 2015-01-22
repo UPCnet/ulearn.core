@@ -1,11 +1,10 @@
 Changelog
 =========
 
-1.56 (unreleased)
+1.56 (2015-01-22)
 -----------------
 
-- Nothing changed yet.
-
+* Method to remove user permission [Carles Bruguera]
 
 1.55 (2015-01-22)
 -----------------
