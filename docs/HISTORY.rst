@@ -1,11 +1,10 @@
 Changelog
 =========
 
-1.55 (unreleased)
+1.55 (2015-01-22)
 -----------------
 
-- Nothing changed yet.
-
+* Remove flag permission on leaving owner role [Carles Bruguera]
 
 1.54 (2015-01-21)
 -----------------
