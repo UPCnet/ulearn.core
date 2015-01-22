@@ -1,11 +1,10 @@
 Changelog
 =========
 
-1.57 (unreleased)
+1.57 (2015-01-22)
 -----------------
 
-- Nothing changed yet.
-
+* Fix mo in eggs
 
 1.56 (2015-01-22)
 -----------------
