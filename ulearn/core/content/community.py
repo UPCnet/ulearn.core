@@ -312,6 +312,12 @@ class Community(Container):
             # This is the case of the permission roaming user...
             maxclient.contexts[wrapped_community.absolute_url()].permissions[user][permission].delete()
 
+    def remove_max_user_permission(self, user, permission):
+        portal = getSite()
+        maxclient = self.get_max_client()
+        wrapped_community = self.__of__(portal)
+        maxclient.contexts[wrapped_community.absolute_url()].permissions[user][permission].delete()
+
     def unsubscribe_user(self, user):
         portal = getSite()
         wrapped_community = self.__of__(portal)
@@ -407,7 +413,7 @@ class Community(Container):
                 self.unset_plone_permissions(user)
             else:
                 # User is still reader OR editor so take away the flag permission
-                self.unsubscribe_max_user_per_role(user, 'flag')
+                self.remove_max_user_permission(user, 'flag')
         self._owners = value
 
     owners = property(get_owners, set_owners)
