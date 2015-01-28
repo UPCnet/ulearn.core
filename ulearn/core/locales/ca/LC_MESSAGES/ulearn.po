@@ -610,6 +610,9 @@ msgstr "Enllaç"
 msgid "Font Awesome Icon"
 msgstr "Icona Font Awesome"
 
+msgid "New window"
+msgstr "Obrir finestra nova?"
+
 ###### Idea content type
 
 msgid "idea_title"

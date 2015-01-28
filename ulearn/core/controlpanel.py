@@ -69,6 +69,7 @@ class ITableQuickLinks(form.Schema):
     text = schema.TextLine(title=_(u"Text"), required=True)
     link = schema.TextLine(title=_(u"Link"), required=True)
     icon = schema.TextLine(title=_(u"Font Awesome Icon"), required=False)
+    new_window = schema.Bool(title=_(u"New window"), required=True, default=True)
 
 
 class IUlearnControlPanelSettings(model.Schema):

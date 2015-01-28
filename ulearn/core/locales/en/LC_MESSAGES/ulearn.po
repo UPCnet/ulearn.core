@@ -586,6 +586,9 @@ msgstr "Link"
 msgid "Font Awesome Icon"
 msgstr "Icon Font Awesome"
 
+msgid "New window"
+msgstr "Open new window?"
+
 msgid "activity_view"
 msgstr "Display of community activities"
 
