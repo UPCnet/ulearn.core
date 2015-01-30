@@ -603,3 +603,6 @@ msgstr "Most valued activity"
 
 msgid "Activitats destacades"
 msgstr "Important activity"
+
+msgid "No hi ha elements"
+msgstr "No items"

@@ -695,3 +695,6 @@ msgstr "Activitats més valorades"
 
 msgid "Activitats destacades"
 msgstr "Activitats destacades"
+
+msgid "No hi ha elements"
+msgstr "No hi ha elements"
