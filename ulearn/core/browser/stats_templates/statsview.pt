@@ -1,0 +1,356 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      lang="en"
+      metal:use-macro="context/main_template/macros/master"
+      i18n:domain="ulearn">
+
+<head>
+  <div metal:fill-slot="javascript_head_slot" tal:omit-tag="">
+
+    <script type="text/javascript">
+
+      $(document).ready(function(event) {
+
+          $(".user-select").select2({
+            ajax: {
+              placeholder: 'Tria un usuari',
+              url: portal_url + '/genweb.ajaxusersearch',
+              dataType: 'json',
+              delay: 250,
+              data: function (term, page) {
+                  console.log(term, page)
+                  return {
+                      q: term,
+                      page: page, // page number
+                  };
+              },
+              processResults: function (data, page) {
+                // parse the results into the format expected by Select2.
+                // since we are using custom formatting functions we do not need to
+                // alter the remote JSON data
+                console.log(data)
+                return data
+              },
+              cache: false
+            },
+            minimumInputLength: 3
+          });
+
+          function create_header(headers) {
+            var header = ''
+            _.each(headers, function(element, index, list) {
+              header += '<th>' + element + '</th>\n'
+            })
+            return '<tr>' + header + '</tr>\n'
+
+          }
+
+          function create_body(rows) {
+            var body = '';
+            _.each(rows, function(row, index, list) {
+              body += create_row(row)
+            })
+            return body
+          }
+
+          function create_row(cols) {
+            var row = ''
+            _.each(cols, function(col, index, list) {
+              row += '<td>' + col + '</td>\n'
+            })
+            return '<tr>' + row + '</tr>\n'
+          }
+
+          $('#form-buttons-load').on('click',  function(event) {
+              event.preventDefault();
+              event.stopPropagation();
+
+              var start = $('#first_month_year option:selected').val() + '-' + $('#first_month option:selected').val();
+              var end = $('#last_month_year option:selected').val() + '-' + $('#last_month option:selected').val();
+
+              var community = $('#community option:selected').val();
+              var user = $('#user option:selected').val();
+              var keywords = $('#keywords option:selected').val();
+              var access_type = $('#access_type option:selected').val();
+
+              $.get(portal_url + '/ulearn-stats-query', {
+                start: start,
+                end: end,
+                community: community,
+                user: user,
+                keywords: keywords,
+                access_type: access_type
+              }, function(data) {
+                  var $stats_container = $('#stats-results')
+                  var $header = $stats_container.find('table thead')
+                  var $body = $stats_container.find('table tbody')
+
+                  $header.html(create_header(_.union([''], data['headers'])))
+                  $body.html(create_body(data['rows']))
+                  $stats_container.show()
+                  console.log(data)
+              })
+          })
+
+      })
+
+    </script>
+
+  </div>
+  <metal:block fill-slot="top_slot"
+                 tal:define="dummy python:request.set('disable_border',1);
+                             dummy python:request.set('disable_column_two',1)" />
+
+</head>
+
+<body>
+
+<metal:main fill-slot="main">
+
+  <metal:content-core define-macro="main">
+
+   <div id="viewlet-above-content-title"></div>
+   <h1 class="documentFirstHeading">Estadístiques</h1>
+
+
+<!-- _________________________________ FIRST MONTH ______________________________________________ -->
+
+
+
+<form id="ulearn-stats">
+<div  class="row-fluid">
+
+<div class="field empty span6">
+    <label for="form-widgets-IDublinCore-effective" class="horizontal">
+        Inici
+        <span class="formHelp">Mes inicial</span>
+    </label>
+
+    <div class="fieldErrorBox"></div>
+
+    <!-- month -->
+
+    <select class="month datetime-widget datetime-field" id="first_month" name="first_month">
+      <option value="">--</option>
+      <option value="01" selected="selected">gener</option>
+      <option value="02">febrer</option>
+      <option value="03">març</option>
+      <option value="04">abril</option>
+      <option value="05">maig</option>
+      <option value="06">juny</option>
+      <option value="07">juliol</option>
+      <option value="08">agost</option>
+      <option value="09">setembre</option>
+      <option value="10">octubre</option>
+      <option value="11">novembre</option>
+      <option value="12">desembre</option>
+    </select>
+    <span class="separator">/</span>
+
+    <!-- year -->
+
+    <select class="year datetime-widget datetime-field" id="first_month_year" name="first_month_year">
+      <option value="">--</option>
+      <option value="2005">2005</option>
+      <option value="2006">2006</option>
+      <option value="2007">2007</option>
+      <option value="2008">2008</option>
+      <option value="2009">2009</option>
+      <option value="2010">2010</option>
+      <option value="2011">2011</option>
+      <option value="2012">2012</option>
+      <option value="2013">2013</option>
+      <option value="2014" selected="selected">2014</option>
+      <option value="2015">2015</option>
+      <option value="2016">2016</option>
+      <option value="2017">2017</option>
+      <option value="2018">2018</option>
+      <option value="2019">2019</option>
+      <option value="2020">2020</option>
+      <option value="2021">2021</option>
+      <option value="2022">2022</option>
+      <option value="2023">2023</option>
+      <option value="2024">2024</option>
+    </select>
+</div>
+
+<!-- _________________________________ LAST MONTH ______________________________________________ -->
+
+<div class="field empty span6">
+    <label for="form-widgets-IDublinCore-effective" class="horizontal">
+        Fi
+        <span class="formHelp">Mes final</span>
+    </label>
+
+    <div class="fieldErrorBox"></div>
+
+    <!-- month -->
+
+    <select class="month datetime-widget datetime-field" id="last_month" name="last_month">
+      <option value="">--</option>
+      <option value="01">gener</option>
+      <option value="02">febrer</option>
+      <option value="03">març</option>
+      <option value="04">abril</option>
+      <option value="05">maig</option>
+      <option value="06">juny</option>
+      <option value="07">juliol</option>
+      <option value="08">agost</option>
+      <option value="09">setembre</option>
+      <option value="10">octubre</option>
+      <option value="11">novembre</option>
+      <option value="12" selected="selected">desembre</option>
+    </select>
+    <span class="separator">/</span>
+
+    <!-- year -->
+
+    <select class="year datetime-widget datetime-field" id="last_month_year" name="last_month_year">
+      <option value="">--</option>
+      <option value="2005">2005</option>
+      <option value="2006">2006</option>
+      <option value="2007">2007</option>
+      <option value="2008">2008</option>
+      <option value="2009">2009</option>
+      <option value="2010">2010</option>
+      <option value="2011">2011</option>
+      <option value="2012">2012</option>
+      <option value="2013">2013</option>
+      <option value="2014" selected="selected">2014</option>
+      <option value="2015">2015</option>
+      <option value="2016">2016</option>
+      <option value="2017">2017</option>
+      <option value="2018">2018</option>
+      <option value="2019">2019</option>
+      <option value="2020">2020</option>
+      <option value="2021">2021</option>
+      <option value="2022">2022</option>
+      <option value="2023">2023</option>
+      <option value="2024">2024</option>
+    </select>
+</div>
+</div>
+
+<br/>
+<!-- _________________________________ ______________________________________________ -->
+
+
+<div id="stats-filter-1" class="row-fluid">
+  <div class="field empty span6">
+      <label for="form-widgets-IDublinCore-effective" class="horizontal">
+          Comunitat
+          <span class="formHelp"></span>
+      </label>
+
+      <div class="fieldErrorBox"></div>
+
+    <select class="year datetime-widget datetime-field" id="community" name="community">
+      <option tal:repeat="community view/get_communities" tal:attributes="value community/hash" tal:content="community/title">Totes les comunitats</option>
+    </select>
+
+
+  </div>
+
+
+  <div class="field empty span6">
+      <label for="form-widgets-IDublinCore-effective" class="horizontal">
+          Usuari
+          <span class="formHelp"></span>
+      </label>
+
+      <div class="fieldErrorBox"></div>
+
+      <div class="user-select" style="width:100%;"></div>
+
+  </div>
+</div>
+
+<br/>
+
+<!-- _________________________________ ______________________________________________ -->
+
+
+<div id="stats-filter-1" class="row-fluid">
+  <div class="field empty span6">
+      <label for="form-widgets-IDublinCore-effective" class="horizontal">
+          Filtre per paraula clau
+          <span class="formHelp"></span>
+      </label>
+
+      <div class="fieldErrorBox"></div>
+
+    <select class="year datetime-widget datetime-field" id="keyword" name="keyword">
+      <option value="">Paraula clau</option>
+      <option value="032940235">caca</option>
+
+    </select>
+
+
+  </div>
+
+  <div class="field empty span6">
+      <label for="form-widgets-IDublinCore-effective" class="horizontal">
+          Tipus d'accés
+          <span class="formHelp"></span>
+      </label>
+
+      <div class="fieldErrorBox"></div>
+
+    <select class="year datetime-widget datetime-field" id="access_type" name="access_type">
+      <option value="">Tots</option>
+      <option value="web">Web</option>
+      <option value="mobile">Mòvil</option>
+
+    </select>
+
+
+  </div>
+</div>
+
+
+
+<div class="formControls">
+    <button id="form-buttons-load" class="button-field context">Busca</button>
+    <button class="btn" data-dismiss="modal" aria-hidden="true">Cancela</button>
+</div>
+</form>
+
+<div id="stats-results" style="display:none;">
+
+   <div id="viewlet-above-content-title"></div>
+   <h2 class="documentFirstHeading">Resultats</h2>
+
+
+   <table>
+     <thead>
+       <tr>
+         <th></th>
+         <th>Entrades</th>
+         <th>Comentaris</th>
+         <th>Documents</th>
+         <th>Enllaços</th>
+         <th>Media</th>
+       </tr>
+     </thead>
+
+     <tbody>
+     <tr>
+        <td>Gener</td>
+        <td>1</td>
+        <td>2</td>
+        <td>3</td>
+        <td>4</td>
+        <td>5</td>
+     </tr>
+     </tbody>
+   </table>
+
+</div>
+
+  </metal:content-core>
+</metal:main>
+
+</body>
+</html>

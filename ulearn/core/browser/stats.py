@@ -5,9 +5,15 @@ from zope.interface import Interface
 from Products.CMFCore.utils import getToolByName
 from zope.component import getUtility
 
+from plone.memoize.view import memoize_contextless
 from ulearn.core import _
+from zope.i18nmessageid import MessageFactory
+
+_cal = MessageFactory('cmf_calendar')
+
 from ulearn.theme.browser.interfaces import IUlearnTheme
 from datetime import datetime
+from zope.component.hooks import getSite
 
 from mrs.max.utilities import IMAXClient
 
@@ -38,17 +44,40 @@ def last_moment_of_month(dt):
 STATS = ['activity', 'comments', 'documents', 'links', 'media']
 
 
-class StatsQuery(grok.View):
+class StatsView(grok.View):
     grok.context(Interface)
     grok.name('ulearn-stats')
     grok.require('genweb.authenticated')
     grok.layer(IUlearnTheme)
 
     def __init__(self, context, request):
+        super(StatsView, self).__init__(context, request)
+        self.catalog = getToolByName(self.portal(), 'portal_catalog')
+
+    @memoize_contextless
+    def portal(self):
+        return getSite()
+
+    def get_communities(self):
+        all_communities = [{'hash': 'all', 'title': 'Totes les comunitats'}]
+        return all_communities + [{'hash': community.community_hash, 'title': community.Title} for community in self.catalog.searchResults(portal_type='Community')]
+
+
+class StatsQuery(grok.View):
+    grok.context(Interface)
+    grok.name('ulearn-stats-query')
+    grok.require('genweb.authenticated')
+    grok.layer(IUlearnTheme)
+
+    def __init__(self, context, request):
         super(StatsQuery, self).__init__(context, request)
-        catalog = getToolByName(context, 'portal_catalog')
+        catalog = getToolByName(self.portal(), 'portal_catalog')
         self.plone_stats = PloneStats(catalog)
         self.max_stats = MaxStats(self.get_max_client())
+
+    @memoize_contextless
+    def portal(self):
+        return getSite()
 
     def get_max_client(self):
         maxclient, settings = getUtility(IMAXClient)()
@@ -79,8 +108,10 @@ class StatsQuery(grok.View):
         search_filters['access_type'] = self.request.form.get('access_type', None)
 
         # Dates MUST follow YYYY-MM Format
-        start_filter = self.request.form.get('start', '{0}-01'.format(*datetime.now().timetuple()))
-        end_filter = self.request.form.get('end', '{0}-12'.format(*datetime.now().timetuple()))
+        start_filter = self.request.form.get('start', '').strip()
+        start_filter = start_filter or '{0}-01'.format(*datetime.now().timetuple())
+        end_filter = self.request.form.get('end', '').strip()
+        end_filter = end_filter or '{0}-12'.format(*datetime.now().timetuple())
 
         startyear, startmonth = start_filter.split('-')
         endyear, endmonth = end_filter.split('-')
@@ -106,8 +137,7 @@ class StatsQuery(grok.View):
 
         current = start
         while current <= end:
-            current = next_month(current)
-            row = [current.month, ]
+            row = [current.strftime('%B')]
             for stat_type in STATS:
                 value = self.get_stats(
                     stat_type,
@@ -116,6 +146,7 @@ class StatsQuery(grok.View):
                     end=last_moment_of_month(current))
                 row.append(value)
             results['rows'].append(row)
+            current = next_month(current)
 
         self.request.response.setHeader("Content-type", "application/json")
         return json.dumps(results)
