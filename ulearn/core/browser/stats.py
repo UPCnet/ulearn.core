@@ -158,137 +158,50 @@ class PloneStats(object):
     def __init__(self, catalog):
         self.catalog = catalog
 
+    def stat_by_folder(self, filters, start, end, search_folder):
+        """
+        """
+        # Prepare filtes search to get all the
+        # target communities
+        catalog_filters = dict(
+            portal_type='ulearn.community'
+        )
+        if filters['community']:
+            catalog_filters[id] = filters['community']
+
+        # List all paths of the resulting comunities
+        communities = self.catalog.searchResults(**catalog_filters)
+        folder_paths = ['{}/{}'.format(community[0].getPath(), search_folder) for community in communities]
+
+        # Prepare filters for the final search
+        catalog_filters = dict(
+            path={'query': folder_paths, 'depth': 2},
+            created={'query': (start, end), 'range': 'min:max'}
+        )
+
+        if filters['user']:
+            catalog_filters['Creator'] = filters['user']
+
+        if filters['keywords']:
+            catalog_filters['Subject'] = {'query': filters['keywords'], 'operator': 'or'}
+
+        results = self.catalog.searchResults(**catalog_filters)
+        return results.actual_result_count
+
     def stat_documents(self, filters, start, end):
         """
         """
-
-        if filters['community'] is not None:
-            community = self.catalog.searchResults(portal_type='ulearn.community',
-                                                   id=filters['community']
-                                                   )
-            folder_path = community[0].getPath() + '/documents'
-        else:
-            communities = self.catalog.searchResults(portal_type='ulearn.community')
-            folder_path = []
-            for c in communities:
-                community = c.getPath() + '/documents'
-                folder_path.append(community)
-
-        date_range_query = {'query': (start, end), 'range': 'min:max'}
-
-        if filters['user'] is not None and filters['keywords'] is None:
-            results = self.catalog.searchResults(path={'query': folder_path, 'depth': 2},
-                                                 Creator=filters['user'],
-                                                 created=date_range_query
-                                                 )
-
-        if filters['keywords'] is not None and filters['user'] is None:
-            results = self.catalog.searchResults(path={'query': folder_path, 'depth': 2},
-                                                 Subject={'query': filters['keywords'], 'operator': 'or'},
-                                                 created=date_range_query
-                                                 )
-
-        if filters['user'] is not None and filters['keywords'] is not None:
-            results = self.catalog.searchResults(path={'query': folder_path, 'depth': 2},
-                                                 Creator=filters['user'],
-                                                 Subject={'query': filters['keywords'], 'operator': 'or'},
-                                                 created=date_range_query
-                                                 )
-
-        if filters['user'] is None and filters['keywords'] is None:
-            results = self.catalog.searchResults(path={'query': folder_path, 'depth': 2},
-                                                 created=date_range_query
-                                                 )
-
-        return results.actual_result_count
+        return self.stat_by_folder(filters, start, end, 'documents')
 
     def stat_links(self, filters, start, end):
         """
         """
-
-        if filters['community'] is not None:
-            community = self.catalog.searchResults(portal_type='ulearn.community',
-                                                   id=filters['community']
-                                                   )
-            folder_path = community[0].getPath() + '/links'
-        else:
-            communities = self.catalog.searchResults(portal_type='ulearn.community')
-            folder_path = []
-            for c in communities:
-                community = c.getPath() + '/links'
-                folder_path.append(community)
-
-        date_range_query = {'query': (start, end), 'range': 'min:max'}
-
-        if filters['user'] is not None and filters['keywords'] is None:
-            results = self.catalog.searchResults(path={'query': folder_path, 'depth': 2},
-                                                 Creator=filters['user'],
-                                                 created=date_range_query
-                                                 )
-
-        if filters['keywords'] is not None and filters['user'] is None:
-            results = self.catalog.searchResults(path={'query': folder_path, 'depth': 2},
-                                                 Subject={'query': filters['keywords'], 'operator': 'or'},
-                                                 created=date_range_query
-                                                 )
-
-        if filters['user'] is not None and filters['keywords'] is not None:
-            results = self.catalog.searchResults(path={'query': folder_path, 'depth': 2},
-                                                 Creator=filters['user'],
-                                                 Subject={'query': filters['keywords'], 'operator': 'or'},
-                                                 created=date_range_query
-                                                 )
-
-        if filters['user'] is None and filters['keywords'] is None:
-            results = self.catalog.searchResults(path={'query': folder_path, 'depth': 2},
-                                                 created=date_range_query
-                                                 )
-
-        return results.actual_result_count
+        return self.stat_by_folder(filters, start, end, 'links')
 
     def stat_media(self, filters, start, end):
         """
         """
-
-        if filters['community'] is not None:
-            community = self.catalog.searchResults(portal_type='ulearn.community',
-                                                   id=filters['community']
-                                                   )
-            folder_path = community[0].getPath() + '/media'
-        else:
-            communities = self.catalog.searchResults(portal_type='ulearn.community')
-            folder_path = []
-            for c in communities:
-                community = c.getPath() + '/media'
-                folder_path.append(community)
-
-        date_range_query = {'query': (start, end), 'range': 'min:max'}
-
-        if filters['user'] is not None and filters['keywords'] is None:
-            results = self.catalog.searchResults(path={'query': folder_path, 'depth': 2},
-                                                 Creator=filters['user'],
-                                                 created=date_range_query
-                                                 )
-
-        if filters['keywords'] is not None and filters['user'] is None:
-            results = self.catalog.searchResults(path={'query': folder_path, 'depth': 2},
-                                                 Subject={'query': filters['keywords'], 'operator': 'or'},
-                                                 created=date_range_query
-                                                 )
-
-        if filters['user'] is not None and filters['keywords'] is not None:
-            results = self.catalog.searchResults(path={'query': folder_path, 'depth': 2},
-                                                 Creator=filters['user'],
-                                                 Subject={'query': filters['keywords'], 'operator': 'or'},
-                                                 created=date_range_query
-                                                 )
-
-        if filters['user'] is None and filters['keywords'] is None:
-            results = self.catalog.searchResults(path={'query': folder_path, 'depth': 2},
-                                                 created=date_range_query
-                                                 )
-
-        return results.actual_result_count
+        return self.stat_by_folder(filters, start, end, 'media')
 
 
 class MaxStats(object):
