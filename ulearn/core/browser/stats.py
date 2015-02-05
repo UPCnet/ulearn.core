@@ -282,7 +282,7 @@ class MaxStats(object):
         """
         """
         if filters['community']:
-            endpoint = self.contexts[filters['community']].comments
+            endpoint = self.maxclient.contexts[filters['community']].comments
         else:
             endpoint = self.maxclient.activities.comments
 
