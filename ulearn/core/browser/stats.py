@@ -19,7 +19,8 @@ from mrs.max.utilities import IMAXClient
 
 import json
 import calendar
-import plone.app.vocabularies import Month
+
+from zope.schema.interfaces import IVocabularyFactory
 
 
 def next_month(current):
@@ -70,6 +71,15 @@ class StatsView(grok.View):
     def get_communities(self):
         all_communities = [{'hash': 'all', 'title': 'Totes les comunitats'}]
         return all_communities + [{'hash': community.community_hash, 'title': community.Title} for community in self.catalog.searchResults(portal_type='ulearn.community')]
+
+    def get_months(self):
+        all_months = []
+        vocab = getUtility(IVocabularyFactory,
+                           name='plone.app.vocabularies.Month')
+        for field in vocab(self.context):
+            all_months += [{'value': field.value + 1, 'title': field.title}]
+
+        return all_months
 
 
 class StatsQuery(grok.View):
@@ -193,7 +203,7 @@ class PloneStats(object):
             catalog_filters['Creator'] = filters['user']
 
         if filters['keywords']:
-            catalog_filters['Subject'] = {'query': filters['keywords'], 'operator': 'or'}
+            catalog_filters['SearchableText'] = {'query': filters['keywords'], 'operator': 'or'}
 
         results = self.catalog.searchResults(**catalog_filters)
         return results.actual_result_count

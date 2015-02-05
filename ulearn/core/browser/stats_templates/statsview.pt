@@ -138,19 +138,7 @@
     <!-- month -->
 
     <select class="month datetime-widget datetime-field" id="first_month" name="first_month">
-      <option value="">--</option>
-      <option value="01" selected="selected">gener</option>
-      <option value="02">febrer</option>
-      <option value="03">març</option>
-      <option value="04">abril</option>
-      <option value="05">maig</option>
-      <option value="06">juny</option>
-      <option value="07">juliol</option>
-      <option value="08">agost</option>
-      <option value="09">setembre</option>
-      <option value="10">octubre</option>
-      <option value="11">novembre</option>
-      <option value="12">desembre</option>
+      <option tal:repeat="month view/get_months" tal:attributes="value month/value" tal:content="month/title">Tots els mesos</option>
     </select>
     <span class="separator">/</span>
 
@@ -167,8 +155,8 @@
       <option value="2011">2011</option>
       <option value="2012">2012</option>
       <option value="2013">2013</option>
-      <option value="2014" selected="selected">2014</option>
-      <option value="2015">2015</option>
+      <option value="2014">2014</option>
+      <option value="2015" selected="selected">2015</option>
       <option value="2016">2016</option>
       <option value="2017">2017</option>
       <option value="2018">2018</option>
@@ -193,20 +181,9 @@
 
     <!-- month -->
 
+
     <select class="month datetime-widget datetime-field" id="last_month" name="last_month">
-      <option value="">--</option>
-      <option value="01">gener</option>
-      <option value="02">febrer</option>
-      <option value="03">març</option>
-      <option value="04">abril</option>
-      <option value="05">maig</option>
-      <option value="06">juny</option>
-      <option value="07">juliol</option>
-      <option value="08">agost</option>
-      <option value="09">setembre</option>
-      <option value="10">octubre</option>
-      <option value="11">novembre</option>
-      <option value="12" selected="selected">desembre</option>
+      <option tal:repeat="month view/get_months" tal:attributes="value month/value" tal:content="month/title">Tots els mesos</option>
     </select>
     <span class="separator">/</span>
 
@@ -223,8 +200,8 @@
       <option value="2011">2011</option>
       <option value="2012">2012</option>
       <option value="2013">2013</option>
-      <option value="2014" selected="selected">2014</option>
-      <option value="2015">2015</option>
+      <option value="2014">2014</option>
+      <option value="2015" selected="selected">2015</option>
       <option value="2016">2016</option>
       <option value="2017">2017</option>
       <option value="2018">2018</option>
