@@ -19,6 +19,7 @@ from mrs.max.utilities import IMAXClient
 
 import json
 import calendar
+import plone.app.vocabularies import Month
 
 
 def next_month(current):
@@ -68,7 +69,11 @@ class StatsView(grok.View):
 
     def get_communities(self):
         all_communities = [{'hash': 'all', 'title': 'Totes les comunitats'}]
-        return all_communities + [{'hash': community.community_hash, 'title': community.Title} for community in self.catalog.searchResults(portal_type='Community')]
+        return all_communities + [{'hash': community.community_hash, 'title': community.Title} for community in self.catalog.searchResults(portal_type='ulearn.community')]
+
+    def get_month(self):
+        import ipdb;ipdb.set_trace()
+        return True
 
 
 class StatsQuery(grok.View):
