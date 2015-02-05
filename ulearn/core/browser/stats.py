@@ -166,12 +166,13 @@ class PloneStats(object):
         catalog_filters = dict(
             portal_type='ulearn.community'
         )
+
         if filters['community']:
-            catalog_filters[id] = filters['community']
+            catalog_filters['id'] = filters['community']
 
         # List all paths of the resulting comunities
         communities = self.catalog.searchResults(**catalog_filters)
-        folder_paths = ['{}/{}'.format(community[0].getPath(), search_folder) for community in communities]
+        folder_paths = ['{}/{}'.format(community.getPath(), search_folder) for community in communities]
 
         # Prepare filters for the final search
         catalog_filters = dict(
