@@ -71,10 +71,6 @@ class StatsView(grok.View):
         all_communities = [{'hash': 'all', 'title': 'Totes les comunitats'}]
         return all_communities + [{'hash': community.community_hash, 'title': community.Title} for community in self.catalog.searchResults(portal_type='ulearn.community')]
 
-    def get_month(self):
-        import ipdb;ipdb.set_trace()
-        return True
-
 
 class StatsQuery(grok.View):
     grok.context(Interface)
