@@ -1,11 +1,10 @@
 Changelog
 =========
 
-1.59 (unreleased)
+1.59 (2015-02-05)
 -----------------
 
-- Nothing changed yet.
-
+* Fix comment stats [Carles Bruguera]
 
 1.58 (2015-02-05)
 -----------------
