@@ -63,7 +63,7 @@
           function create_row(cols) {
             var row = ''
             _.each(cols, function(col, index, list) {
-              row += '<td>' + col + '</td>\n'
+              row += '<td style="text-align:center;">' + col + '</td>\n'
             })
             return '<tr>' + row + '</tr>\n'
           }

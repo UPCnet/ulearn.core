@@ -19,7 +19,6 @@ from mrs.max.utilities import IMAXClient
 
 import json
 import calendar
-
 from zope.schema.interfaces import IVocabularyFactory
 
 
@@ -70,7 +69,8 @@ class StatsView(grok.View):
 
     def get_communities(self):
         all_communities = [{'hash': 'all', 'title': 'Totes les comunitats'}]
-        return all_communities + [{'hash': community.community_hash, 'title': community.Title} for community in self.catalog.searchResults(portal_type='ulearn.community')]
+        all_communities += [{'hash': community.community_hash, 'title': community.Title} for community in self.catalog.searchResults(portal_type='ulearn.community')]
+        return all_communities
 
     def get_months(self):
         all_months = []
@@ -125,11 +125,13 @@ class StatsQuery(grok.View):
     def render(self):
         search_filters = {}
 
-        search_filters['community'] = self.request.form.get('community', None)
-        search_filters['user'] = self.request.form.get('user', None)
-        search_filters['keywords'] = self.request.form.get('keywords[]', None)
+        community = self.request.form.get('community', None)
+        user = self.request.form.get('user', None)
+        search_filters['keywords'] = self.request.form.get('keywords[]', [])
         search_filters['access_type'] = self.request.form.get('access_type', None)
 
+        search_filters['community'] = None if community == 'all' else community
+        search_filters['user'] = None if user == 'all' else user
         # Dates MUST follow YYYY-MM Format
         start_filter = self.request.form.get('start', '').strip()
         start_filter = start_filter or '{0}-01'.format(*datetime.now().timetuple())
@@ -235,9 +237,45 @@ class MaxStats(object):
     def stat_activity(self, filters, start, end):
         """
         """
-        return 4
+        if filters['community']:
+            endpoint = self.maxclient.contexts[filters['community']].activities
+        else:
+            endpoint = self.maxclient.activities
+
+        params = {
+            'date_filter': '{}-{:02}'.format(*start.timetuple())
+        }
+
+        if filters['user']:
+            params['actor'] = filters['user']
+
+        if filters['keywords']:
+            params['keyword'] = filters['keywords']
+
+        try:
+            return endpoint.head(qs=params)
+        except:
+            return '?'
 
     def stat_comments(self, filters, start, end):
         """
         """
-        return 5
+        if filters['community']:
+            endpoint = self.contexts[filters['community']].comments
+        else:
+            endpoint = self.maxclient.activities.comments
+
+        params = {
+            'date_filter': '{}-{:02}'.format(*start.timetuple())
+        }
+
+        if filters['user']:
+            params['actor'] = filters['user']
+
+        if filters['keywords']:
+            params['keyword'] = filters['keywords']
+
+        try:
+            return endpoint.head(qs=params)
+        except:
+            return '?'
