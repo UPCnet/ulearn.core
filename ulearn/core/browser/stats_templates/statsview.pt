@@ -138,7 +138,7 @@
     <!-- month -->
 
     <select class="month datetime-widget datetime-field" id="first_month" name="first_month">
-      <option tal:repeat="month view/get_months" tal:attributes="value month/value" tal:content="month/title">Tots els mesos</option>
+      <option tal:repeat="month view/get_months" tal:attributes="value month/value; selected month/selected" tal:content="month/title">Tots els mesos</option>
     </select>
     <span class="separator">/</span>
 

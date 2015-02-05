@@ -76,8 +76,12 @@ class StatsView(grok.View):
         all_months = []
         vocab = getUtility(IVocabularyFactory,
                            name='plone.app.vocabularies.Month')
+        current_month = datetime.now().month
         for field in vocab(self.context):
-            all_months += [{'value': field.value + 1, 'title': field.title}]
+            if current_month == field.value + 1:
+                all_months += [{'value': field.value + 1, 'title': field.title, 'selected': True}]
+            else:
+                all_months += [{'value': field.value + 1, 'title': field.title, 'selected': False}]
 
         return all_months
 
