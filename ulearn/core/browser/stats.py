@@ -6,10 +6,9 @@ from Products.CMFCore.utils import getToolByName
 from zope.component import getUtility
 
 from plone.memoize.view import memoize_contextless
-from ulearn.core import _
 from zope.i18nmessageid import MessageFactory
 
-_cal = MessageFactory('cmf_calendar')
+_ = MessageFactory('plone')
 
 from ulearn.theme.browser.interfaces import IUlearnTheme
 from datetime import datetime
@@ -68,7 +67,7 @@ class StatsView(grok.View):
         return getSite()
 
     def get_communities(self):
-        all_communities = [{'hash': 'all', 'title': 'Totes les comunitats'}]
+        all_communities = [{'hash': 'all', 'title': 'Todas las comunidades'}]
         all_communities += [{'hash': community.community_hash, 'title': community.Title} for community in self.catalog.searchResults(portal_type='ulearn.community')]
         return all_communities
 
@@ -136,6 +135,14 @@ class StatsQuery(grok.View):
         else:
             return 0
 
+    def get_month_by_num(self, num):
+        """
+        """
+        ts = getToolByName(self.context, 'translation_service')
+        vocab = getUtility(IVocabularyFactory, name='plone.app.vocabularies.Month')
+        month_name = {a.value + 1: a.title for a in vocab(self.context)}[num]
+        return ts.translate(month_name, context=self.request)
+
     def render(self):
         search_filters = {}
 
@@ -176,7 +183,7 @@ class StatsQuery(grok.View):
 
         current = start
         while current <= end:
-            row = [current.strftime('%B')]
+            row = [self.get_month_by_num(current.month)]
             for stat_type in STATS:
                 value = self.get_stats(
                     stat_type,

@@ -14,7 +14,7 @@
       $(document).ready(function(event) {
 
         $(".user-select").select2({
-            placeholder: "Search for a user",
+            placeholder: "Busca un usuario",
             minimumInputLength: 3,
             ajax: { // instead of writing the function to execute the request we use Select2's convenient helper
                 url: portal_url + "/max.ajaxusersearch",
@@ -34,7 +34,7 @@
             initSelection: function(element, callback) {
                 var value = $(element).val();
                 if (value == 'all') {
-                  value = 'Tots els usuaris'
+                  value = 'Todos los usuarios'
                   callback({text:value})
                 }
             },
@@ -106,7 +106,8 @@
   </div>
   <metal:block fill-slot="top_slot"
                  tal:define="dummy python:request.set('disable_border',1);
-                             dummy python:request.set('disable_column_two',1)" />
+                             dummy python:request.set('disable_plone.rightcolumn',1)" />
+
 
 </head>
 
@@ -117,7 +118,7 @@
   <metal:content-core define-macro="main">
 
    <div id="viewlet-above-content-title"></div>
-   <h1 class="documentFirstHeading">Estadístiques</h1>
+   <h1 class="documentFirstHeading">Estadísticas</h1>
 
 
 <!-- _________________________________ FIRST MONTH ______________________________________________ -->
@@ -129,7 +130,7 @@
 
 <div class="field empty span6">
     <label for="form-widgets-IDublinCore-effective" class="horizontal">
-        Inici
+        Inicio
         <span class="formHelp">Mes inicial</span>
     </label>
 
@@ -138,14 +139,14 @@
     <!-- month -->
 
     <select class="month datetime-widget datetime-field" id="first_month" name="first_month">
-      <option tal:repeat="month python:view.get_months('start')" tal:attributes="value month/value; selected month/selected" tal:content="month/title">Tots els mesos</option>
+      <option tal:repeat="month python:view.get_months('start')" tal:attributes="value month/value; selected month/selected" tal:content="month/title">xxxxxx</option>
     </select>
     <span class="separator">/</span>
 
     <!-- year -->
 
     <select class="year datetime-widget datetime-field" id="first_month_year" name="first_month_year">
-      <option tal:repeat="year python:view.get_years('start')" tal:attributes="value year/value; selected year/selected" tal:content="year/title">Tots els mesos</option>
+      <option tal:repeat="year python:view.get_years('start')" tal:attributes="value year/value; selected year/selected" tal:content="year/title">xxxxxx</option>
     </select>
 </div>
 
@@ -163,7 +164,7 @@
 
 
     <select class="month datetime-widget datetime-field" id="last_month" name="last_month">
-      <option tal:repeat="month python:view.get_months('end')" tal:attributes="value month/value; selected month/selected" tal:content="month/title">Tots els mesos</option>
+      <option tal:repeat="month python:view.get_months('end')" tal:attributes="value month/value; selected month/selected" tal:content="month/title">xxxxxx</option>
     </select>
     <span class="separator">/</span>
 
@@ -171,7 +172,7 @@
 
 
     <select class="year datetime-widget datetime-field" id="last_month_year" name="last_month_year">
-      <option tal:repeat="year python:view.get_years('end')" tal:attributes="value year/value; selected year/selected" tal:content="year/title">Tots els mesos</option>
+      <option tal:repeat="year python:view.get_years('end')" tal:attributes="value year/value; selected year/selected" tal:content="year/title">xxxxxx</option>
     </select>
 </div>
 </div>
@@ -183,14 +184,14 @@
 <div id="stats-filter-1" class="row-fluid">
   <div class="field empty span6">
       <label for="form-widgets-IDublinCore-effective" class="horizontal">
-          Comunitat
+          Comunidad
           <span class="formHelp"></span>
       </label>
 
       <div class="fieldErrorBox"></div>
 
     <select class="year datetime-widget datetime-field" id="community" name="community">
-      <option tal:repeat="community view/get_communities" tal:attributes="value community/hash" tal:content="community/title">Totes les comunitats</option>
+      <option tal:repeat="community view/get_communities" tal:attributes="value community/hash" tal:content="community/title">Todas las comunidades</option>
     </select>
 
 
@@ -199,7 +200,7 @@
 
   <div class="field empty span6">
       <label for="form-widgets-IDublinCore-effective" class="horizontal">
-          Usuari
+          Usuario
           <span class="formHelp"></span>
       </label>
 
@@ -218,7 +219,7 @@
 <div id="stats-filter-1" class="row-fluid">
   <div class="field empty span6">
       <label for="form-widgets-IDublinCore-effective" class="horizontal">
-          Filtre per paraula clau
+          Filtro per palabra clave
           <span class="formHelp"></span>
       </label>
 
@@ -230,16 +231,16 @@
 
   <div class="field empty span6">
       <label for="form-widgets-IDublinCore-effective" class="horizontal">
-          Tipus d'accés
+          Tipos de acceso
           <span class="formHelp"></span>
       </label>
 
       <div class="fieldErrorBox"></div>
 
     <select class="year datetime-widget datetime-field" id="access_type" name="access_type">
-      <option value="">Tots</option>
+      <option value="">Todos</option>
       <option value="web">Web</option>
-      <option value="mobile">Mòvil</option>
+      <option value="mobile">Móvil</option>
 
     </select>
 
@@ -258,17 +259,17 @@
 <div id="stats-results" style="display:none;">
 
    <div id="viewlet-above-content-title"></div>
-   <h2 class="documentFirstHeading">Resultats</h2>
+   <h2 class="documentFirstHeading">Resultados</h2>
 
 
    <table>
      <thead>
        <tr>
          <th></th>
-         <th>Entrades</th>
-         <th>Comentaris</th>
-         <th>Documents</th>
-         <th>Enllaços</th>
+         <th>Entradas</th>
+         <th>Comentarios</th>
+         <th>Documentos</th>
+         <th>Enlaces</th>
          <th>Media</th>
        </tr>
      </thead>
