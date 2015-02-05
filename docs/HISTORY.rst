@@ -1,11 +1,24 @@
 Changelog
 =========
 
-1.58 (unreleased)
+1.58 (2015-02-05)
 -----------------
 
-- Nothing changed yet.
-
+* Hide right column & translations [Carles Bruguera]
+* Dynamic year and months [Carles Bruguera]
+* Selected start month [Pilar Marinas]
+* get_months dinamicament [Pilar Marinas]
+* Finish select2 widgets [Carles Bruguera]
+* Get communities [Pilar Marinas]
+* Get communities [Pilar Marinas]
+* Method to get date ranges [Carles Bruguera]
+* Search PloneStats by community_hash [Pilar Marinas]
+* Generalize code [Carles Bruguera]
+* Stats view [Carles Bruguera]
+* Queries PloneStats document link media [Pilar Marinas]
+* Ulearn stats base [Carles Bruguera]
+* Traducció literal No hi ha elements cerca [Pilar Marinas]
+* Afegir selector obrir finestra nova quicklinks [Pilar Marinas]
 
 1.57 (2015-01-22)
 -----------------
