@@ -4,4 +4,5 @@
     <column value="subscribed_items"/>
     <column value="subscribed_users"/>
     <column value="community_type"/>
+    <column value="community_hash"/>
 </object>

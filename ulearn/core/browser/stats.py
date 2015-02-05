@@ -168,7 +168,7 @@ class PloneStats(object):
         )
 
         if filters['community']:
-            catalog_filters['id'] = filters['community']
+            catalog_filters['community_hash'] = filters['community']
 
         # List all paths of the resulting comunities
         communities = self.catalog.searchResults(**catalog_filters)
