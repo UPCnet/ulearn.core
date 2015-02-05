@@ -41,6 +41,14 @@ def last_moment_of_month(dt):
     return dt.replace(day=last_day_of_month(dt), hour=23, minute=59, second=59)
 
 
+def last_twelve_months_range():
+    current_year = datetime.now().year
+    last_year = current_year - 1
+    current_month = datetime.now().month
+    last_year_month = 1 if current_month == 12 else current_month + 1
+
+    return (last_year, last_year_month, current_year, current_month)
+
 STATS = ['activity', 'comments', 'documents', 'links', 'media']
 
 

@@ -13,30 +13,28 @@
 
       $(document).ready(function(event) {
 
-          $(".user-select").select2({
-            ajax: {
-              placeholder: 'Tria un usuari',
-              url: portal_url + '/genweb.ajaxusersearch',
-              dataType: 'json',
-              delay: 250,
-              data: function (term, page) {
-                  console.log(term, page)
-                  return {
-                      q: term,
-                      page: page, // page number
-                  };
-              },
-              processResults: function (data, page) {
-                // parse the results into the format expected by Select2.
-                // since we are using custom formatting functions we do not need to
-                // alter the remote JSON data
-                console.log(data)
-                return data
-              },
-              cache: false
+        $(".user-select").select2({
+            placeholder: "Search for a user",
+            minimumInputLength: 3,
+            ajax: { // instead of writing the function to execute the request we use Select2's convenient helper
+                url: portal_url + "/genweb.ajaxusersearch",
+                dataType: 'json',
+                quietMillis: 250,
+                data: function (term, page) {
+                    return {
+                        q: term, // search term
+                    };
+                },
+                results: function (data, page) { // parse the results into the format expected by Select2.
+                    // since we are using custom formatting functions we do not need to alter the remote JSON data
+                    return { results: data.items };
+                },
+                cache: true
             },
-            minimumInputLength: 3
-          });
+            initSelection: function(element, callback) {
+                callback({text:$(element).val()})
+            }
+        });
 
           function create_header(headers) {
             var header = ''
@@ -262,7 +260,7 @@
 
       <div class="fieldErrorBox"></div>
 
-      <div class="user-select" style="width:100%;"></div>
+      <input type="text" class="user-select" value="test" style="width:100%;"/>
 
   </div>
 </div>
