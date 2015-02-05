@@ -113,7 +113,7 @@ class StatsQuery(grok.View):
 
         search_filters['community'] = self.request.form.get('community', None)
         search_filters['user'] = self.request.form.get('user', None)
-        search_filters['keywords'] = self.request.form.get('keywords', None)
+        search_filters['keywords'] = self.request.form.get('keywords[]', None)
         search_filters['access_type'] = self.request.form.get('access_type', None)
 
         # Dates MUST follow YYYY-MM Format
