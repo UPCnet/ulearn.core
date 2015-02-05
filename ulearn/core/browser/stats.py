@@ -72,18 +72,32 @@ class StatsView(grok.View):
         all_communities += [{'hash': community.community_hash, 'title': community.Title} for community in self.catalog.searchResults(portal_type='ulearn.community')]
         return all_communities
 
-    def get_months(self):
+    def get_months(self, position):
         all_months = []
         vocab = getUtility(IVocabularyFactory,
                            name='plone.app.vocabularies.Month')
-        current_month = datetime.now().month
+
+        last_12 = last_twelve_months_range()
+        current_month_day = last_12[1] if position == 'start' else last_12[3]
+
         for field in vocab(self.context):
-            if current_month == field.value + 1:
-                all_months += [{'value': field.value + 1, 'title': field.title, 'selected': True}]
-            else:
-                all_months += [{'value': field.value + 1, 'title': field.title, 'selected': False}]
+            month_number = field.value + 1
+            selected = month_number == current_month_day
+            all_months += [{'value': month_number, 'title': field.title, 'selected': selected}]
 
         return all_months
+
+    def get_years(self, position):
+        all_years = []
+        years = range(datetime.now().year - 11, datetime.now().year + 1)
+        last_12 = last_twelve_months_range()
+        current_year = last_12[0] if position == 'start' else last_12[2]
+
+        for year in years:
+            selected = year == current_year
+            all_years += [{'value': year, 'title': year, 'selected': selected}]
+
+        return all_years
 
 
 class StatsQuery(grok.View):
