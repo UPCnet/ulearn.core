@@ -54,7 +54,7 @@ STATS = ['activity', 'comments', 'documents', 'links', 'media']
 class StatsView(grok.View):
     grok.context(Interface)
     grok.name('ulearn-stats')
-    grok.require('genweb.authenticated')
+    grok.require('genweb.webmaster')
     grok.layer(IUlearnTheme)
 
     def __init__(self, context, request):
@@ -101,7 +101,7 @@ class StatsView(grok.View):
 class StatsQuery(grok.View):
     grok.context(Interface)
     grok.name('ulearn-stats-query')
-    grok.require('genweb.authenticated')
+    grok.require('genweb.webmaster')
     grok.layer(IUlearnTheme)
 
     def __init__(self, context, request):
@@ -176,6 +176,7 @@ class StatsQuery(grok.View):
             end == start
 
         ts = getToolByName(self.context, 'translation_service')
+
         results = {
             'headers': [ts.translate(_(unicode(a)), context=self.request) for a in STATS],
             'rows': []
@@ -217,7 +218,7 @@ class PloneStats(object):
             catalog_filters['community_hash'] = filters['community']
 
         # List all paths of the resulting comunities
-        communities = self.catalog.searchResults(**catalog_filters)
+        communities = self.catalog.unrestrictedSearchResults(**catalog_filters)
         folder_paths = ['{}/{}'.format(community.getPath(), search_folder) for community in communities]
 
         # Prepare filters for the final search
@@ -232,7 +233,7 @@ class PloneStats(object):
         if filters['keywords']:
             catalog_filters['SearchableText'] = {'query': filters['keywords'], 'operator': 'or'}
 
-        results = self.catalog.searchResults(**catalog_filters)
+        results = self.catalog.unrestrictedSearchResults(**catalog_filters)
         return results.actual_result_count
 
     def stat_documents(self, filters, start, end):
