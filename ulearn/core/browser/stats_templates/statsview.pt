@@ -34,7 +34,7 @@
             initSelection: function(element, callback) {
                 var value = $(element).val();
                 if (value == 'all') {
-                  value = 'Todos los usuarios'
+                  value = _ulearn_i18n("Todos los usuarios")
                   callback({text:value})
                 }
             },
@@ -120,7 +120,7 @@
   <metal:content-core define-macro="main">
 
    <div id="viewlet-above-content-title"></div>
-   <h1 class="documentFirstHeading">Estadísticas</h1>
+   <h1 class="documentFirstHeading" i18n:translate="stats">Estadísticas</h1>
 
 
 <!-- _________________________________ FIRST MONTH ______________________________________________ -->
@@ -131,9 +131,9 @@
 <div  class="row-fluid">
 
 <div class="field empty span6">
-    <label for="form-widgets-IDublinCore-effective" class="horizontal">
+    <label for="form-widgets-IDublinCore-effective" class="horizontal" i18n:translate="Inicio_stats">
         Inicio
-        <span class="formHelp">Mes inicial</span>
+        <span class="formHelp" i18n:translate="Mes_inicial">Mes inicialsds</span>
     </label>
 
     <div class="fieldErrorBox"></div>
@@ -155,9 +155,9 @@
 <!-- _________________________________ LAST MONTH ______________________________________________ -->
 
 <div class="field empty span6">
-    <label for="form-widgets-IDublinCore-effective" class="horizontal">
-        Fi
-        <span class="formHelp">Mes final</span>
+    <label for="form-widgets-IDublinCore-effective" class="horizontal" i18n:translate="Fin_stats">
+        Fin
+        <span class="formHelp" i18n:translate="Mes_final">Mes final</span>
     </label>
 
     <div class="fieldErrorBox"></div>
@@ -185,7 +185,7 @@
 
 <div id="stats-filter-1" class="row-fluid">
   <div class="field empty span6">
-      <label for="form-widgets-IDublinCore-effective" class="horizontal">
+      <label for="form-widgets-IDublinCore-effective" class="horizontal" i18n:translate="Comunitat_stats">
           Comunidad
           <span class="formHelp"></span>
       </label>
@@ -201,7 +201,7 @@
 
 
   <div class="field empty span6">
-      <label for="form-widgets-IDublinCore-effective" class="horizontal">
+      <label for="form-widgets-IDublinCore-effective" class="horizontal" i18n:translate="Usuario_stats">
           Usuario
           <span class="formHelp"></span>
       </label>
@@ -220,8 +220,8 @@
 
 <div id="stats-filter-1" class="row-fluid">
   <div class="field empty span6">
-      <label for="form-widgets-IDublinCore-effective" class="horizontal">
-          Filtro per palabra clave
+      <label for="form-widgets-IDublinCore-effective" class="horizontal" i18n:translate="Filtro por palabra clave">
+          Filtro por palabra clave
           <span class="formHelp"></span>
       </label>
 
@@ -254,8 +254,8 @@
 
 
 <div class="formControls">
-    <button id="form-buttons-load" class="button-field context">Busca</button>
-    <button class="btn" data-dismiss="modal" aria-hidden="true">Cancela</button>
+    <button id="form-buttons-load" class="button-field context" i18n:translate="search">Busca</button>
+    <button class="btn" data-dismiss="modal" aria-hidden="true" i18n:translate="btnCancel">Cancela</button>
 </div>
 </form>
 
@@ -263,7 +263,7 @@
 <div id="stats-results" style="display:none;">
 
    <div id="viewlet-above-content-title"></div>
-   <h2 class="documentFirstHeading">Resultados</h2>
+   <h2 class="documentFirstHeading" i18n:translate="Resultados">Resultados</h2>
 
 
    <table class="table table-striped">

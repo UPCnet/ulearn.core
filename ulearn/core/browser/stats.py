@@ -8,8 +8,6 @@ from zope.component import getUtility
 from plone.memoize.view import memoize_contextless
 from zope.i18nmessageid import MessageFactory
 
-_ = MessageFactory('plone')
-
 from ulearn.theme.browser.interfaces import IUlearnTheme
 from datetime import datetime
 from zope.component.hooks import getSite
@@ -19,6 +17,7 @@ from mrs.max.utilities import IMAXClient
 import json
 import calendar
 from zope.schema.interfaces import IVocabularyFactory
+from ulearn.core import _
 
 
 def next_month(current):
@@ -67,7 +66,7 @@ class StatsView(grok.View):
         return getSite()
 
     def get_communities(self):
-        all_communities = [{'hash': 'all', 'title': 'Todas las comunidades'}]
+        all_communities = [{'hash': 'all', 'title': _(u"Todas las comunidades")}]
         all_communities += [{'hash': community.community_hash, 'title': community.Title} for community in self.catalog.searchResults(portal_type='ulearn.community')]
         return all_communities
 
@@ -176,8 +175,9 @@ class StatsQuery(grok.View):
         if end < start:
             end == start
 
+        ts = getToolByName(self.context, 'translation_service')
         results = {
-            'headers': STATS,
+            'headers': [ts.translate(_(unicode(a)), context=self.request) for a in STATS],
             'rows': []
         }
 

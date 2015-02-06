@@ -666,3 +666,54 @@ msgstr "Actividades destacadas"
 
 msgid "No hi ha elements"
 msgstr "No hay elementos"
+
+msgid "Estadísticas"
+msgstr "Estadísticas"
+
+msgid "Inicio_stats"
+msgstr "Inicio"
+
+msgid "Mes_inicial"
+msgstr "Mes inicial"
+
+msgid "Fin_stats"
+msgstr "Fin"
+
+msgid "Mes_final"
+msgstr "Mes final"
+
+msgid "Todas las comunidades"
+msgstr "Todas las comunidades"
+
+msgid "Usuario_stats"
+msgstr "Usuario"
+
+msgid "Filtro por palabra clave"
+msgstr "Filtro por palabra clave"
+
+msgid "Resultados"
+msgstr "Resultados"
+
+msgid "Todos los usuarios"
+msgstr "Todos los usuarios"
+
+msgid "activity"
+msgstr "Actividad"
+
+msgid "comments"
+msgstr "Comentarios"
+
+msgid "documents"
+msgstr "Documentos"
+
+msgid "links"
+msgstr "Enlaces"
+
+msgid "media"
+msgstr "Media"
+
+msgid "btnCancel"
+msgstr "Cancela"
+
+msgid "Comunitat_stats"
+msgstr "Comunidad"

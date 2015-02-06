@@ -606,3 +606,54 @@ msgstr "Important activity"
 
 msgid "No hi ha elements"
 msgstr "No items"
+
+msgid "Estadísticas"
+msgstr "Statistics"
+
+msgid "Inicio_stats"
+msgstr "Start"
+
+msgid "Mes_inicial"
+msgstr "Start Month"
+
+msgid "Fin_stats"
+msgstr "End"
+
+msgid "Mes_final"
+msgstr "End Month"
+
+msgid "Todas las comunidades"
+msgstr "All communities"
+
+msgid "Usuario_stats"
+msgstr "User"
+
+msgid "Filtro por palabra clave"
+msgstr "Filter by keyword"
+
+msgid "Resultados"
+msgstr "Results"
+
+msgid "Todos los usuarios"
+msgstr "All users"
+
+msgid "activity"
+msgstr "Activity"
+
+msgid "comments"
+msgstr "Comments"
+
+msgid "documents"
+msgstr "Documents"
+
+msgid "links"
+msgstr "Links"
+
+msgid "media"
+msgstr "Media"
+
+msgid "btnCancel"
+msgstr "Cancel"
+
+msgid "Comunitat_stats"
+msgstr "Community"

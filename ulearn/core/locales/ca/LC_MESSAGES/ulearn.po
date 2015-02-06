@@ -698,3 +698,54 @@ msgstr "Activitats destacades"
 
 msgid "No hi ha elements"
 msgstr "No hi ha elements"
+
+msgid "Estadísticas"
+msgstr "Estadístiques"
+
+msgid "Inicio_stats"
+msgstr "Inici"
+
+msgid "Mes_inicial"
+msgstr "Mes inicial"
+
+msgid "Fin_stats"
+msgstr "Fi"
+
+msgid "Mes_final"
+msgstr "Mes final"
+
+msgid "Todas las comunidades"
+msgstr "Totes les comunitats"
+
+msgid "Usuario_stats"
+msgstr "Usuari"
+
+msgid "Filtro por palabra clave"
+msgstr "Filtre per paraula clau"
+
+msgid "Resultados"
+msgstr "Resultats"
+
+msgid "Todos los usuarios"
+msgstr "Tots els usuaris"
+
+msgid "activity"
+msgstr "Activitat"
+
+msgid "comments"
+msgstr "Comentaris"
+
+msgid "documents"
+msgstr "Documents"
+
+msgid "links"
+msgstr "Enllaços"
+
+msgid "media"
+msgstr "Media"
+
+msgid "btnCancel"
+msgstr "Cancel·la"
+
+msgid "Comunitat_stats"
+msgstr "Comunitat"
