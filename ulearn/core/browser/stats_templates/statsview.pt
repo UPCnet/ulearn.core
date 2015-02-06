@@ -46,7 +46,7 @@
           function create_header(headers) {
             var header = ''
             _.each(headers, function(element, index, list) {
-              header += '<th>' + element + '</th>\n'
+              header += '<th style="text-align:center;">' + element + '</th>\n'
             })
             return '<tr>' + header + '</tr>\n'
 
@@ -63,7 +63,9 @@
           function create_row(cols) {
             var row = ''
             _.each(cols, function(col, index, list) {
-              row += '<td style="text-align:center;">' + col + '</td>\n'
+              var style = "text-align:center;";
+              if (index==0) {style += "font-weight:bold;"}
+              row += '<td style="'+ style +'">' + col + '</td>\n'
             })
             return '<tr>' + row + '</tr>\n'
           }
@@ -257,13 +259,14 @@
 </div>
 </form>
 
+<br/>
 <div id="stats-results" style="display:none;">
 
    <div id="viewlet-above-content-title"></div>
    <h2 class="documentFirstHeading">Resultados</h2>
 
 
-   <table>
+   <table class="table table-striped">
      <thead>
        <tr>
          <th></th>
