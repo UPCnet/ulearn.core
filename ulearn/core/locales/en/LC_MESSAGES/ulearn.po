@@ -657,3 +657,6 @@ msgstr "Cancel"
 
 msgid "Comunitat_stats"
 msgstr "Community"
+
+msgid "seemore_stats"
+msgstr "See more stats"

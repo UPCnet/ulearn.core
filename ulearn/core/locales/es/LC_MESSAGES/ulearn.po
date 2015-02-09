@@ -717,3 +717,6 @@ msgstr "Cancela"
 
 msgid "Comunitat_stats"
 msgstr "Comunidad"
+
+msgid "seemore_stats"
+msgstr "Ver más estadísticas"
