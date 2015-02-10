@@ -1153,14 +1153,17 @@ def edit_community(community, event):
 
 @grok.subscribe(ICommunity, IObjectRemovedEvent)
 def delete_community(community, event):
-    registry = queryUtility(IRegistry)
-    maxui_settings = registry.forInterface(IMAXUISettings)
+    try:
+        registry = queryUtility(IRegistry)
+        maxui_settings = registry.forInterface(IMAXUISettings)
 
-    maxclient = MaxClient(maxui_settings.max_server, maxui_settings.oauth_server)
-    maxclient.setActor(maxui_settings.max_restricted_username)
-    maxclient.setToken(maxui_settings.max_restricted_token)
+        maxclient = MaxClient(maxui_settings.max_server, maxui_settings.oauth_server)
+        maxclient.setActor(maxui_settings.max_restricted_username)
+        maxclient.setToken(maxui_settings.max_restricted_token)
 
-    maxclient.contexts[event.object.absolute_url()].delete()
+        maxclient.contexts[event.object.absolute_url()].delete()
+    except:
+        pass
 
 
 def create_max_context(community):

@@ -45,7 +45,8 @@ setup(name='ulearn.core',
                                'Products.PloneLDAP',
                                'plone.app.testing[robot]>=4.2.2',
                                'plone.app.robotframework[debug]',
-                               'httpretty']},
+                               'httpretty',
+                               'profilehooks']},
       entry_points="""
       # -*- Entry points: -*-
       [z3c.autoinclude.plugin]

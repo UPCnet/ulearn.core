@@ -1,3 +1,4 @@
+from plone import api
 from zope.component import getUtility
 from plone.app.testing import PloneSandboxLayer
 from plone.app.testing import applyProfile
@@ -68,9 +69,13 @@ class UlearncoreLayer(PloneSandboxLayer):
         portal.acl_users.userFolderAddUser('victor.fernandez', 'secret', ['Member'], [])
         portal.acl_users.userFolderAddUser('janet.dura', 'secret', ['Member'], [])
         portal.acl_users.userFolderAddUser('usuari.iescude', 'secret', ['Member', 'WebMaster'], [])
+        portal.acl_users.userFolderAddUser('ulearn.testuser1', 'secret', ['Member', 'WebMaster'], [])
+
+        api.user.get('ulearn.testuser1').setMemberProperties(mapping={'location': 'Test', 'telefon': '123456'})
+        api.user.get('janet.dura').setMemberProperties(mapping={'location': 'Barcelona', 'telefon': '654321'})
 
         login(portal, 'admin')
-        setup_max(u'usuari.iescude', 'holahola')
+        setup_max(u'ulearn.testuser1', '99994183a')
         portal.portal_workflow.setDefaultChain("genweb_intranet")
         logout()
         # setRoles(portal, TEST_USER_ID, ['Manager'])

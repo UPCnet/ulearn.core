@@ -1,59 +1,56 @@
 # -*- encoding: utf-8 -*-
-from Acquisition import aq_inner
-from itertools import chain
+from plone import api
 from zope.component.hooks import getSite
-from zope.component import getMultiAdapter, getUtility
-from Products.CMFCore.utils import getToolByName
+from zope.component import getUtility
+
 from Products.CMFPlone.utils import normalizeString
 from Products.CMFPlone.interfaces import IPloneSiteRoot
+
+from souper.soup import Record
+from repoze.catalog.query import Eq
+from repoze.catalog.query import Or
+from repoze.catalog.query import All
+from souper.soup import get_soup
 
 from mrs.max.utilities import IMAXClient
 from ulearn.core.content.community import ICommunity
 
-import plone.api
 import random
 
 
 def searchUsersFunction(context, request, search_string, user_properties=None):
     portal = getSite()
-    pm = plone.api.portal.get_tool(name='portal_membership')
-    nonvisibles = plone.api.portal.get_registry_record(name="ulearn.core.controlpanel.IUlearnControlPanelSettings.nonvisibles")
-    searchView = getMultiAdapter((aq_inner(context), request), name='pas_search')
+    pm = api.portal.get_tool(name='portal_membership')
+    nonvisibles = api.portal.get_registry_record(name="ulearn.core.controlpanel.IUlearnControlPanelSettings.nonvisibles")
 
-    current_user = plone.api.user.get_current()
+    current_user = api.user.get_current()
     oauth_token = current_user.getProperty('oauth_token', '')
 
     maxclient, settings = getUtility(IMAXClient)()
     maxclient.setActor(current_user.getId())
     maxclient.setToken(oauth_token)
-    if IPloneSiteRoot.providedBy(context):
-        if search_string:
-            max_results = maxclient.people.get(qs={'username': search_string})
-            plone_results = searchView.merge(chain(*[searchView.searchUsers(**{field: search_string}) for field in ['name', 'fullname', 'email', 'twitter_username', 'ubicacio', 'location', 'telefon']]), 'userid')
-            if max_results:
-                merged_results = list(set([plone_user['userid'] for plone_user in plone_results]) &
-                                      set([max_user['username'] for max_user in max_results]))
-                users = [pm.getMemberById(user) for user in merged_results]
-            else:
-                merged_results = []
-                users = []
-                for plone_user in plone_results:
-                    max_results = maxclient.people.get(qs={'username': plone_user['userid']})
-                    merged_results_user = list(set([plone_user['userid']]) &
-                                               set([max_user['username'] for max_user in max_results]))
-                    if merged_results_user != []:
-                        merged_results.append(merged_results_user[0])
-                if merged_results:
-                    users = [pm.getMemberById(user) for user in merged_results]
-        else:
-            plone_results = [userinfo.get('login') for userinfo in portal.acl_users.mutable_properties.enumerateUsers()]
-            users = [pm.getMemberById(user) for user in plone_results]
 
+    users = portal.acl_users.mutable_properties.enumerateUsers()
+
+    if IPloneSiteRoot.providedBy(context):
+        # Search by string (partial) and return a list of Records from the user
+        # catalog
+        if search_string:
+            soup = get_soup('user_properties', portal)
+            users = [r for r in soup.query(Or(Eq('username', search_string + '*'),
+                                              Eq('fullname', search_string + '*'),
+                                              Eq('telefon', search_string + '*'),
+                                              Eq('email', search_string + '*'),
+                                              Eq('ubicacio', search_string + '*')))]
+        else:
+            # User information directly from mutable_properties to avoid LDAP searches
+            # plone_results = [userinfo.get('login') for userinfo in portal.acl_users.mutable_properties.enumerateUsers()]
+            # users = [pm.getMemberById(user) for user in plone_results]
             if nonvisibles:
                 filtered = []
                 for user in users:
                     if user is not None:
-                        if user.id not in nonvisibles:
+                        if user.attrs['username'] not in nonvisibles:
                             filtered.append(user)
                 users = filtered
 
@@ -63,63 +60,102 @@ def searchUsersFunction(context, request, search_string, user_properties=None):
             maxclientrestricted.setActor(settings.max_restricted_username)
             maxclientrestricted.setToken(settings.max_restricted_token)
             max_users = maxclientrestricted.contexts[context.absolute_url()].subscriptions.get(qs={'username': search_string, 'limit': 0})
-            #max_users = maxclient.contexts[context.absolute_url()].subscriptions.get(qs={'username': search_string, 'limit': 0})
 
-            plone_results = searchView.merge(chain(*[searchView.searchUsers(**{field: search_string}) for field in ['name', 'fullname', 'email', 'twitter_username', 'ubicacio', 'location', 'telefon']]), 'userid')
+            soup = get_soup('user_properties', portal)
+            plone_results = [r for r in soup.query(Or(Eq('username', search_string + '*'),
+                                                      Eq('fullname', search_string + '*'),
+                                                      Eq('telefon', search_string + '*'),
+                                                      Eq('email', search_string + '*'),
+                                                      Eq('ubicacio', search_string + '*')))]
 
             if max_users:
-                merged_results = list(set([plone_user['userid'] for plone_user in plone_results]) &
+                merged_results = list(set([plone_user.attrs['username'] for plone_user in plone_results]) &
                                       set([max_user['username'] for max_user in max_users]))
+                users = []
+                for user in merged_results:
+                    users.append([r for r in soup.query(Or(Eq('username', user + '*')))][0])
 
-                users = [pm.getMemberById(user) for user in merged_results]
             else:
                 merged_results = []
                 users = []
                 for plone_user in plone_results:
-                    max_results = maxclientrestricted.contexts[context.absolute_url()].subscriptions.get(qs={'username': plone_user['userid'], 'limit': 0})
-                    merged_results_user = list(set([plone_user['userid']]) &
+                    max_results = maxclientrestricted.contexts[context.absolute_url()].subscriptions.get(qs={'username': plone_user.attrs['username'], 'limit': 0})
+                    merged_results_user = list(set([plone_user.attrs['username']]) &
                                                set([max_user['username'] for max_user in max_results]))
                     if merged_results_user != []:
                         merged_results.append(merged_results_user[0])
 
                 if merged_results:
-                    users = [pm.getMemberById(user) for user in merged_results]
+                    users = [r for r in soup.query(All('username', merged_results))]
+
         else:
+            soup = get_soup('user_properties', portal)
             maxclientrestricted, settings = getUtility(IMAXClient)()
             maxclientrestricted.setActor(settings.max_restricted_username)
             maxclientrestricted.setToken(settings.max_restricted_token)
             max_users = maxclientrestricted.contexts[context.absolute_url()].subscriptions.get(qs={'limit': 0})
-            users = [pm.getMemberById(user.get('username')) for user in max_users]
+            max_users = [user.get('username') for user in max_users]
+
+            users = []
+            for user in max_users:
+                record = [r for r in soup.query(Eq('username', user))]
+                if record:
+                    users.append(record[0])
+                else:
+                    # User subscribed, but no local profile found, append empty profile for display
+                    pass
 
             if nonvisibles:
                 filtered = []
                 for user in users:
                     if user is not None:
-                        if user.id not in nonvisibles:
+                        if user.attrs['username'] not in nonvisibles:
                             filtered.append(user)
                 users = filtered
 
     users_profile = []
     for user in users:
         if user is not None:
-            if user_properties:
-                user_dict = {}
-                for user_property in user_properties:
-                    user_dict.update({user_property: user.getProperty(user_property, '')})
-                user_dict.update(dict(foto=str(pm.getPersonalPortrait(user.id))))
-                user_dict.update(dict(url=portal.absolute_url() + '/profile/' + user.id))
-                users_profile.append(user_dict)
+            if isinstance(user, Record):
+                if user_properties:
+                    # Per revisar
+                    user_dict = {}
+                    for user_property in user_properties:
+                        user_dict.update({user_property: user.attrs.get(user_property, '')})
+                    user_dict.update(dict(id=user.attrs['username']))
+                    user_dict.update(dict(foto=str(pm.getPersonalPortrait(user.attrs['username']))))
+                    user_dict.update(dict(url=portal.absolute_url() + '/profile/' + user.attrs['username']))
+                    users_profile.append(user_dict)
+                else:
+                    users_profile.append({
+                        'id': user.attrs['username'],
+                        'fullname': user.attrs.get('fullname', ''),
+                        'ubicacio': user.attrs.get('ubicacio', ''),
+                        'location': user.attrs.get('location', ''),
+                        'email': user.attrs.get('email', ''),
+                        'telefon': user.attrs.get('telefon', ''),
+                        'foto': str(pm.getPersonalPortrait(user.attrs['username'])),
+                        'url': portal.absolute_url() + '/profile/' + user.attrs['username']
+                    })
             else:
-                users_profile.append({
-                    'id': user.id,
-                    'fullname': user.getProperty('fullname', ''),
-                    'ubicacio': user.getProperty('ubicacio', ''),
-                    'location': user.getProperty('location', ''),
-                    'email': user.getProperty('email', ''),
-                    'telefon': user.getProperty('telefon', ''),
-                    'foto': str(pm.getPersonalPortrait(user.id)),
-                    'url': portal.absolute_url() + '/profile/' + user.id
-                })
+                if user_properties:
+                    user_dict = {}
+                    for user_property in user_properties:
+                        user_dict.update({user_property: user.get(user_property, '')})
+                    user_dict.update(dict(foto=str(pm.getPersonalPortrait(user.id))))
+                    user_dict.update(dict(url=portal.absolute_url() + '/profile/' + user.id))
+                    users_profile.append(user_dict)
+                else:
+                    users_profile.append({
+                        'id': user.get('id', ''),
+                        'fullname': user.get('title', ''),
+                        'ubicacio': user.get('ubicacio', ''),
+                        'location': user.get('location', ''),
+                        'email': user.get('email', ''),
+                        'telefon': user.get('telefon', ''),
+                        'foto': str(pm.getPersonalPortrait(user.get('id', ''))),
+                        'url': portal.absolute_url() + '/profile/' + user.get('id', '')
+                    })
 
     len_usuaris = len(users_profile)
     if len_usuaris > 100:
@@ -130,62 +166,3 @@ def searchUsersFunction(context, request, search_string, user_properties=None):
         return {'content': llista, 'length': len_usuaris, 'big': True}
     else:
         return {'content': users_profile, 'length': len_usuaris, 'big': False}
-
-
-def searchUsersFunction_old(context, request, searchString, user_properties=None):
-    ignore = []
-    mtool = getToolByName(context, 'portal_membership')
-
-    # Get all my communities
-    pc = getToolByName(context, 'portal_catalog')
-    if ICommunity.providedBy(context):
-        visible = context.readers + context.subscribed + context.owners
-    else:
-        # We are in root object
-        my_communities = pc.searchResults(subscribed_users=mtool.getAuthenticatedMember().getId())
-        visible = list(set([user for community in my_communities for user in community.subscribed_users]))
-
-    if searchString:
-        searchView = getMultiAdapter((aq_inner(context), request), name='pas_search')
-        # Si cal, per performance "max_results":20
-        userResults = searchView.merge(chain(*[searchView.searchUsers(**{field: searchString}) for field in ['name', 'fullname', 'email', 'twitter_username', 'ubicacio', 'location']]), 'userid')
-        userResults = [mtool.getMemberById(u['id']) for u in userResults if u['id'] not in ignore]
-        userResults.sort(key=lambda x: x is not None and x.getProperty('fullname') is not None and normalizeString(x.getProperty('fullname')) or '')
-    else:
-        userResults = [mtool.getMemberById(user) for user in visible]
-        userResults.sort(key=lambda x: x is not None and x.getProperty('fullname') is not None and normalizeString(x.getProperty('fullname')) or '')
-
-    # Filter by community
-    site = getSite()
-    usersDict = []
-    for user in userResults:
-        # if is in any of my communities
-        if user is not None and user.id in visible:
-            if user_properties:
-                user_dict = {}
-                for user_property in user_properties:
-                    user_dict.update({user_property: user.getProperty(user_property, '')})
-                user_dict.update(dict(foto=str(mtool.getPersonalPortrait(user.id))))
-                user_dict.update(dict(url=site.absolute_url() + '/profile/' + user.id))
-                usersDict.append(user_dict)
-            else:
-                usersDict.append({
-                    'id': user.id,
-                    'fullname': user.getProperty('fullname', ''),
-                    'ubicacio': user.getProperty('ubicacio', ''),
-                    'location': user.getProperty('location', ''),
-                    'email': user.getProperty('email', ''),
-                    'telefon': user.getProperty('telefon', ''),
-                    'foto': str(mtool.getPersonalPortrait(user.id)),
-                    'url': site.absolute_url() + '/profile/' + user.id
-                })
-
-    len_usuaris = len(usersDict)
-    if len_usuaris > 100:
-        escollits = random.sample(range(len(usersDict)), 100)
-        llista = []
-        for escollit in escollits:
-            llista.append(usersDict[escollit])
-        return {'content': llista, 'length': len_usuaris, 'big': True}
-    else:
-        return {'content': usersDict, 'length': len_usuaris, 'big': False}
