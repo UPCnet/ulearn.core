@@ -1,11 +1,10 @@
 Changelog
 =========
 
-1.61 (unreleased)
+1.61 (2015-02-10)
 -----------------
 
-- Nothing changed yet.
-
+* Fix use case for communities [Victor Fernandez de Alba]
 
 1.60 (2015-02-10)
 -----------------
