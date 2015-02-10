@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import unittest2 as unittest
 from AccessControl import Unauthorized
 from zope.event import notify
@@ -70,7 +71,16 @@ class TestExample(unittest.TestCase):
         self.assertEqual(users['content'][0]['id'], u'janet.dura')
 
     def test_search_portal_with_search_string_not_username(self):
-        search_string = '654321'
+        search_string = u'654321'
+        login(self.portal, u'usuari.iescude')
+        users = searchUsersFunction(self.portal, self.request, search_string)
+        logout()
+
+        self.assertTrue(len(users['content']) == 1)
+        self.assertEqual(users['content'][0]['id'], u'janet.dura')
+
+    def test_search_portal_with_search_string_unicode(self):
+        search_string = u'Durà'
         login(self.portal, u'usuari.iescude')
         users = searchUsersFunction(self.portal, self.request, search_string)
         logout()

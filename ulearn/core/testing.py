@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from plone import api
 from zope.component import getUtility
 from plone.app.testing import PloneSandboxLayer
@@ -71,8 +72,8 @@ class UlearncoreLayer(PloneSandboxLayer):
         portal.acl_users.userFolderAddUser('usuari.iescude', 'secret', ['Member', 'WebMaster'], [])
         portal.acl_users.userFolderAddUser('ulearn.testuser1', 'secret', ['Member', 'WebMaster'], [])
 
-        api.user.get('ulearn.testuser1').setMemberProperties(mapping={'location': 'Test', 'telefon': '123456'})
-        api.user.get('janet.dura').setMemberProperties(mapping={'location': 'Barcelona', 'telefon': '654321'})
+        api.user.get('ulearn.testuser1').setMemberProperties(mapping={'location': u'Test', 'telefon': u'123456'})
+        api.user.get('janet.dura').setMemberProperties(mapping={'fullname': u'Janet Durà', 'location': u'Barcelona', 'telefon': u'654321 123 123'})
 
         login(portal, 'admin')
         setup_max(u'ulearn.testuser1', '99994183a')

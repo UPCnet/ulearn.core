@@ -86,7 +86,13 @@ def searchUsersFunction(context, request, search_string, user_properties=None):
                         merged_results.append(merged_results_user[0])
 
                 if merged_results:
-                    users = [r for r in soup.query(All('username', merged_results))]
+                    for user in merged_results:
+                        record = [r for r in soup.query(Eq('username', user))]
+                        if record:
+                            users.append(record[0])
+                        else:
+                            # User subscribed, but no local profile found, append empty profile for display
+                            pass
 
         else:
             soup = get_soup('user_properties', portal)
