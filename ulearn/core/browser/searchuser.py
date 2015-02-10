@@ -41,6 +41,7 @@ def searchUsersFunction(context, request, search_string, user_properties=None):
                                               Eq('fullname', search_string + '*'),
                                               Eq('telefon', search_string + '*'),
                                               Eq('email', search_string + '*'),
+                                              Eq('location', search_string + '*'),
                                               Eq('ubicacio', search_string + '*')))]
         else:
             # User information directly from mutable_properties to avoid LDAP searches
@@ -66,6 +67,7 @@ def searchUsersFunction(context, request, search_string, user_properties=None):
                                                       Eq('fullname', search_string + '*'),
                                                       Eq('telefon', search_string + '*'),
                                                       Eq('email', search_string + '*'),
+                                                      Eq('location', search_string + '*'),
                                                       Eq('ubicacio', search_string + '*')))]
 
             if max_users:
