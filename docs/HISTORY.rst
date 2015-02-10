@@ -1,11 +1,16 @@
 Changelog
 =========
 
-1.60 (unreleased)
+1.60 (2015-02-10)
 -----------------
 
-- Nothing changed yet.
-
+* Refactor searchusers [Victor Fernandez de Alba]
+* See more stats [Pilar Marinas]
+* Permis genweb.webmaster i unrestrictedSearchResults [Pilar Marinas]
+* Traduccions Estadistiques [Pilar Marinas]
+* Allow clear user select & styles [Carles Bruguera]
+* Allow clear user select [Carles Bruguera]
+* Hide access_type widget [Carles Bruguera]
 
 1.59 (2015-02-05)
 -----------------
