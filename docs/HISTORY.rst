@@ -1,11 +1,10 @@
 Changelog
 =========
 
-1.62 (unreleased)
+1.62 (2015-02-10)
 -----------------
 
-- Nothing changed yet.
-
+* Add missing location [Victor Fernandez de Alba]
 
 1.61 (2015-02-10)
 -----------------
