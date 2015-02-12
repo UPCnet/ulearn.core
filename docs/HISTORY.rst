@@ -1,11 +1,10 @@
 Changelog
 =========
 
-1.63 (unreleased)
+1.63 (2015-02-12)
 -----------------
 
-- Nothing changed yet.
-
+* Export to csv [Carles Bruguera]
 
 1.62 (2015-02-10)
 -----------------
