@@ -195,8 +195,17 @@ class StatsQuery(grok.View):
             results['rows'].append(row)
             current = next_month(current)
 
-        self.request.response.setHeader("Content-type", "application/json")
-        return json.dumps(results)
+        output_format = self.request.form.get('format', 'json')
+        if output_format == 'json':
+            self.request.response.setHeader("Content-type", "application/json")
+            return json.dumps(results)
+        elif output_format == 'csv':
+            self.request.response.setHeader("Content-type", "application/csv")
+            self.request.response.setHeader("Content-disposition", "attachment; filename=ulearn-stats-{}.csv".format(datetime.now().strftime('%Y%m%d%H%M%S')))
+            lines = [','.join([''] + results['headers'])]
+            for row in results['rows']:
+                lines.append(','.join([str(col) for col in row]))
+            return '\n'.join(lines)
 
 
 class PloneStats(object):

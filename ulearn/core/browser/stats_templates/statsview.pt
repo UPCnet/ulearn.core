@@ -70,10 +70,8 @@
             return '<tr>' + row + '</tr>\n'
           }
 
-          $('#form-buttons-load').on('click',  function(event) {
-              event.preventDefault();
-              event.stopPropagation();
 
+          function get_form_params() {
               var start = $('#first_month_year option:selected').val() + '-' + $('#first_month option:selected').val();
               var end = $('#last_month_year option:selected').val() + '-' + $('#last_month option:selected').val();
 
@@ -82,14 +80,21 @@
               var keywords = $('.keyword-select').select2('val');
               var access_type = $('#access_type option:selected').val();
 
-              $.get(portal_url + '/ulearn-stats-query', {
+              return {
                 start: start,
                 end: end,
                 community: community,
                 user: user,
                 keywords: keywords,
                 access_type: access_type
-              }, function(data) {
+              }
+          }
+
+          $('#form-buttons-load').on('click',  function(event) {
+              event.preventDefault();
+              event.stopPropagation();
+
+              $.get(portal_url + '/ulearn-stats-query', get_form_params(), function(data) {
                   var $stats_container = $('#stats-results')
                   var $header = $stats_container.find('table thead')
                   var $body = $stats_container.find('table tbody')
@@ -101,6 +106,21 @@
               })
           })
 
+          $('#form-buttons-export').on('click',  function(event) {
+              event.preventDefault();
+              event.stopPropagation();
+
+              var params = get_form_params();
+              params.format = 'csv';
+              var url = portal_url + '/ulearn-stats-query?' + $.param(params)
+
+              var a = document.createElement('a');
+              a.setAttribute('href', url);
+              a.setAttribute('target', '_blank');
+              document.body.appendChild(a);
+              debugger;
+              a.click();
+          })
       })
 
     </script>
@@ -255,6 +275,7 @@
 
 <div class="formControls">
     <button id="form-buttons-load" class="button-field context" i18n:translate="search">Busca</button>
+    <button id="form-buttons-export" class="button-field context" i18n:translate="exporta">Exporta</button>
     <button class="btn" data-dismiss="modal" aria-hidden="true" i18n:translate="btnCancel">Cancela</button>
 </div>
 </form>
