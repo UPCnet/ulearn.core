@@ -88,7 +88,8 @@ class IUlearnControlPanelSettings(model.Schema):
                           'background_color',
                           'buttons_color_primary', 'buttons_color_secondary',
                           'maxui_form_bg',
-                          'alt_gradient_start_color', 'alt_gradient_end_color'])
+                          'alt_gradient_start_color', 'alt_gradient_end_color',
+                          'color_community_closed', 'color_community_organizative', 'color_community_open'])
 
     model.fieldset('Visibility',
                   _(u'Visibility'),
@@ -227,6 +228,33 @@ class IUlearnControlPanelSettings(model.Schema):
                 default=u"Aquest és el color secundari dels botons."),
         required=True,
         default=u"#34495E",
+    )
+
+    color_community_closed = schema.TextLine(
+        title=_(u"color_community_closed",
+                default=u"Color comunitat tancada"),
+        description=_(u"help_color_community_closed",
+                default=u"Aquest és el color per les comunitats tancades."),
+        required=True,
+        default=u"#f58d3d",
+    )
+
+    color_community_organizative = schema.TextLine(
+        title=_(u"color_community_organizative",
+                default=u"Color comunitat organitzativa"),
+        description=_(u"help_color_community_organizative",
+                default=u"Aquest és el color per les comunitats organitzatives."),
+        required=True,
+        default=u"#b5c035",
+    )
+
+    color_community_open = schema.TextLine(
+        title=_(u"color_community_open",
+                default=u"Color comunitat oberta"),
+        description=_(u"help_color_community_open",
+                default=u"Aquest és el color per les comunitats obertes."),
+        required=True,
+        default=u"#888888",
     )
 
     dexterity.write_permission(language='zope2.ViewManagementScreens')
