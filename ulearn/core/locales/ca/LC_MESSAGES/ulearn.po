@@ -752,3 +752,16 @@ msgstr "Comunitat"
 
 msgid "seemore_stats"
 msgstr "Veure més estadístiques"
+
+msgid "label_check_favorite"
+msgstr "Marcar com a favorit"
+
+msgid "label_subscribe_to_community"
+msgstr "Subscriu-te a la comunitat"
+
+msgid "label_edit_community"
+msgstr "Editar comunitat"
+
+msgid "label_delete_community"
+msgstr "Esborrar comunitat"
+

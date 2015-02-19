@@ -720,3 +720,15 @@ msgstr "Comunidad"
 
 msgid "seemore_stats"
 msgstr "Ver más estadísticas"
+
+msgid "label_check_favorite"
+msgstr "Marcar como favorito"
+
+msgid "label_subscribe_to_community"
+msgstr "Subscribirse a la comunidad"
+
+msgid "label_edit_community"
+msgstr "Editar comunidad"
+
+msgid "label_delete_community"
+msgstr "Eliminar comunidad"

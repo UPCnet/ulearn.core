@@ -660,3 +660,19 @@ msgstr "Community"
 
 msgid "seemore_stats"
 msgstr "See more stats"
+
+msgid "label_check_favorite"
+msgstr "Add to favorites"
+
+msgid "label_subscribe_to_community"
+msgstr "Subscribe community"
+
+msgid "label_edit_community"
+msgstr "Edit community"
+
+msgid "label_delete_community"
+msgstr "Delete community"
+
+
+
+
