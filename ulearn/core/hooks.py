@@ -82,20 +82,8 @@ def Added(content, event):
         # or the content is created externaly through apps via the upload ws
         return
 
-    if pm.isAnonymousUser():  # the user has not logged in
-        username = ''
-        return
-    else:
-        member = pm.getAuthenticatedMember()
-
-    username = member.getUserName()
-    memberdata = pm.getMemberById(username)
-    oauth_token = memberdata.getProperty('oauth_token', None)
-
-    maxclient, settings = getUtility(IMAXClient)()
-
-    maxclient.setActor(username)
-    maxclient.setToken(oauth_token)
+    username,oauth_token = getUserOauthToken(pm)
+    maxclient = connectMaxclient(username,oauth_token)
 
     parts = dict(type=tipus[default_lang].get(content.portal_type, ''),
                  name=content.Title().decode('utf-8') or getattr(getattr(content, 'file', u''), 'filename', u'').decode('utf-8') or getattr(getattr(content, 'image', u''), 'filename', u'').decode('utf-8'),
@@ -124,7 +112,7 @@ def Added(content, event):
             logger.warning('The username {} has been unable to post the default object creation message'.format(username))
 
 
-def Modified(content, event):            
+def Modified(content, event):
     """ Max hooks modified handler """
 
     portal = getSite()
@@ -141,20 +129,8 @@ def Modified(content, event):
         # or the content is created externaly through apps via the upload ws
         return
 
-    if pm.isAnonymousUser():  # the user has not logged in
-        username = ''
-        return
-    else:
-        member = pm.getAuthenticatedMember()
-
-    username = member.getUserName()
-    memberdata = pm.getMemberById(username)
-    oauth_token = memberdata.getProperty('oauth_token', None)
-
-    maxclient, settings = getUtility(IMAXClient)()
-
-    maxclient.setActor(username)
-    maxclient.setToken(oauth_token)
+    username,oauth_token = getUserOauthToken(pm)
+    maxclient = connectMaxclient(username,oauth_token)
 
     parts = dict(type=tipus[default_lang].get(content.portal_type, ''),
                  name=content.Title().decode('utf-8') or getattr(getattr(content, 'file', u''), 'filename', u'').decode('utf-8') or getattr(getattr(content, 'image', u''), 'filename', u'').decode('utf-8'),
@@ -184,11 +160,29 @@ def Modified(content, event):
 
 
 
-
-
 def findContainerCommunity(content):
     for parent in aq_chain(content):
         if ICommunity.providedBy(parent):
             return parent
 
     return None
+
+def getUserOauthToken(pm):
+    if pm.isAnonymousUser():  # the user has not logged in
+        username = ''
+        return
+    else:
+        member = pm.getAuthenticatedMember()
+
+    username = member.getUserName()
+    memberdata = pm.getMemberById(username)
+    oauth_token = memberdata.getProperty('oauth_token', None)
+
+    return username, oauth_token
+
+def connectMaxclient(username,oauth_token):
+    maxclient, settings = getUtility(IMAXClient)()
+    maxclient.setActor(username)
+    maxclient.setToken(oauth_token)
+
+    return maxclient
