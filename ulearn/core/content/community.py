@@ -504,6 +504,10 @@ class View(grok.View):
             return False
 
 
+class EditACL(grok.View):
+    grok.context(ICommunity)
+
+
 class UploadFile(grok.View):
     grok.context(ICommunity)
     grok.name('upload')

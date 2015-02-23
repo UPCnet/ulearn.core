@@ -3,13 +3,11 @@ from plone import api
 from zope.component.hooks import getSite
 from zope.component import getUtility
 
-from Products.CMFPlone.utils import normalizeString
 from Products.CMFPlone.interfaces import IPloneSiteRoot
 
 from souper.soup import Record
 from repoze.catalog.query import Eq
 from repoze.catalog.query import Or
-from repoze.catalog.query import All
 from souper.soup import get_soup
 
 from mrs.max.utilities import IMAXClient
@@ -37,12 +35,13 @@ def searchUsersFunction(context, request, search_string, user_properties=None):
         # catalog
         if search_string:
             soup = get_soup('user_properties', portal)
-            users = [r for r in soup.query(Or(Eq('username', search_string + '*'),
-                                              Eq('fullname', search_string + '*'),
-                                              Eq('telefon', search_string + '*'),
-                                              Eq('email', search_string + '*'),
-                                              Eq('location', search_string + '*'),
-                                              Eq('ubicacio', search_string + '*')))]
+            normalized_query = search_string.replace('.', ' ') + '*'
+            users = [r for r in soup.query(Or(Eq('username', normalized_query),
+                                              Eq('fullname', normalized_query),
+                                              Eq('telefon', normalized_query),
+                                              Eq('email', normalized_query),
+                                              Eq('location', normalized_query),
+                                              Eq('ubicacio', normalized_query)))]
         else:
             # User information directly from mutable_properties to avoid LDAP searches
             # plone_results = [userinfo.get('login') for userinfo in portal.acl_users.mutable_properties.enumerateUsers()]
@@ -63,12 +62,13 @@ def searchUsersFunction(context, request, search_string, user_properties=None):
             max_users = maxclientrestricted.contexts[context.absolute_url()].subscriptions.get(qs={'username': search_string, 'limit': 0})
 
             soup = get_soup('user_properties', portal)
-            plone_results = [r for r in soup.query(Or(Eq('username', search_string + '*'),
-                                                      Eq('fullname', search_string + '*'),
-                                                      Eq('telefon', search_string + '*'),
-                                                      Eq('email', search_string + '*'),
-                                                      Eq('location', search_string + '*'),
-                                                      Eq('ubicacio', search_string + '*')))]
+            normalized_query = search_string.replace('.', ' ') + '*'
+            plone_results = [r for r in soup.query(Or(Eq('username', normalized_query),
+                                                      Eq('fullname', normalized_query),
+                                                      Eq('telefon', normalized_query),
+                                                      Eq('email', normalized_query),
+                                                      Eq('location', normalized_query),
+                                                      Eq('ubicacio', normalized_query)))]
 
             if max_users:
                 merged_results = list(set([plone_user.attrs['username'] for plone_user in plone_results]) &
