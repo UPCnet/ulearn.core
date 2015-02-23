@@ -10,6 +10,7 @@ from zope.app.container.interfaces import IObjectAddedEvent
 from zope.component import getMultiAdapter
 from zope.component import getUtility
 from zope.component import queryUtility
+from zope.component import getAdapter
 from zope.component.hooks import getSite
 from zope.container.interfaces import INameChooser
 from zope.event import notify
@@ -43,6 +44,15 @@ from Products.CMFPlone.interfaces import IPloneSiteRoot
 from Products.CMFPlone.interfaces.constrains import ISelectableConstrainTypes
 from Products.statusmessages.interfaces import IStatusMessage
 from ZPublisher.HTTPRequest import FileUpload
+
+from zope.interface import implementer
+from zope.component import provideUtility
+from repoze.catalog.catalog import Catalog
+from repoze.catalog.indexes.field import CatalogFieldIndex
+from repoze.catalog.indexes.keyword import CatalogKeywordIndex
+from souper.interfaces import ICatalogFactory
+from souper.soup import NodeAttributeIndexer
+
 from genweb.core.adapters.favorites import IFavorite
 from genweb.core.widgets.select2_maxuser_widget import Select2MAXUserInputFieldWidget
 
@@ -134,6 +144,7 @@ class ICommunity(form.Schema):
         required=True,
         default=u'Darreres activitats')
 
+    form.omitted('readers', 'subscribed', 'owners')
     form.widget(readers=Select2MAXUserInputFieldWidget)
     readers = schema.List(
         title=_(u"Readers"),
@@ -186,6 +197,99 @@ class ICommunity(form.Schema):
         description=_(u'help_notify_activity_via_push_comments_too'),
         required=False
     )
+
+
+class ICommunityTyped(Interface):
+    """ The adapter for the ICommunity It would adapt the Community instances in
+        order to have a centralized way of dealing with community types and the
+        common processes with them.
+    """
+
+
+class CommunityAdapterMixin(object):
+    """ Common methods for community adapters """
+    def __init__(self, context):
+        # Determine the value for notifications
+        if self.notify_activity_via_push and self.notify_activity_via_push_comments_too:
+            self.max_notifications = 'comments'
+        elif self.notify_activity_via_push and not self.notify_activity_via_push_comments_too:
+            self.max_notifications = 'posts'
+        elif not self.notify_activity_via_push and not self.notify_activity_via_push_comments_too:
+            self.max_notifications = False
+
+    def get_max_client(self):
+        self.maxclient, self.settings = getUtility(IMAXClient)()
+        self.maxclient.setActor(self.settings.max_restricted_username)
+        self.maxclient.setToken(self.settings.max_restricted_token)
+
+    def create_max_context(self):
+        """ Add context for the community on MAX server given a set of
+            properties like context permissions and notifications.
+        """
+        self.maxclient.contexts.post(
+            url=self.absolute_url(),
+            displayName=self.title,
+            permissions=self.max_permissions,
+            notifications=self.notifications,
+        )
+
+    def set_initial_subscription(self):
+        permission = 'owner'
+        ########### OJO!!! ##### Preguntar que implica owner
+        self.maxclient.contexts[self.absolute_url()].permissions[self.Creator()][permission].put()
+
+
+@grok.implementer(ICommunityTyped)
+@grok.adapter(ICommunity, name="Organizative")
+class OrganizativeCommunity(CommunityAdapterMixin):
+    """ Named adapter for the organizative communities """
+    def __init__(self, context):
+        super(OrganizativeCommunity, self).__init__(context)
+        self.context = context
+        self.max_permissions = dict(read='subscribed',
+                                    write='restricted',
+                                    subscribe='restricted',
+                                    unsubscribe='restricted')
+
+
+@grok.implementer(ICommunityTyped)
+@grok.adapter(ICommunity, name="Open")
+class OpenCommunity(CommunityAdapterMixin):
+    """ Named adapter for the open communities """
+    def __init__(self, context):
+        super(OpenCommunity, self).__init__(context)
+        self.context = context
+        self.max_permissions = dict(read='subscribed',
+                                    write='subscribed',
+                                    subscribe='public',
+                                    unsubscribe='public')
+
+
+@grok.implementer(ICommunityTyped)
+@grok.adapter(ICommunity, name="Closed")
+class ClosedCommunity(CommunityAdapterMixin):
+    """ Named adapter for the closed communities """
+    def __init__(self, context):
+        super(ClosedCommunity, self).__init__(context)
+        self.context = context
+        self.max_permissions = dict(read='subscribed',
+                                    write='restricted',
+                                    subscribe='restricted',
+                                    unsubscribe='public')
+
+    def set_plone_permissions(self, acl):
+        """ Set the Plone local roles given the acl """
+        user_and_groups = acl.get('users', []) + acl.get('groups', [])
+
+        for principal in user_and_groups:
+            if principal.get('role', u'') == u'reader' and principal.get('id', False):
+                self.manage_setLocalRoles(principal, ['Reader', ])
+
+            if principal.get('role', u'') == u'writer' and principal.get('id', False):
+                self.manage_setLocalRoles(principal, ['Reader', 'Contributor', 'Editor'])
+
+            if principal.get('role', u'') == u'owner' and principal.get('id', False):
+                self.manage_setLocalRoles(principal, ['Reader', 'Contributor', 'Editor', 'Owner'])
 
 
 class Community(Container):
@@ -850,31 +954,18 @@ class communityEdit(form.SchemaForm):
 
 @grok.subscribe(ICommunity, IObjectAddedEvent)
 def initialize_community(community, event):
-    registry = queryUtility(IRegistry)
-    maxui_settings = registry.forInterface(IMAXUISettings)
+    """ On creation we only initialize the community based on its type and all
+        the Plone-based processes. On the MAX side, for convenience we create
+        the context directly into the MAX server with only the creator as
+        subscriber (and owner).
+    """
 
-    maxclient = MaxClient(maxui_settings.max_server, maxui_settings.oauth_server)
-    maxclient.setActor(maxui_settings.max_restricted_username)
-    maxclient.setToken(maxui_settings.max_restricted_token)
+    adapter = getAdapter(community, ICommunityTyped, name=community_type)
 
-    # Fallback for some rare cases when we arrive at this point and the MAX
-    # context is not created. This happens when the community has been created
-    # using the default Dexterity machinery.
-    try:
-        maxclient.contexts[community.absolute_url()].get()
-    except:
-        create_max_context(community)
+    adapter.create_max_context()
+    adapter.set_initial_subscription()
+    adapter.set_plone_permissions(dict(users=dict(id=unicode(community.Creator().encode('utf-8')), role='owner')))
 
-    # Add creator to owners field - Not making use of .append() to force the setter
-    community.owners = list(set(community.owners + [unicode(community.Creator().encode('utf-8'))]))
-
-    # # Determine the value for notifications
-    # if community.notify_activity_via_push and community.notify_activity_via_push_comments_too:
-    #     notifications = 'comments'
-    # elif community.notify_activity_via_push and not community.notify_activity_via_push_comments_too:
-    #     notifications = 'posts'
-    # elif not community.notify_activity_via_push and not community.notify_activity_via_push_comments_too:
-    #     notifications = False
 
     # # Determine the kind of security the community should have provided the type
     # # of community
@@ -1228,3 +1319,17 @@ def create_max_context(community):
             maxclient.contexts[community.absolute_url()].permissions[owner]['write'].put()
         except:
             logger.error('Impossible to subscribe user {} as owner in the {} community.'.format(owner, community.absolute_url()))
+
+
+@implementer(ICatalogFactory)
+class ACLSoupCatalog(object):
+    def __call__(self, context):
+        catalog = Catalog()
+        pathindexer = NodeAttributeIndexer('path')
+        catalog['path'] = CatalogFieldIndex(pathindexer)
+        gwuuid = NodeAttributeIndexer('gwuuid')
+        catalog['gwuuid'] = CatalogFieldIndex(gwuuid)
+        groups = NodeAttributeIndexer('groups')
+        catalog['groups'] = CatalogKeywordIndex(groups)
+        return catalog
+provideUtility(ACLSoupCatalog(), name="communities_acl")

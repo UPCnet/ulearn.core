@@ -1,3 +1,4 @@
+from plone import api
 from infrae.rest import REST as REST_BASE
 from infrae.rest.interfaces import RESTMethodPublishedEvent
 from infrae.rest.components import IRESTComponent
@@ -98,15 +99,30 @@ class REST(REST_BASE):
         """
             Validates request params
 
-            The seal_hash is calculated by joining all param values except seal,
-            sorted by its param key, plus the private_key and separated by
-            an underescore char "(_)
-
             Returns True if request is correct otherwise returns an error
         """
         if not self.extract_params():
             self.response.setStatus(404)
             return self.json_response({"error": "Missing parameters"})
+
+        return True
+
+    def check_roles(self, obj, roles):
+        allowed = False
+        for role in roles:
+            if role in api.user.get_roles(obj=obj):
+                allowed = True
+
+        if not allowed:
+            self.response.setStatus(401)
+            return self.json_response({"error": "You are not allowed to modify this object"})
+
+        return allowed
+
+    def check_permission(self, obj, permission):
+        if not api.user.has_permission(permission, obj):
+            self.response.setStatus(401)
+            return self.json_response({"error": "You are not allowed to modify this object"})
 
         return True
 

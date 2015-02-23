@@ -19,15 +19,17 @@ from plone.portlets.interfaces import IPortletManager
 from plone.portlets.interfaces import IPortletAssignmentMapping
 from plone.dexterity.utils import createContentInContainer
 from plone.subrequest import subrequest
+from plone.uuid.interfaces import IUUIDGenerator
 
 from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.interfaces import IPloneSiteRoot
 
 from ulearn.core.interfaces import IDocumentFolder, ILinksFolder, IPhotosFolder, IEventsFolder
 from ulearn.core.content.community import IInitializedCommunity
+from ulearn.core.content.community import ICommunity
 from ulearn.core.content.community import Community
 from genweb.core.browser.helpers import listPloneSites
-
+from genweb.core.gwuuid import ATTRIBUTE_NAME
 from ulearn.core.interfaces import IDiscussionFolder
 from ulearn.core import _
 
@@ -280,3 +282,23 @@ class BulkReinstalluLearn(grok.View):
             response = subrequest('/'.join(plonesite.getPhysicalPath()) + '/reinstall_ulearncontrolpanel')
             output.append(response.getBody())
         return '\n'.join(output)
+
+
+class GiveAllCommunitiesGWUUID(grok.View):
+    grok.context(ICommunity)
+
+    def render(self):
+        pc = api.portal.get_tool('portal_catalog')
+        communities = pc.searchResults(portal_type='ulearn.community')
+
+        generator = queryUtility(IUUIDGenerator)
+        if generator is None:
+            return
+
+        for community in communities:
+            obj = community.getObject()
+            uuid = generator()
+            if not uuid:
+                return
+
+            setattr(obj, ATTRIBUTE_NAME, uuid)

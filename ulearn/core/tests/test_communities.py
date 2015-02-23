@@ -5,6 +5,7 @@ from zope.lifecycleevent import ObjectAddedEvent
 from zope.lifecycleevent import ObjectModifiedEvent
 from zope.component import getUtility
 from zope.component import getMultiAdapter
+from zope.component import getAdapter
 
 from plone.app.testing import login
 from plone.app.testing import logout
@@ -14,6 +15,7 @@ from plone.app.testing import TEST_USER_ID
 from Products.CMFCore.utils import getToolByName
 
 from mrs.max.utilities import IMAXClient
+from ulearn.core.content.community import ICommunityTyped
 from ulearn.core.testing import ULEARN_CORE_INTEGRATION_TESTING
 
 
@@ -345,3 +347,8 @@ class TestExample(unittest.TestCase):
 
         info = self.get_max_context_info(community)
         self.assertEquals(info['notifications'], u'comments')
+
+    def test_community_type_adapters(self):
+        subscribed = [u'janet.dura']
+        community = self.create_test_community(id='community-test-notify', community_type='Closed', subscribed=subscribed)
+        adapter = getAdapter(community, ICommunityTyped, name='Closed')
