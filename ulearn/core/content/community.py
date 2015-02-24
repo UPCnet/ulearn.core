@@ -74,6 +74,7 @@ import mimetypes
 import logging
 
 logger = logging.getLogger(__name__)
+VALID_COMMUNITY_ROLES = ['reader', 'writer', 'owner']
 
 
 @grok.provider(IContextSourceBinder)
@@ -278,18 +279,61 @@ class ClosedCommunity(CommunityAdapterMixin):
                                     unsubscribe='public')
 
     def set_plone_permissions(self, acl):
-        """ Set the Plone local roles given the acl """
+        """ Set the Plone local roles given the acl. Shameless ripped off from
+            sharing.py in p.a.workflow
+        """
         user_and_groups = acl.get('users', []) + acl.get('groups', [])
 
+        # Sanitize the list, just in case
+        user_and_groups = [p for p in user_and_groups if p.get('id', False) and p.get('role', False) and p.get('role', '') in VALID_COMMUNITY_ROLES]
+
+        member_ids_to_clear = []
+
+        changed = False
         for principal in user_and_groups:
-            if principal.get('role', u'') == u'reader' and principal.get('id', False):
-                self.manage_setLocalRoles(principal, ['Reader', ])
+            user_id = principal['id']
+            existing_roles = frozenset(self.get_local_roles_for_userid(userid=user_id))
 
-            if principal.get('role', u'') == u'writer' and principal.get('id', False):
-                self.manage_setLocalRoles(principal, ['Reader', 'Contributor', 'Editor'])
+            if principal['role'] == u'reader':
+                selected_roles = frozenset(['Reader', ])
 
-            if principal.get('role', u'') == u'owner' and principal.get('id', False):
-                self.manage_setLocalRoles(principal, ['Reader', 'Contributor', 'Editor', 'Owner'])
+            if principal['role'] == u'writer':
+                selected_roles = frozenset(['Reader', 'Contributor', 'Editor'])
+
+            if principal['role'] == u'owner':
+                selected_roles = frozenset(['Reader', 'Contributor', 'Editor', 'Owner'])
+
+            managed_roles = ['Reader', 'Contributor', 'Editor', 'Owner']
+            relevant_existing_roles = managed_roles & existing_roles
+
+            # If, for the managed roles, the new set is the same as the
+            # current set we do not need to do anything.
+            if relevant_existing_roles == selected_roles:
+                continue
+
+            # We will remove those roles that we are managing and which set
+            # on the context, but which were not selected
+            to_remove = relevant_existing_roles - selected_roles
+
+            # Leaving us with the selected roles, less any roles that we
+            # want to remove
+            wanted_roles = (selected_roles | existing_roles) - to_remove
+
+            # take away roles that we are managing, that were not selected
+            # and which were part of the existing roles
+
+            if wanted_roles:
+                self.manage_setLocalRoles(user_id, list(wanted_roles))
+                changed = True
+            elif existing_roles:
+                member_ids_to_clear.append(user_id)
+
+        if member_ids_to_clear:
+            self.manage_delLocalRoles(userids=member_ids_to_clear)
+            changed = True
+
+        if changed:
+            self.reindexObjectSecurity()
 
 
 class Community(Container):
