@@ -87,8 +87,6 @@ class Subscriptions(REST):
         return self.json_response(result)
 
     def update_subscriptions(self):
-        portal = api.portal.get()
-        soup = get_soup('communities_acl', portal)
         pc = api.portal.get_tool(name='portal_catalog')
         result = pc.searchResults(community_hash=self.params['community'])
 
@@ -103,85 +101,18 @@ class Subscriptions(REST):
                 logger.error(error_response)
                 return self.json_response({'error': error_response})
 
-            records = [r for r in soup.query(Eq('gwuuid', self.params['community']))]
+        community = result[0].getObject()
 
-        else:
-            records = [r for r in soup.query(Eq('path', result[0].getPath()))]
-
-        # Save ACL into the communities_acl soup
-        if records:
-            acl_record = records[0]
-        else:
-            # For some reason, the community isn't indexed in the acl catalog
-            # yet, so do it now.
-            record = Record()
-            record.attrs['path'] = result[0].getPath()
-            record.attrs['gwuuid'] = result[0].gwuuid
-            record_id = soup.add(record)
-            acl_record = soup.get(record_id)
-
-        acl_record.attrs['groups'] = [g['id'] for g in self.data.get('groups', []) if g.get('id', False)]
-        acl_record.attrs['acl'] = self.data
+        adapter = getAdapter(community, ICommunityTyped, name=community.community_type)
 
         # Change the uLearn part of the community
-        community_type = result[0].community_type
-        community = getAdapter(result[0].getObject(), ICommunityTyped, name=community_type)
-        community.set_plone_permissions(self.data)
+        adapter.update_acl(self.data)
+        adapter.set_plone_permissions(self.data)
 
-        # Communicate the change in the community subscription to the uLearnHub
-
+        # XXX Communicate the change in the community subscription to the uLearnHub
+        # adapter.send_update_context()
 
         # Response successful
         success_response = 'Updated community "{}" subscriptions'.format(result[0].getPath())
         logger.info(success_response)
         return {'message': success_response, 'status': 200}
-
-
-
-        maxclient, settings = getUtility(IMAXClient)()
-        maxclient.setActor(settings.max_restricted_username)
-        maxclient.setToken(settings.max_restricted_token)
-
-        if not result:
-            self.response.setStatus(404)
-            error_response = 'Community hash not found: {}'.format(self.params['community'])
-            logger.error(error_response)
-            return self.json_response({'error': error_response})
-        else:
-            readers = self.data.get('readers', [])
-            editors = self.data.get('editors', [])
-            owners = self.data.get('owners', [])
-
-            readers = readers if isinstance(readers, list) else [readers]
-            editors = editors if isinstance(editors, list) else [editors]
-            owners = owners if isinstance(owners, list) else [owners]
-
-            # Create users before subscriptions
-            for user in readers:
-                maxclient.people[user].post()
-            for user in editors:
-                maxclient.people[user].post()
-            for user in owners:
-                maxclient.people[user].post()
-
-            # Convert to unicode as it's required by community setters/getters
-            readers_fixed_list = []
-            for user in readers:
-                readers_fixed_list.append(unicode(user))
-            editors_fixed_list = []
-            for user in editors:
-                editors_fixed_list.append(unicode(user))
-            owners_fixed_list = []
-            for user in owners:
-                owners_fixed_list.append(unicode(user))
-
-            community = result[0].getObject()
-            community.readers = readers_fixed_list
-            community.subscribed = editors_fixed_list
-            community.owners = owners_fixed_list
-
-            notify(ObjectModifiedEvent(community))
-
-            success_response = 'Updated community "{}" subscriptions'.format(community.title)
-            logger.info(success_response)
-            return {'message': success_response, 'status': 200}

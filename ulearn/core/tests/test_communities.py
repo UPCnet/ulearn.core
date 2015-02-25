@@ -1,4 +1,5 @@
 import unittest2 as unittest
+from hashlib import sha1
 from AccessControl import Unauthorized
 from zope.event import notify
 from zope.lifecycleevent import ObjectAddedEvent
@@ -13,6 +14,12 @@ from plone.app.testing import setRoles
 from plone.app.testing import TEST_USER_ID
 
 from Products.CMFCore.utils import getToolByName
+
+from repoze.catalog.query import Eq
+from souper.soup import get_soup
+from souper.soup import Record
+
+from genweb.core.gwuuid import IGWUUID
 
 from mrs.max.utilities import IMAXClient
 from ulearn.core.content.community import ICommunityTyped
@@ -37,23 +44,20 @@ class TestExample(unittest.TestCase):
         self.maxclient.setToken(settings.max_restricted_token)
 
     def tearDown(self):
+        self.maxclient.contexts['http://nohost/plone/community-test'].delete()
         self.maxclient.contexts['http://nohost/plone/community-test2'].delete()
         self.maxclient.contexts['http://nohost/plone/community-test-open'].delete()
         self.maxclient.contexts['http://nohost/plone/community-test-notify'].delete()
 
-    def create_test_community(self, id='community-test', name=u'community-test', community_type='Closed', readers=[], subscribed=[], owners=[]):
-        login(self.portal, 'usuari.iescude')
+    def create_test_community(self, id='community-test', name=u'community-test', community_type='Closed', readers=[], writers=[], owners=[]):
+        """ Creates the community as ulearn.testuser1 """
+        login(self.portal, 'ulearn.testuser1')
 
         self.portal.invokeFactory('ulearn.community', id,
-                                 title=name,
-                                 readers=readers,
-                                 subscribed=subscribed,
-                                 owners=owners,
-                                 community_type=community_type,)
+                                  title=name,
+                                  community_type=community_type,)
         logout()
 
-        # transaction.commit()  # This is for not conflict with each other
-        # TODO: Do the teardown properly
         return self.portal[id]
 
     def get_max_subscribed_users(self, community):
@@ -78,31 +82,47 @@ class TestExample(unittest.TestCase):
     def test_community_creation(self):
         nom = u'community-test'
         description = 'Blabla'
-        subscribed = [u'usuari.iescude']
         image = None
         community_type = 'Closed'
         twitter_hashtag = 'helou'
 
-        login(self.portal, 'usuari.iescude')
+        login(self.portal, 'ulearn.testuser1')
 
         self.portal.invokeFactory('ulearn.community', 'community-test',
                                  title=nom,
                                  description=description,
-                                 subscribed=subscribed,
                                  image=image,
                                  community_type=community_type,
                                  twitter_hashtag=twitter_hashtag)
 
-        new_comunitat = self.portal['community-test']
+        community = self.portal['community-test']
 
         logout()
 
-        self.assertEquals(new_comunitat.objectIds(), ['documents', 'links', 'media', 'events', 'discussion'])
+        # Test for the acl registry
+        soup = get_soup('communities_acl', self.portal)
+        # By the gwuuid
+        records = [r for r in soup.query(Eq('gwuuid', IGWUUID(community)))]
+        self.assertEquals(len(records), 1)
+        self.assertEquals(records[0].attrs.get('gwuuid', ''), IGWUUID(community))
+        self.assertEquals(records[0].attrs.get('path', ''), '/'.join(community.getPhysicalPath()))
+        self.assertEquals(records[0].attrs.get('hash', ''), sha1(community.absolute_url()).hexdigest())
+
+        # Test for internal objects
+        self.assertEquals(community.objectIds(), ['documents', 'links', 'media', 'events', 'discussion'])
+
+        # Test for subscribed users
+        self.assertTrue(u'ulearn.testuser1' in self.get_max_subscribed_users(community))
+
+        # Test for Plone permissions/local roles
+        self.assertTrue('Reader' not in community.get_local_roles_for_userid(userid='AuthenticatedUsers'))
+        self.assertTrue('Editor' in community.get_local_roles_for_userid(userid='ulearn.testuser1'))
+        self.assertTrue('Owner' in community.get_local_roles_for_userid(userid='ulearn.testuser1'))
+        self.assertTrue('Reader' in community.get_local_roles_for_userid(userid='ulearn.testuser1'))
 
     def test_community_creation_not_allowed(self):
         nom = u'community-test'
         description = 'Blabla'
-        subscribed = [u'usuari.iescude']
         image = None
         community_type = 'Closed'
         twitter_hashtag = 'helou'
@@ -113,15 +133,14 @@ class TestExample(unittest.TestCase):
                           'ulearn.community', 'community-test',
                           title=nom,
                           description=description,
-                          subscribed=subscribed,
                           image=image,
                           community_type=community_type,
                           twitter_hashtag=twitter_hashtag)
+        logout()
 
     def test_events_visibility(self):
         nom = u'community-test'
         description = 'Blabla'
-        subscribed = [u'usuari.iescude']
         image = None
         community_type = 'Closed'
         twitter_hashtag = 'helou'
@@ -131,7 +150,6 @@ class TestExample(unittest.TestCase):
         self.portal.invokeFactory('ulearn.community', 'community-test',
                                  title=nom,
                                  description=description,
-                                 subscribed=subscribed,
                                  image=image,
                                  community_type=community_type,
                                  twitter_hashtag=twitter_hashtag)
@@ -151,7 +169,6 @@ class TestExample(unittest.TestCase):
     def test_events_visibility_open_communities(self):
         nom = u'community-test'
         description = 'Blabla'
-        subscribed = [u'usuari.iescude']
         image = None
         community_type = 'Open'
         twitter_hashtag = 'helou'
@@ -161,7 +178,6 @@ class TestExample(unittest.TestCase):
         self.portal.invokeFactory('ulearn.community', 'community-test',
                                  title=nom,
                                  description=description,
-                                 subscribed=subscribed,
                                  image=image,
                                  community_type=community_type,
                                  twitter_hashtag=twitter_hashtag)
