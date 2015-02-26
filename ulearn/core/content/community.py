@@ -950,7 +950,7 @@ def edit_community(community, event):
     if not IInitializedCommunity.providedBy(community):
         return
 
-    adapter = getAdapter(community, ICommunityTyped, name=community_type)
+    adapter = getAdapter(community, ICommunityTyped, name=community.community_type)
     adapter.update_max_context()
 
 

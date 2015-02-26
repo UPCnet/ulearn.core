@@ -39,33 +39,26 @@ class RendererTest(unittest.TestCase):
         #     ['Event'], ['simple_publication_workflow']
         # )
 
-    def create_test_community(self):
-        nom = u'community-test'
-        description = 'Blabla'
-        subscribed = [u'usuari.iescude']
-        image = None
-        community_type = 'Open'
-        twitter_hashtag = 'helou'
-        login(self.portal, 'usuari.iescude')
-        self.portal.invokeFactory('ulearn.community', 'community-test',
-                                 title=nom,
-                                 description=description,
-                                 subscribed=subscribed,
-                                 image=image,
-                                 community_type=community_type,
-                                 twitter_hashtag=twitter_hashtag)
+    def tearDown(self):
+        self.maxclient.contexts['http://nohost/plone/community-test'].delete()
+
+    def create_test_community(self, id='community-test', name=u'community-test', community_type='Closed', readers=[], writers=[], owners=[]):
+        """ Creates the community as ulearn.testuser1 """
+        login(self.portal, 'ulearn.testuser1')
+
+        self.portal.invokeFactory('ulearn.community', id,
+                                  title=name,
+                                  community_type=community_type,)
         logout()
 
-        # transaction.commit()  # This is for not conflict with each other
-        # TODO: Do the teardown properly
-        return self.portal['community-test']
+        return self.portal[id]
 
     def create_event(self, context, day, start, end, event_id='e1'):
         now = localized_now().replace(minute=0, second=0, microsecond=0)
         start = localized_now().replace(day=now.day + day, hour=now.hour + start)
         end = localized_now().replace(day=now.day + day, hour=now.hour + end)
 
-        login(self.portal, 'usuari.iescude')
+        login(self.portal, 'ulearn.testuser1')
         context.events.invokeFactory('Event', event_id, start=start, end=end, timezone=TZNAME, whole_day=False)
         logout()
         return context.events[event_id]

@@ -32,6 +32,12 @@ def setup_max(restricted, password):
     set_user_oauth_token(restricted, token)
 
 
+def setup_user_max(username, password):
+    maxclient, settings = getUtility(IMAXClient)()
+    token = maxclient.getToken(username, password)
+    api.user.get(username).setMemberProperties(mapping={'oauth_token': token})
+
+
 def set_browserlayer(request):
     """Set the BrowserLayer for the request.
 
@@ -71,12 +77,14 @@ class UlearncoreLayer(PloneSandboxLayer):
         portal.acl_users.userFolderAddUser('janet.dura', 'secret', ['Member'], [])
         portal.acl_users.userFolderAddUser('usuari.iescude', 'secret', ['Member', 'WebMaster'], [])
         portal.acl_users.userFolderAddUser('ulearn.testuser1', 'secret', ['Member', 'WebMaster'], [])
+        portal.acl_users.userFolderAddUser('ulearn.testuser2', 'secret', ['Member', ], [])
 
         api.user.get('ulearn.testuser1').setMemberProperties(mapping={'location': u'Test', 'telefon': u'123456'})
         api.user.get('janet.dura').setMemberProperties(mapping={'fullname': u'Janet Durà', 'location': u'Barcelona', 'telefon': u'654321 123 123'})
 
         login(portal, 'admin')
         setup_max(u'ulearn.testuser1', '99994183a')
+        setup_user_max('ulearn.testuser2', '99994184a')
         portal.portal_workflow.setDefaultChain("genweb_intranet")
         logout()
         # setRoles(portal, TEST_USER_ID, ['Manager'])

@@ -29,7 +29,7 @@ class Communities(REST):
     placeholder_id = 'community'
 
     grok.adapts(APIRoot, IPloneSiteRoot)
-    grok.require('ulearn.APIAccess')
+    grok.require('genweb.authenticated')
 
 
 class Community(REST):
@@ -38,7 +38,7 @@ class Community(REST):
     """
 
     grok.adapts(Communities, IPloneSiteRoot)
-    grok.require('ulearn.APIAccess')
+    grok.require('genweb.authenticated')
 
     def __init__(self, context, request):
         super(Community, self).__init__(context, request)
@@ -68,15 +68,21 @@ class Subscriptions(REST):
             then by checking explicitly if the requester user has permission on
             the target community.
         """
-        # Hard security validation as the view is soft checked
-        check_permission = self.check_roles(['Owner', 'Manager'])
-        if check_permission is not True:
-            return check_permission
-
+        import ipdb;ipdb.set_trace()
         # Parameters validation
         validation = self.validate()
         if validation is not True:
             return validation
+
+        # Lookup for object
+        lookedup_obj = self.lookup_for_requested_object()
+        if lookedup_obj is not True:
+            return lookedup_obj
+
+        # Hard security validation as the view is soft checked
+        check_permission = self.check_roles(self.community, ['Owner', 'Manager'])
+        if check_permission is not True:
+            return check_permission
 
         self.data = self.request.form
 
@@ -85,6 +91,24 @@ class Subscriptions(REST):
 
         self.response.setStatus(result.pop('status'))
         return self.json_response(result)
+
+    def lookup_for_requested_object(self):
+        pc = api.portal.get_tool(name='portal_catalog')
+        result = pc.searchResults(community_hash=self.params['community'])
+
+        if not result:
+            # Fallback search by gwuuid
+            result = pc.searchResults(gwuuid=self.params['community'])
+
+            if not result:
+                # Not found either by hash nor by gwuuid
+                self.response.setStatus(404)
+                error_response = 'Community hash not found: {}'.format(self.params['community'])
+                logger.error(error_response)
+                return self.json_response({'error': error_response})
+
+        self.community = result[0].getObject()
+        return True
 
     def update_subscriptions(self):
         pc = api.portal.get_tool(name='portal_catalog')
