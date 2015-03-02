@@ -306,9 +306,6 @@ class TestExample(unittest.TestCase):
 
         self.assertEqual(cmp(records[0].attrs['acl'], acl), 0)
 
-    def test_api_endpoint(self):
-        pass
-
     def test_events_visibility(self):
         community = self.create_test_community()
 

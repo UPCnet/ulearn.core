@@ -285,7 +285,8 @@ class BulkReinstalluLearn(grok.View):
 
 
 class GiveAllCommunitiesGWUUID(grok.View):
-    grok.context(ICommunity)
+    grok.context(IPloneSiteRoot)
+    grok.name('GiveAllCommunitiesGWUUID')
 
     def render(self):
         pc = api.portal.get_tool('portal_catalog')
@@ -302,3 +303,7 @@ class GiveAllCommunitiesGWUUID(grok.View):
                 return
 
             setattr(obj, ATTRIBUTE_NAME, uuid)
+
+        pc.clearFindAndRebuild()
+
+        return 'Done'

@@ -18,7 +18,8 @@
 
   <metal:content-core define-macro="main">
 
-    <div ng-controller="uLearnEditACL as ctrl" ngCloak>
+    <div ng-controller="uLearnEditACL as ctrl" ngCloak
+         tal:attributes="ng-init string:ctrl.gwuuid='${view/get_gwuuid}'">
       <ui-select ng-model="ctrl.principals.selected" on-select="ctrl.selectItem($item, $model)" theme="selectize" style="width: 300px;">
         <ui-select-match placeholder="Search user...">{{$select.selected.username}}</ui-select-match>
         <ui-select-choices repeat="principal in ctrl.principals"
@@ -56,6 +57,7 @@
         </tbody>
       </table>
 
+      <button ng-click="ctrl.saveAcl()">Save ACL</button>
     </div>
   </metal:content-core>
 </metal:main>

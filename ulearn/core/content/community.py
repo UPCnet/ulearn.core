@@ -203,6 +203,24 @@ class ICommunity(form.Schema):
     )
 
 
+class ICommunityACL(Interface):
+    """"""
+
+
+@grok.implementer(ICommunityACL)
+@grok.adapter(ICommunity)
+def get_community_acl(community):
+    portal = api.portal.get()
+    soup = get_soup('communities_acl', portal)
+    gwuuid = IGWUUID(community)
+    records = [r for r in soup.query(Eq('gwuuid', gwuuid))]
+
+    if records:
+        return records[0]
+    else:
+        return None
+
+
 class ICommunityTyped(Interface):
     """ The adapter for the ICommunity It would adapt the Community instances in
         order to have a centralized way of dealing with community types and the
@@ -504,6 +522,9 @@ class View(grok.View):
 
 class EditACL(grok.View):
     grok.context(ICommunity)
+
+    def get_gwuuid(self):
+        return IGWUUID(self.context)
 
 
 class UploadFile(grok.View):

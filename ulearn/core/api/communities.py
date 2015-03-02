@@ -14,10 +14,13 @@ from mrs.max.utilities import IMAXClient
 
 from genweb.core.gwuuid import IGWUUID
 from ulearn.core.content.community import ICommunityTyped
+from ulearn.core.content.community import ICommunityACL
 from ulearn.core.api import REST
 from ulearn.core.api import logger
 from ulearn.core.api.root import APIRoot
 from ulearn.core.api.security import execute_under_special_role
+
+import json
 
 
 class Communities(REST):
@@ -61,21 +64,20 @@ class Subscriptions(REST):
     grok.adapts(Community, IPloneSiteRoot)
     grok.require('genweb.authenticated')
 
-    def POST(self):
+    def GET(self):
         """
-            Subscribes a bunch of users to a community the security is given an
+            Get the subscriptions for the community. The security is given an
             initial soft check for authenticated users at the view level and
             then by checking explicitly if the requester user has permission on
             the target community.
         """
-        import ipdb;ipdb.set_trace()
         # Parameters validation
         validation = self.validate()
         if validation is not True:
             return validation
 
         # Lookup for object
-        lookedup_obj = self.lookup_for_requested_object()
+        lookedup_obj = self.lookup_community()
         if lookedup_obj is not True:
             return lookedup_obj
 
@@ -84,15 +86,41 @@ class Subscriptions(REST):
         if check_permission is not True:
             return check_permission
 
-        self.data = self.request.form
+        result = ICommunityACL(self.community).attrs.get('acl', '')
 
-        with api.env.adopt_roles(['Manager']):
-            result = self.update_subscriptions()
+        self.response.setStatus(200)
+        return self.json_response(result)
+
+    def POST(self):
+        """
+            Subscribes a bunch of users to a community the security is given an
+            initial soft check for authenticated users at the view level and
+            then by checking explicitly if the requester user has permission on
+            the target community.
+        """
+        # Parameters validation
+        validation = self.validate()
+        if validation is not True:
+            return validation
+
+        # Lookup for object
+        lookedup_obj = self.lookup_community()
+        if lookedup_obj is not True:
+            return lookedup_obj
+
+        # Hard security validation as the view is soft checked
+        check_permission = self.check_roles(self.community, ['Owner', 'Manager'])
+        if check_permission is not True:
+            return check_permission
+
+        self.data = json.loads(self.request['BODY'])
+
+        result = self.update_subscriptions()
 
         self.response.setStatus(result.pop('status'))
         return self.json_response(result)
 
-    def lookup_for_requested_object(self):
+    def lookup_community(self):
         pc = api.portal.get_tool(name='portal_catalog')
         result = pc.searchResults(community_hash=self.params['community'])
 
@@ -111,23 +139,7 @@ class Subscriptions(REST):
         return True
 
     def update_subscriptions(self):
-        pc = api.portal.get_tool(name='portal_catalog')
-        result = pc.searchResults(community_hash=self.params['community'])
-
-        if not result:
-            # Fallback search by gwuuid
-            result = pc.searchResults(gwuuid=self.params['community'])
-
-            if not result:
-                # Not found either by hash nor by gwuuid
-                self.response.setStatus(404)
-                error_response = 'Community hash not found: {}'.format(self.params['community'])
-                logger.error(error_response)
-                return self.json_response({'error': error_response})
-
-        community = result[0].getObject()
-
-        adapter = getAdapter(community, ICommunityTyped, name=community.community_type)
+        adapter = getAdapter(self.community, ICommunityTyped, name=self.community.community_type)
 
         # Change the uLearn part of the community
         adapter.update_acl(self.data)
@@ -137,6 +149,6 @@ class Subscriptions(REST):
         # adapter.send_update_context()
 
         # Response successful
-        success_response = 'Updated community "{}" subscriptions'.format(result[0].getPath())
+        success_response = 'Updated community "{}" subscriptions'.format(self.community.absolute_url())
         logger.info(success_response)
         return {'message': success_response, 'status': 200}
