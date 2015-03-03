@@ -256,7 +256,7 @@ class TestExample(unittest.TestCase):
         community_type = 'Closed'
         twitter_hashtag = 'helou'
 
-        login(self.portal, 'user')
+        login(self.portal, 'ulearn.testuser2')
 
         self.assertRaises(Unauthorized, self.portal.invokeFactory,
                           'ulearn.community', 'community-test',
@@ -313,7 +313,7 @@ class TestExample(unittest.TestCase):
         community['events'].invokeFactory('Event', 'test-event', title="Da event")
         logout()
 
-        login(self.portal, 'user')
+        login(self.portal, 'ulearn.testuser2')
 
         pc = api.portal.get_tool('portal_catalog')
 
@@ -327,7 +327,7 @@ class TestExample(unittest.TestCase):
         community['events'].invokeFactory('Event', 'test-event', title="Da event")
         logout()
 
-        login(self.portal, 'user')
+        login(self.portal, 'ulearn.testuser2')
 
         pc = api.portal.get_tool('portal_catalog')
 
@@ -340,7 +340,7 @@ class TestExample(unittest.TestCase):
     #     community['events'].invokeFactory('Event', 'test-event', title="Da event")
     #     logout()
 
-    #     login(self.portal, 'user')
+    #     login(self.portal, 'ulearn.testuser2')
 
     #     pc = api.portal.get_tool('portal_catalog')
 
@@ -355,7 +355,7 @@ class TestExample(unittest.TestCase):
 
     #     logout()
 
-    #     login(self.portal, 'user')
+    #     login(self.portal, 'ulearn.testuser2')
 
     #     self.assertFalse(pc.searchResults(portal_type='Event'))
     #     self.assertRaises(Unauthorized, self.portal.restrictedTraverse, 'community-test/events/test-event')

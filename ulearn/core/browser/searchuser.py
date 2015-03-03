@@ -43,9 +43,8 @@ def searchUsersFunction(context, request, search_string, user_properties=None):
                                               Eq('location', normalized_query),
                                               Eq('ubicacio', normalized_query)))]
         else:
-            # User information directly from mutable_properties to avoid LDAP searches
-            # plone_results = [userinfo.get('login') for userinfo in portal.acl_users.mutable_properties.enumerateUsers()]
-            # users = [pm.getMemberById(user) for user in plone_results]
+            # User information directly from mutable_properties to avoid LDAP
+            # searches and force to show only the truly registered users
             if nonvisibles:
                 filtered = []
                 for user in users:

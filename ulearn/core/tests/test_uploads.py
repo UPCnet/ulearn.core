@@ -7,6 +7,7 @@ from plone.app.testing import logout
 
 from Products.CMFCore.utils import getToolByName
 
+from ulearn.core.tests import uLearnTestBase
 from ulearn.core.testing import ULEARN_CORE_FUNCTIONAL_TESTING
 from ulearn.core.interfaces import IAppImage
 from mrs.max.utilities import IMAXClient
@@ -16,7 +17,7 @@ import os
 import transaction
 
 
-class TestUploads(unittest.TestCase):
+class TestUploads(uLearnTestBase):
 
     layer = ULEARN_CORE_FUNCTIONAL_TESTING
 
@@ -34,28 +35,11 @@ class TestUploads(unittest.TestCase):
             "X-Oauth-Username": username,
             "X-Oauth-Scope": scope}
 
-    def create_test_community(self):
-        nom = u'community-test'
-        description = 'Blabla'
-        subscribed = [u'usuari.iescude']
-        image = None
-        community_type = 'Open'
-        twitter_hashtag = 'helou'
-        login(self.portal, 'usuari.iescude')
-        self.portal.invokeFactory('ulearn.community', 'community-test',
-                                 title=nom,
-                                 description=description,
-                                 subscribed=subscribed,
-                                 image=image,
-                                 community_type=community_type,
-                                 twitter_hashtag=twitter_hashtag)
-        logout()
-
-        transaction.commit()
-        return self.portal['community-test']
-
     def test_upload_file_to_community(self):
+        login(self.portal, 'ulearn.testuser1')
         community = self.create_test_community()
+        transaction.commit()
+
         avatar_file = open(os.path.join(os.path.dirname(__file__), "avatar.png"), "rb")
         files = {'file': ('avatar.png', avatar_file)}
 
@@ -70,7 +54,10 @@ class TestUploads(unittest.TestCase):
         IAppImage.providedBy(community['media']['avatar.png'])
 
     def test_upload_file_to_community_corner_mimetipes(self):
+        login(self.portal, 'ulearn.testuser1')
         community = self.create_test_community()
+        transaction.commit()
+
         avatar_file = open(os.path.join(os.path.dirname(__file__), "avatar.png"), "rb")
         files = {'file': ('avatar', avatar_file)}
 
@@ -102,7 +89,10 @@ class TestUploads(unittest.TestCase):
         self.assertTrue('avatar.odt' in community['documents'].objectIds())
 
     def test_upload_file_to_community_corner_cases(self):
+        login(self.portal, 'ulearn.testuser1')
         community = self.create_test_community()
+        transaction.commit()
+
         avatar_file = open(os.path.join(os.path.dirname(__file__), "avatar.png"), "rb")
         files = {'file': ('avatar amb espais', avatar_file)}
 
@@ -114,7 +104,10 @@ class TestUploads(unittest.TestCase):
         self.assertTrue('avatar-amb-espais' in community['documents'].objectIds())
 
     def test_upload_file_to_community_with_parameters(self):
+        login(self.portal, 'ulearn.testuser1')
         community = self.create_test_community()
+        transaction.commit()
+
         activity_data = {"activity": "This is my fancy file"}
         avatar_file = open(os.path.join(os.path.dirname(__file__), "avatar.png"), "rb")
         files = {'file': ('avatar.png', avatar_file)}
@@ -128,7 +121,10 @@ class TestUploads(unittest.TestCase):
         self.assertTrue(community['media']['avatar.png'].title, activity_data)
 
     def test_upload_file_to_community_with_parameters_with_strange_chars(self):
+        login(self.portal, 'ulearn.testuser1')
         community = self.create_test_community()
+        transaction.commit()
+
         activity_data = {"activity": u"This is my fancy file ç à"}
         avatar_file = open(os.path.join(os.path.dirname(__file__), "avatar.png"), "rb")
         files = {'file': ('avatar.png', avatar_file)}

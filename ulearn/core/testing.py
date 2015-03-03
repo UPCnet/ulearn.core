@@ -22,6 +22,9 @@ from mrs.max.utilities import set_user_oauth_token
 from genweb.core.testing import GENWEBUPC_FIXTURE
 from ulearn.theme.browser.interfaces import IUlearnTheme
 
+import requests.packages.urllib3
+requests.packages.urllib3.disable_warnings()
+
 
 def setup_max(restricted, password):
     maxclient, settings = getUtility(IMAXClient)()
@@ -70,12 +73,12 @@ class UlearncoreLayer(PloneSandboxLayer):
     def setUpPloneSite(self, portal):
         applyProfile(portal, 'ulearn.core:default')
 
-        portal.acl_users.userFolderAddUser('admin', 'secret', ['Manager'], [])
-        portal.acl_users.userFolderAddUser('user', 'secret', ['Member'], [])
-        portal.acl_users.userFolderAddUser('poweruser', 'secret', ['Member', 'WebMaster'], [])
+        # portal.acl_users.userFolderAddUser('admin', 'secret', ['Manager'], [])
+        # portal.acl_users.userFolderAddUser('user', 'secret', ['Member'], [])
+        # portal.acl_users.userFolderAddUser('poweruser', 'secret', ['Member', 'WebMaster'], [])
         portal.acl_users.userFolderAddUser('victor.fernandez', 'secret', ['Member'], [])
         portal.acl_users.userFolderAddUser('janet.dura', 'secret', ['Member'], [])
-        portal.acl_users.userFolderAddUser('usuari.iescude', 'secret', ['Member', 'WebMaster'], [])
+        # portal.acl_users.userFolderAddUser('usuari.iescude', 'secret', ['Member', 'WebMaster'], [])
         portal.acl_users.userFolderAddUser('ulearn.testuser1', 'secret', ['Member', 'WebMaster'], [])
         portal.acl_users.userFolderAddUser('ulearn.testuser2', 'secret', ['Member', ], [])
 

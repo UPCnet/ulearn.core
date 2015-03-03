@@ -35,18 +35,18 @@
         <div ng-switch-when="users">
 
           <ui-select ng-model="ctrl.principals.selected" on-select="ctrl.selectUser($item, $model)" theme="selectize" style="width: 300px;">
-            <ui-select-match placeholder="Search user...">{{$select.selected.username}}</ui-select-match>
+            <ui-select-match placeholder="Search user...">{{$select.selected.id}}</ui-select-match>
             <ui-select-choices repeat="principal in ctrl.principals"
                  refresh="ctrl.searchUser($select.search)"
                  refresh-delay="400">
-                <div ng-bind-html="principal.username | highlight: $select.search"></div>
+                <div ng-bind-html="principal.id | highlight: $select.search"></div>
             </ui-select-choices>
           </ui-select>
 
 
           <h2>The ACL</h2>
           <ul>
-              <li ng-repeat="user in ctrl.users">{{user.username}}</li>
+              <li ng-repeat="user in ctrl.users">{{user.id}}</li>
           </ul>
 
           <table datatable="ng" dt-options="ctrl.dtOptions" dt-column-defs="ctrl.dtColumnDefs" class="table table-striped table-bordered">
@@ -61,18 +61,55 @@
             </thead>
             <tbody>
               <tr ng-repeat="user in ctrl.users">
-                <td>{{ user.username }}</td>
-                <td>{{ user.displayname }}</td>
-                <td><input ng-model="user.role" type="radio" name="{{user.username}}" value="reader" checked></td>
-                <td><input ng-model="user.role" type="radio" name="{{user.username}}" value="writer"></td>
-                <td><input ng-model="user.role" type="radio" name="{{user.username}}" value="owner"></td>
+                <td>{{ user.id }}</td>
+                <td>{{ user.displayName }}</td>
+                <td><input ng-model="user.role" type="radio" name="{{user.id}}" value="reader" checked></td>
+                <td><input ng-model="user.role" type="radio" name="{{user.id}}" value="writer"></td>
+                <td><input ng-model="user.role" type="radio" name="{{user.id}}" value="owner"></td>
               </tr>
               <tt>{{ctrl.users | json}}</tt><br/>
             </tbody>
           </table>
         </div>
         <div ng-switch-when="groups">
-          HELOO
+
+          <ui-select ng-model="ctrl.group_results.selected" on-select="ctrl.selectGroup($item, $model)" theme="selectize" style="width: 300px;">
+            <ui-select-match placeholder="Search group...">{{$select.selected.id}}</ui-select-match>
+            <ui-select-choices repeat="principal in ctrl.group_results"
+                 refresh="ctrl.searchGroup($select.search)"
+                 refresh-delay="400">
+                <div ng-bind-html="principal.id | highlight: $select.search"></div>
+            </ui-select-choices>
+          </ui-select>
+
+
+          <h2>The ACL</h2>
+          <ul>
+              <li ng-repeat="group in ctrl.groups">{{group.id}}</li>
+          </ul>
+
+          <table datatable="ng" dt-options="ctrl.dtOptions" dt-column-defs="ctrl.dtColumnDefs" class="table table-striped table-bordered">
+            <thead>
+              <tr>
+                <th>groupname</th>
+                <th>displayName</th>
+                <th>Reader</th>
+                <th>Writer</th>
+                <th>Owner</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="group in ctrl.groups">
+                <td>{{ group.id }}</td>
+                <td>{{ group.displayName }}</td>
+                <td><input ng-model="group.role" type="radio" name="{{group.id}}" value="reader" checked></td>
+                <td><input ng-model="group.role" type="radio" name="{{group.id}}" value="writer"></td>
+                <td><input ng-model="group.role" type="radio" name="{{group.id}}" value="owner"></td>
+              </tr>
+              <tt>{{ctrl.groups | json}}</tt><br/>
+            </tbody>
+          </table>
+
         </div>
       </div>
       <button ng-click="ctrl.saveAcl()">Save ACL</button>
