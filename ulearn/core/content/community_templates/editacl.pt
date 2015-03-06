@@ -21,6 +21,9 @@
     <div ng-controller="uLearnEditACL as ctrl" ngCloak
          tal:attributes="ng-init string:ctrl.gwuuid='${view/get_gwuuid}'">
 
+      <input type="hidden"
+             tal:attributes="acl view/get_acl" />
+
       <div class="btn-group">
         <button class="btn active"
                 ng-click="ctrl.active_tab = 'users'"
@@ -43,7 +46,7 @@
             </ui-select-choices>
           </ui-select>
 
-
+          The loaded ACL = {{ctrl.acl}}
           <h2>The ACL</h2>
           <ul>
               <li ng-repeat="user in ctrl.users">{{user.id}}</li>

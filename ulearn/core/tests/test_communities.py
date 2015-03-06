@@ -24,11 +24,12 @@ from souper.soup import Record
 from genweb.core.gwuuid import IGWUUID
 
 from mrs.max.utilities import IMAXClient
+from ulearn.core.tests import uLearnTestBase
 from ulearn.core.content.community import ICommunityTyped
 from ulearn.core.testing import ULEARN_CORE_INTEGRATION_TESTING
 
 
-class TestExample(unittest.TestCase):
+class TestExample(uLearnTestBase):
 
     layer = ULEARN_CORE_INTEGRATION_TESTING
 
@@ -50,17 +51,6 @@ class TestExample(unittest.TestCase):
         self.maxclient.contexts['http://nohost/plone/community-test2'].delete()
         self.maxclient.contexts['http://nohost/plone/community-test-open'].delete()
         self.maxclient.contexts['http://nohost/plone/community-test-notify'].delete()
-
-    def create_test_community(self, id='community-test', name=u'community-test', community_type='Closed', readers=[], writers=[], owners=[]):
-        """ Creates the community as ulearn.testuser1 """
-        login(self.portal, 'ulearn.testuser1')
-
-        self.portal.invokeFactory('ulearn.community', id,
-                                  title=name,
-                                  community_type=community_type,)
-        logout()
-
-        return self.portal[id]
 
     def get_max_subscribed_users(self, community):
         return [user.get('username', '') for user in self.maxclient.contexts[community.absolute_url()].subscriptions.get(qs={'limit': 0})]
@@ -268,6 +258,7 @@ class TestExample(unittest.TestCase):
         logout()
 
     def test_edit_community(self):
+        login(self.portal, 'ulearn.testuser1')
         community = self.create_test_community()
         community.twitter_hashtag = 'Modified'
         notify(ObjectModifiedEvent(community))
@@ -291,6 +282,7 @@ class TestExample(unittest.TestCase):
         self.assertEquals('', max_community_info.get(u'notifications', ''))
 
     def test_edit_acl(self):
+        login(self.portal, 'ulearn.testuser1')
         community = self.create_test_community()
         acl = dict(users=[dict(id=u'janet.dura', displayName=u'Janet Durà', role=u'writer'),
                           dict(id=u'victor.fernandez', displayName=u'Víctor Fernández de Alba', role=u'reader')],
@@ -307,6 +299,7 @@ class TestExample(unittest.TestCase):
         self.assertEqual(cmp(records[0].attrs['acl'], acl), 0)
 
     def test_events_visibility(self):
+        login(self.portal, 'ulearn.testuser1')
         community = self.create_test_community()
 
         login(self.portal, 'ulearn.testuser1')
@@ -321,6 +314,7 @@ class TestExample(unittest.TestCase):
         self.assertRaises(Unauthorized, self.portal.restrictedTraverse, 'community-test/events/test-event')
 
     def test_events_visibility_open_communities(self):
+        login(self.portal, 'ulearn.testuser1')
         community = self.create_test_community(community_type='Open')
 
         login(self.portal, 'ulearn.testuser1')
@@ -467,6 +461,7 @@ class TestExample(unittest.TestCase):
     #     logout()
 
     def test_notify_posts_comments(self):
+        login(self.portal, 'ulearn.testuser1')
         community = self.create_test_community(id='community-test-notify', community_type='Open')
 
         info = self.get_max_context_info(community)
@@ -488,5 +483,17 @@ class TestExample(unittest.TestCase):
         self.assertEquals(info['notifications'], u'comments')
 
     def test_community_type_adapters(self):
+        login(self.portal, 'ulearn.testuser1')
         community = self.create_test_community(id='community-test-notify', community_type='Closed')
         adapter = getAdapter(community, ICommunityTyped, name='Closed')
+
+    def test_delete_community(self):
+        login(self.portal, 'ulearn.testuser1')
+        community = self.create_test_community()
+        gwuuid = IGWUUID(community)
+        api.content.delete(obj=community)
+
+        soup = get_soup('communities_acl', self.portal)
+        records = [r for r in soup.query(Eq('gwuuid', gwuuid))]
+
+        self.assertFalse(records)

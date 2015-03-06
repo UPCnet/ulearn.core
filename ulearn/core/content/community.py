@@ -132,7 +132,7 @@ class ICommunity(form.Schema):
         description=_(u"La descripció de la comunitat"),
         required=False
     )
-    form.omitted('community_type')
+    form.mode(community_type='hidden')
     community_type = schema.Choice(
         title=_(u"Tipus de comunitat"),
         description=_(u"community_type_description"),
@@ -271,6 +271,9 @@ class CommunityAdapterMixin(object):
         self.maxclient.people[self.context.Creator()].subscriptions.post(object_url=self.context.absolute_url())
         self.update_acl(acl)
 
+    def get_acl(self):
+        return ICommunityACL(self).attrs.get('acl', '')
+
     def update_acl(self, acl):
         gwuuid = IGWUUID(self.context)
         portal = api.portal.get()
@@ -294,6 +297,17 @@ class CommunityAdapterMixin(object):
         acl_record.attrs['acl'] = acl
 
         soup.reindex(records=[acl_record])
+
+    def delete_acl(self):
+        """ In case that we delete the community, delete its ACL record. """
+        gwuuid = IGWUUID(self.context)
+        portal = api.portal.get()
+        soup = get_soup('communities_acl', portal)
+
+        records = [r for r in soup.query(Eq('gwuuid', gwuuid))]
+
+        if records:
+            del soup[records[0]]
 
     def update_max_context(self):
         # Get current MAX context information
@@ -526,6 +540,9 @@ class EditACL(grok.View):
     def get_gwuuid(self):
         return IGWUUID(self.context)
 
+    def get_acl(self):
+        return json.dumps(ICommunityACL(self.context).attrs.get('acl', ''))
+
 
 class UploadFile(grok.View):
     grok.context(ICommunity)
@@ -683,6 +700,11 @@ class communityAdder(form.SchemaForm):
     def update(self):
         super(communityAdder, self).update()
         self.actions['save'].addClass('context')
+
+    def updateWidgets(self):
+        super(communityAdder, self).updateWidgets()
+        # Override the interface forced 'hidden' to 'input' for add form only
+        self.widgets['community_type'].mode = 'input'
 
     @button.buttonAndHandler(_(u'Crea la comunitat'), name="save")
     def handleApply(self, action):
@@ -978,10 +1000,11 @@ def edit_community(community, event):
 @grok.subscribe(ICommunity, IObjectRemovedEvent)
 def delete_community(community, event):
     try:
-        adapter = getAdapter(community, ICommunityTyped, name=community_type)
+        adapter = getAdapter(community, ICommunityTyped, name=community.community_type)
         adapter.delete_max_context()
+        adapter.delete_acl()
     except:
-        pass
+        logger.error('There was an error deleting the community {}'.community.absolute_url())
 
 
 @implementer(ICatalogFactory)

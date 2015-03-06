@@ -132,7 +132,7 @@ class TestExample(uLearnTestBase):
 
         logout()
 
-    def test_user_search_ajax(self):
+    def test_user_search_on_acl(self):
         """
             cas 1: Primer caràcter (només 1) is_useless_request == False too_much_results ? searching_surname == False
             cas 2.1: Segona lletra en endavant i not searching_surname i is_useless_request i too_much_results ==> soup
@@ -163,14 +163,51 @@ class TestExample(uLearnTestBase):
         result = search_view.render()
         result = json.loads(result)
 
-        self.assertEqual(result['last_query_count'], 15)
+        self.assertTrue(result['last_query_count'] > 5)
         self.assertEqual(result['last_query'], 'victor.fer')
 
         soup = get_soup('user_properties', self.portal)
-        self.assertEqual(len([r for r in soup.query(Eq('username', 'victor fer*'))]), 15)
+        self.assertTrue(len([r for r in soup.query(Eq('username', 'victor fer*'))]) > 5)
+
+        # Amb un altre usuari (janet)
+        add_user_to_catalog(u'janet.dura', dict(fullname=u'Janet'))
+        self.request.form = dict(q='janet', last_query='', last_query_count=0)
+        result = search_view.render()
+        result = json.loads(result)
+
+        self.assertEqual(result['last_query_count'], 1)
+        self.assertEqual(result['results'], [{u'displayName': u'Janet', u'id': u'janet.dura'}])
+
+        self.request.form = dict(q='janeth', last_query='janet', last_query_count=1)
+        result = search_view.render()
+        result = json.loads(result)
+        self.assertEqual(result['last_query_count'], 0)
+
+        self.request.form = dict(q='janeth.tosca', last_query='janeth', last_query_count=0)
+        result = search_view.render()
+        result = json.loads(result)
+
+        self.assertEqual(result['last_query_count'], 1)
+        self.assertEqual(result['results'], [{"displayName": "janeth.toscana", "id": "janeth.toscana"}])
 
         logout()
 
         login(self.portal, 'admin')
         self.delete_default_test_users()
         logout()
+
+    def test_group_search_on_acl(self):
+        setRoles(self.portal, u'ulearn.testuser1', ['Manager'])
+        login(self.portal, u'ulearn.testuser1')
+        sync_view = getMultiAdapter((self.portal, self.request), name='syncldapgroups')
+        sync_view.render()
+        logout()
+
+        login(self.portal, u'ulearn.testuser2')
+        search_view = getMultiAdapter((self.portal, self.request), name='omega13groupsearch')
+        self.request.form = dict(q='pas')
+        result = search_view.render()
+        result = json.loads(result)
+
+        self.assertTrue(len(result) > 5)
+        self.assertTrue('PAS' in [r['id'] for r in result])
