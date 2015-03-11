@@ -1,11 +1,10 @@
 Changelog
 =========
 
-1.65 (unreleased)
+1.65 (2015-03-11)
 -----------------
 
-- Nothing changed yet.
-
+* Transferred from g.core [Victor Fernandez de Alba]
 
 1.64 (2015-03-11)
 -----------------
