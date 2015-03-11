@@ -1,11 +1,14 @@
 Changelog
 =========
 
-1.64 (unreleased)
+1.64 (2015-03-11)
 -----------------
 
-- Nothing changed yet.
-
+* Optimizations and improvements on templates and getMemberById [Victor Fernandez de Alba]
+* New search user view [Victor Fernandez de Alba]
+* cambios en hook para modificación de documentos [Paco Gregori]
+* afegir al activity stream notificació quan modifiquem un document [Paco Gregori]
+* Traducciones tooltips iconos vista más comunidades [Paco Gregori]
 
 1.63 (2015-02-12)
 -----------------
