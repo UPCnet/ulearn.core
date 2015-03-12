@@ -1077,7 +1077,12 @@ def edit_community(community, event):
         if context_current_info.get('twitterHashtag', None) != community.twitter_hashtag:
             properties_to_update['twitterHashtag'] = community.twitter_hashtag
 
-        if context_current_info.get('permissions', '') != community_permissions:
+        update_permissions = False
+        for permission, value in community_permissions.items():
+            if context_current_info['permissions'][permission] != value:
+                update_permissions = True
+
+        if update_permissions:
             properties_to_update['permissions'] = community_permissions
 
         if context_current_info.get('displayName', '') != community.title:
