@@ -209,5 +209,5 @@ class TestExample(uLearnTestBase):
         result = search_view.render()
         result = json.loads(result)
 
-        self.assertTrue(len(result) > 5)
-        self.assertTrue('PAS' in [r['id'] for r in result])
+        self.assertTrue(len(result['results']) > 5)
+        self.assertTrue('PAS' in [r['id'] for r in result['results']])

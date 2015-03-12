@@ -124,7 +124,7 @@ class TestExample(uLearnTestBase):
         self.assertFalse(max_community_info.get(u'notifications', False))
         self.assertTrue(u'[COMMUNITY]' in max_community_info.get('tags', []))
 
-        for key in max_community_info.get('permissions', []):
+        for key in CLOSED_PERMISSIONS:
             self.assertEqual(max_community_info['permissions'].get(key, ''), CLOSED_PERMISSIONS[key])
 
     def test_community_creation_open(self):
@@ -180,7 +180,7 @@ class TestExample(uLearnTestBase):
         self.assertFalse(max_community_info.get(u'notifications', False))
         self.assertTrue(u'[COMMUNITY]' in max_community_info.get('tags', []))
 
-        for key in max_community_info.get('permissions', []):
+        for key in OPEN_PERMISSIONS:
             self.assertEqual(max_community_info['permissions'].get(key, ''), OPEN_PERMISSIONS[key])
 
     def test_community_creation_organizative(self):
@@ -236,7 +236,7 @@ class TestExample(uLearnTestBase):
         self.assertFalse(max_community_info.get(u'notifications', False))
         self.assertTrue(u'[COMMUNITY]' in max_community_info.get('tags', []))
 
-        for key in max_community_info.get('permissions', []):
+        for key in ORGANIZATIVE_PERMISSIONS:
             self.assertEqual(max_community_info['permissions'].get(key, ''), ORGANIZATIVE_PERMISSIONS[key])
 
     def test_community_creation_not_allowed(self):
