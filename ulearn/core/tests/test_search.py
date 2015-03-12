@@ -24,6 +24,7 @@ from ulearn.core.testing import ULEARN_CORE_INTEGRATION_TESTING
 from mrs.max.utilities import IMAXClient
 
 import json
+import os
 
 DP_USER_PROPERTIES = ['id', 'fullname', 'email', 'company', 'area', 'department', 'function']
 
@@ -196,6 +197,7 @@ class TestExample(uLearnTestBase):
         self.delete_default_test_users()
         logout()
 
+    @unittest.skipIf(os.environ.get('JENKINS', False), 'Skipping due to lack of LDAP access')
     def test_group_search_on_acl(self):
         setRoles(self.portal, u'ulearn.testuser1', ['Manager'])
         login(self.portal, u'ulearn.testuser1')
