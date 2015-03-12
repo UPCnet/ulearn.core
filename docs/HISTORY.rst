@@ -1,11 +1,10 @@
 Changelog
 =========
 
-1.66 (unreleased)
+1.66 (2015-03-12)
 -----------------
 
-- Nothing changed yet.
-
+* Fix new permissions schema [Victor Fernandez de Alba]
 
 1.65 (2015-03-11)
 -----------------
