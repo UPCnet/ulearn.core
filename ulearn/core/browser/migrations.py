@@ -298,11 +298,12 @@ class GiveAllCommunitiesGWUUID(grok.View):
 
         for community in communities:
             obj = community.getObject()
-            uuid = generator()
-            if not uuid:
-                return
+            if getattr(obj, ATTRIBUTE_NAME, False):
+                uuid = generator()
+                if not uuid:
+                    return
 
-            setattr(obj, ATTRIBUTE_NAME, uuid)
+                setattr(obj, ATTRIBUTE_NAME, uuid)
 
         pc.clearFindAndRebuild()
 
