@@ -23,3 +23,6 @@ class uLearnTestBase(unittest.TestCase):
         return {'X-Oauth-Username': username,
                 'X-Oauth-Token': token,
                 'X-Oauth-Scope': 'widgetcli'}
+
+    def get_max_context_info(self, community):
+        return self.maxclient.contexts[community.absolute_url()].get()

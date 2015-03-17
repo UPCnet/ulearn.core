@@ -28,6 +28,10 @@ from ulearn.core.tests import uLearnTestBase
 from ulearn.core.content.community import ICommunityTyped
 from ulearn.core.testing import ULEARN_CORE_INTEGRATION_TESTING
 
+from ulearn.core.content.community import OPEN_PERMISSIONS
+from ulearn.core.content.community import CLOSED_PERMISSIONS
+from ulearn.core.content.community import ORGANIZATIVE_PERMISSIONS
+
 
 class TestExample(uLearnTestBase):
 
@@ -55,9 +59,6 @@ class TestExample(uLearnTestBase):
     def get_max_subscribed_users(self, community):
         return [user.get('username', '') for user in self.maxclient.contexts[community.absolute_url()].subscriptions.get(qs={'limit': 0})]
 
-    def get_max_context_info(self, community):
-        return self.maxclient.contexts[community.absolute_url()].get()
-
     def test_product_is_installed(self):
         """ Validate that our products GS profile has been run and the product
             installed
@@ -72,10 +73,6 @@ class TestExample(uLearnTestBase):
         self.assertTrue(self.portal.get_local_roles()[0][0], 'AuthenticatedUsers')
 
     def test_community_creation_closed(self):
-        CLOSED_PERMISSIONS = dict(read='subscribed',
-                                  write='restricted',
-                                  subscribe='restricted',
-                                  unsubscribe='public')
         nom = u'community-test'
         description = 'Blabla'
         image = None
@@ -128,10 +125,6 @@ class TestExample(uLearnTestBase):
             self.assertEqual(max_community_info['permissions'].get(key, ''), CLOSED_PERMISSIONS[key])
 
     def test_community_creation_open(self):
-        OPEN_PERMISSIONS = dict(read='subscribed',
-                                write='subscribed',
-                                subscribe='public',
-                                unsubscribe='public')
         nom = u'community-test'
         description = 'Blabla'
         image = None
@@ -184,10 +177,6 @@ class TestExample(uLearnTestBase):
             self.assertEqual(max_community_info['permissions'].get(key, ''), OPEN_PERMISSIONS[key])
 
     def test_community_creation_organizative(self):
-        ORGANIZATIVE_PERMISSIONS = dict(read='subscribed',
-                                        write='restricted',
-                                        subscribe='restricted',
-                                        unsubscribe='restricted')
         nom = u'community-test'
         description = 'Blabla'
         image = None

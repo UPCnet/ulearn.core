@@ -79,6 +79,21 @@ import logging
 logger = logging.getLogger(__name__)
 VALID_COMMUNITY_ROLES = ['reader', 'writer', 'owner']
 
+OPEN_PERMISSIONS = dict(read='subscribed',
+                        write='subscribed',
+                        subscribe='public',
+                        unsubscribe='public')
+
+CLOSED_PERMISSIONS = dict(read='subscribed',
+                          write='restricted',
+                          subscribe='restricted',
+                          unsubscribe='public')
+
+ORGANIZATIVE_PERMISSIONS = dict(read='subscribed',
+                                write='restricted',
+                                subscribe='restricted',
+                                unsubscribe='restricted')
+
 
 @grok.provider(IContextSourceBinder)
 def availableCommunityTypes(context):
@@ -204,21 +219,25 @@ class ICommunity(form.Schema):
 
 
 class ICommunityACL(Interface):
-    """"""
+    """Helper to retrieve the community ACL safely by adapting any ICommunity"""
 
 
 @grok.implementer(ICommunityACL)
 @grok.adapter(ICommunity)
-def get_community_acl(community):
-    portal = api.portal.get()
-    soup = get_soup('communities_acl', portal)
-    gwuuid = IGWUUID(community)
-    records = [r for r in soup.query(Eq('gwuuid', gwuuid))]
+class GetCommunityACL(object):
+    def __init__(self, context):
+        self.context = context
 
-    if records:
-        return records[0]
-    else:
-        return None
+    def __call__(self):
+        portal = api.portal.get()
+        soup = get_soup('communities_acl', portal)
+        gwuuid = IGWUUID(self.context)
+        records = [r for r in soup.query(Eq('gwuuid', gwuuid))]
+
+        if records:
+            return records[0]
+        else:
+            return None
 
 
 class ICommunityTyped(Interface):
@@ -271,8 +290,25 @@ class CommunityAdapterMixin(object):
         self.maxclient.people[self.context.Creator()].subscriptions.post(object_url=self.context.absolute_url())
         self.update_acl(acl)
 
+    def update_community_type(self):
+        # Guard in case the update could already be made by other means
+        context_current_info = self.maxclient.contexts[self.context.absolute_url()].get()
+        should_update = False
+        for key in self.max_permissions:
+            if self.max_permissions[key] != context_current_info['permissions'][key]:
+                should_update = True
+        if should_update:
+            properties_to_update = dict(permissions=self.max_permissions)
+            self.maxclient.contexts[self.context.absolute_url()].put(**properties_to_update)
+
+        # Update the community_type field
+        self.context.community_type = self.__component_name__
+
+        # and related permissions
+        self.set_plone_permissions(self.get_acl())
+
     def get_acl(self):
-        return ICommunityACL(self).attrs.get('acl', '')
+        return ICommunityACL(self.context)().attrs.get('acl', '')
 
     def update_acl(self, acl):
         gwuuid = IGWUUID(self.context)
@@ -395,10 +431,7 @@ class OrganizativeCommunity(CommunityAdapterMixin):
     """ Named adapter for the organizative communities """
     def __init__(self, context):
         super(OrganizativeCommunity, self).__init__(context)
-        self.max_permissions = dict(read='subscribed',
-                                    write='restricted',
-                                    subscribe='restricted',
-                                    unsubscribe='restricted')
+        self.max_permissions = ORGANIZATIVE_PERMISSIONS
 
 
 @grok.implementer(ICommunityTyped)
@@ -407,10 +440,7 @@ class OpenCommunity(CommunityAdapterMixin):
     """ Named adapter for the open communities """
     def __init__(self, context):
         super(OpenCommunity, self).__init__(context)
-        self.max_permissions = dict(read='subscribed',
-                                    write='subscribed',
-                                    subscribe='public',
-                                    unsubscribe='public')
+        self.max_permissions = OPEN_PERMISSIONS
 
     def set_plone_permissions(self, acl, changed=False):
 
@@ -427,10 +457,7 @@ class ClosedCommunity(CommunityAdapterMixin):
     """ Named adapter for the closed communities """
     def __init__(self, context):
         super(ClosedCommunity, self).__init__(context)
-        self.max_permissions = dict(read='subscribed',
-                                    write='restricted',
-                                    subscribe='restricted',
-                                    unsubscribe='public')
+        self.max_permissions = CLOSED_PERMISSIONS
 
     def set_initial_subscription(self, acl):
         super(ClosedCommunity, self).set_initial_subscription(acl)
@@ -541,7 +568,7 @@ class EditACL(grok.View):
         return IGWUUID(self.context)
 
     def get_acl(self):
-        return json.dumps(ICommunityACL(self.context).attrs.get('acl', ''))
+        return json.dumps(ICommunityACL(self.context)().attrs.get('acl', ''))
 
 
 class UploadFile(grok.View):

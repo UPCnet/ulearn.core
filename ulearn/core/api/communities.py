@@ -4,7 +4,7 @@ from zope.component import getUtility
 from zope.event import notify
 from zope.lifecycleevent import ObjectModifiedEvent
 from zope.component import getAdapter
-
+from zope.component import getAdapters
 from Products.CMFPlone.interfaces import IPloneSiteRoot
 from repoze.catalog.query import Eq
 from souper.soup import get_soup
@@ -46,6 +46,46 @@ class Community(REST):
     def __init__(self, context, request):
         super(Community, self).__init__(context, request)
 
+    def PUT(self):
+        """ Modifies the community itself. """
+        # Parameters validation
+        validation = self.validate()
+        if validation is not True:
+            return validation
+
+        # Check if there's a valid community with the requested hash
+        lookedup_obj = self.lookup_community()
+        if lookedup_obj is not True:
+            return lookedup_obj
+
+        # Hard security validation as the view is soft checked
+        check_permission = self.check_roles(self.community, ['Owner', 'Manager'])
+        if check_permission is not True:
+            return check_permission
+
+        self.data = json.loads(self.request['BODY'])
+
+        if 'community_type' in self.data:
+            # We are changing the type of the community
+            # Check if it's a legit change
+            if self.data['community_type'] in [a[0] for a in getAdapters((self.community,), ICommunityTyped)]:
+                adapter = getAdapter(self.community, ICommunityTyped, name=self.data['community_type'])
+            else:
+                self.response.setStatus(400)
+                return self.json_response({"error": "Bad request, wrong community type"})
+
+            if self.data['community_type'] == self.community.community_type:
+                self.response.setStatus(400)
+                return self.json_response({"error": "Bad request, already that community type"})
+
+            # Everything is ok, proceed
+            adapter.update_community_type()
+
+        self.response.setStatus(200)
+        success_response = 'Updated community "{}"'.format(self.community.absolute_url())
+        logger.info(success_response)
+        return self.json_response({'message': success_response, 'status': 200})
+
 
 class Subscriptions(REST):
     """
@@ -86,7 +126,7 @@ class Subscriptions(REST):
         if check_permission is not True:
             return check_permission
 
-        result = ICommunityACL(self.community).attrs.get('acl', '')
+        result = ICommunityACL(self.community)().attrs.get('acl', '')
 
         self.response.setStatus(200)
         return self.json_response(result)
@@ -119,24 +159,6 @@ class Subscriptions(REST):
 
         self.response.setStatus(result.pop('status'))
         return self.json_response(result)
-
-    def lookup_community(self):
-        pc = api.portal.get_tool(name='portal_catalog')
-        result = pc.searchResults(community_hash=self.params['community'])
-
-        if not result:
-            # Fallback search by gwuuid
-            result = pc.searchResults(gwuuid=self.params['community'])
-
-            if not result:
-                # Not found either by hash nor by gwuuid
-                self.response.setStatus(404)
-                error_response = 'Community hash not found: {}'.format(self.params['community'])
-                logger.error(error_response)
-                return self.json_response({'error': error_response})
-
-        self.community = result[0].getObject()
-        return True
 
     def update_subscriptions(self):
         adapter = getAdapter(self.community, ICommunityTyped, name=self.community.community_type)

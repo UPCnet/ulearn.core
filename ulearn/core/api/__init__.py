@@ -184,3 +184,21 @@ class REST(REST_BASE):
         if view is None:
             raise NotFound(name)
         return view
+
+    def lookup_community(self):
+        pc = api.portal.get_tool(name='portal_catalog')
+        result = pc.searchResults(community_hash=self.params['community'])
+
+        if not result:
+            # Fallback search by gwuuid
+            result = pc.searchResults(gwuuid=self.params['community'])
+
+            if not result:
+                # Not found either by hash nor by gwuuid
+                self.response.setStatus(404)
+                error_response = 'Community hash not found: {}'.format(self.params['community'])
+                logger.error(error_response)
+                return self.json_response({'error': error_response})
+
+        self.community = result[0].getObject()
+        return True

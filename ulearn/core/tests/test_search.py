@@ -197,7 +197,7 @@ class TestExample(uLearnTestBase):
         self.delete_default_test_users()
         logout()
 
-    @unittest.skipIf(os.environ.get('JENKINS', False), 'Skipping due to lack of LDAP access')
+    @unittest.skipUnless(os.environ.get('LDAP_TEST', False), 'Skipping due to lack of LDAP access')
     def test_group_search_on_acl(self):
         setRoles(self.portal, u'ulearn.testuser1', ['Manager'])
         login(self.portal, u'ulearn.testuser1')
