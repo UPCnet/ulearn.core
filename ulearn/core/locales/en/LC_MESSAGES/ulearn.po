@@ -673,6 +673,14 @@ msgstr "Edit community"
 msgid "label_delete_community"
 msgstr "Delete community"
 
+msgid "video_url"
+msgstr "URL of the video"
 
+msgid "video_url_description"
+msgstr "Add your website youtube video"
 
+msgid "video_embed"
+msgstr "Embedded video"
 
+msgid "video_embed_description"
+msgstr "An embedded video"

@@ -732,3 +732,15 @@ msgstr "Editar comunidad"
 
 msgid "label_delete_community"
 msgstr "Eliminar comunidad"
+
+msgid "video_url"
+msgstr "URL del video"
+
+msgid "video_url_description"
+msgstr "Agregar la dirección web del video de youtube"
+
+msgid "video_embed"
+msgstr "Video incrustado"
+
+msgid "video_embed_description"
+msgstr "Un video incrustado"

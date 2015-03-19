@@ -765,3 +765,14 @@ msgstr "Editar comunitat"
 msgid "label_delete_community"
 msgstr "Esborrar comunitat"
 
+msgid "video_url"
+msgstr "URL del vídeo"
+
+msgid "video_url_description"
+msgstr "Afegeix l'adreça web del vídeo de youtube"
+
+msgid "video_embed"
+msgstr "Vídeo incrustat"
+
+msgid "video_embed_description"
+msgstr "Un vídeo incrustat"
