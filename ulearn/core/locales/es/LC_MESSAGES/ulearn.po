@@ -744,3 +744,9 @@ msgstr "Video incrustado"
 
 msgid "video_embed_description"
 msgstr "Un video incrustado"
+
+msgid "change_community_type"
+msgstr "Cambia el tipo"
+
+msgid "manage_membership"
+msgstr "Gestiona los miembros"

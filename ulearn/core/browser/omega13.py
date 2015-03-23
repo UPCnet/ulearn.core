@@ -34,7 +34,7 @@ class Omega13UserSearch(grok.View):
                                                          Eq('fullname', normalized_query)))]
             too_much_results = len(users_in_soup) > result_threshold
 
-            is_useless_request = query.startswith(last_query) and len(users_in_soup) == last_query_count
+            is_useless_request = query.startswith(last_query) and len(users_in_soup) == int(last_query_count)
 
             if is_useless_request and (not too_much_results or searching_surname):
                 current_user = api.user.get_current()

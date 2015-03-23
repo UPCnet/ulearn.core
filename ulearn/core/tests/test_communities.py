@@ -31,6 +31,10 @@ from ulearn.core.testing import ULEARN_CORE_INTEGRATION_TESTING
 from ulearn.core.content.community import OPEN_PERMISSIONS
 from ulearn.core.content.community import CLOSED_PERMISSIONS
 from ulearn.core.content.community import ORGANIZATIVE_PERMISSIONS
+from ulearn.core.tests.mockers import http_mock_hub_syncacl
+
+import httpretty
+import json
 
 
 class TestExample(uLearnTestBase):
@@ -43,14 +47,17 @@ class TestExample(uLearnTestBase):
         self.request = self.layer['request']
         self.qi_tool = getToolByName(self.portal, 'portal_quickinstaller')
 
-        self.maxclient, settings = getUtility(IMAXClient)()
-        self.username = settings.max_restricted_username
-        self.token = settings.max_restricted_token
+        self.maxclient, self.settings = getUtility(IMAXClient)()
+        self.username = self.settings.max_restricted_username
+        self.token = self.settings.max_restricted_token
 
-        self.maxclient.setActor(settings.max_restricted_username)
-        self.maxclient.setToken(settings.max_restricted_token)
+        self.maxclient.setActor(self.settings.max_restricted_username)
+        self.maxclient.setToken(self.settings.max_restricted_token)
 
     def tearDown(self):
+        httpretty.disable()
+        httpretty.reset()
+
         self.maxclient.contexts['http://nohost/plone/community-test'].delete()
         self.maxclient.contexts['http://nohost/plone/community-test2'].delete()
         self.maxclient.contexts['http://nohost/plone/community-test-open'].delete()
@@ -279,8 +286,14 @@ class TestExample(uLearnTestBase):
                            dict(id=u'UPCnet', displayName=u'UPCnet', role=u'reader')]
                    )
 
+        httpretty.enable()
+        http_mock_hub_syncacl(acl, self.settings.hub_server)
+
         adapter = getAdapter(community, ICommunityTyped, name=community.community_type)
         adapter.update_acl(acl)
+
+        httpretty.disable()
+        httpretty.reset()
 
         soup = get_soup('communities_acl', self.portal)
         records = [r for r in soup.query(Eq('gwuuid', IGWUUID(community)))]
@@ -486,3 +499,24 @@ class TestExample(uLearnTestBase):
         records = [r for r in soup.query(Eq('gwuuid', gwuuid))]
 
         self.assertFalse(records)
+
+    def test_auto_subscribe_to_open(self):
+        login(self.portal, 'ulearn.testuser1')
+        community = self.create_test_community(community_type='Open')
+        logout()
+        login(self.portal, 'ulearn.testuser2')
+
+        self.request.method = 'POST'
+        view = getMultiAdapter((community, self.request), name='subscribe_to_open')
+        result = view.render()
+
+        result = json.loads(result)
+        self.assertTrue('message' in result)
+
+        adapter = getAdapter(community, ICommunityTyped, name=community.community_type)
+        acl = adapter.get_acl()
+        self.assertTrue(len(acl['users']), 2)
+        users_subscribed = [a['id'] for a in acl['users']]
+        self.assertTrue(u'ulearn.testuser2' in users_subscribed)
+
+        self.assertTrue(u'ulearn.testuser2' in self.get_max_subscribed_users(community))

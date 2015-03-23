@@ -25,26 +25,29 @@
 
   <metal:content-core define-macro="main">
     <div ng-controller="subscribeToOpenCommunity as ctrl">
-    <alert ng-if="ctrl.show_alert"
-           close="ctrl.closeAlert()"
-           type="info">
+      <alert ng-if="ctrl.show_alert"
+             close="ctrl.closeAlert()"
+             type="info"
+             ng-cloak>
         <p>
         <strong i18n:translate="info">
-                  Info
+          Info
         </strong>
         <tal:msg i18n:translate="community_open_and_no_subscribed">
           This is an open community, but you are not currently subscribed.
         </tal:msg>
         </p>
         <p>
-          <a  i18n:translate="subscribe" class="btn btn-info" href="#"
+          <a i18n:translate="subscribe" class="btn btn-info"
+             ng-click="ctrl.confirmSubscribe()"
              tal:attributes="data-community string:${context/absolute_url};
                              data-name context/Title">
-              Subscribe
+            Subscribe
           </a>
         </p>
-    </alert>
-      <div id="subscribealert" class="alert alert-info" role="alert"
+      </alert>
+
+<!--!       <div id="subscribealert" class="alert alert-info" role="alert"
            tal:condition="view/show_community_open_but_not_subscribed">
         <button data-dismiss="alert" class="close" type="button">×</button>
         <p>
@@ -83,7 +86,7 @@
               Upgrade
           </a>
         </p>
-      </div>
+      </div> -->
 
     </div>
     <div class="tab-pane active" id="maxui-widget-container"></div>

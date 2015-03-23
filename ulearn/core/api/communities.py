@@ -72,11 +72,11 @@ class Community(REST):
                 adapter = getAdapter(self.community, ICommunityTyped, name=self.data['community_type'])
             else:
                 self.response.setStatus(400)
-                return self.json_response({"error": "Bad request, wrong community type"})
+                return self.json_response(dict(error='Bad request, wrong community type', status_code=400))
 
             if self.data['community_type'] == self.community.community_type:
                 self.response.setStatus(400)
-                return self.json_response({"error": "Bad request, already that community type"})
+                return self.json_response(dict(error='Bad request, already that community type', status_code=400))
 
             # Everything is ok, proceed
             adapter.update_community_type()
@@ -84,7 +84,7 @@ class Community(REST):
         self.response.setStatus(200)
         success_response = 'Updated community "{}"'.format(self.community.absolute_url())
         logger.info(success_response)
-        return self.json_response({'message': success_response, 'status': 200})
+        return self.json_response(dict(message=success_response, status_code=200))
 
 
 class Subscriptions(REST):
@@ -157,7 +157,7 @@ class Subscriptions(REST):
 
         result = self.update_subscriptions()
 
-        self.response.setStatus(result.pop('status'))
+        self.response.setStatus(result['status_code'])
         return self.json_response(result)
 
     def update_subscriptions(self):
@@ -167,10 +167,11 @@ class Subscriptions(REST):
         adapter.update_acl(self.data)
         adapter.set_plone_permissions(self.data)
 
-        # XXX Communicate the change in the community subscription to the uLearnHub
-        # adapter.send_update_context()
+        # Communicate the change in the community subscription to the uLearnHub
+        # XXX: Until we do not have a proper Hub online
+        adapter.update_hub_subscriptions()
 
         # Response successful
         success_response = 'Updated community "{}" subscriptions'.format(self.community.absolute_url())
         logger.info(success_response)
-        return {'message': success_response, 'status': 200}
+        return {'message': success_response, 'status_code': 200}

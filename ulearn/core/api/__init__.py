@@ -103,7 +103,8 @@ class REST(REST_BASE):
         """
         if not self.extract_params():
             self.response.setStatus(404)
-            return self.json_response({"error": "Missing parameters"})
+            return self.json_response(dict(error='Missing parameters',
+                                           status_code=404))
 
         return True
 
@@ -115,14 +116,16 @@ class REST(REST_BASE):
 
         if not allowed:
             self.response.setStatus(401)
-            return self.json_response({"error": "You are not allowed to modify this object"})
+            return self.json_response(dict(error='You are not allowed to modify this object',
+                                           status_code=401))
 
         return allowed
 
     def check_permission(self, obj, permission):
         if not api.user.has_permission(permission, obj):
             self.response.setStatus(401)
-            return self.json_response({"error": "You are not allowed to modify this object"})
+            return self.json_response(dict(error='You are not allowed to modify this object',
+                                           status_code=401))
 
         return True
 
@@ -198,7 +201,7 @@ class REST(REST_BASE):
                 self.response.setStatus(404)
                 error_response = 'Community hash not found: {}'.format(self.params['community'])
                 logger.error(error_response)
-                return self.json_response({'error': error_response})
+                return self.json_response(dict(error=error_response, status_code=404))
 
         self.community = result[0].getObject()
         return True

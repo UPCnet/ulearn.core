@@ -24,6 +24,7 @@ class APIRoot(grok.View):
             if hasattr(self, name):
                 notify(RESTMethodPublishedEvent(self, name))
                 return getattr(self, name)
+
         view = queryRESTComponent(
             (self, self.context),
             (self.context, request),

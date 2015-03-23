@@ -64,6 +64,7 @@ from hashlib import sha1
 from mrs.max.utilities import IMAXClient
 
 from genweb.core.gwuuid import IGWUUID
+from genweb.core.utils import json_response
 from ulearn.core import _
 from ulearn.core.interfaces import IDXFileFactory
 from ulearn.core.interfaces import IDocumentFolder
@@ -73,8 +74,9 @@ from ulearn.core.interfaces import IPhotosFolder
 from ulearn.core.interfaces import IDiscussionFolder
 
 import json
-import mimetypes
 import logging
+import mimetypes
+import requests
 
 logger = logging.getLogger(__name__)
 VALID_COMMUNITY_ROLES = ['reader', 'writer', 'owner']
@@ -345,6 +347,30 @@ class CommunityAdapterMixin(object):
         if records:
             del soup[records[0]]
 
+    def update_acl_atomic(self, username, role):
+        """ This method is used when it is required to perform an atomic (single
+            user) acl update to a community.
+        """
+        acl = self.get_acl()
+        new_user_acl = dict(id=username, displayName=u'', role=role)
+        acl['users'].append(new_user_acl)
+        self.update_acl(acl)
+
+    def update_hub_subscriptions(self):
+        portal = api.portal.get()
+        subscribe_request = {}
+        subscribe_request['component'] = dict(type='communities', id=portal.absolute_url())
+        subscribe_request['permission_mapping'] = self.hub_permission_mapping
+        subscribe_request['ignore_grants_and_vetos'] = True
+        subscribe_request['context'] = self.context.absolute_url()
+        subscribe_request['acl'] = self.get_acl()
+
+        requests.post('{}/api/domains/{}/services/syncacl'.format(self.settings.hub_server, self.settings.domain), json=subscribe_request)
+
+    def add_max_subscription_atomic(self, username):
+        """ Used in auto-subscribe an user to an Open community. """
+        self.maxclient.people[username].subscriptions.post(object_url=self.context.absolute_url())
+
     def update_max_context(self):
         # Get current MAX context information
         context_current_info = self.maxclient.contexts[self.context.absolute_url()].get()
@@ -432,6 +458,9 @@ class OrganizativeCommunity(CommunityAdapterMixin):
     def __init__(self, context):
         super(OrganizativeCommunity, self).__init__(context)
         self.max_permissions = ORGANIZATIVE_PERMISSIONS
+        self.hub_permission_mapping = dict(reader=['read'],
+                                           write=['read', 'write'],
+                                           owner=['read', 'write', 'unsubscribe', 'flag'])
 
 
 @grok.implementer(ICommunityTyped)
@@ -441,6 +470,9 @@ class OpenCommunity(CommunityAdapterMixin):
     def __init__(self, context):
         super(OpenCommunity, self).__init__(context)
         self.max_permissions = OPEN_PERMISSIONS
+        self.hub_permission_mapping = dict(reader=['read', 'unsubscribe'],
+                                           write=['read', 'write', 'unsubscribe'],
+                                           owner=['read', 'write', 'unsubscribe', 'flag'])
 
     def set_plone_permissions(self, acl, changed=False):
 
@@ -458,6 +490,9 @@ class ClosedCommunity(CommunityAdapterMixin):
     def __init__(self, context):
         super(ClosedCommunity, self).__init__(context)
         self.max_permissions = CLOSED_PERMISSIONS
+        self.hub_permission_mapping = dict(reader=['read', 'unsubscribe'],
+                                           write=['read', 'write', 'unsubscribe'],
+                                           owner=['read', 'write', 'unsubscribe', 'flag'])
 
     def set_initial_subscription(self, acl):
         super(ClosedCommunity, self).set_initial_subscription(acl)
@@ -550,6 +585,10 @@ class View(grok.View):
             return False
 
     def show_community_open_subscribed_readonly(self):
+        """ This use case happens when given a closed community and then is
+            converted to an open one, the users with reader role stays with that
+            role, but are allowed to 'upgrade' it to writer.
+        """
         pm = getToolByName(self.context, "portal_membership")
         current_user = pm.getAuthenticatedMember().getUserName()
         if self.context.community_type == 'Open' and \
@@ -651,6 +690,43 @@ class ToggleFavorite(grok.View):
         return "Toggled"
 
 
+class SubscribeToOpen(grok.View):
+    """" Subscribe a requester user to an open community """
+    grok.context(ICommunity)
+    grok.name('subscribe_to_open')
+
+    @json_response
+    def render(self):
+        community = self.context
+        current_user = api.user.get_current()
+
+        if self.request.method == 'POST' and \
+           community.community_type == u'Open' and \
+           'Reader' in api.user.get_roles(obj=self.context):
+            adapter = getAdapter(self.context, ICommunityTyped, name=self.context.community_type)
+
+            # Subscribe to context
+            try:
+                adapter.add_max_subscription_atomic(current_user.id)
+            except:
+                return dict(error='Something bad happened while sending the related MAX request.',
+                            status='502')
+
+            # For this use case, the user is able to auto-subscribe to the
+            # community with write permissions
+            adapter.update_acl_atomic(current_user.id, u'write')
+
+            acl = adapter.get_acl()
+            # Finally, we update the plone permissions
+            adapter.set_plone_permissions(acl)
+
+            return dict(message='Subscription to the requested open community done.')
+
+        if self.request.method != 'POST':
+            return dict(error='Bad request. POST request expected.',
+                        status=400)
+
+
 class ToggleSubscribe(grok.View):
     """ Toggle subscription in an Open or Closed community. """
 
@@ -739,10 +815,6 @@ class communityAdder(form.SchemaForm):
         if errors:
             self.status = self.formErrorsMessage
             return
-
-        # Handle order here. For now, just print it to the console. A more
-        # realistic action would be to send the order to another system, send
-        # an email, or similar
 
         nom = data['title']
         description = data['description']

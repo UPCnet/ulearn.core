@@ -3,6 +3,9 @@ import unittest2 as unittest
 from hashlib import sha1
 from plone import api
 from zope.component import getUtility
+from zope.component import getMultiAdapter
+from zope.publisher.browser import TestRequest
+
 from plone.testing.z2 import Browser
 from plone.app.testing import TEST_USER_ID
 from plone.app.testing import setRoles
@@ -18,9 +21,11 @@ from ulearn.core.testing import ULEARN_CORE_FUNCTIONAL_TESTING
 from ulearn.core.content.community import OPEN_PERMISSIONS
 from ulearn.core.content.community import CLOSED_PERMISSIONS
 from ulearn.core.content.community import ORGANIZATIVE_PERMISSIONS
+from ulearn.core.api import queryRESTComponent
+from ulearn.core.tests.mockers import http_mock_hub_syncacl
 
-import requests
-import transaction
+import httpretty
+import json
 
 
 class TestAPI(uLearnTestBase):
@@ -31,85 +36,125 @@ class TestAPI(uLearnTestBase):
         self.app = self.layer['app']
         self.portal = self.layer['portal']
         self.request = self.layer['request']
-        # self.browser = Browser(self.app)
 
-        self.maxclient, settings = getUtility(IMAXClient)()
-        self.username = settings.max_restricted_username
-        self.token = settings.max_restricted_token
+        self.maxclient, self.settings = getUtility(IMAXClient)()
+        self.username = self.settings.max_restricted_username
+        self.token = self.settings.max_restricted_token
 
-        self.maxclient.setActor(settings.max_restricted_username)
-        self.maxclient.setToken(settings.max_restricted_token)
+        self.maxclient.setActor(self.settings.max_restricted_username)
+        self.maxclient.setToken(self.settings.max_restricted_token)
 
     def tearDown(self):
+        httpretty.disable()
+        httpretty.reset()
+
         self.maxclient.contexts['http://localhost:55001/plone/community-test'].delete()
+
+    def request_API_endpoint(self, username, traversal, body=None):
+        """ Get the API endpoint given a list with the traversal to be done. """
+        fake_environ = self.max_headers(username)
+        if body is not None:
+            fake_environ.update(dict(BODY=json.dumps(body)))
+        fake_request = TestRequest(environ=fake_environ)
+
+        api_root = getMultiAdapter((self.portal, fake_request), name=traversal[0])
+        traversal.pop(0)
+        previous_view = api_root
+        for name in traversal:
+            partial_view = queryRESTComponent((previous_view, self.portal), (self.portal, fake_request), name=name, parent=previous_view)
+            placeholder = getattr(previous_view, 'placeholder_type', None)
+
+            if partial_view is None and placeholder is not None:
+                placeholder_id = getattr(previous_view, 'placeholder_id')
+                partial_view = queryRESTComponent((previous_view, self.portal), (self.portal, fake_request), name=placeholder, parent=previous_view, placeholder={placeholder_id: name})
+
+            previous_view = partial_view
+
+        return partial_view
 
     def test_community_subscribe_post(self):
         username = 'ulearn.testuser1'
         login(self.portal, username)
-        portal_url = self.portal.absolute_url()
         community = self.create_test_community()
-        # Needed for the 'external' request with requests
-        transaction.commit()
         gwuuid = IGWUUID(community)
-        url = portal_url + '/api/communities/{}/subscriptions'.format(gwuuid)
+
         acl = dict(users=[dict(id=u'janet.dura', displayName=u'Janet Durà', role=u'writer'),
                           dict(id=u'victor.fernandez', displayName=u'Víctor Fernández de Alba', role=u'reader')],
                    groups=[dict(id=u'PAS', displayName=u'PAS UPC', role=u'writer'),
                            dict(id=u'UPCnet', displayName=u'UPCnet', role=u'reader')]
                    )
-        resp = requests.post(url, json=acl, headers=self.max_headers(username))
 
-        self.assertEqual(resp.status_code, 200)
-        transaction.commit()
+        subscriptions_view = self.request_API_endpoint(username, ['api', 'communities', gwuuid, 'subscriptions'], body=acl)
+        httpretty.enable()
+        http_mock_hub_syncacl(acl, self.settings.hub_server)
+        response = subscriptions_view.POST()
+
+        response = json.loads(response)
+
+        self.assertEqual(response['status_code'], 200)
+        self.assertTrue('message' in response)
         self.assertEqual(ICommunityACL(community)().attrs['acl'], acl)
         self.assertEqual(ICommunityACL(community)().attrs['groups'], ['PAS', 'UPCnet'])
         logout()
 
         # Not allowed to change ACL
         username_not_allowed = 'ulearn.testuser2'
-        resp = requests.post(url, json=acl, headers=self.max_headers(username_not_allowed))
-        self.assertEqual(resp.status_code, 404)
+        login(self.portal, username_not_allowed)
+        subscriptions_view = self.request_API_endpoint(username_not_allowed, ['api', 'communities', gwuuid, 'subscriptions'], body=acl)
+        response = subscriptions_view.POST()
+        response = json.loads(response)
+
+        self.assertEqual(response['status_code'], 404)
+        logout()
 
         # Subscribed to community but not Owner
+        login(self.portal, username)
         acl = dict(users=[dict(id=username_not_allowed, displayName=u'Test', role=u'writer'),
                           dict(id=u'victor.fernandez', displayName=u'Víctor Fernández de Alba', role=u'reader')],
                    groups=[dict(id=u'PAS', displayName=u'PAS UPC', role=u'writer'),
                            dict(id=u'UPCnet', displayName=u'UPCnet', role=u'reader')]
                    )
-        resp = requests.post(url, json=acl, headers=self.max_headers(username))
-        transaction.commit()
+        subscriptions_view = self.request_API_endpoint(username, ['api', 'communities', gwuuid, 'subscriptions'], body=acl)
+        response = subscriptions_view.POST()
+        response = json.loads(response)
+        logout()
 
-        resp = requests.post(url, json=acl, headers=self.max_headers(username_not_allowed))
-        self.assertEqual(resp.status_code, 401)
+        login(self.portal, username_not_allowed)
+        subscriptions_view = self.request_API_endpoint(username_not_allowed, ['api', 'communities', gwuuid, 'subscriptions'], body=acl)
+        response = subscriptions_view.POST()
+        response = json.loads(response)
+
+        self.assertEqual(response['status_code'], 401)
+        logout()
+
+        httpretty.disable()
+        httpretty.reset()
 
     def test_community_subscribe_get(self):
         username = 'ulearn.testuser1'
         login(self.portal, username)
-        portal_url = self.portal.absolute_url()
         community = self.create_test_community()
-
-        transaction.commit()
         gwuuid = IGWUUID(community)
-        url = portal_url + '/api/communities/{}/subscriptions'.format(gwuuid)
 
-        resp = requests.get(url, headers=self.max_headers(username))
+        subscriptions_view = self.request_API_endpoint(username, ['api', 'communities', gwuuid, 'subscriptions'])
+        response = subscriptions_view.GET()
+        response = json.loads(response)
 
         self.assertEqual(ICommunityACL(community)().attrs['acl'], {'users': [{'role': 'owner', 'id': u'ulearn.testuser1'}]})
 
     def test_community_put_permissions(self):
+        """ Used when changing the community type. """
         username = 'ulearn.testuser1'
         login(self.portal, username)
-        portal_url = self.portal.absolute_url()
         community = self.create_test_community()
-
-        transaction.commit()
         gwuuid = IGWUUID(community)
-        url = portal_url + '/api/communities/{}'.format(gwuuid)
-        data = dict(community_type='Open')
-        resp = requests.put(url, json=data, headers=self.max_headers(username))
-        transaction.commit()
 
-        self.assertEqual(resp.status_code, 200)
+        data = dict(community_type='Open')
+        community_view = self.request_API_endpoint(username, ['api', 'communities', gwuuid], body=data)
+        response = community_view.PUT()
+        response = json.loads(response)
+
+        self.assertEqual(response['status_code'], 200)
         self.assertEqual(community.community_type, 'Open')
 
         self.assertTrue('Reader' in community.get_local_roles_for_userid(userid='AuthenticatedUsers'))
@@ -120,10 +165,11 @@ class TestAPI(uLearnTestBase):
 
         # To closed again
         data = dict(community_type='Closed')
-        resp = requests.put(url, json=data, headers=self.max_headers(username))
-        transaction.commit()
+        community_view = self.request_API_endpoint(username, ['api', 'communities', gwuuid], body=data)
+        response = community_view.PUT()
+        response = json.loads(response)
 
-        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(response['status_code'], 200)
         self.assertEqual(community.community_type, 'Closed')
 
         self.assertTrue('Reader' not in community.get_local_roles_for_userid(userid='AuthenticatedUsers'))
@@ -133,20 +179,27 @@ class TestAPI(uLearnTestBase):
             self.assertEqual(max_community_info['permissions'].get(key, ''), CLOSED_PERMISSIONS[key])
 
         # Try to make it again closed
-        resp = requests.put(url, json=data, headers=self.max_headers(username))
-        self.assertEqual(resp.status_code, 400)
+        community_view = self.request_API_endpoint(username, ['api', 'communities', gwuuid], body=data)
+        response = community_view.PUT()
+        response = json.loads(response)
+
+        self.assertEqual(response['status_code'], 400)
         self.assertEqual(community.community_type, 'Closed')
 
         # Try to change it to an unknown type
         data = dict(community_type='Bullshit')
-        resp = requests.put(url, json=data, headers=self.max_headers(username))
-        self.assertEqual(resp.status_code, 400)
+        community_view = self.request_API_endpoint(username, ['api', 'communities', gwuuid], body=data)
+        response = community_view.PUT()
+        response = json.loads(response)
+
+        self.assertEqual(response['status_code'], 400)
         self.assertEqual(community.community_type, 'Closed')
 
         # Try to change it to Organizative
         data = dict(community_type='Organizative')
-        resp = requests.put(url, json=data, headers=self.max_headers(username))
-        transaction.commit()
+        community_view = self.request_API_endpoint(username, ['api', 'communities', gwuuid], body=data)
+        response = community_view.PUT()
+        response = json.loads(response)
 
-        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(response['status_code'], 200)
         self.assertEqual(community.community_type, 'Organizative')
