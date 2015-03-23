@@ -520,3 +520,31 @@ class TestExample(uLearnTestBase):
         self.assertTrue(u'ulearn.testuser2' in users_subscribed)
 
         self.assertTrue(u'ulearn.testuser2' in self.get_max_subscribed_users(community))
+
+    def test_acl_migration(self):
+        login(self.portal, 'ulearn.testuser1')
+        community = self.create_test_community()
+
+        # Fake already existing old style acl
+        community.readers = ['ulearn.testuser2', 'janet.dura']
+        community.subscribed = ['javier.otero']
+        community.owners = ['victor.fernandez']
+
+        view = getMultiAdapter((self.portal, self.request), name='migrate_acls')
+        view.render()
+
+        adapter = getAdapter(community, ICommunityTyped, name=community.community_type)
+        acl = adapter.get_acl()
+
+        readers = [a['id'] for a in acl['users'] if a['role'] == u'reader']
+        writers = [a['id'] for a in acl['users'] if a['role'] == u'writer']
+        owners = [a['id'] for a in acl['users'] if a['role'] == u'owner']
+
+        self.assertTrue(u'janet.dura' in readers)
+        self.assertTrue(u'ulearn.testuser2' in readers)
+        self.assertTrue(u'javier.otero' in writers)
+        self.assertTrue(u'victor.fernandez' in owners)
+
+        self.assertEqual(len(readers), 2)
+        self.assertEqual(len(writers), 1)
+        self.assertEqual(len(owners), 1)

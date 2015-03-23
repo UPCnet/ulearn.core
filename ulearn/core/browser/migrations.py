@@ -6,6 +6,8 @@ from zope.component import getUtility
 from zope.component import queryUtility
 from zope.component import getMultiAdapter
 from zope.component.hooks import getSite
+from zope.component import getAdapter
+
 from zope.interface import alsoProvides
 from zope.event import notify
 from zope.lifecycleevent import ObjectModifiedEvent
@@ -32,8 +34,8 @@ from genweb.core.browser.helpers import listPloneSites
 from genweb.core.gwuuid import ATTRIBUTE_NAME
 from ulearn.core.interfaces import IDiscussionFolder
 from ulearn.core import _
-
-
+from ulearn.core.content.community import ICommunityTyped
+from genweb.core.utils import get_safe_member_by_id
 from mrs.max.utilities import IMAXClient
 from maxclient.rest import RequestError
 
@@ -306,5 +308,37 @@ class GiveAllCommunitiesGWUUID(grok.View):
                 setattr(obj, ATTRIBUTE_NAME, uuid)
 
         pc.clearFindAndRebuild()
+
+        return 'Done'
+
+
+class MigrateOldStyleACLs(grok.View):
+    grok.context(IPloneSiteRoot)
+    grok.name('migrate_acls')
+
+    def render(self):
+        pc = api.portal.get_tool('portal_catalog')
+        communities = pc.searchResults(portal_type='ulearn.community')
+
+        permission_map = {
+            'readers': 'reader',
+            'subscribed': 'writer',
+            'owners': 'owner'
+        }
+
+        for brain in communities:
+            acl = dict(users=[], groups=[])
+            community = brain.getObject()
+            adapter = getAdapter(community, ICommunityTyped, name=community.community_type)
+
+            for old_role in permission_map:
+                users = getattr(community, old_role)
+                for username in users:
+                    acl['users'].append(dict(id=username,
+                                             displayName=get_safe_member_by_id(username).get('fullname', u''),
+                                             role=permission_map[old_role]))
+
+            adapter.update_acl(acl)
+            logger.warn('migrated community {} with acl: {}'.format(community.absolute_url(), acl))
 
         return 'Done'
