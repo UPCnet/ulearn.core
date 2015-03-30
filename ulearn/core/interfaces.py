@@ -37,3 +37,13 @@ class IAppFile(Interface):
 
 class IVideo(Interface):
     """ Marker to identify content type Video """
+
+class IUlearnUtils(Interface):
+    """ Marker describing the functionality of the convenience methods
+        placeholder ulearn.utils view.
+    """
+    def portal(self):
+        """ Returns the portal object """
+
+    def get_url_forget_password(self):
+        """ return redirect url when forget user password """

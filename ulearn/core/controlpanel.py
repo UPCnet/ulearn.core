@@ -96,7 +96,7 @@ class IUlearnControlPanelSettings(model.Schema):
 
     model.fieldset('UPCnet only',
                   _(u'UPCnet only'),
-                  fields=['language', 'activity_view'])
+                  fields=['language', 'activity_view','url_forget_password'])
 
     model.fieldset('Quick Links',
                   _(u'QuickLinks'),
@@ -284,6 +284,17 @@ class IUlearnControlPanelSettings(model.Schema):
         vocabulary=u"ulearn.core.activity_view",
         required=True,
         default=u'Darreres activitats')
+
+
+    url_forget_password = schema.TextLine(
+        title=_(u"url_forget_password",
+                default=u"URL contrasenya oblidada"),
+        description=_(u"help_url_forget_password",
+                    default=u"Url per defecte: '/mail_password_form?userid='. Per a dominis externs indiqueu la url completa, 'http://www.domini.cat'"),
+        required=True,
+        default=u"/mail_password_form?userid=")
+
+
 
 
 class UlearnControlPanelSettingsForm(controlpanel.RegistryEditForm):

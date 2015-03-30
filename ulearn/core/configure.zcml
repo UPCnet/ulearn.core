@@ -72,6 +72,16 @@
       provides="Products.GenericSetup.interfaces.EXTENSION"
       />
 
+    <!-- The utilities browser view (can't be a grok view) -->
+    <browser:page
+      for="*"
+      name="ulearn.utils"
+      class=".utils.ulearnUtils"
+      permission="zope2.Public"
+      allowed_interface=".interfaces.IUlearnUtils"
+      />
+
+
     <include file="patches.zcml" />
 
 </configure>
