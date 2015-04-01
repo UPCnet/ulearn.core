@@ -285,7 +285,6 @@ class IUlearnControlPanelSettings(model.Schema):
         required=True,
         default=u'Darreres activitats')
 
-
     url_forget_password = schema.TextLine(
         title=_(u"url_forget_password",
                 default=u"URL contrasenya oblidada"),
@@ -293,8 +292,6 @@ class IUlearnControlPanelSettings(model.Schema):
                     default=u"Url per defecte: '/mail_password_form?userid='. Per a dominis externs indiqueu la url completa, 'http://www.domini.cat'"),
         required=True,
         default=u"/mail_password_form?userid=")
-
-
 
 
 class UlearnControlPanelSettingsForm(controlpanel.RegistryEditForm):
