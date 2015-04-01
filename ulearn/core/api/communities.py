@@ -12,6 +12,7 @@ from souper.soup import Record
 
 from mrs.max.utilities import IMAXClient
 
+from genweb.core.utils import json_response
 from genweb.core.gwuuid import IGWUUID
 from ulearn.core.content.community import ICommunityTyped
 from ulearn.core.content.community import ICommunityACL
@@ -33,6 +34,66 @@ class Communities(REST):
 
     grok.adapts(APIRoot, IPloneSiteRoot)
     grok.require('genweb.authenticated')
+
+    def GET(self):
+        """ Returns all the user communities and the open ones. """
+        # Parameters validation
+        validation = self.validate()
+        if validation is not True:
+            return validation
+
+        # Hard security validation as the view is soft checked
+        check_permission = self.check_roles(roles=['Member', ])
+        if check_permission is not True:
+            return check_permission
+
+        # Get all communities for the current user
+        pc = api.portal.get_tool('portal_catalog')
+        r_results = pc.searchResults(portal_type="ulearn.community", community_type=[u"Closed", u"Organizative"])
+        ur_results = pc.unrestrictedSearchResults(portal_type="ulearn.community", community_type=u"Open")
+        communities = r_results + ur_results
+
+        self.is_role_manager = False
+        self.username = api.user.get_current().id
+        global_roles = api.user.get_roles()
+        if 'Manager' in global_roles:
+            self.is_role_manager = True
+
+        result = []
+        favorites = self.get_favorites()
+        for brain in communities:
+            community = dict(id=brain.id,
+                             title=brain.Title,
+                             description=brain.Description,
+                             url=brain.getURL(),
+                             gwuuid=brain.gwuuid,
+                             type=brain.community_type,
+                             image=brain.image_filename if brain.image_filename else False,
+                             favorited=brain.id in favorites,
+                             can_manage=self.is_community_manager(brain))
+            result.append(community)
+
+        self.response.setStatus(200)
+        return self.json_response(result)
+
+    def get_favorites(self):
+        pc = api.portal.get_tool('portal_catalog')
+
+        results = pc.unrestrictedSearchResults(favoritedBy=self.username)
+        return [favorites.id for favorites in results]
+
+    def is_community_manager(self, community):
+        # The user has role Manager
+        if self.is_role_manager:
+            return True
+
+        gwuuid = community.gwuuid
+        portal = api.portal.get()
+        soup = get_soup('communities_acl', portal)
+
+        records = [r for r in soup.query(Eq('gwuuid', gwuuid))]
+        if records:
+            return self.username in [a['id'] for a in records[0].attrs['acl']['users'] if a['role'] == u'owner']
 
 
 class Community(REST):
@@ -85,6 +146,27 @@ class Community(REST):
         success_response = 'Updated community "{}"'.format(self.community.absolute_url())
         logger.info(success_response)
         return self.json_response(dict(message=success_response, status_code=200))
+
+    @json_response
+    def DELETE(self):
+        # Parameters validation
+        validation = self.validate()
+        if validation is not True:
+            return validation
+
+        # Check if there's a valid community with the requested hash
+        lookedup_obj = self.lookup_community()
+        if lookedup_obj is not True:
+            return lookedup_obj
+
+        # Hard security validation as the view is soft checked
+        check_permission = self.check_roles(self.community, ['Owner', 'Manager'])
+        if check_permission is not True:
+            return check_permission
+
+        api.content.delete(obj=self.community)
+
+        return dict(status_code=204)
 
 
 class Subscriptions(REST):

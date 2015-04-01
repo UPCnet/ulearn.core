@@ -108,10 +108,15 @@ class REST(REST_BASE):
 
         return True
 
-    def check_roles(self, obj, roles):
+    def check_roles(self, obj=None, roles=[]):
         allowed = False
+        if obj:
+            user_roles = api.user.get_roles(obj=obj)
+        else:
+            user_roles = api.user.get_roles()
+
         for role in roles:
-            if role in api.user.get_roles(obj=obj):
+            if role in user_roles:
                 allowed = True
 
         if not allowed:

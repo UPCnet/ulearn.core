@@ -347,6 +347,15 @@ class CommunityAdapterMixin(object):
         if records:
             del soup[records[0]]
 
+    def remove_acl_atomic(self, username):
+        acl = self.get_acl()
+
+        for user in acl['users']:
+            if user['id'] == username:
+                acl['users'].remove(user)
+
+        self.update_acl(acl)
+
     def update_acl_atomic(self, username, role):
         """ This method is used when it is required to perform an atomic (single
             user) acl update to a community.
@@ -370,6 +379,10 @@ class CommunityAdapterMixin(object):
     def add_max_subscription_atomic(self, username):
         """ Used in auto-subscribe an user to an Open community. """
         self.maxclient.people[username].subscriptions.post(object_url=self.context.absolute_url())
+
+    def remove_max_subscription_atomic(self, username):
+        """ Used in unsubscribe an user to an Open or Closed community. """
+        self.maxclient.people[username].subscriptions[self.context.absolute_url()].delete()
 
     def update_max_context(self):
         # Get current MAX context information
@@ -681,19 +694,26 @@ class ToggleFavorite(grok.View):
     grok.context(IDexterityContent)
     grok.name('toggle-favorite')
 
+    @json_response
     def render(self):
-        current_user = api.user.get_current()
-        if current_user in IFavorite(self.context).get():
-            IFavorite(self.context).remove(current_user)
-        else:
-            IFavorite(self.context).add(current_user)
-        return "Toggled"
+        if self.request.method == 'POST':
+            current_user = api.user.get_current()
+            if current_user.id in IFavorite(self.context).get():
+                IFavorite(self.context).remove(current_user)
+                return dict(message='UnFavorited', status_code=200)
+            else:
+                IFavorite(self.context).add(current_user)
+                return dict(message='Favorited', status_code=200)
+
+        if self.request.method != 'POST':
+            return dict(error='Bad request. POST request expected.',
+                        status_code=400)
 
 
-class SubscribeToOpen(grok.View):
+class Subscribe(grok.View):
     """" Subscribe a requester user to an open community """
     grok.context(ICommunity)
-    grok.name('subscribe_to_open')
+    grok.name('subscribe')
 
     @json_response
     def render(self):
@@ -710,7 +730,7 @@ class SubscribeToOpen(grok.View):
                 adapter.add_max_subscription_atomic(current_user.id)
             except:
                 return dict(error='Something bad happened while sending the related MAX request.',
-                            status='502')
+                            status_code='502')
 
             # For this use case, the user is able to auto-subscribe to the
             # community with write permissions
@@ -724,50 +744,55 @@ class SubscribeToOpen(grok.View):
 
         if self.request.method != 'POST':
             return dict(error='Bad request. POST request expected.',
-                        status=400)
+                        status_code=400)
 
 
-class ToggleSubscribe(grok.View):
-    """ Toggle subscription in an Open or Closed community. """
+class UnSubscribe(grok.View):
+    """ Unsubscribe from an Open or Closed community. """
 
     grok.context(ICommunity)
-    grok.name('toggle-subscribe')
+    grok.name('unsubscribe')
 
+    @json_response
     def render(self):
         community = self.context
         current_user = api.user.get_current()
 
-        if community.community_type == u'Open' or community.community_type == u'Closed':
-            if self.user_is_subscribed(current_user, community):
-                self.remove_user_from_subscriptions(current_user, community)
-                if current_user in IFavorite(community).get():
-                    IFavorite(community).remove(current_user)
-            else:
-                community.add_subscription(unicode(current_user), 'subscribed')
+        if self.request.method == 'POST':
+            if community.community_type == u'Open' or community.community_type == u'Closed':
+                adapter = getAdapter(self.context, ICommunityTyped, name=self.context.community_type)
 
-            community.reindexObject()
-            notify(ObjectModifiedEvent(community))
-            return True
+                # Unsubscribe to context
+                try:
+                    adapter.remove_max_subscription_atomic(current_user.id)
+                except:
+                    return dict(error='Something bad happened while sending the related MAX request.',
+                                status_code='502')
 
-        elif community.community_type == u'Organizative':
-            # Bad, bad guy... You shouldn't been trying this...
-            return False
+                # Remove from acl
+                adapter.remove_acl_atomic(current_user.id)
 
-    def user_is_subscribed(self, user, community):
-        return user in community.readers + community.subscribed + community.owners
+                acl = adapter.get_acl()
+                # Finally, we update the plone permissions
+                adapter.set_plone_permissions(acl)
 
-    def remove_user_from_subscriptions(self, user, community):
-        if user in community.readers:
-            community.readers.remove(user)
-            community.remove_subscription(unicode(user), 'readers')
-        if user in community.subscribed:
-            community.remove_subscription(unicode(user), 'subscribed')
-        if user in community.owners:
-            community.remove_subscription(unicode(user), 'owners')
+                # Unfavorite
+                IFavorite(self.context).remove(current_user)
+
+                return dict(message='Unsubscription to the requested community done.')
+
+            elif community.community_type == u'Organizative':
+                # Bad, bad guy... You shouldn't been trying this...
+                return dict(error='Unsubscription from organizative community forbidden.',
+                            status_code='403')
+
+        if self.request.method != 'POST':
+            return dict(error='Bad request. POST request expected.',
+                        status_code=400)
 
 
 class UpgradeSubscribe(grok.View):
-    """ Upgrade subscription from reader to editor in an open community. """
+    """ DEPRECATED: ASK JAVIER. Upgrade subscription from reader to editor in an open community. """
 
     grok.context(ICommunity)
     grok.name('upgrade-subscribe')

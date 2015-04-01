@@ -203,3 +203,31 @@ class TestAPI(uLearnTestBase):
 
         self.assertEqual(response['status_code'], 200)
         self.assertEqual(community.community_type, 'Organizative')
+
+    def test_communities_get(self):
+        """ Gets all communities and its properties for the requester user. """
+        username = 'ulearn.testuser1'
+        login(self.portal, username)
+        community = self.create_test_community(community_type='Open')
+        gwuuid = IGWUUID(community)
+
+        communities_view = self.request_API_endpoint(username, ['api', 'communities'])
+        response = communities_view.GET()
+        response = json.loads(response)
+
+        self.assertEqual(len(response), 1)
+        self.assertEqual(response[0]['id'], 'community-test')
+        self.assertTrue(response[0]['favorited'])
+        self.assertTrue(response[0]['can_manage'])
+
+    def test_communities_delete(self):
+        """ Delete the given community. """
+        username = 'ulearn.testuser1'
+        login(self.portal, username)
+        community = self.create_test_community(community_type='Open')
+        gwuuid = IGWUUID(community)
+
+        community_view = self.request_API_endpoint(username, ['api', 'communities', gwuuid])
+        community_view.DELETE()
+
+        self.assertTrue('community-test' not in self.portal.objectIds())

@@ -507,7 +507,7 @@ class TestExample(uLearnTestBase):
         login(self.portal, 'ulearn.testuser2')
 
         self.request.method = 'POST'
-        view = getMultiAdapter((community, self.request), name='subscribe_to_open')
+        view = getMultiAdapter((community, self.request), name='subscribe')
         result = view.render()
 
         result = json.loads(result)
