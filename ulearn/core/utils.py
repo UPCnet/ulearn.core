@@ -23,13 +23,13 @@ class ulearnUtils(BrowserView):
     def portal(self):
         return api.portal.get()
 
-    def get_url_forget_password(self,context):
+    def get_url_forget_password(self, context):
         """ return redirect url when forget user password """
         portal = getToolByName(context, 'portal_url').getPortalObject()
         base_path = '/'.join(portal.getPhysicalPath())
         registry = queryUtility(IRegistry)
         settings = registry.forInterface(IUlearnControlPanelSettings)
         if 'http' in settings.url_forget_password:
-        	return settings.url_forget_password
+            return settings.url_forget_password
         else:
-        	return base_path + settings.url_forget_password
+            return base_path + settings.url_forget_password

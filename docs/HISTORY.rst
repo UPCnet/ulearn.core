@@ -1,11 +1,10 @@
 Changelog
 =========
 
-1.67 (unreleased)
+1.67 (2015-04-01)
 -----------------
 
-- Nothing changed yet.
-
+* add ulearn_utils to ulearn [Paco Gregori]
 
 1.66 (2015-03-12)
 -----------------
