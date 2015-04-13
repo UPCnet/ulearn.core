@@ -4,14 +4,18 @@ from zope.component import getUtility
 
 from Products.CMFCore.interfaces import ISiteRoot
 from Products.CMFPlone.interfaces import IPloneSiteRoot
+from repoze.catalog.query import Eq
+from souper.soup import get_soup
 
 from mrs.max.utilities import IMAXClient
 
+from genweb.core.utils import json_response
 from ulearn.core.api import logger
 from ulearn.core.api import REST
 from ulearn.core.api.root import APIRoot
 
-import plone.api
+from plone import api
+
 
 
 class People(REST):
@@ -23,7 +27,7 @@ class People(REST):
     placeholder_id = 'username'
 
     grok.adapts(APIRoot, IPloneSiteRoot)
-    grok.require('ulearn.APIAccess')
+    grok.require('genweb.authenticated')
 
 
 class Person(REST):
@@ -32,7 +36,7 @@ class Person(REST):
     """
 
     grok.adapts(People, IPloneSiteRoot)
-    grok.require('ulearn.APIAccess')
+    grok.require('genweb.authenticated')
 
     def __init__(self, context, request):
         super(Person, self).__init__(context, request)
@@ -73,7 +77,7 @@ class Person(REST):
         return self.json_response({})
 
     def create_user(self, username, email, password, **properties):
-        existing_user = plone.api.user.get(username=username)
+        existing_user = api.user.get(username=username)
         maxclient, settings = getUtility(IMAXClient)()
         maxclient.setActor(settings.max_restricted_username)
         maxclient.setToken(settings.max_restricted_token)
@@ -86,7 +90,7 @@ class Person(REST):
             )
             if password:
                 args['password'] = password
-            plone.api.user.create(**args)
+            api.user.create(**args)
             maxclient.people[username].put(displayName=properties['fullname'])
             created = 201
 
@@ -112,7 +116,7 @@ class Person(REST):
         # this method exists to bypass the 'Manage Users' permission check
         # in the CMF member tool's version
         context = aq_inner(self.context)
-        mtool = plone.api.portal.get_tool(name='portal_membership')
+        mtool = api.portal.get_tool(name='portal_membership')
 
         # Delete members in acl_users.
         acl_users = context.acl_users
@@ -131,7 +135,7 @@ class Person(REST):
                 'doesn\'t support deleting members.')
 
         # Delete member data in portal_memberdata.
-        mdtool = plone.api.portal.get_tool(name='portal_memberdata')
+        mdtool = api.portal.get_tool(name='portal_memberdata')
         if mdtool is not None:
             for member_id in member_ids:
                 mdtool.deleteMemberData(member_id)
@@ -140,3 +144,73 @@ class Person(REST):
         mtool.deleteLocalRoles(getUtility(ISiteRoot), member_ids,
                                reindex=1, recursive=1)
 
+
+class Subscriptions(REST):
+    """
+        /api/people/{username}/subscriptions
+
+        Manages the user subscriptions.
+    """
+
+    grok.adapts(Person, IPloneSiteRoot)
+    grok.require('genweb.authenticated')
+
+    @json_response
+    def GET(self):
+        """ Returns all the user communities."""
+        # Parameters validation
+        validation = self.validate()
+        if validation is not True:
+            return validation
+
+        # Hard security validation as the view is soft checked
+        check_permission = self.check_roles(roles=['Member', ])
+        if check_permission is not True:
+            return check_permission
+
+        # Get all communities for the current user
+        pc = api.portal.get_tool('portal_catalog')
+        r_results = pc.searchResults(portal_type="ulearn.community", community_type=[u"Closed", u"Organizative"])
+        ur_results = pc.unrestrictedSearchResults(portal_type="ulearn.community", community_type=u"Open")
+        communities = r_results + ur_results
+
+        self.is_role_manager = False
+        self.username = api.user.get_current().id
+        global_roles = api.user.get_roles()
+        if 'Manager' in global_roles:
+            self.is_role_manager = True
+
+        result = []
+        favorites = self.get_favorites()
+        for brain in communities:
+            community = dict(id=brain.id,
+                             title=brain.Title,
+                             description=brain.Description,
+                             url=brain.getURL(),
+                             gwuuid=brain.gwuuid,
+                             type=brain.community_type,
+                             image=brain.image_filename if brain.image_filename else False,
+                             favorited=brain.id in favorites,
+                             can_manage=self.is_community_manager(brain))
+            result.append(community)
+
+        return result
+
+    def get_favorites(self):
+        pc = api.portal.get_tool('portal_catalog')
+
+        results = pc.unrestrictedSearchResults(favoritedBy=self.username)
+        return [favorites.id for favorites in results]
+
+    def is_community_manager(self, community):
+        # The user has role Manager
+        if self.is_role_manager:
+            return True
+
+        gwuuid = community.gwuuid
+        portal = api.portal.get()
+        soup = get_soup('communities_acl', portal)
+
+        records = [r for r in soup.query(Eq('gwuuid', gwuuid))]
+        if records:
+            return self.username in [a['id'] for a in records[0].attrs['acl']['users'] if a['role'] == u'owner']
