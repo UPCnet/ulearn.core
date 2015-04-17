@@ -197,6 +197,24 @@ class TestExample(uLearnTestBase):
         self.delete_default_test_users()
         logout()
 
+    def test_user_properties_searchable_text(self):
+        """ Test the searchable_text of the user_properties soup for make sure
+            you can search on several properties at once.
+        """
+        self.create_default_test_users()
+        reset_user_catalog()
+        add_user_to_catalog(u'victor.fernandez', dict(fullname=u'Víctor Fernández de Alba', location='Nexus'))
+
+        login(self.portal, u'ulearn.testuser1')
+
+        soup = get_soup('user_properties', self.portal)
+        self.assertTrue([r for r in soup.query(Eq('searchable_text', 'victor Nex*'))])
+        logout()
+
+        login(self.portal, 'admin')
+        self.delete_default_test_users()
+        logout()
+
     @unittest.skipUnless(os.environ.get('LDAP_TEST', False), 'Skipping due to lack of LDAP access')
     def test_group_search_on_acl(self):
         setRoles(self.portal, u'ulearn.testuser1', ['Manager'])

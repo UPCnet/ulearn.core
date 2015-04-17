@@ -14,6 +14,7 @@ from mrs.max.utilities import IMAXClient
 from ulearn.core.content.community import ICommunity
 
 import random
+import unicodedata
 
 
 def searchUsersFunction(context, request, search_string, user_properties=None):
@@ -34,14 +35,13 @@ def searchUsersFunction(context, request, search_string, user_properties=None):
         # Search by string (partial) and return a list of Records from the user
         # catalog
         if search_string:
+            if isinstance(search_string, str):
+                search_string = search_string.decode('utf-8')
+
             soup = get_soup('user_properties', portal)
-            normalized_query = search_string.replace('.', ' ') + '*'
-            users = [r for r in soup.query(Or(Eq('username', normalized_query),
-                                              Eq('fullname', normalized_query),
-                                              Eq('telefon', normalized_query),
-                                              Eq('email', normalized_query),
-                                              Eq('location', normalized_query),
-                                              Eq('ubicacio', normalized_query)))]
+            normalized_query = unicodedata.normalize('NFKD', search_string).encode('ascii', errors='ignore')
+            normalized_query = normalized_query.replace('.', ' ') + '*'
+            users = [r for r in soup.query(Eq('searchable_text', normalized_query))]
         else:
             # User information directly from mutable_properties to avoid LDAP
             # searches and force to show only the truly registered users
@@ -61,13 +61,12 @@ def searchUsersFunction(context, request, search_string, user_properties=None):
             max_users = maxclientrestricted.contexts[context.absolute_url()].subscriptions.get(qs={'username': search_string, 'limit': 0})
 
             soup = get_soup('user_properties', portal)
-            normalized_query = search_string.replace('.', ' ') + '*'
-            plone_results = [r for r in soup.query(Or(Eq('username', normalized_query),
-                                                      Eq('fullname', normalized_query),
-                                                      Eq('telefon', normalized_query),
-                                                      Eq('email', normalized_query),
-                                                      Eq('location', normalized_query),
-                                                      Eq('ubicacio', normalized_query)))]
+            if isinstance(search_string, str):
+                search_string = search_string.decode('utf-8')
+
+            normalized_query = unicodedata.normalize('NFKD', search_string).encode('ascii', errors='ignore')
+            normalized_query = normalized_query.replace('.', ' ') + '*'
+            plone_results = [r for r in soup.query(Eq('searchable_text', normalized_query))]
 
             if max_users:
                 merged_results = list(set([plone_user.attrs['username'] for plone_user in plone_results]) &
