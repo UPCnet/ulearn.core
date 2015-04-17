@@ -1128,7 +1128,7 @@ def delete_community(community, event):
         adapter.delete_max_context()
         adapter.delete_acl()
     except:
-        logger.error('There was an error deleting the community {}'.community.absolute_url())
+        logger.error('There was an error deleting the community {}'.format(community.absolute_url()))
 
 
 @implementer(ICatalogFactory)
