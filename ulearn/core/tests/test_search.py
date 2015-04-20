@@ -14,6 +14,10 @@ from repoze.catalog.indexes.field import CatalogFieldIndex
 from repoze.catalog.indexes.text import CatalogTextIndex
 from souper.interfaces import ICatalogFactory
 from souper.soup import NodeAttributeIndexer
+from repoze.catalog.query import Eq
+from repoze.catalog.query import Or
+from repoze.catalog.query import And
+from souper.soup import get_soup
 
 from plone.app.testing import login
 from plone.app.testing import logout
@@ -259,6 +263,52 @@ class TestExample(uLearnTestBase):
 
         self.assertTrue(len(result['results']) > 5)
         self.assertTrue('PAS' in [r['id'] for r in result['results']])
+
+    def test_user_legit_mode(self):
+        """
+        """
+        self.create_default_test_users()
+        reset_user_catalog()
+        # Add a legit user
+        add_user_to_catalog(u'victor.fernandez', dict(fullname=u'Víctor'))
+        normalized_query = 'victor fer*'
+        soup = get_soup('user_properties', self.portal)
+
+        # Search for it via the searchable_text
+        result = [r for r in soup.query(Eq('searchable_text', normalized_query))]
+        self.assertEqual(result[0].attrs['id'], 'victor.fernandez')
+        self.assertEqual(len(result), 1)
+
+        # Add a non legit user from the initial set
+        add_user_to_catalog(u'victor.fernandez.1', dict(fullname=u'Víctor'), notlegit=True)
+
+        # The result is still the legit one alone
+        result = [r for r in soup.query(Eq('searchable_text', normalized_query))]
+        self.assertEqual(result[0].attrs['id'], 'victor.fernandez')
+        self.assertEqual(len(result), 1)
+
+        # The non legit only can be accessed directly by querying the notlegit
+        # index and the legit one does not show, of course
+        result = [r for r in soup.query(Eq('notlegit', True))]
+        self.assertEqual(result[0].attrs['id'], 'victor.fernandez.1')
+        self.assertEqual(len(result), 1)
+
+        # The non legit only can be accessed directly by querying the fields
+        # directly
+        result = [r for r in soup.query(And(Or(Eq('username', normalized_query), Eq('fullname', normalized_query)), Eq('notlegit', True)))]
+        self.assertEqual(result[0].attrs['id'], 'victor.fernandez.1')
+        self.assertEqual(len(result), 1)
+
+        # If the non legit became legit at some point of time via a subscriber
+        api.user.get('victor.fernandez.1').setMemberProperties(mapping={'fullname': u'Test', 'location': u'Barcelona', 'telefon': u'654321 123 123'})
+
+        # Then it does not show as not legit
+        result = [r for r in soup.query(And(Or(Eq('username', normalized_query), Eq('fullname', normalized_query)), Eq('notlegit', True)))]
+        self.assertEqual(len(result), 0)
+
+        # And it shows as legit
+        result = [r for r in soup.query(Eq('searchable_text', normalized_query))]
+        self.assertEqual(len(result), 2)
 
 
 @implementer(ICatalogFactory)
