@@ -264,6 +264,22 @@ class TestExample(uLearnTestBase):
         self.assertTrue(len(result['results']) > 5)
         self.assertTrue('PAS' in [r['id'] for r in result['results']])
 
+    @unittest.skipUnless(os.environ.get('LDAP_TEST', False), 'Skipping due to lack of LDAP access')
+    def test_group_search_on_acl_with_dashes(self):
+        setRoles(self.portal, u'ulearn.testuser1', ['Manager'])
+        login(self.portal, u'ulearn.testuser1')
+        sync_view = getMultiAdapter((self.portal, self.request), name='syncldapgroups')
+        sync_view.render()
+        logout()
+
+        login(self.portal, u'ulearn.testuser2')
+        search_view = getMultiAdapter((self.portal, self.request), name='omega13groupsearch')
+        self.request.form = dict(q='pas-188')
+        result = search_view.render()
+        result = json.loads(result)
+
+        self.assertTrue(len(result['results']) == 2)
+
     def test_user_legit_mode(self):
         """
         """
