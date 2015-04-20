@@ -5,7 +5,15 @@ from AccessControl import Unauthorized
 from zope.event import notify
 from zope.component import getMultiAdapter
 from zope.lifecycleevent import ObjectModifiedEvent
+
 from zope.component import getUtility
+from zope.interface import implementer
+from zope.component import provideUtility
+from repoze.catalog.catalog import Catalog
+from repoze.catalog.indexes.field import CatalogFieldIndex
+from repoze.catalog.indexes.text import CatalogTextIndex
+from souper.interfaces import ICatalogFactory
+from souper.soup import NodeAttributeIndexer
 
 from plone.app.testing import login
 from plone.app.testing import logout
@@ -25,8 +33,6 @@ from mrs.max.utilities import IMAXClient
 
 import json
 import os
-
-DP_USER_PROPERTIES = ['id', 'fullname', 'email', 'company', 'area', 'department', 'function']
 
 
 class TestExample(uLearnTestBase):
@@ -121,15 +127,37 @@ class TestExample(uLearnTestBase):
 
         logout()
 
-    def test_search_community_with_additional_fields(self):
+    def test_search_community_with_additional_fields_on_community_no_query(self):
         """ This is the case when a client has customized user properties """
         login(self.portal, u'ulearn.testuser1')
         community = self.create_test_community(id='community-testsearch', community_type='Closed')
 
-        users = searchUsersFunction(community, self.request, '', user_properties=DP_USER_PROPERTIES)
+        users = searchUsersFunction(community, self.request, '')
 
         self.assertTrue(len(users['content']) == 1)
         self.assertEqual(users['content'][0]['id'], u'ulearn.testuser1')
+
+        logout()
+
+    def test_search_community_with_additional_fields_on_portal_with_query(self):
+        """ This is the case when a client has customized user properties """
+        login(self.portal, u'ulearn.testuser1')
+        # We provide here the required initialization for a user custom properties catalog
+        provideUtility(TestUserExtendedPropertiesSoupCatalogFactory(), name="user_properties_exttest")
+        api.portal.set_registry_record(name='mrs.max.browser.controlpanel.IMAXUISettings.domain', value=u'exttest')
+
+        # Modify an user to accomodate new properties from extended catalog
+        # Force it as we are not faking the extension of the user properties
+        # (Plone side utility overriding blabla)
+        add_user_to_catalog('ulearn.testuser1', {'position': u'Jefe', 'unit_organizational': u'Finance'})
+
+        users = searchUsersFunction(self.portal, self.request, 'ulearn.testuser1')
+
+        self.assertTrue(len(users['content']) == 1)
+        self.assertEqual(users['content'][0]['id'], u'ulearn.testuser1')
+        self.assertEqual(users['content'][0]['position'], u'Jefe')
+        self.assertEqual(users['content'][0]['unit_organizational'], u'Finance')
+        self.assertEqual(users['content'][0]['telefon'], u'123456')
 
         logout()
 
@@ -231,3 +259,22 @@ class TestExample(uLearnTestBase):
 
         self.assertTrue(len(result['results']) > 5)
         self.assertTrue('PAS' in [r['id'] for r in result['results']])
+
+
+@implementer(ICatalogFactory)
+class TestUserExtendedPropertiesSoupCatalogFactory(object):
+    """ Extended user catalog for testing purposes
+    """
+    properties = ['username', 'unit_organizational', 'position']
+
+    def __call__(self, context):
+        catalog = Catalog()
+        idindexer = NodeAttributeIndexer('id')
+        catalog['id'] = CatalogFieldIndex(idindexer)
+        userindexer = NodeAttributeIndexer('username')
+        catalog['username'] = CatalogTextIndex(userindexer)
+        unit_organizational = NodeAttributeIndexer('unit_organizational')
+        catalog['unit_organizational'] = CatalogTextIndex(unit_organizational)
+        position = NodeAttributeIndexer('position')
+        catalog['position'] = CatalogTextIndex(position)
+        return catalog

@@ -2,10 +2,12 @@
 from plone import api
 from zope.component.hooks import getSite
 from zope.component import getUtility
+from zope.component import getUtilitiesFor
 
 from Products.CMFPlone.interfaces import IPloneSiteRoot
 
 from souper.soup import Record
+from souper.interfaces import ICatalogFactory
 from repoze.catalog.query import Eq
 from repoze.catalog.query import Or
 from souper.soup import get_soup
@@ -17,7 +19,7 @@ import random
 import unicodedata
 
 
-def searchUsersFunction(context, request, search_string, user_properties=None):
+def searchUsersFunction(context, request, search_string):
     portal = getSite()
     pm = api.portal.get_tool(name='portal_membership')
     nonvisibles = api.portal.get_registry_record(name="ulearn.core.controlpanel.IUlearnControlPanelSettings.nonvisibles")
@@ -119,49 +121,45 @@ def searchUsersFunction(context, request, search_string, user_properties=None):
                             filtered.append(user)
                 users = filtered
 
+    has_extended_properties = False
+    client = api.portal.get_registry_record('mrs.max.browser.controlpanel.IMAXUISettings.domain')
+    if 'user_properties_{}'.format(client) in [a[0] for a in getUtilitiesFor(ICatalogFactory)]:
+        has_extended_properties = True
+        extended_user_properties_utility = getUtility(ICatalogFactory, name='user_properties_{}'.format(client))
+
+    user_properties_utility = getUtility(ICatalogFactory, name='user_properties')
+
     users_profile = []
     for user in users:
         if user is not None:
             if isinstance(user, Record):
-                if user_properties:
-                    # Per revisar
-                    user_dict = {}
-                    for user_property in user_properties:
+                user_dict = {}
+                for user_property in user_properties_utility.properties:
+                    user_dict.update({user_property: user.attrs.get(user_property, '')})
+
+                if has_extended_properties:
+                    for user_property in extended_user_properties_utility.properties:
                         user_dict.update({user_property: user.attrs.get(user_property, '')})
-                    user_dict.update(dict(id=user.attrs['username']))
-                    user_dict.update(dict(foto=str(pm.getPersonalPortrait(user.attrs['username']))))
-                    user_dict.update(dict(url=portal.absolute_url() + '/profile/' + user.attrs['username']))
-                    users_profile.append(user_dict)
-                else:
-                    users_profile.append({
-                        'id': user.attrs['username'],
-                        'fullname': user.attrs.get('fullname', ''),
-                        'ubicacio': user.attrs.get('ubicacio', ''),
-                        'location': user.attrs.get('location', ''),
-                        'email': user.attrs.get('email', ''),
-                        'telefon': user.attrs.get('telefon', ''),
-                        'foto': str(pm.getPersonalPortrait(user.attrs['username'])),
-                        'url': portal.absolute_url() + '/profile/' + user.attrs['username']
-                    })
+
+                user_dict.update(dict(id=user.attrs['username']))
+                user_dict.update(dict(foto=str(pm.getPersonalPortrait(user.attrs['username']))))
+                user_dict.update(dict(url=portal.absolute_url() + '/profile/' + user.attrs['username']))
+                users_profile.append(user_dict)
+
             else:
-                if user_properties:
-                    user_dict = {}
-                    for user_property in user_properties:
+                user_dict = {}
+                for user_property in user_properties_utility.properties:
+                    user_dict.update({user_property: user.get(user_property, '')})
+                    user_dict.update(dict(id=user.get('id', '')))
+                    user_dict.update(dict(fullname=user.get('title', '')))
+
+                if has_extended_properties:
+                    for user_property in extended_user_properties_utility.properties:
                         user_dict.update({user_property: user.get(user_property, '')})
-                    user_dict.update(dict(foto=str(pm.getPersonalPortrait(user.id))))
-                    user_dict.update(dict(url=portal.absolute_url() + '/profile/' + user.id))
-                    users_profile.append(user_dict)
-                else:
-                    users_profile.append({
-                        'id': user.get('id', ''),
-                        'fullname': user.get('title', ''),
-                        'ubicacio': user.get('ubicacio', ''),
-                        'location': user.get('location', ''),
-                        'email': user.get('email', ''),
-                        'telefon': user.get('telefon', ''),
-                        'foto': str(pm.getPersonalPortrait(user.get('id', ''))),
-                        'url': portal.absolute_url() + '/profile/' + user.get('id', '')
-                    })
+
+                user_dict.update(dict(foto=str(pm.getPersonalPortrait(user.get('id', '')))))
+                user_dict.update(dict(url=portal.absolute_url() + '/profile/' + user.get('id', '')))
+                users_profile.append(user_dict)
 
     len_usuaris = len(users_profile)
     if len_usuaris > 100:
