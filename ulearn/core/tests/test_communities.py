@@ -103,15 +103,15 @@ class TestExample(uLearnTestBase):
         soup = get_soup('communities_acl', self.portal)
         # By the gwuuid
         records = [r for r in soup.query(Eq('gwuuid', IGWUUID(community)))]
-        self.assertEquals(len(records), 1)
-        self.assertEquals(records[0].attrs.get('gwuuid', ''), IGWUUID(community))
-        self.assertEquals(records[0].attrs.get('path', ''), '/'.join(community.getPhysicalPath()))
-        self.assertEquals(records[0].attrs.get('hash', ''), sha1(community.absolute_url()).hexdigest())
-        self.assertEquals(records[0].attrs.get('acl', '').get('users', [])[0]['role'], u'owner')
-        self.assertEquals(records[0].attrs.get('acl', '').get('users', [])[0]['id'], u'ulearn.testuser1')
+        self.assertEqual(len(records), 1)
+        self.assertEqual(records[0].attrs.get('gwuuid', ''), IGWUUID(community))
+        self.assertEqual(records[0].attrs.get('path', ''), '/'.join(community.getPhysicalPath()))
+        self.assertEqual(records[0].attrs.get('hash', ''), sha1(community.absolute_url()).hexdigest())
+        self.assertEqual(records[0].attrs.get('acl', '').get('users', [])[0]['role'], u'owner')
+        self.assertEqual(records[0].attrs.get('acl', '').get('users', [])[0]['id'], u'ulearn.testuser1')
 
         # Test for internal objects
-        self.assertEquals(community.objectIds(), ['documents', 'links', 'media', 'events', 'discussion'])
+        self.assertEqual(community.objectIds(), ['documents', 'links', 'media', 'events', 'discussion'])
 
         # Test for subscribed users
         self.assertTrue(u'ulearn.testuser1' in self.get_max_subscribed_users(community))
@@ -155,15 +155,15 @@ class TestExample(uLearnTestBase):
         soup = get_soup('communities_acl', self.portal)
         # By the gwuuid
         records = [r for r in soup.query(Eq('gwuuid', IGWUUID(community)))]
-        self.assertEquals(len(records), 1)
-        self.assertEquals(records[0].attrs.get('gwuuid', ''), IGWUUID(community))
-        self.assertEquals(records[0].attrs.get('path', ''), '/'.join(community.getPhysicalPath()))
-        self.assertEquals(records[0].attrs.get('hash', ''), sha1(community.absolute_url()).hexdigest())
-        self.assertEquals(records[0].attrs.get('acl', '').get('users', [])[0]['role'], u'owner')
-        self.assertEquals(records[0].attrs.get('acl', '').get('users', [])[0]['id'], u'ulearn.testuser1')
+        self.assertEqual(len(records), 1)
+        self.assertEqual(records[0].attrs.get('gwuuid', ''), IGWUUID(community))
+        self.assertEqual(records[0].attrs.get('path', ''), '/'.join(community.getPhysicalPath()))
+        self.assertEqual(records[0].attrs.get('hash', ''), sha1(community.absolute_url()).hexdigest())
+        self.assertEqual(records[0].attrs.get('acl', '').get('users', [])[0]['role'], u'owner')
+        self.assertEqual(records[0].attrs.get('acl', '').get('users', [])[0]['id'], u'ulearn.testuser1')
 
         # Test for internal objects
-        self.assertEquals(community.objectIds(), ['documents', 'links', 'media', 'events', 'discussion'])
+        self.assertEqual(community.objectIds(), ['documents', 'links', 'media', 'events', 'discussion'])
 
         # Test for subscribed users
         self.assertTrue(u'ulearn.testuser1' in self.get_max_subscribed_users(community))
@@ -207,15 +207,15 @@ class TestExample(uLearnTestBase):
         soup = get_soup('communities_acl', self.portal)
         # By the gwuuid
         records = [r for r in soup.query(Eq('gwuuid', IGWUUID(community)))]
-        self.assertEquals(len(records), 1)
-        self.assertEquals(records[0].attrs.get('gwuuid', ''), IGWUUID(community))
-        self.assertEquals(records[0].attrs.get('path', ''), '/'.join(community.getPhysicalPath()))
-        self.assertEquals(records[0].attrs.get('hash', ''), sha1(community.absolute_url()).hexdigest())
-        self.assertEquals(records[0].attrs.get('acl', '').get('users', [])[0]['role'], u'owner')
-        self.assertEquals(records[0].attrs.get('acl', '').get('users', [])[0]['id'], u'ulearn.testuser1')
+        self.assertEqual(len(records), 1)
+        self.assertEqual(records[0].attrs.get('gwuuid', ''), IGWUUID(community))
+        self.assertEqual(records[0].attrs.get('path', ''), '/'.join(community.getPhysicalPath()))
+        self.assertEqual(records[0].attrs.get('hash', ''), sha1(community.absolute_url()).hexdigest())
+        self.assertEqual(records[0].attrs.get('acl', '').get('users', [])[0]['role'], u'owner')
+        self.assertEqual(records[0].attrs.get('acl', '').get('users', [])[0]['id'], u'ulearn.testuser1')
 
         # Test for internal objects
-        self.assertEquals(community.objectIds(), ['documents', 'links', 'media', 'events', 'discussion'])
+        self.assertEqual(community.objectIds(), ['documents', 'links', 'media', 'events', 'discussion'])
 
         # Test for subscribed users
         self.assertTrue(u'ulearn.testuser1' in self.get_max_subscribed_users(community))
@@ -259,23 +259,23 @@ class TestExample(uLearnTestBase):
         community.twitter_hashtag = 'Modified'
         notify(ObjectModifiedEvent(community))
         max_community_info = self.get_max_context_info(community)
-        self.assertEquals('modified', max_community_info.get(u'twitterHashtag', ''))
+        self.assertEqual('modified', max_community_info.get(u'twitterHashtag', ''))
 
         community.notify_activity_via_push = True
         notify(ObjectModifiedEvent(community))
         max_community_info = self.get_max_context_info(community)
-        self.assertEquals('posts', max_community_info.get(u'notifications', ''))
+        self.assertEqual('posts', max_community_info.get(u'notifications', ''))
 
         community.notify_activity_via_push_comments_too = True
         notify(ObjectModifiedEvent(community))
         max_community_info = self.get_max_context_info(community)
-        self.assertEquals('comments', max_community_info.get(u'notifications', ''))
+        self.assertEqual('comments', max_community_info.get(u'notifications', ''))
 
         community.notify_activity_via_push = False
         community.notify_activity_via_push_comments_too = False
         notify(ObjectModifiedEvent(community))
         max_community_info = self.get_max_context_info(community)
-        self.assertEquals('', max_community_info.get(u'notifications', ''))
+        self.assertEqual('', max_community_info.get(u'notifications', ''))
 
     def test_edit_acl(self):
         login(self.portal, 'ulearn.testuser1')
@@ -327,7 +327,7 @@ class TestExample(uLearnTestBase):
 
         pc = api.portal.get_tool('portal_catalog')
 
-        self.assertEquals(len(pc.searchResults(portal_type='Event')), 1)
+        self.assertEqual(len(pc.searchResults(portal_type='Event')), 1)
 
     # def test_events_visibility_open_communities_switch_to_closed(self):
     #     community = self.create_test_community(community_type='Open')
@@ -340,7 +340,7 @@ class TestExample(uLearnTestBase):
 
     #     pc = api.portal.get_tool('portal_catalog')
 
-    #     self.assertEquals(len(pc.searchResults(portal_type='Event')), 1)
+    #     self.assertEqual(len(pc.searchResults(portal_type='Event')), 1)
 
     #     logout()
 
@@ -468,21 +468,21 @@ class TestExample(uLearnTestBase):
 
         info = self.get_max_context_info(community)
 
-        self.assertEquals(info['notifications'], False)
+        self.assertEqual(info['notifications'], False)
 
         community.notify_activity_via_push = True
 
         notify(ObjectModifiedEvent(community))
 
         info = self.get_max_context_info(community)
-        self.assertEquals(info['notifications'], u'posts')
+        self.assertEqual(info['notifications'], u'posts')
 
         community.notify_activity_via_push_comments_too = True
 
         notify(ObjectModifiedEvent(community))
 
         info = self.get_max_context_info(community)
-        self.assertEquals(info['notifications'], u'comments')
+        self.assertEqual(info['notifications'], u'comments')
 
     def test_community_type_adapters(self):
         login(self.portal, 'ulearn.testuser1')

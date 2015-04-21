@@ -29,18 +29,18 @@ class TestUploads(uLearnTestBase):
         self.username = settings.max_restricted_username
         self.token = settings.max_restricted_token
 
-    def oauth2Header(self, username, token, scope="widgetcli"):
+    def oauth2Header(self, username, token, scope='widgetcli'):
         return {
-            "X-Oauth-Token": token,
-            "X-Oauth-Username": username,
-            "X-Oauth-Scope": scope}
+            'X-Oauth-Token': token,
+            'X-Oauth-Username': username,
+            'X-Oauth-Scope': scope}
 
     def test_upload_file_to_community(self):
         login(self.portal, 'ulearn.testuser1')
         community = self.create_test_community()
         transaction.commit()
 
-        avatar_file = open(os.path.join(os.path.dirname(__file__), "avatar.png"), "rb")
+        avatar_file = open(os.path.join(os.path.dirname(__file__), 'avatar.png'), 'rb')
         files = {'file': ('avatar.png', avatar_file)}
 
         res = requests.post('{}/{}/upload'.format(self.portal.absolute_url(), community.id), headers=self.oauth2Header(self.username, self.token), files=files)
@@ -58,7 +58,7 @@ class TestUploads(uLearnTestBase):
         community = self.create_test_community()
         transaction.commit()
 
-        avatar_file = open(os.path.join(os.path.dirname(__file__), "avatar.png"), "rb")
+        avatar_file = open(os.path.join(os.path.dirname(__file__), 'avatar.png'), 'rb')
         files = {'file': ('avatar', avatar_file)}
 
         res = requests.post('{}/{}/upload'.format(self.portal.absolute_url(), community.id), headers=self.oauth2Header(self.username, self.token), files=files)
@@ -68,7 +68,7 @@ class TestUploads(uLearnTestBase):
         self.assertEqual(res.status_code, 201)
         self.assertTrue('avatar' in community['documents'].objectIds())
 
-        avatar_file = open(os.path.join(os.path.dirname(__file__), "avatar.png"), "rb")
+        avatar_file = open(os.path.join(os.path.dirname(__file__), 'avatar.png'), 'rb')
         files = {'file': ('avatar.pdf', avatar_file)}
 
         res = requests.post('{}/{}/upload'.format(self.portal.absolute_url(), community.id), headers=self.oauth2Header(self.username, self.token), files=files)
@@ -78,7 +78,7 @@ class TestUploads(uLearnTestBase):
         self.assertEqual(res.status_code, 201)
         self.assertTrue('avatar.pdf' in community['documents'].objectIds())
 
-        avatar_file = open(os.path.join(os.path.dirname(__file__), "avatar.png"), "rb")
+        avatar_file = open(os.path.join(os.path.dirname(__file__), 'avatar.png'), 'rb')
         files = {'file': ('avatar.odt', avatar_file)}
 
         res = requests.post('{}/{}/upload'.format(self.portal.absolute_url(), community.id), headers=self.oauth2Header(self.username, self.token), files=files)
@@ -93,7 +93,7 @@ class TestUploads(uLearnTestBase):
         community = self.create_test_community()
         transaction.commit()
 
-        avatar_file = open(os.path.join(os.path.dirname(__file__), "avatar.png"), "rb")
+        avatar_file = open(os.path.join(os.path.dirname(__file__), 'avatar.png'), 'rb')
         files = {'file': ('avatar amb espais', avatar_file)}
 
         res = requests.post('{}/{}/upload'.format(self.portal.absolute_url(), community.id), headers=self.oauth2Header(self.username, self.token), files=files)
@@ -108,8 +108,8 @@ class TestUploads(uLearnTestBase):
         community = self.create_test_community()
         transaction.commit()
 
-        activity_data = {"activity": "This is my fancy file"}
-        avatar_file = open(os.path.join(os.path.dirname(__file__), "avatar.png"), "rb")
+        activity_data = {'activity': 'This is my fancy file'}
+        avatar_file = open(os.path.join(os.path.dirname(__file__), 'avatar.png'), 'rb')
         files = {'file': ('avatar.png', avatar_file)}
 
         res = requests.post('{}/{}/upload'.format(self.portal.absolute_url(), community.id), headers=self.oauth2Header(self.username, self.token), files=files, data=activity_data)
@@ -125,8 +125,8 @@ class TestUploads(uLearnTestBase):
         community = self.create_test_community()
         transaction.commit()
 
-        activity_data = {"activity": u"This is my fancy file ç à"}
-        avatar_file = open(os.path.join(os.path.dirname(__file__), "avatar.png"), "rb")
+        activity_data = {'activity': u'This is my fancy file ç à'}
+        avatar_file = open(os.path.join(os.path.dirname(__file__), 'avatar.png'), 'rb')
         files = {'file': ('avatar.png', avatar_file)}
 
         res = requests.post('{}/{}/upload'.format(self.portal.absolute_url(), community.id), headers=self.oauth2Header(self.username, self.token), files=files, data=activity_data)

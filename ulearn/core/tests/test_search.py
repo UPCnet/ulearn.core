@@ -147,7 +147,7 @@ class TestExample(uLearnTestBase):
         """ This is the case when a client has customized user properties """
         login(self.portal, u'ulearn.testuser1')
         # We provide here the required initialization for a user custom properties catalog
-        provideUtility(TestUserExtendedPropertiesSoupCatalogFactory(), name="user_properties_exttest")
+        provideUtility(TestUserExtendedPropertiesSoupCatalogFactory(), name='user_properties_exttest')
         api.portal.set_registry_record(name='mrs.max.browser.controlpanel.IMAXUISettings.domain', value=u'exttest')
 
         # Modify an user to accomodate new properties from extended catalog
