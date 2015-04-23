@@ -3,9 +3,9 @@ from AccessControl import Unauthorized
 from AccessControl import getSecurityManager
 from five import grok
 from plone import api
+from hashlib import sha1
 from z3c.form import button
 from zope import schema
-from zope.annotation.interfaces import IAnnotations
 from zope.app.container.interfaces import IObjectAddedEvent
 from zope.component import getMultiAdapter
 from zope.component import getUtility
@@ -17,14 +17,13 @@ from zope.event import notify
 from zope.interface import implements
 from zope.interface import Interface
 from zope.interface import alsoProvides
-from zope.globalrequest import getRequest
 from zope.lifecycleevent import ObjectModifiedEvent
 from zope.lifecycleevent.interfaces import IObjectModifiedEvent
 from zope.lifecycleevent.interfaces import IObjectRemovedEvent
-from zope.schema.fieldproperty import FieldProperty
 from zope.schema.interfaces import IContextSourceBinder
 from zope.schema.vocabulary import SimpleVocabulary
 from zope.security import checkPermission
+from zope.interface import implementer
 
 from plone.dexterity.content import Container
 from plone.dexterity.utils import createContentInContainer
@@ -45,8 +44,6 @@ from Products.CMFPlone.interfaces.constrains import ISelectableConstrainTypes
 from Products.statusmessages.interfaces import IStatusMessage
 from ZPublisher.HTTPRequest import FileUpload
 
-from zope.interface import implementer
-from zope.component import provideUtility
 from repoze.catalog.catalog import Catalog
 from repoze.catalog.indexes.field import CatalogFieldIndex
 from repoze.catalog.indexes.keyword import CatalogKeywordIndex
@@ -56,15 +53,13 @@ from repoze.catalog.query import Eq
 from souper.soup import get_soup
 from souper.soup import Record
 
+from genweb.core.utils import json_response
+from genweb.core.gwuuid import IGWUUID
 from genweb.core.adapters.favorites import IFavorite
 from genweb.core.widgets.select2_maxuser_widget import Select2MAXUserInputFieldWidget
-
 from genweb.core.widgets.select2_user_widget import SelectWidgetConverter
-from hashlib import sha1
 from mrs.max.utilities import IMAXClient
 
-from genweb.core.gwuuid import IGWUUID
-from genweb.core.utils import json_response
 from ulearn.core import _
 from ulearn.core.interfaces import IDXFileFactory
 from ulearn.core.interfaces import IDocumentFolder
@@ -277,6 +272,7 @@ class CommunityAdapterMixin(object):
             displayName=self.context.title,
             permissions=self.max_permissions,
             notifications=self.max_notifications,
+            # Include notify=False
         )
 
     def set_initial_max_metadata(self):
@@ -358,11 +354,23 @@ class CommunityAdapterMixin(object):
 
     def update_acl_atomic(self, username, role):
         """ This method is used when it is required to perform an atomic (single
-            user) acl update to a community.
+            user) acl update to a community. It supports either adding a new
+            user and updating an existing one.
         """
         acl = self.get_acl()
         new_user_acl = dict(id=username, displayName=u'', role=role)
-        acl['users'].append(new_user_acl)
+
+        updating = False
+        for user in acl['users']:
+            if user['id'] == username:
+                # We are updating
+                user['role'] = role
+                updating = True
+
+        if not updating:
+            # We are adding
+            acl['users'].append(new_user_acl)
+
         self.update_acl(acl)
 
     def update_hub_subscriptions(self):
@@ -411,12 +419,17 @@ class CommunityAdapterMixin(object):
         """ Set the Plone local roles given the acl. Shameless ripped off from
             sharing.py in p.a.workflow
         """
-        user_and_groups = acl.get('users', []) + acl.get('groups', [])
+        acl_user_and_groups = acl.get('users', []) + acl.get('groups', [])
 
-        # Sanitize the list, just in case
-        user_and_groups = [p for p in user_and_groups if p.get('id', False) and p.get('role', False) and p.get('role', '') in VALID_COMMUNITY_ROLES]
+        # First, get a list with the current principals assigned to Plone ACL
+        # and exclude 'AuthenticatedUsers'
+        current_acl_principals = [p[0] for p in self.context.get_local_roles()]
+        if 'AuthenticatedUsers' in current_acl_principals:
+            current_acl_principals.remove('AuthenticatedUsers')
 
-        member_ids_to_clear = []
+        member_ids_to_clear = frozenset(current_acl_principals) - frozenset([p['id'] for p in acl_user_and_groups])
+        # Search for users no longer in ACL and sanitize the list, just in case
+        user_and_groups = [p for p in acl_user_and_groups if p.get('id', False) and p.get('role', False) and p.get('role', '') in VALID_COMMUNITY_ROLES]
 
         for principal in user_and_groups:
             user_id = principal['id']
@@ -473,7 +486,7 @@ class OrganizativeCommunity(CommunityAdapterMixin):
         self.max_permissions = ORGANIZATIVE_PERMISSIONS
         self.hub_permission_mapping = dict(reader=['read'],
                                            write=['read', 'write'],
-                                           owner=['read', 'write', 'unsubscribe', 'flag'])
+                                           owner=['read', 'write', 'unsubscribe', 'flag', 'invite', 'kick'])
 
 
 @grok.implementer(ICommunityTyped)
@@ -485,7 +498,7 @@ class OpenCommunity(CommunityAdapterMixin):
         self.max_permissions = OPEN_PERMISSIONS
         self.hub_permission_mapping = dict(reader=['read', 'unsubscribe'],
                                            write=['read', 'write', 'unsubscribe'],
-                                           owner=['read', 'write', 'unsubscribe', 'flag'])
+                                           owner=['read', 'write', 'unsubscribe', 'flag', 'invite', 'kick'])
 
     def set_plone_permissions(self, acl, changed=False):
 
@@ -505,7 +518,7 @@ class ClosedCommunity(CommunityAdapterMixin):
         self.max_permissions = CLOSED_PERMISSIONS
         self.hub_permission_mapping = dict(reader=['read', 'unsubscribe'],
                                            write=['read', 'write', 'unsubscribe'],
-                                           owner=['read', 'write', 'unsubscribe', 'flag'])
+                                           owner=['read', 'write', 'unsubscribe', 'flag', 'invite', 'kick'])
 
     def set_initial_subscription(self, acl):
         super(ClosedCommunity, self).set_initial_subscription(acl)
@@ -621,6 +634,78 @@ class EditACL(grok.View):
 
     def get_acl(self):
         return json.dumps(ICommunityACL(self.context)().attrs.get('acl', ''))
+
+
+class NotifyAtomicChange(grok.View):
+    """ This is a context endpoint for notify the context with external changes
+        to the context. This changes can be originated for example, by an user
+        changing the context programatically via the maxclient or via the
+        uLearnHub user interface.
+
+        The MAX server will notify the change to this endpoint using the form:
+
+            {
+              "action": "", // one of subscribe, unsubscribe, change_permissions
+              "username": "victor.fernandez",
+              "subscription": {
+                "hash": "93717fe74ad7cdee87312f98863de2c4cb9c98a2",
+                "url": "https://max.upc.edu",
+                "displayName": "Max UPC",
+                "permissions": [
+                  "read",
+                  "write",
+                  "unsubscribe"
+                ],
+
+                // More properties here [..]
+
+                "objectType": "subscription"
+              }
+            }
+
+        The available actions are: subscribe, unsubscribe, change_permissions
+        The username is the person who receives the action.
+        The subscription object holds the subscription information of the
+        username to the context
+    """
+    grok.context(ICommunity)
+    grok.name('notify')
+
+    @json_response
+    def render(self):
+        if self.request.method == 'POST':
+            data = json.loads(self.request['BODY'])
+            adapter = getAdapter(self.context, ICommunityTyped, name=self.context.community_type)
+
+            if 'read' in data['subscription']['permissions']:
+                permission = u'reader'
+            if 'write' in data['subscription']['permissions']:
+                permission = u'writer'
+            # For now, we took for granted that those users that has the
+            # permissions 'flag', 'unsubscribe', 'invite' i 'kick' are owners
+            if 'flag' in data['subscription']['permissions'] and \
+               'unsubscribe' in data['subscription']['permissions'] and \
+               'invite' in data['subscription']['permissions'] and \
+               'kick' in data['subscription']['permissions']:
+                permission = u'owner'
+
+            if data['action'] == 'subscribe':
+                adapter.update_acl_atomic(data['username'], permission)
+            elif data['action'] == 'unsubscribe':
+                adapter.remove_acl_atomic(data['username'])
+            elif data['action'] == 'change_permissions':
+                adapter.update_acl_atomic(data['username'], permission)
+
+            acl = adapter.get_acl()
+
+            # Finally, we update the plone permissions
+            adapter.set_plone_permissions(acl)
+
+            return dict(message='Done', status_code=200)
+
+        if self.request.method != 'POST':
+            return dict(error='Bad request. POST request expected.',
+                        status_code=400)
 
 
 class UploadFile(grok.View):

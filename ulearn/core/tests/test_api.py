@@ -124,7 +124,7 @@ class TestAPI(uLearnTestBase):
         response = subscriptions_view.POST()
         response = json.loads(response)
 
-        self.assertEqual(response['status_code'], 401)
+        self.assertEqual(response['status_code'], 404)
         logout()
 
         httpretty.disable()
