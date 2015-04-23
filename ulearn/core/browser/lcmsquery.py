@@ -23,13 +23,14 @@ class LCMSSearch(grok.View):
         alldocs = self.request.form.get('all', None)
 
         portal = getSite()
-        pc = getToolByName(portal, "portal_catalog")
+        catalog = getToolByName(portal, "portal_catalog")
+        search = catalog.unrestrictedSearchResults
         if alldocs=='True':
-            docs = pc.searchResults(portal_type="Document",
+            docs = search(portal_type="File",
                                     sort_on='id',)
 
         else:    
-            docs = pc.searchResults(portal_type="Document",
+            docs = search(portal_type="File",
                                     sort_on='id',
                                     SearchableText=query)
 
@@ -37,9 +38,8 @@ class LCMSSearch(grok.View):
 
         for obj in docs:
             valueEntry = {}
-            valueEntry['Title'] = obj.Title
-            valueEntry['path'] = obj.absolute_url()
-            valueEntry['Description'] = obj.Description
+            valueEntry['title'] = obj.Title
+            valueEntry['path'] = obj.getURL()
             valueEntry['Description'] = obj.Description
             valueEntry['ModificationDate'] = obj.ModificationDate
             valueEntry['CreationDate'] = obj.CreationDate
