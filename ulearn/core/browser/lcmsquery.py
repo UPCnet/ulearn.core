@@ -11,7 +11,7 @@ import json
 
 class LCMSSearch(grok.View):
     # LCMS QUERY!
-    # Used in Aquology Moodle Site for connecting to Plone and return all docs
+    # Used in Aquology Moodle Site for connecting to Plone and return all files
 
     grok.name('lcms-query')
     grok.context(Interface)
@@ -19,30 +19,32 @@ class LCMSSearch(grok.View):
 
     def render(self):
         query = self.request.form.get('q', None)
-
         alldocs = self.request.form.get('all', None)
 
         portal = getSite()
         catalog = getToolByName(portal, "portal_catalog")
         search = catalog.unrestrictedSearchResults
-        if alldocs=='True':
+        # you can see all docs if pass the key -> &all=True
+        if alldocs == 'True':
             docs = search(portal_type="File",
-                                    sort_on='id',)
-
-        else:    
+                          sort_on='id',)
+        else:
             docs = search(portal_type="File",
-                                    sort_on='id',
-                                    SearchableText=query)
-
+                          sort_on='id',
+                          SearchableText=query)
         data = []
 
         for obj in docs:
             valueEntry = {}
+            fileObject = obj.getObject()
             valueEntry['title'] = obj.Title
             valueEntry['path'] = obj.getURL()
             valueEntry['Description'] = obj.Description
             valueEntry['ModificationDate'] = obj.ModificationDate
             valueEntry['CreationDate'] = obj.CreationDate
+            valueEntry['size'] = fileObject.file.size
+            valueEntry['filename'] = fileObject.file.filename
+            valueEntry['contentType'] = fileObject.file.contentType
 
             data.append(valueEntry)
 
