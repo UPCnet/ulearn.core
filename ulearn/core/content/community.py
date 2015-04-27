@@ -1124,31 +1124,31 @@ def initialize_community(community, event):
 
     # Set default view layout
     documents.setLayout('filtered_contents_search_view')
-    # links.setLayout('folder_summary_view')
-    # photos.setLayout('folder_summary_view')
+    links.setLayout('folder_summary_view')
+    photos.setLayout('folder_summary_view')
     events.setLayout('folder_summary_view')
     discussion.setLayout('discussion_folder_view')
 
     # Mark them with a marker interface
     alsoProvides(documents, IDocumentFolder)
-    # alsoProvides(links, ILinksFolder)
-    # alsoProvides(photos, IPhotosFolder)
+    alsoProvides(links, ILinksFolder)
+    alsoProvides(photos, IPhotosFolder)
     alsoProvides(events, IEventsFolder)
     alsoProvides(discussion, IDiscussionFolder)
 
     # Set on them the allowable content types
     behavior = ISelectableConstrainTypes(documents)
     behavior.setConstrainTypesMode(1)
-    behavior.setLocallyAllowedTypes(('Document', 'File', 'Folder','Link','Image'))
-    behavior.setImmediatelyAddableTypes(('Document', 'File', 'Folder','Link','Image'))
-    # behavior = ISelectableConstrainTypes(links)
-    # behavior.setConstrainTypesMode(1)
-    # behavior.setLocallyAllowedTypes(('Link', 'Folder'))
-    # behavior.setImmediatelyAddableTypes(('Link', 'Folder'))
-    # behavior = ISelectableConstrainTypes(photos)
-    # behavior.setConstrainTypesMode(1)
-    # behavior.setLocallyAllowedTypes(('Image', 'Folder'))
-    # behavior.setImmediatelyAddableTypes(('Image', 'Folder'))
+    behavior.setLocallyAllowedTypes(('Document', 'File', 'Folder', 'Link', 'Image'))
+    behavior.setImmediatelyAddableTypes(('Document', 'File', 'Folder', 'Link', 'Image'))
+    behavior = ISelectableConstrainTypes(links)
+    behavior.setConstrainTypesMode(1)
+    behavior.setLocallyAllowedTypes(('Link', 'Folder'))
+    behavior.setImmediatelyAddableTypes(('Link', 'Folder'))
+    behavior = ISelectableConstrainTypes(photos)
+    behavior.setConstrainTypesMode(1)
+    behavior.setLocallyAllowedTypes(('Image', 'Folder'))
+    behavior.setImmediatelyAddableTypes(('Image', 'Folder'))
     behavior = ISelectableConstrainTypes(events)
     behavior.setConstrainTypesMode(1)
     behavior.setLocallyAllowedTypes(('Event', 'Folder'))
@@ -1163,15 +1163,15 @@ def initialize_community(community, event):
     blacklist = getMultiAdapter((documents, right_manager), ILocalPortletAssignmentManager)
     blacklist.setBlacklistStatus(CONTEXT_CATEGORY, True)
 
-    # # Blacklist the right column portlets on photos
-    # right_manager = queryUtility(IPortletManager, name=u"plone.rightcolumn")
-    # blacklist = getMultiAdapter((photos, right_manager), ILocalPortletAssignmentManager)
-    # blacklist.setBlacklistStatus(CONTEXT_CATEGORY, True)
+    # Blacklist the right column portlets on photos
+    right_manager = queryUtility(IPortletManager, name=u"plone.rightcolumn")
+    blacklist = getMultiAdapter((photos, right_manager), ILocalPortletAssignmentManager)
+    blacklist.setBlacklistStatus(CONTEXT_CATEGORY, True)
 
-    # # Blacklist the right column portlets on links
-    # right_manager = queryUtility(IPortletManager, name=u"plone.rightcolumn")
-    # blacklist = getMultiAdapter((links, right_manager), ILocalPortletAssignmentManager)
-    # blacklist.setBlacklistStatus(CONTEXT_CATEGORY, True)
+    # Blacklist the right column portlets on links
+    right_manager = queryUtility(IPortletManager, name=u"plone.rightcolumn")
+    blacklist = getMultiAdapter((links, right_manager), ILocalPortletAssignmentManager)
+    blacklist.setBlacklistStatus(CONTEXT_CATEGORY, True)
 
     # Blacklist the right column portlets on events
     right_manager = queryUtility(IPortletManager, name=u"plone.rightcolumn")
@@ -1186,8 +1186,8 @@ def initialize_community(community, event):
     # Reindex all created objects
     community.reindexObject()
     documents.reindexObject()
-    # links.reindexObject()
-    # photos.reindexObject()
+    links.reindexObject()
+    photos.reindexObject()
     events.reindexObject()
     discussion.reindexObject()
 
