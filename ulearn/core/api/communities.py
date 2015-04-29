@@ -43,7 +43,7 @@ class Communities(REST):
             return validation
 
         # Hard security validation as the view is soft checked
-        check_permission = self.check_roles(roles=['Member', ])
+        check_permission = self.check_roles(roles=['Member', 'Manager'])
         if check_permission is not True:
             return check_permission
 
