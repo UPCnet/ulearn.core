@@ -34,7 +34,6 @@ from plone.namedfile.field import NamedBlobImage
 from plone.portlets.constants import CONTEXT_CATEGORY
 from plone.portlets.interfaces import ILocalPortletAssignmentManager
 from plone.portlets.interfaces import IPortletManager
-from plone.registry.interfaces import IRegistry
 from plone.dexterity.interfaces import IDexterityContent
 
 from Products.CMFCore.utils import getToolByName
@@ -59,6 +58,7 @@ from genweb.core.adapters.favorites import IFavorite
 from genweb.core.widgets.select2_maxuser_widget import Select2MAXUserInputFieldWidget
 from genweb.core.widgets.select2_user_widget import SelectWidgetConverter
 from mrs.max.utilities import IMAXClient
+from mrs.max.utilities import IHubClient
 
 from ulearn.core import _
 from ulearn.core.interfaces import IDXFileFactory
@@ -249,6 +249,7 @@ class CommunityAdapterMixin(object):
     def __init__(self, context):
         self.context = context
         self.get_max_client()
+        self.get_hub_client()
 
         # Determine the value for notifications
         if self.context.notify_activity_via_push and self.context.notify_activity_via_push_comments_too:
@@ -262,6 +263,11 @@ class CommunityAdapterMixin(object):
         self.maxclient, self.settings = getUtility(IMAXClient)()
         self.maxclient.setActor(self.settings.max_restricted_username)
         self.maxclient.setToken(self.settings.max_restricted_token)
+
+    def get_hub_client(self):
+        self.hubclient, settings = getUtility(IHubClient)()
+        self.hubclient.setActor(settings.max_restricted_username)
+        self.hubclient.setToken(settings.max_restricted_token)
 
     def create_max_context(self):
         """ Add context for the community on MAX server given a set of
@@ -382,7 +388,7 @@ class CommunityAdapterMixin(object):
         subscribe_request['context'] = self.context.absolute_url()
         subscribe_request['acl'] = self.get_acl()
 
-        requests.post('{}/api/domains/{}/services/syncacl'.format(self.settings.hub_server, self.settings.domain), json=subscribe_request)
+        self.hubclient.api.domains[self.settings.domain].services['syncacl'].post(**subscribe_request)
 
     def add_max_subscription_atomic(self, username):
         """ Used in auto-subscribe an user to an Open community. """
@@ -485,7 +491,7 @@ class OrganizativeCommunity(CommunityAdapterMixin):
         super(OrganizativeCommunity, self).__init__(context)
         self.max_permissions = ORGANIZATIVE_PERMISSIONS
         self.hub_permission_mapping = dict(reader=['read'],
-                                           write=['read', 'write'],
+                                           writer=['read', 'write'],
                                            owner=['read', 'write', 'unsubscribe', 'flag', 'invite', 'kick'])
 
 
@@ -497,7 +503,7 @@ class OpenCommunity(CommunityAdapterMixin):
         super(OpenCommunity, self).__init__(context)
         self.max_permissions = OPEN_PERMISSIONS
         self.hub_permission_mapping = dict(reader=['read', 'unsubscribe'],
-                                           write=['read', 'write', 'unsubscribe'],
+                                           writer=['read', 'write', 'unsubscribe'],
                                            owner=['read', 'write', 'unsubscribe', 'flag', 'invite', 'kick'])
 
     def set_plone_permissions(self, acl, changed=False):
@@ -517,12 +523,16 @@ class ClosedCommunity(CommunityAdapterMixin):
         super(ClosedCommunity, self).__init__(context)
         self.max_permissions = CLOSED_PERMISSIONS
         self.hub_permission_mapping = dict(reader=['read', 'unsubscribe'],
-                                           write=['read', 'write', 'unsubscribe'],
+                                           writer=['read', 'write', 'unsubscribe'],
                                            owner=['read', 'write', 'unsubscribe', 'flag', 'invite', 'kick'])
 
     def set_initial_subscription(self, acl):
+        """ For closed communities the write permission should be explicit via a
+            grant.
+        """
         super(ClosedCommunity, self).set_initial_subscription(acl)
         self.maxclient.contexts[self.context.absolute_url()].permissions[self.context.Creator()]['write'].put()
+        self.update_hub_subscriptions()
 
     def set_plone_permissions(self, acl, changed=False):
 

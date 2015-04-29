@@ -21,7 +21,7 @@ window._MAXUI.activitySource = '%(activitySource)s';
 window._MAXUI.activitySortView = '%(activitySortView)s';
 window._MAXUI.language = '%(language)s';
 window._MAXUI.hidePostboxOnTimeline = false;
-window._MAXUI.domain = '%(max_domain)s';
+window._MAXUI.domain = '%(domain)s';
 """
 
 
@@ -71,5 +71,5 @@ class communityVariables(grok.View):
             activitySource='activities',
             activitySortView=activity_views_map.get(activity_view, 'recent'),
             language=default_lang,
-            max_domain=settings.max_domain
+            domain=settings.domain
         )
