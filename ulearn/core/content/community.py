@@ -531,7 +531,9 @@ class ClosedCommunity(CommunityAdapterMixin):
             grant.
         """
         super(ClosedCommunity, self).set_initial_subscription(acl)
-        self.maxclient.contexts[self.context.absolute_url()].permissions[self.context.Creator()]['write'].put()
+        for permission in self.hub_permission_mapping['owner']:
+            self.maxclient.contexts[self.context.absolute_url()].permissions[self.context.Creator()][permission].put()
+
         self.update_hub_subscriptions()
 
     def set_plone_permissions(self, acl, changed=False):
