@@ -11,7 +11,6 @@ TEMPLATE = """\
 if (!window._MAXUI) {window._MAXUI = {}; }
 window._MAXUI.username = '%(username)s';
 window._MAXUI.oauth_token = '%(oauth_token)s';
-window._MAXUI.oauth_grant_type = '%(oauth_grant_type)s';
 window._MAXUI.max_server = '%(max_server)s';
 window._MAXUI.max_server_alias = '%(max_server_alias)s';
 window._MAXUI.avatar_url = '%(avatar_url)s';
@@ -62,7 +61,6 @@ class communityVariables(grok.View):
         return TEMPLATE % dict(
             username=username,
             oauth_token=oauth_token,
-            oauth_grant_type=settings.oauth_grant_type,
             max_server=settings.max_server,
             max_server_alias=settings.max_server_alias,
             avatar_url='%s/people/{0}/avatar/large' % (settings.max_server),
