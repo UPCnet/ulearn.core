@@ -70,7 +70,7 @@
                 <td class="text-center"><input ng-model="user.role" type="radio" name="{{user.id}}" value="writer"></td>
                 <td class="text-center"><input ng-model="user.role" type="radio" name="{{user.id}}" value="owner"></td>
                 <td class="text-center">
-                    <button type="button" ng-click="ctrl.deleteUser($index)" class="btn btn-danger"><i class="fa fa-trash-o"></i></button>
+                    <button type="button" ng-click="ctrl.deleteUser(user)" class="btn btn-danger"><i class="fa fa-trash-o"></i></button>
                 </td>
               </tr>
               <!--! <tt>{{ctrl.users | json}}</tt><br/> -->
@@ -113,7 +113,7 @@
                 <td class="text-center"><input ng-model="group.role" type="radio" name="{{group.id}}" value="writer"></td>
                 <td class="text-center"><input ng-model="group.role" type="radio" name="{{group.id}}" value="owner"></td>
                 <td class="text-center">
-                    <button type="button" ng-click="ctrl.deleteGroup($index)" class="btn btn-danger"><i class="fa fa-trash-o"></i></button>
+                    <button type="button" ng-click="ctrl.deleteGroup(group)" class="btn btn-danger"><i class="fa fa-trash-o"></i></button>
                 </td>
               </tr>
               <!--! <tt>{{ctrl.groups | json}}</tt><br/> -->
