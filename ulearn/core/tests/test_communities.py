@@ -111,7 +111,10 @@ class TestExample(uLearnTestBase):
         self.assertEqual(records[0].attrs.get('acl', '').get('users', [])[0]['id'], u'ulearn.testuser1')
 
         # Test for internal objects
-        self.assertEqual(community.objectIds(), ['documents', 'links', 'media', 'events', 'discussion'])
+        self.assertEqual(community.objectIds(), ['documents', 'events', 'discussion'])
+
+        # Test for photo folder
+        self.assertEqual(community['documents'].objectIds(), ['media', ])
 
         # Test for subscribed users
         self.assertTrue(u'ulearn.testuser1' in self.get_max_subscribed_users(community))
@@ -163,7 +166,10 @@ class TestExample(uLearnTestBase):
         self.assertEqual(records[0].attrs.get('acl', '').get('users', [])[0]['id'], u'ulearn.testuser1')
 
         # Test for internal objects
-        self.assertEqual(community.objectIds(), ['documents', 'links', 'media', 'events', 'discussion'])
+        self.assertEqual(community.objectIds(), ['documents', 'events', 'discussion'])
+
+        # Test for photo folder
+        self.assertEqual(community['documents'].objectIds(), ['media', ])
 
         # Test for subscribed users
         self.assertTrue(u'ulearn.testuser1' in self.get_max_subscribed_users(community))
@@ -215,7 +221,10 @@ class TestExample(uLearnTestBase):
         self.assertEqual(records[0].attrs.get('acl', '').get('users', [])[0]['id'], u'ulearn.testuser1')
 
         # Test for internal objects
-        self.assertEqual(community.objectIds(), ['documents', 'links', 'media', 'events', 'discussion'])
+        self.assertEqual(community.objectIds(), ['documents', 'events', 'discussion'])
+
+        # Test for photo folder
+        self.assertEqual(community['documents'].objectIds(), ['media', ])
 
         # Test for subscribed users
         self.assertTrue(u'ulearn.testuser1' in self.get_max_subscribed_users(community))

@@ -50,8 +50,8 @@ class TestUploads(uLearnTestBase):
         self.assertEqual(res.status_code, 201)
         self.assertTrue('thumbURL' in res.json())
         self.assertTrue('uploadURL' in res.json())
-        self.assertTrue('avatar.png' in community['media'].objectIds())
-        IAppImage.providedBy(community['media']['avatar.png'])
+        self.assertTrue('avatar.png' in community['documents']['media'].objectIds())
+        IAppImage.providedBy(community['documents']['media']['avatar.png'])
 
     def test_upload_file_to_community_corner_mimetipes(self):
         login(self.portal, 'ulearn.testuser1')
@@ -117,8 +117,8 @@ class TestUploads(uLearnTestBase):
         transaction.commit()
 
         self.assertEqual(res.status_code, 201)
-        self.assertTrue('avatar.png' in community['media'].objectIds())
-        self.assertTrue(community['media']['avatar.png'].title, activity_data)
+        self.assertTrue('avatar.png' in community['documents']['media'].objectIds())
+        self.assertTrue(community['documents']['media']['avatar.png'].title, activity_data)
 
     def test_upload_file_to_community_with_parameters_with_strange_chars(self):
         login(self.portal, 'ulearn.testuser1')
@@ -134,5 +134,5 @@ class TestUploads(uLearnTestBase):
         transaction.commit()
 
         self.assertEqual(res.status_code, 201)
-        self.assertTrue('avatar.png' in community['media'].objectIds())
-        self.assertEqual(community['media']['avatar.png'].title, activity_data['activity'])
+        self.assertTrue('avatar.png' in community['documents']['media'].objectIds())
+        self.assertEqual(community['documents']['media']['avatar.png'].title, activity_data['activity'])

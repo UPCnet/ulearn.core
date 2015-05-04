@@ -730,19 +730,29 @@ class UploadFile(grok.View):
     def portal(self):
         return getSite()
 
-    def is_user_subscribed(self):
-        pm = getToolByName(self.context, "portal_membership")
-        current_user = pm.getAuthenticatedMember().getUserName()
-        return current_user in self.context.readers or \
-            current_user in self.context.subscribed or \
-            current_user in self.context.owners
-
     def get_images_folder(self):
+        """ Gets the media folder. It looks for it on the expected place with a
+            fallback, just in case
+        """
+        if self.context.get('documents', False):
+            if self.context['documents'].get('media', False):
+                if IPhotosFolder.providedBy(self.context['documents']['media']):
+                    return self.context['documents']['media']
+        # Fallback
         for obj in self.context.objectIds():
-            if IPhotosFolder.providedBy(self.context[obj]):
-                return self.context[obj]
+            if IDocumentFolder.providedBy(self.context[obj]):
+                for doc in self.context[obj].objectIds():
+                    if IPhotosFolder.providedBy(self.context[obj][doc]):
+                        return self.context[obj][doc]
 
     def get_documents_folder(self):
+        """ Gets the documents folder. It looks for it on the expected place
+            with a fallback, just in case
+        """
+        if self.context.get('documents', False):
+            if IDocumentFolder.providedBy(self.context['documents']):
+                return self.context['documents']
+        # Fallback
         for obj in self.context.objectIds():
             if IDocumentFolder.providedBy(self.context[obj]):
                 return self.context[obj]
@@ -1115,14 +1125,12 @@ def initialize_community(community, event):
 
     # Create default content containers
     documents = createContentInContainer(community, 'Folder', title='documents', checkConstraints=False)
-    links = createContentInContainer(community, 'Folder', title='links', checkConstraints=False)
-    photos = createContentInContainer(community, 'Folder', title='media', checkConstraints=False)
+    media = createContentInContainer(documents, 'Folder', title='media', checkConstraints=False)
     events = createContentInContainer(community, 'Folder', title='events', checkConstraints=False)
 
     # Set the correct title, translated
     documents.setTitle(community.translate(_(u"Documents")))
-    links.setTitle(community.translate(_(u"Enllaços")))
-    photos.setTitle(community.translate(_(u"Media")))
+    media.setTitle(community.translate(_(u"Media")))
     events.setTitle(community.translate(_(u"Esdeveniments")))
 
     # Create the default discussion container and set title
@@ -1131,15 +1139,13 @@ def initialize_community(community, event):
 
     # Set default view layout
     documents.setLayout('filtered_contents_search_view')
-    links.setLayout('folder_summary_view')
-    photos.setLayout('folder_summary_view')
+    media.setLayout('folder_summary_view')
     events.setLayout('folder_summary_view')
     discussion.setLayout('discussion_folder_view')
 
     # Mark them with a marker interface
     alsoProvides(documents, IDocumentFolder)
-    alsoProvides(links, ILinksFolder)
-    alsoProvides(photos, IPhotosFolder)
+    alsoProvides(media, IPhotosFolder)
     alsoProvides(events, IEventsFolder)
     alsoProvides(discussion, IDiscussionFolder)
 
@@ -1148,11 +1154,7 @@ def initialize_community(community, event):
     behavior.setConstrainTypesMode(1)
     behavior.setLocallyAllowedTypes(('Document', 'File', 'Folder', 'Link', 'Image'))
     behavior.setImmediatelyAddableTypes(('Document', 'File', 'Folder', 'Link', 'Image'))
-    behavior = ISelectableConstrainTypes(links)
-    behavior.setConstrainTypesMode(1)
-    behavior.setLocallyAllowedTypes(('Link', 'Folder'))
-    behavior.setImmediatelyAddableTypes(('Link', 'Folder'))
-    behavior = ISelectableConstrainTypes(photos)
+    behavior = ISelectableConstrainTypes(media)
     behavior.setConstrainTypesMode(1)
     behavior.setLocallyAllowedTypes(('Image', 'Folder'))
     behavior.setImmediatelyAddableTypes(('Image', 'Folder'))
@@ -1170,14 +1172,9 @@ def initialize_community(community, event):
     blacklist = getMultiAdapter((documents, right_manager), ILocalPortletAssignmentManager)
     blacklist.setBlacklistStatus(CONTEXT_CATEGORY, True)
 
-    # Blacklist the right column portlets on photos
+    # Blacklist the right column portlets on media
     right_manager = queryUtility(IPortletManager, name=u"plone.rightcolumn")
-    blacklist = getMultiAdapter((photos, right_manager), ILocalPortletAssignmentManager)
-    blacklist.setBlacklistStatus(CONTEXT_CATEGORY, True)
-
-    # Blacklist the right column portlets on links
-    right_manager = queryUtility(IPortletManager, name=u"plone.rightcolumn")
-    blacklist = getMultiAdapter((links, right_manager), ILocalPortletAssignmentManager)
+    blacklist = getMultiAdapter((media, right_manager), ILocalPortletAssignmentManager)
     blacklist.setBlacklistStatus(CONTEXT_CATEGORY, True)
 
     # Blacklist the right column portlets on events
@@ -1193,8 +1190,7 @@ def initialize_community(community, event):
     # Reindex all created objects
     community.reindexObject()
     documents.reindexObject()
-    links.reindexObject()
-    photos.reindexObject()
+    media.reindexObject()
     events.reindexObject()
     discussion.reindexObject()
 
