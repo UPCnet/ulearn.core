@@ -294,6 +294,11 @@ class CommunityAdapterMixin(object):
         self.maxclient.people[self.context.Creator()].subscriptions.post(object_url=self.context.absolute_url())
         self.update_acl(acl)
 
+        for permission in self.hub_permission_mapping['owner']:
+            self.maxclient.contexts[self.context.absolute_url()].permissions[self.context.Creator()][permission].put()
+
+        self.update_hub_subscriptions()
+
     def update_community_type(self):
         # Guard in case the update could already be made by other means
         context_current_info = self.maxclient.contexts[self.context.absolute_url()].get()
@@ -525,16 +530,6 @@ class ClosedCommunity(CommunityAdapterMixin):
         self.hub_permission_mapping = dict(reader=['read', 'unsubscribe'],
                                            writer=['read', 'write', 'unsubscribe'],
                                            owner=['read', 'write', 'unsubscribe', 'flag', 'invite', 'kick'])
-
-    def set_initial_subscription(self, acl):
-        """ For closed communities the write permission should be explicit via a
-            grant.
-        """
-        super(ClosedCommunity, self).set_initial_subscription(acl)
-        for permission in self.hub_permission_mapping['owner']:
-            self.maxclient.contexts[self.context.absolute_url()].permissions[self.context.Creator()][permission].put()
-
-        self.update_hub_subscriptions()
 
     def set_plone_permissions(self, acl, changed=False):
 
