@@ -342,3 +342,36 @@ class MigrateOldStyleACLs(grok.View):
             logger.warn('migrated community {} with acl: {}'.format(community.absolute_url(), acl))
 
         return 'Done'
+
+
+class MigrateOldStyleFolders(grok.View):
+    grok.context(IPloneSiteRoot)
+    grok.name('migrate_folders')
+
+    def render(self):
+        pc = api.portal.get_tool('portal_catalog')
+        communities = pc.searchResults(portal_type='ulearn.community')
+
+        for brain in communities:
+            obj = brain.getObject()
+            if 'media' in obj.objectIds():
+                if IPhotosFolder.providedBy(obj['media']):
+                    try:
+                        api.content.move(source=obj['media'], target=obj['documents'], safe_id=True)
+                        logger.warn('Successfully migrated "links" community folder {}.'.format(obj.absolute_url()))
+                    except:
+                        logger.error('Error moving content from "media" folder: {}'.format(obj.absolute_url()))
+
+            if 'links' in obj.objectIds():
+                if ILinksFolder.providedBy(obj['links']):
+                    # If it's empty do nothing
+                    if obj['links'].objectIds():
+                        try:
+                            api.content.move(source=obj['links'], target=obj['documents'], safe_id=True)
+                            logger.warn('Successfully migrated "links" community folder {}.'.format(obj.absolute_url()))
+                        except:
+                            logger.error('Error moving content from "links" folder: {}'.format(obj.absolute_url()))
+                    else:
+                        logger.warn('The links folder in {} is empty. Doing nothing.'.format(obj.absolute_url()))
+
+        return 'Done'
