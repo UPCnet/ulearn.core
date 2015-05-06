@@ -684,3 +684,28 @@ msgstr "Embedded video"
 
 msgid "video_embed_description"
 msgstr "An embedded video"
+
+#. Default: "Dirección de correo"
+#: ../../../../ulearn.theme/ulearn/theme/browser/views_templates/user_profile.pt:101
+msgid "email"
+msgstr "e-mail"
+
+#: ../../../../ulearn.theme/ulearn/theme/browser/views_templates/user_profile.pt:101
+msgid "description"
+msgstr "Biography"
+
+#: ../../../../ulearn.theme/ulearn/theme/browser/views_templates/user_profile.pt:101
+msgid "location"
+msgstr "Location"
+
+#: ../../../../ulearn.theme/ulearn/theme/browser/views_templates/user_profile.pt:101
+msgid "ubicacio"
+msgstr "Work place"
+
+#: ../../../../ulearn.theme/ulearn/theme/browser/views_templates/user_profile.pt:101
+msgid "telefon"
+msgstr "Telephone"
+
+#: ../../../../ulearn.theme/ulearn/theme/browser/views_templates/user_profile.pt:101
+msgid "twitter_username"
+msgstr "Twitter username"

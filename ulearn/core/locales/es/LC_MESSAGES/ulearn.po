@@ -750,3 +750,28 @@ msgstr "Cambia el tipo"
 
 msgid "manage_membership"
 msgstr "Gestiona los miembros"
+
+#. Default: "Dirección de correo"
+#: ../../../../ulearn.theme/ulearn/theme/browser/views_templates/user_profile.pt:101
+msgid "email"
+msgstr "Correo electrónico"
+
+#: ../../../../ulearn.theme/ulearn/theme/browser/views_templates/user_profile.pt:101
+msgid "description"
+msgstr "Biografía"
+
+#: ../../../../ulearn.theme/ulearn/theme/browser/views_templates/user_profile.pt:101
+msgid "location"
+msgstr "Localización"
+
+#: ../../../../ulearn.theme/ulearn/theme/browser/views_templates/user_profile.pt:101
+msgid "ubicacio"
+msgstr "Ubicación"
+
+#: ../../../../ulearn.theme/ulearn/theme/browser/views_templates/user_profile.pt:101
+msgid "telefon"
+msgstr "Teléfono"
+
+#: ../../../../ulearn.theme/ulearn/theme/browser/views_templates/user_profile.pt:101
+msgid "twitter_username"
+msgstr "Usuario de Twitter"

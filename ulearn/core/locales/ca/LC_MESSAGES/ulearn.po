@@ -782,3 +782,28 @@ msgstr "Canvia el tipus"
 
 msgid "manage_membership"
 msgstr "Gestiona els membres"
+
+#. Default: "Dirección de correo"
+#: ../../../../ulearn.theme/ulearn/theme/browser/views_templates/user_profile.pt:101
+msgid "email"
+msgstr "Correu electrònic"
+
+#: ../../../../ulearn.theme/ulearn/theme/browser/views_templates/user_profile.pt:101
+msgid "description"
+msgstr "Biografia"
+
+#: ../../../../ulearn.theme/ulearn/theme/browser/views_templates/user_profile.pt:101
+msgid "location"
+msgstr "Localització"
+
+#: ../../../../ulearn.theme/ulearn/theme/browser/views_templates/user_profile.pt:101
+msgid "ubicacio"
+msgstr "Ubicació"
+
+#: ../../../../ulearn.theme/ulearn/theme/browser/views_templates/user_profile.pt:101
+msgid "telefon"
+msgstr "Telèfon"
+
+#: ../../../../ulearn.theme/ulearn/theme/browser/views_templates/user_profile.pt:101
+msgid "twitter_username"
+msgstr "Usuari de Twitter"

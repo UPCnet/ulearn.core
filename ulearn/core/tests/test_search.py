@@ -334,6 +334,9 @@ class TestUserExtendedPropertiesSoupCatalogFactory(object):
     """
     properties = ['username', 'unit_organizational', 'position']
 
+    # The profile properties for display, including the default ones, and in order
+    profile_properties = ['unit_organizational', 'twitter_username']
+
     def __call__(self, context):
         catalog = Catalog()
         idindexer = NodeAttributeIndexer('id')
