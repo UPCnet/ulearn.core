@@ -775,3 +775,19 @@ msgstr "Teléfono"
 #: ../../../../ulearn.theme/ulearn/theme/browser/views_templates/user_profile.pt:101
 msgid "twitter_username"
 msgstr "Usuario de Twitter"
+
+#. Properties extended Credit Andorra
+msgid "number_operator"
+msgstr "Número de Operador"
+
+msgid "unit_organizational"
+msgstr "Unidad Organizativa"
+
+msgid "position"
+msgstr "Posición"
+
+msgid "country"
+msgstr "Pais"
+
+msgid "language"
+msgstr "Idioma"

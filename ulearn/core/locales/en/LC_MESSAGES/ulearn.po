@@ -709,3 +709,19 @@ msgstr "Telephone"
 #: ../../../../ulearn.theme/ulearn/theme/browser/views_templates/user_profile.pt:101
 msgid "twitter_username"
 msgstr "Twitter username"
+
+#. Properties extended Credit Andorra
+msgid "number_operator"
+msgstr "Operator number"
+
+msgid "unit_organizational"
+msgstr "Unit organizational"
+
+msgid "position"
+msgstr "Position"
+
+msgid "country"
+msgstr "Country"
+
+msgid "language"
+msgstr "Language"
