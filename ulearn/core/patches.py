@@ -1,7 +1,14 @@
 # -*- encoding: utf-8 -*-
 import copy
 
+from plone import api
+from zope.component import getUtility
+from zope.component import getUtilitiesFor
+from souper.interfaces import ICatalogFactory
 
+
+# We are patching the enumerateUsers method of the mutable_properties plugin to
+# make it return all the available user properties extension
 def enumerateUsers(self, id=None, login=None,
                        exact_match=False, **kw):
         """ See IUserEnumerationPlugin.
@@ -20,14 +27,30 @@ def enumerateUsers(self, id=None, login=None,
                     if self.testMemberData(data, criteria, exact_match)
                         and not data.get('isGroup', False)]
 
-        user_info = [{'id': self.prefix + user_id,
-                      'login': user_id,
-                      'title': data.get('fullname', user_id),
-                      'description': data.get('fullname', user_id),
-                      'email': data.get('email', ''),
-                      'ubicacio': data.get('ubicacio', ''),
-                      'location': data.get('location', ''),
-                      'telefon': data.get('telefon', ''),
-                      'pluginid': plugin_id} for (user_id, data) in users]
+        has_extended_properties = False
+        client = api.portal.get_registry_record('mrs.max.browser.controlpanel.IMAXUISettings.domain')
+        if 'user_properties_{}'.format(client) in [a[0] for a in getUtilitiesFor(ICatalogFactory)]:
+            has_extended_properties = True
+            extended_user_properties_utility = getUtility(ICatalogFactory, name='user_properties_{}'.format(client))
 
-        return tuple(user_info)
+        user_properties_utility = getUtility(ICatalogFactory, name='user_properties')
+
+        users_profile = []
+        for user_id, user in users:
+            if user is not None:
+                user_dict = {}
+                for user_property in user_properties_utility.properties:
+                    user_dict.update({user_property: user.get(user_property, '')})
+
+                if has_extended_properties:
+                    for user_property in extended_user_properties_utility.properties:
+                        user_dict.update({user_property: user.get(user_property, '')})
+
+                user_dict.update(dict(id=user_id))
+                user_dict.update(dict(login=user_id))
+                user_dict.update(dict(title=user.get('fullname', user_id)))
+                user_dict.update(dict(description=user.get('fullname', user_id)))
+                user_dict.update({'pluginid': plugin_id})
+                users_profile.append(user_dict)
+
+        return tuple(users_profile)

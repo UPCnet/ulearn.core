@@ -328,6 +328,41 @@ class TestExample(uLearnTestBase):
         self.assertEqual(len(result), 2)
 
 
+    def test_rebuild_user_catalog_with_user_extended_properties(self):
+        """ This is the case when a client has customized user properties """
+        login(self.portal, u'ulearn.testuser1')
+        # We provide here the required initialization for a user custom properties catalog
+        provideUtility(TestUserExtendedPropertiesSoupCatalogFactory(), name='user_properties_exttest')
+        api.portal.set_registry_record(name='mrs.max.browser.controlpanel.IMAXUISettings.domain', value=u'exttest')
+
+        # Fake extended Plone user properties
+        pmd = api.portal.get_tool('portal_memberdata')
+        pmd._setProperty('position', '')
+        pmd._setProperty('unit_organizational', '')
+
+        # Modify user
+        api.user.get('ulearn.testuser1').setMemberProperties(mapping={'position': u'Jefe', 'unit_organizational': u'Finance'})
+
+        rebuild_view = getMultiAdapter((self.portal, self.request), name='rebuild_user_catalog')
+        rebuild_view.render()
+
+        users_view = getMultiAdapter((self.portal, self.request), name='view_user_catalog')
+        users = json.loads(users_view.render())
+
+        self.assertTrue('unit_organizational' in users['ulearn.testuser1'])
+        self.assertTrue(users['ulearn.testuser1']['unit_organizational'] == 'Finance')
+
+        # Then, reset and rebuild
+        reset_view = getMultiAdapter((self.portal, self.request), name='reset_user_catalog')
+        reset_view.render()
+        rebuild_view.render()
+
+        users = json.loads(users_view.render())
+
+        self.assertTrue('unit_organizational' in users['ulearn.testuser1'])
+        self.assertTrue(users['ulearn.testuser1']['unit_organizational'] == 'Finance')
+
+
 @implementer(ICatalogFactory)
 class TestUserExtendedPropertiesSoupCatalogFactory(object):
     """ Extended user catalog for testing purposes

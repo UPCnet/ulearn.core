@@ -150,13 +150,13 @@ def searchUsersFunction(context, request, search_string):
                 user_dict = {}
                 for user_property in user_properties_utility.properties:
                     user_dict.update({user_property: user.get(user_property, '')})
-                    user_dict.update(dict(id=user.get('id', '')))
-                    user_dict.update(dict(fullname=user.get('title', '')))
 
                 if has_extended_properties:
                     for user_property in extended_user_properties_utility.properties:
                         user_dict.update({user_property: user.get(user_property, '')})
 
+                user_dict.update(dict(id=user.get('id', '')))
+#                user_dict.update(dict(fullname=user.get('title', '')))
                 user_dict.update(dict(foto=str(pm.getPersonalPortrait(user.get('id', '')))))
                 user_dict.update(dict(url=portal.absolute_url() + '/profile/' + user.get('id', '')))
                 users_profile.append(user_dict)
