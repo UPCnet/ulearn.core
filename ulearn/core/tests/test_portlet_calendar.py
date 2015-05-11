@@ -16,6 +16,9 @@ from zope.component.hooks import setSite
 from ulearn.core.tests import uLearnTestBase
 from mrs.max.utilities import IMAXClient
 
+from datetime import timedelta
+from plone.app.event.dx.behaviors import EventAccessor
+
 TZNAME = 'Europe/Vienna'
 
 
@@ -45,14 +48,30 @@ class RendererTest(uLearnTestBase):
     def tearDown(self):
         self.maxclient.contexts['http://nohost/plone/community-test'].delete()
 
-    def create_event(self, context, day, start, end, event_id='e1'):
-        now = localized_now().replace(minute=0, second=0, microsecond=0)
-        start = localized_now().replace(day=now.day + day, hour=now.hour + start)
-        end = localized_now().replace(day=now.day + day, hour=now.hour + end)
+    def create_event(self, context, id='e1', title='New event', days=(1, 1), start=0, end=1, whole_day=False, open_end=False):
+        """ Creates an event with delta days tuple (start, end) beggining from
+            now. The start and end arguments are also treated as delta hours.
+        """
+        delta_start = timedelta(hours=start, days=days[0])
+        delta_end = timedelta(hours=end, days=days[1])
 
-        context.events.invokeFactory('Event', event_id, start=start, end=end, timezone=TZNAME, whole_day=False)
+        start = localized_now() + delta_start
+        end = localized_now() + delta_end
 
-        return context.events[event_id]
+        EventAccessor.event_type = 'Event'
+        acc = EventAccessor.create(
+            container=context,
+            content_id=id,
+            title=title,
+            start=start,
+            end=end,
+            timezone=TZNAME,
+            whole_day=whole_day,
+            open_end=open_end
+        )
+        acc.location = u'Graz, Austria'
+
+        return context[id]
 
     def renderer(self, context=None, request=None, view=None, manager=None,
                  assignment=None):
@@ -74,7 +93,7 @@ class RendererTest(uLearnTestBase):
         login(self.portal, 'ulearn.testuser1')
 
         test_community = self.create_test_community()
-        self.create_event(test_community, 0, 2, 3)
+        self.create_event(test_community['events'], days=(0, 0), start=2, end=3)
 
         portlet = self.renderer(context=test_community, assignment=portlet_calendar.Assignment())
         portlet.update()
@@ -89,7 +108,7 @@ class RendererTest(uLearnTestBase):
     def test_nearest_event_today_tomorrow(self):
         login(self.portal, 'ulearn.testuser1')
         test_community = self.create_test_community()
-        self.create_event(test_community, 1, 2, 3)
+        self.create_event(test_community['events'], start=2, end=3)
 
         portlet = self.renderer(context=test_community, assignment=portlet_calendar.Assignment())
 
@@ -105,8 +124,8 @@ class RendererTest(uLearnTestBase):
     def test_nearest_event_today_two_events(self):
         login(self.portal, 'ulearn.testuser1')
         test_community = self.create_test_community()
-        event = self.create_event(test_community, 0, 2, 3)
-        self.create_event(test_community, 0, 4, 5, event_id='e2')
+        event = self.create_event(test_community['events'], days=(0, 0), start=2, end=3)
+        self.create_event(test_community['events'], days=(0, 0), start=4, end=5, id='e2')
 
         portlet = self.renderer(context=test_community, assignment=portlet_calendar.Assignment())
 
@@ -122,8 +141,8 @@ class RendererTest(uLearnTestBase):
     def test_next_three_events_today_two_events(self):
         login(self.portal, 'ulearn.testuser1')
         test_community = self.create_test_community()
-        self.create_event(test_community, 0, 2, 3)
-        event_must_show = self.create_event(test_community, 0, 4, 5, event_id='e2')
+        self.create_event(test_community['events'], days=(0, 0), start=2, end=3)
+        event_must_show = self.create_event(test_community['events'], days=(0, 0), start=4, end=5, id='e2')
 
         portlet = self.renderer(context=test_community, assignment=portlet_calendar.Assignment())
 
