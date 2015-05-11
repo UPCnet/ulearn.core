@@ -16,8 +16,8 @@ class IVideoEmbed(form.Schema):
     """ The video embed schema """
 
     video_url = schema.TextLine(
-        title=_(u"video_url"),
-        description=_(u"video_url_description"),
+        title=_(u'video_url'),
+        description=_(u'video_url_description'),
         required=True
     )
 
@@ -28,7 +28,7 @@ class VideoEmbed(Item):
 
 class VideoEmbedView(grok.View):
     grok.context(IVideoEmbed)
-    grok.name("view")
+    grok.name('view')
 
     def render(self):
         embed_type, code = self.getEmbed()

@@ -36,8 +36,8 @@ def communityAdded(content, event):
     """ Community added handler
     """
     portal = getSite()
-    pm = getToolByName(portal, "portal_membership")
-    pl = getToolByName(portal, "portal_languages")
+    pm = getToolByName(portal, 'portal_membership')
+    pl = getToolByName(portal, 'portal_languages')
     default_lang = pl.getDefaultLanguage()
 
     if pm.isAnonymousUser():  # the user has not logged in
@@ -70,8 +70,8 @@ def Added(content, event):
     """ MAX hooks main handler
     """
     portal = getSite()
-    pm = getToolByName(portal, "portal_membership")
-    pl = getToolByName(portal, "portal_languages")
+    pm = getToolByName(portal, 'portal_membership')
+    pl = getToolByName(portal, 'portal_languages')
     default_lang = pl.getDefaultLanguage()
 
     community = findContainerCommunity(content)
@@ -103,12 +103,12 @@ def Added(content, event):
         activity_text = u'{} {}'.format(content.title, u'{}/view'.format(content.absolute_url()))
 
         try:
-            maxclient.people[username].activities.post(object_content=activity_text, contexts=[dict(url=community.absolute_url(), objectType="context")])
+            maxclient.people[username].activities.post(object_content=activity_text, contexts=[dict(url=community.absolute_url(), objectType='context')])
         except:
             logger.warning('The username {} has been unable to post the default object creation message'.format(username))
     else:
         try:
-            maxclient.people[username].activities.post(object_content=activity_text[default_lang].format(**parts), contexts=[dict(url=community.absolute_url(), objectType="context")])
+            maxclient.people[username].activities.post(object_content=activity_text[default_lang].format(**parts), contexts=[dict(url=community.absolute_url(), objectType='context')])
         except:
             logger.warning('The username {} has been unable to post the default object creation message'.format(username))
 
@@ -150,12 +150,12 @@ def Modified(content, event):
         activity_text = u'{} {}'.format(content.title, u'{}/view'.format(content.absolute_url()))
 
         try:
-            maxclient.people[username].activities.post(object_content=activity_text, contexts=[dict(url=community.absolute_url(), objectType="context")])
+            maxclient.people[username].activities.post(object_content=activity_text, contexts=[dict(url=community.absolute_url(), objectType='context')])
         except:
             logger.warning('The username {} has been unable to post the default object creation message'.format(username))
     else:
         try:
-            maxclient.people[username].activities.post(object_content=activity_text[default_lang].format(**parts), contexts=[dict(url=community.absolute_url(), objectType="context")])
+            maxclient.people[username].activities.post(object_content=activity_text[default_lang].format(**parts), contexts=[dict(url=community.absolute_url(), objectType='context')])
         except:
             logger.warning('The username {} has been unable to post the default object creation message'.format(username))
 

@@ -51,8 +51,8 @@ class portletfix(grok.View):
 
     def render(self):
         portal = getSite()
-        pc = getToolByName(portal, "portal_catalog")
-        communities = pc.searchResults(portal_type="ulearn.community")
+        pc = getToolByName(portal, 'portal_catalog')
+        communities = pc.searchResults(portal_type='ulearn.community')
 
         for community in communities:
             community = community.getObject()
@@ -73,7 +73,7 @@ class linkFolderFix(grok.View):
 
     def render(self):
         portal = getSite()
-        pc = getToolByName(portal, "portal_catalog")
+        pc = getToolByName(portal, 'portal_catalog')
         folder_ifaces = {IDocumentFolder.__identifier__: 'documents',
                          ILinksFolder.__identifier__: 'links',
                          IPhotosFolder.__identifier__: 'media',
@@ -84,7 +84,7 @@ class linkFolderFix(grok.View):
             for result in results:
                 parent = aq_parent(aq_inner(result.getObject()))
                 parent.manage_renameObjects((result.id,), (folder_ifaces[iface],))
-                print("renamed {} to {} in community {}".format(result.id, folder_ifaces[iface], parent))
+                print('renamed {} to {} in community {}'.format(result.id, folder_ifaces[iface], parent))
 
 
 def createMAXUser(username):
@@ -147,14 +147,14 @@ class CreateDiscussionFolders(grok.View):
     grok.require('zope2.ViewManagementScreens')
 
     def render(self):
-        pc = api.portal.get_tool(name="portal_catalog")
-        communities = pc.searchResults(portal_type="ulearn.community")
+        pc = api.portal.get_tool(name='portal_catalog')
+        communities = pc.searchResults(portal_type='ulearn.community')
         for community in communities:
             community = community.getObject()
             if not 'discussion' in community.objectIds():
                 # Create the default discussion container and set title
                 discussion = createContentInContainer(community, 'Folder', title='discussion', checkConstraints=False)
-                discussion.setTitle(community.translate(_(u"Discussion")))
+                discussion.setTitle(community.translate(_(u'Discussion')))
 
                 discussion.setLayout('discussion_folder_view')
 
@@ -166,13 +166,13 @@ class CreateDiscussionFolders(grok.View):
                 behavior.setImmediatelyAddableTypes(('ulearn.discussion', 'Folder'))
 
                 # Blacklist the right column portlets on discussion
-                right_manager = queryUtility(IPortletManager, name=u"plone.rightcolumn")
+                right_manager = queryUtility(IPortletManager, name=u'plone.rightcolumn')
                 blacklist = getMultiAdapter((discussion, right_manager), ILocalPortletAssignmentManager)
                 blacklist.setBlacklistStatus(CONTEXT_CATEGORY, True)
 
                 discussion.reindexObject()
 
-                logger.info("Created discussion folder in {}".format(community.absolute_url()))
+                logger.info('Created discussion folder in {}'.format(community.absolute_url()))
 
         return 'Done.'
 
@@ -182,8 +182,8 @@ class InitializeVideos(grok.View):
     grok.require('zope2.ViewManagementScreens')
 
     def render(self):
-        pc = api.portal.get_tool(name="portal_catalog")
-        communities = pc.searchResults(portal_type="ulearn.community")
+        pc = api.portal.get_tool(name='portal_catalog')
+        communities = pc.searchResults(portal_type='ulearn.community')
 
         text = []
         for community in communities:
@@ -196,7 +196,7 @@ class InitializeVideos(grok.View):
             behavior.setImmediatelyAddableTypes(('Image', 'ulearn.video', 'Folder'))
 
             if media_folder.title != 'Media':
-                media_folder.setTitle(community.translate(_(u"Media")))
+                media_folder.setTitle(community.translate(_(u'Media')))
 
             text.append('Added type video to {}\n'.format(community.absolute_url()))
         return ''.join(text)
@@ -212,8 +212,8 @@ class MigrateCommunities(grok.View):
 
     def render(self):
         portal = api.portal.get()
-        pc = api.portal.get_tool(name="portal_catalog")
-        communities = pc.searchResults(portal_type="ulearn.community")
+        pc = api.portal.get_tool(name='portal_catalog')
+        communities = pc.searchResults(portal_type='ulearn.community')
 
         text = []
         for community_brain in communities:

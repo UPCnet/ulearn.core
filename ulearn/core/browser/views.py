@@ -41,40 +41,40 @@ class IReservaBBB(form.Schema):
     """
 
     nom_reunio = schema.TextLine(
-        title=_(u"Nom de la reunió"),
-        description=_(u"Indiqueu la descripció de la reunió virtual."),
+        title=_(u'Nom de la reunió'),
+        description=_(u'Indiqueu la descripció de la reunió virtual.'),
         required=True
     )
 
     start_date = schema.Datetime(
-        title=_(u"Data d'inici"),
-        description=_(u"Indiqueu la data d'inici de la reserva."),
+        title=_(u'Data d'inici'),
+        description=_(u'Indiqueu la data d'inici de la reserva.'),
         required=True,
         default=datetime.now()
     )
 
     durada = schema.Choice(
-        title=_(u"Durada de la reunió"),
-        description=_(u"Indiqueu durada de la reunió."),
+        title=_(u'Durada de la reunió'),
+        description=_(u'Indiqueu durada de la reunió.'),
         values=range(1, 25),
         required=True
     )
 
     invitats_convidats = schema.TextLine(
-        title=_(u"Convidats moderadors"),
-        description=_(u"Llista d'emails dels convidats MODERADORS, separats per comes."),
+        title=_(u'Convidats moderadors'),
+        description=_(u'Llista d'emails dels convidats MODERADORS, separats per comes.'),
         required=True
     )
 
     invitats_espectadors = schema.TextLine(
-        title=_(u"Invitats espectadors"),
-        description=_(u"Llista d'emails dels convidats ESPECTADORS, separats per comes."),
+        title=_(u'Invitats espectadors'),
+        description=_(u'Llista d'emails dels convidats ESPECTADORS, separats per comes.'),
         required=False
     )
 
     # carrega = schema.Choice(
-    #     title=_(u"Nombre de convidats total"),
-    #     description=_(u"Indiqueu el nombre total d'assistents previstos."),
+    #     title=_(u'Nombre de convidats total'),
+    #     description=_(u'Indiqueu el nombre total d'assistents previstos.'),
     #     values=range(2, 26),
     #     required=True
     # )
@@ -88,7 +88,7 @@ class reservaBBB(form.SchemaForm):
     schema = IReservaBBB
     ignoreContext = True
 
-    label = _(u"Create new meeting space")
+    label = _(u'Create new meeting space')
 
     def update(self):
         super(reservaBBB, self).update()
@@ -97,7 +97,7 @@ class reservaBBB(form.SchemaForm):
         self.actions['save'].addClass('context')
         self.actions['cancel'].addClass('standalone')
 
-    @button.buttonAndHandler(_(u'Save'), name="save")
+    @button.buttonAndHandler(_(u'Save'), name='save')
     def handleApply(self, action):
         portal = getSite()
         pm = getToolByName(portal, 'portal_membership')
@@ -109,8 +109,8 @@ class reservaBBB(form.SchemaForm):
 
         if not user_email:
             IStatusMessage(self.request).addStatusMessage(
-                _(u"La reunió no es pot crear perquè l'usuari no te informat la adreca de correu electrònic."),
-                u"error"
+                _(u'La reunió no es pot crear perquè l'usuari no te informat la adreca de correu electrònic.'),
+                u'error'
             )
             self.request.response.redirect(portal.absolute_url())
 
@@ -147,25 +147,25 @@ class reservaBBB(form.SchemaForm):
             # Redirect back to the front page with a status message
             if int(req.text) > 0:
                 IStatusMessage(self.request).addStatusMessage(
-                    _(u"La reunió virtual ha estat creada."),
-                    u"info"
+                    _(u'La reunió virtual ha estat creada.'),
+                    u'info'
                 )
             else:
                 IStatusMessage(self.request).addStatusMessage(
-                    _(u"Hi ha hagut algun problema i la reunió virtual no ha estat creada."),
-                    u"info"
+                    _(u'Hi ha hagut algun problema i la reunió virtual no ha estat creada.'),
+                    u'info'
                 )
         except:
             IStatusMessage(self.request).addStatusMessage(
-                _(u"Hi ha hagut algun problema i la reunió virtual no ha estat creada."),
-                u"info"
+                _(u'Hi ha hagut algun problema i la reunió virtual no ha estat creada.'),
+                u'info'
             )
 
         self.request.response.redirect(portal.absolute_url())
 
-    @button.buttonAndHandler(_(u"Cancel"), name="cancel")
+    @button.buttonAndHandler(_(u'Cancel'), name='cancel')
     def cancel(self, action):
-        IStatusMessage(self.request).addStatusMessage(_(u"Edit cancelled."), type="info")
+        IStatusMessage(self.request).addStatusMessage(_(u'Edit cancelled.'), type='info')
         self.request.response.redirect(self.context.absolute_url())
         return ''
 
@@ -177,7 +177,7 @@ class AjaxUserSearch(grok.View):
     grok.layer(IUlearnTheme)
 
     def render(self):
-        self.request.response.setHeader("Content-type", "application/json")
+        self.request.response.setHeader('Content-type', 'application/json')
         query = self.request.form.get('q', '')
         results = dict(more=False, results=[])
         registry = queryUtility(IRegistry)
@@ -197,4 +197,4 @@ class AjaxUserSearch(grok.View):
             results['results'] = values
             return json.dumps(results)
         else:
-            return json.dumps({"error": "No query found"})
+            return json.dumps({'error': 'No query found'})

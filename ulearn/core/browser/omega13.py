@@ -25,7 +25,7 @@ class Omega13UserSearch(grok.View):
         last_query_count = self.request.form.get('last_query_count', 0)
         if query:
             portal = api.portal.get()
-            self.request.response.setHeader("Content-type", "application/json")
+            self.request.response.setHeader('Content-type', 'application/json')
             soup = get_soup('user_properties', portal)
             searching_surname = len(re.match(r'^[^\ \.]+(?: |\.)*(.*?)$', query).groups()[0])
 

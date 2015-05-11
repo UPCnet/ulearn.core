@@ -39,8 +39,8 @@ class DXFileFactory(object):
         ctr = getToolByName(self.context, 'content_type_registry')
         type_ = ctr.findTypeName(name.lower(), '', '') or 'File'
 
-        name = name.decode("utf8")
-        title = title.decode("utf8")
+        name = name.decode('utf8')
+        title = title.decode('utf8')
 
         chooser = INameChooser(self.context)
 

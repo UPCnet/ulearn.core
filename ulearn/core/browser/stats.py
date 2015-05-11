@@ -66,7 +66,7 @@ class StatsView(grok.View):
         return getSite()
 
     def get_communities(self):
-        all_communities = [{'hash': 'all', 'title': _(u"Todas las comunidades")}]
+        all_communities = [{'hash': 'all', 'title': _(u'Todas las comunidades')}]
         all_communities += [{'hash': community.community_hash, 'title': community.Title} for community in self.catalog.searchResults(portal_type='ulearn.community')]
         return all_communities
 
@@ -197,11 +197,11 @@ class StatsQuery(grok.View):
 
         output_format = self.request.form.get('format', 'json')
         if output_format == 'json':
-            self.request.response.setHeader("Content-type", "application/json")
+            self.request.response.setHeader('Content-type', 'application/json')
             return json.dumps(results)
         elif output_format == 'csv':
-            self.request.response.setHeader("Content-type", "application/csv")
-            self.request.response.setHeader("Content-disposition", "attachment; filename=ulearn-stats-{}.csv".format(datetime.now().strftime('%Y%m%d%H%M%S')))
+            self.request.response.setHeader('Content-type', 'application/csv')
+            self.request.response.setHeader('Content-disposition', 'attachment; filename=ulearn-stats-{}.csv'.format(datetime.now().strftime('%Y%m%d%H%M%S')))
             lines = [','.join([''] + results['headers'])]
             for row in results['rows']:
                 lines.append(','.join([str(col) for col in row]))

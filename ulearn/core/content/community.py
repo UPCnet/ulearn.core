@@ -124,8 +124,7 @@ def communityActivityViews(context):
 
 
 class IInitializedCommunity(Interface):
-    """
-        A Community that has been succesfully initialized
+    """ A Community that has been succesfully initialized
     """
 
 
@@ -134,28 +133,28 @@ class ICommunity(form.Schema):
     """
 
     title = schema.TextLine(
-        title=_(u"Nom"),
-        description=_(u"Nom de la comunitat"),
+        title=_(u'Nom'),
+        description=_(u'Nom de la comunitat'),
         required=True
     )
 
     description = schema.Text(
-        title=_(u"Descripció"),
-        description=_(u"La descripció de la comunitat"),
+        title=_(u'Descripció'),
+        description=_(u'La descripció de la comunitat'),
         required=False
     )
     form.mode(community_type='hidden')
     community_type = schema.Choice(
-        title=_(u"Tipus de comunitat"),
-        description=_(u"community_type_description"),
+        title=_(u'Tipus de comunitat'),
+        description=_(u'community_type_description'),
         source=availableCommunityTypes,
         required=True,
         default=u'Closed'
     )
 
     activity_view = schema.Choice(
-        title=_(u"activity_view"),
-        description=_(u"help_activity_view"),
+        title=_(u'activity_view'),
+        description=_(u'help_activity_view'),
         source=communityActivityViews,
         required=True,
         default=u'Darreres activitats')
@@ -163,8 +162,8 @@ class ICommunity(form.Schema):
     form.omitted('readers', 'subscribed', 'owners')
     form.widget(readers=Select2MAXUserInputFieldWidget)
     readers = schema.List(
-        title=_(u"Readers"),
-        description=_(u"Subscribed people with read-only permissions"),
+        title=_(u'Readers'),
+        description=_(u'Subscribed people with read-only permissions'),
         value_type=schema.TextLine(),
         required=False,
         missing_value=[],
@@ -174,8 +173,8 @@ class ICommunity(form.Schema):
     # understanding that it refers to users with read/write permissions
     form.widget(subscribed=Select2MAXUserInputFieldWidget)
     subscribed = schema.List(
-        title=_(u"Editors"),
-        description=_(u"Subscribed people with editor permissions"),
+        title=_(u'Editors'),
+        description=_(u'Subscribed people with editor permissions'),
         value_type=schema.TextLine(),
         required=False,
         missing_value=[],
@@ -183,33 +182,33 @@ class ICommunity(form.Schema):
 
     form.widget(owners=Select2MAXUserInputFieldWidget)
     owners = schema.List(
-        title=_(u"Owners"),
-        description=_(u"Subscribed people with owner permissions"),
+        title=_(u'Owners'),
+        description=_(u'Subscribed people with owner permissions'),
         value_type=schema.TextLine(),
         required=False,
         missing_value=[],
         default=[])
 
     image = NamedBlobImage(
-        title=_(u"Imatge"),
-        description=_(u"Imatge que defineix la comunitat"),
+        title=_(u'Imatge'),
+        description=_(u'Imatge que defineix la comunitat'),
         required=False,
     )
 
     twitter_hashtag = schema.TextLine(
-        title=_(u"Twitter hashtag"),
+        title=_(u'Twitter hashtag'),
         description=_(u'hashtag_help'),
         required=False
     )
 
     notify_activity_via_push = schema.Bool(
-        title=_(u"Notify activity via push"),
+        title=_(u'Notify activity via push'),
         description=_(u'notify_activity_via_push_help'),
         required=False
     )
 
     notify_activity_via_push_comments_too = schema.Bool(
-        title=_(u"Notify activity and comments via push"),
+        title=_(u'Notify activity and comments via push'),
         description=_(u'help_notify_activity_via_push_comments_too'),
         required=False
     )
@@ -489,7 +488,7 @@ class CommunityAdapterMixin(object):
 
 
 @grok.implementer(ICommunityTyped)
-@grok.adapter(ICommunity, name="Organizative")
+@grok.adapter(ICommunity, name='Organizative')
 class OrganizativeCommunity(CommunityAdapterMixin):
     """ Named adapter for the organizative communities """
     def __init__(self, context):
@@ -501,7 +500,7 @@ class OrganizativeCommunity(CommunityAdapterMixin):
 
 
 @grok.implementer(ICommunityTyped)
-@grok.adapter(ICommunity, name="Open")
+@grok.adapter(ICommunity, name='Open')
 class OpenCommunity(CommunityAdapterMixin):
     """ Named adapter for the open communities """
     def __init__(self, context):
@@ -521,7 +520,7 @@ class OpenCommunity(CommunityAdapterMixin):
 
 
 @grok.implementer(ICommunityTyped)
-@grok.adapter(ICommunity, name="Closed")
+@grok.adapter(ICommunity, name='Closed')
 class ClosedCommunity(CommunityAdapterMixin):
     """ Named adapter for the closed communities """
     def __init__(self, context):
@@ -546,8 +545,8 @@ class Community(Container):
 
 @indexer(ICommunity)
 def imageFilename(context):
-    """Create a catalogue indexer, registered as an adapter, which can
-    populate the ``context.filename`` value and index it.
+    """ Create a catalogue indexer, registered as an adapter, which can
+        populate the ``context.filename`` value and index it.
     """
     return context.image.filename
 grok.global_adapter(imageFilename, name='image_filename')
@@ -555,8 +554,8 @@ grok.global_adapter(imageFilename, name='image_filename')
 
 @indexer(ICommunity)
 def subscribed_items(context):
-    """Create a catalogue indexer, registered as an adapter, which can
-    populate the ``context.subscribed`` value count it and index.
+    """ Create a catalogue indexer, registered as an adapter, which can
+        populate the ``context.subscribed`` value count it and index.
     """
     return len(list(set(context.readers + context.subscribed + context.owners)))
 grok.global_adapter(subscribed_items, name='subscribed_items')
@@ -564,8 +563,8 @@ grok.global_adapter(subscribed_items, name='subscribed_items')
 
 @indexer(ICommunity)
 def subscribed_users(context):
-    """Create a catalogue indexer, registered as an adapter, which can
-    populate the ``context.subscribed`` value count it and index.
+    """ Create a catalogue indexer, registered as an adapter, which can
+        populate the ``context.subscribed`` value count it and index.
     """
     return list(set(context.readers + context.subscribed + context.owners))
 grok.global_adapter(subscribed_users, name='subscribed_users')
@@ -573,8 +572,8 @@ grok.global_adapter(subscribed_users, name='subscribed_users')
 
 @indexer(ICommunity)
 def community_type(context):
-    """Create a catalogue indexer, registered as an adapter, which can
-    populate the ``community_type`` value count it and index.
+    """ Create a catalogue indexer, registered as an adapter, which can
+        populate the ``community_type`` value count it and index.
     """
     return context.community_type
 grok.global_adapter(community_type, name='community_type')
@@ -582,8 +581,8 @@ grok.global_adapter(community_type, name='community_type')
 
 @indexer(ICommunity)
 def community_hash(context):
-    """Create a catalogue indexer, registered as an adapter, which can
-    populate the ``community_hash`` value count it and index.
+    """ Create a catalogue indexer, registered as an adapter, which can
+        populate the ``community_hash`` value count it and index.
     """
     return sha1(context.absolute_url()).hexdigest()
 grok.global_adapter(community_hash, name='community_hash')
@@ -604,7 +603,7 @@ class View(grok.View):
         return getSite()
 
     def is_user_subscribed(self):
-        pm = getToolByName(self.context, "portal_membership")
+        pm = getToolByName(self.context, 'portal_membership')
         current_user = pm.getAuthenticatedMember().getUserName()
         return current_user in self.context.readers or \
             current_user in self.context.subscribed or \
@@ -618,11 +617,11 @@ class View(grok.View):
             return False
 
     def show_community_open_subscribed_readonly(self):
-        """ This use case happens when given a closed community and then is
+        """ DEPRECATED: This use case happens when given a closed community and then is
             converted to an open one, the users with reader role stays with that
             role, but are allowed to 'upgrade' it to writer.
         """
-        pm = getToolByName(self.context, "portal_membership")
+        pm = getToolByName(self.context, 'portal_membership')
         current_user = pm.getAuthenticatedMember().getUserName()
         if self.context.community_type == 'Open' and \
            current_user in self.context.readers and \
@@ -760,9 +759,9 @@ class UploadFile(grok.View):
     def render(self):
         if 'multipart/form-data' not in self.request['CONTENT_TYPE'] and \
            len(self.request.form.keys()) != 1:
-            self.request.response.setHeader("Content-type", "application/json")
+            self.request.response.setHeader('Content-type', 'application/json')
             self.request.response.setStatus(400)
-            return json.dumps({"Error": "Not supported upload method"})
+            return json.dumps({'Error': 'Not supported upload method'})
 
         for key in self.request.form.keys():
             if isinstance(self.request.form[key], FileUpload):
@@ -779,17 +778,17 @@ class UploadFile(grok.View):
         else:
             container = self.get_images_folder()
 
-        content_type = mimetypes.guess_type(filename)[0] or ""
+        content_type = mimetypes.guess_type(filename)[0] or ''
         factory = IDXFileFactory(container)
 
         try:
             thefile = factory(filename, content_type, input_file, activity_text, self.request)
             self.request.response.setStatus(201)
-            return json.dumps({"uploadURL": thefile.absolute_url(), "thumbURL": "{}/@@images/image/mini".format(thefile.absolute_url())})
+            return json.dumps({'uploadURL': thefile.absolute_url(), 'thumbURL': '{}/@@images/image/mini'.format(thefile.absolute_url())})
         except Unauthorized:
-            self.request.response.setHeader("Content-type", "application/json")
+            self.request.response.setHeader('Content-type', 'application/json')
             self.request.response.setStatus(401)
-            return json.dumps({"Error": "Unauthorized"})
+            return json.dumps({'Error': 'Unauthorized'})
 
 
 class ToggleFavorite(grok.View):
@@ -901,7 +900,7 @@ class UpgradeSubscribe(grok.View):
 
     def render(self):
         community = self.context
-        pm = getToolByName(self.context, "portal_membership")
+        pm = getToolByName(self.context, 'portal_membership')
         current_user = pm.getAuthenticatedMember().getUserName()
 
         if community.community_type == u'Open':
@@ -936,7 +935,7 @@ class communityAdder(form.SchemaForm):
         # Override the interface forced 'hidden' to 'input' for add form only
         self.widgets['community_type'].mode = 'input'
 
-    @button.buttonAndHandler(_(u'Crea la comunitat'), name="save")
+    @button.buttonAndHandler(_(u'Crea la comunitat'), name='save')
     def handleApply(self, action):
         data, errors = self.extractData()
         if errors:
@@ -962,12 +961,12 @@ class communityAdder(form.SchemaForm):
         result = pc.unrestrictedSearchResults(portal_type='ulearn.community', id=id_normalized)
 
         if result:
-            msgid = _(u"comunitat_existeix", default=u'La comunitat ${comunitat} ja existeix, si us plau, escolliu un altre nom.', mapping={u"comunitat": nom})
+            msgid = _(u'comunitat_existeix', default=u'La comunitat ${comunitat} ja existeix, si us plau, escolliu un altre nom.', mapping={u'comunitat': nom})
 
             translated = self.context.translate(msgid)
 
             messages = IStatusMessage(self.request)
-            messages.addStatusMessage(translated, type="info")
+            messages.addStatusMessage(translated, type='info')
 
             self.request.response.redirect('{}/++add++ulearn.community'.format(portal.absolute_url()))
         else:
@@ -986,12 +985,12 @@ class communityAdder(form.SchemaForm):
 
             new_comunitat = self.context[new_comunitat_id]
             # Redirect back to the front page with a status message
-            msgid = _(u"comunitat_creada", default=u'La comunitat ${comunitat} ha estat creada.', mapping={u"comunitat": nom})
+            msgid = _(u'comunitat_creada', default=u'La comunitat ${comunitat} ha estat creada.', mapping={u'comunitat': nom})
 
             translated = self.context.translate(msgid)
 
             messages = IStatusMessage(self.request)
-            messages.addStatusMessage(translated, type="info")
+            messages.addStatusMessage(translated, type='info')
 
             self.request.response.redirect(new_comunitat.absolute_url())
 
@@ -1014,32 +1013,32 @@ class communityEdit(form.SchemaForm):
     def updateWidgets(self):
         super(communityEdit, self).updateWidgets()
 
-        self.widgets["title"].value = self.context.title
-        self.widgets["description"].value = self.context.description
-        self.widgets["community_type"].value = [self.ctype_map[self.context.community_type]]
-        self.widgets["activity_view"].value = [self.cview_map[self.context.activity_view]]
-        self.widgets["twitter_hashtag"].value = self.context.twitter_hashtag
+        self.widgets['title'].value = self.context.title
+        self.widgets['description'].value = self.context.description
+        self.widgets['community_type'].value = [self.ctype_map[self.context.community_type]]
+        self.widgets['activity_view'].value = [self.cview_map[self.context.activity_view]]
+        self.widgets['twitter_hashtag'].value = self.context.twitter_hashtag
 
         if self.context.notify_activity_via_push:
-            self.widgets["notify_activity_via_push"].value = ['selected']
+            self.widgets['notify_activity_via_push'].value = ['selected']
             # Bool widgets should call update() once modified
-            self.widgets["notify_activity_via_push"].update()
+            self.widgets['notify_activity_via_push'].update()
 
         if self.context.notify_activity_via_push_comments_too:
-            self.widgets["notify_activity_via_push_comments_too"].value = ['selected']
+            self.widgets['notify_activity_via_push_comments_too'].value = ['selected']
             # Bool widgets should call update() once modified
-            self.widgets["notify_activity_via_push_comments_too"].update()
+            self.widgets['notify_activity_via_push_comments_too'].update()
 
-        converter = SelectWidgetConverter(self.fields['readers'].field, self.widgets["readers"])
-        self.widgets["readers"].value = converter.toWidgetValue(self.context.readers)
+        converter = SelectWidgetConverter(self.fields['readers'].field, self.widgets['readers'])
+        self.widgets['readers'].value = converter.toWidgetValue(self.context.readers)
 
-        converter = SelectWidgetConverter(self.fields['subscribed'].field, self.widgets["subscribed"])
-        self.widgets["subscribed"].value = converter.toWidgetValue(self.context.subscribed)
+        converter = SelectWidgetConverter(self.fields['subscribed'].field, self.widgets['subscribed'])
+        self.widgets['subscribed'].value = converter.toWidgetValue(self.context.subscribed)
 
-        converter = SelectWidgetConverter(self.fields['owners'].field, self.widgets["owners"])
-        self.widgets["owners"].value = converter.toWidgetValue(self.context.owners)
+        converter = SelectWidgetConverter(self.fields['owners'].field, self.widgets['owners'])
+        self.widgets['owners'].value = converter.toWidgetValue(self.context.owners)
 
-    @button.buttonAndHandler(_(u'Edita la comunitat'), name="save")
+    @button.buttonAndHandler(_(u'Edita la comunitat'), name='save')
     def handleApply(self, action):
         data, errors = self.extractData()
         if errors:
@@ -1063,12 +1062,12 @@ class communityEdit(form.SchemaForm):
         result = pc.unrestrictedSearchResults(portal_type='ulearn.community', Title=nom)
 
         if result and self.context.title != nom:
-            msgid = _(u"comunitat_existeix", default=u'La comunitat ${comunitat} ja existeix, si us plau, escolliu un altre nom.', mapping={u"comunitat": nom})
+            msgid = _(u'comunitat_existeix', default=u'La comunitat ${comunitat} ja existeix, si us plau, escolliu un altre nom.', mapping={u'comunitat': nom})
 
             translated = self.context.translate(msgid)
 
             messages = IStatusMessage(self.request)
-            messages.addStatusMessage(translated, type="info")
+            messages.addStatusMessage(translated, type='info')
 
             self.request.response.redirect('{}/edit'.format(self.context.absolute_url()))
 
@@ -1092,12 +1091,12 @@ class communityEdit(form.SchemaForm):
 
             notify(ObjectModifiedEvent(self.context))
 
-            msgid = _(u"comunitat_modificada", default=u'La comunitat ${comunitat} ha estat modificada.', mapping={u"comunitat": nom})
+            msgid = _(u'comunitat_modificada', default=u'La comunitat ${comunitat} ha estat modificada.', mapping={u'comunitat': nom})
 
             translated = self.context.translate(msgid)
 
             messages = IStatusMessage(self.request)
-            messages.addStatusMessage(translated, type="info")
+            messages.addStatusMessage(translated, type='info')
 
             self.request.response.redirect(self.context.absolute_url())
 
@@ -1129,13 +1128,13 @@ def initialize_community(community, event):
     events = createContentInContainer(community, 'Folder', title='events', checkConstraints=False)
 
     # Set the correct title, translated
-    documents.setTitle(community.translate(_(u"Documents")))
-    media.setTitle(community.translate(_(u"Media")))
-    events.setTitle(community.translate(_(u"Esdeveniments")))
+    documents.setTitle(community.translate(_(u'Documents')))
+    media.setTitle(community.translate(_(u'Media')))
+    events.setTitle(community.translate(_(u'Esdeveniments')))
 
     # Create the default discussion container and set title
     discussion = createContentInContainer(community, 'Folder', title='discussion', checkConstraints=False)
-    discussion.setTitle(community.translate(_(u"Discussion")))
+    discussion.setTitle(community.translate(_(u'Discussion')))
 
     # Set default view layout
     documents.setLayout('filtered_contents_search_view')
@@ -1168,22 +1167,22 @@ def initialize_community(community, event):
     behavior.setImmediatelyAddableTypes(('ulearn.discussion', 'Folder'))
 
     # Blacklist the right column portlets on documents
-    right_manager = queryUtility(IPortletManager, name=u"plone.rightcolumn")
+    right_manager = queryUtility(IPortletManager, name=u'plone.rightcolumn')
     blacklist = getMultiAdapter((documents, right_manager), ILocalPortletAssignmentManager)
     blacklist.setBlacklistStatus(CONTEXT_CATEGORY, True)
 
     # Blacklist the right column portlets on media
-    right_manager = queryUtility(IPortletManager, name=u"plone.rightcolumn")
+    right_manager = queryUtility(IPortletManager, name=u'plone.rightcolumn')
     blacklist = getMultiAdapter((media, right_manager), ILocalPortletAssignmentManager)
     blacklist.setBlacklistStatus(CONTEXT_CATEGORY, True)
 
     # Blacklist the right column portlets on events
-    right_manager = queryUtility(IPortletManager, name=u"plone.rightcolumn")
+    right_manager = queryUtility(IPortletManager, name=u'plone.rightcolumn')
     blacklist = getMultiAdapter((events, right_manager), ILocalPortletAssignmentManager)
     blacklist.setBlacklistStatus(CONTEXT_CATEGORY, True)
 
     # Blacklist the right column portlets on discussion
-    right_manager = queryUtility(IPortletManager, name=u"plone.rightcolumn")
+    right_manager = queryUtility(IPortletManager, name=u'plone.rightcolumn')
     blacklist = getMultiAdapter((discussion, right_manager), ILocalPortletAssignmentManager)
     blacklist.setBlacklistStatus(CONTEXT_CATEGORY, True)
 

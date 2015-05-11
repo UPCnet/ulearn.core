@@ -59,9 +59,9 @@ def add_catalog_indexes(context, logger=None):
         if name not in indexes:
             catalog.addIndex(name, meta_type)
             indexables.append(name)
-            logger.info("Added %s for field %s.", meta_type, name)
+            logger.info('Added %s for field %s.', meta_type, name)
     if len(indexables) > 0:
-        logger.info("Indexing new indexes %s.", ', '.join(indexables))
+        logger.info('Indexing new indexes %s.', ', '.join(indexables))
         catalog.manage_reindexIndex(ids=indexables)
 
 
@@ -93,14 +93,14 @@ def setupVarious(context):
         frontpage.exclude_from_nav = True
         frontpage.language = pl.getDefaultLanguage()
         frontpage.reindexObject()
-        logger.info("DX default content site setup successfully.")
+        logger.info('DX default content site setup successfully.')
     elif not front_page:
-        frontpage = createContentInContainer(portal, 'Document', title=u"front-page", checkConstraints=False)
+        frontpage = createContentInContainer(portal, 'Document', title=u'front-page', checkConstraints=False)
         alsoProvides(frontpage, IHomePage)
         frontpage.exclude_from_nav = True
         frontpage.language = pl.getDefaultLanguage()
         frontpage.reindexObject()
-        logger.info("DX default content site setup successfully.")
+        logger.info('DX default content site setup successfully.')
     else:
         alsoProvides(front_page, IHomePage)
         front_page.language = pl.getDefaultLanguage()

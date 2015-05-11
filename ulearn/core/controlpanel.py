@@ -230,30 +230,30 @@ class IUlearnControlPanelSettings(model.Schema):
     )
 
     color_community_closed = schema.TextLine(
-        title=_(u"color_community_closed",
-                default=u"Color comunitat tancada"),
-        description=_(u"help_color_community_closed",
-                default=u"Aquest és el color per les comunitats tancades."),
+        title=_(u'color_community_closed',
+                default=u'Color comunitat tancada'),
+        description=_(u'help_color_community_closed',
+                default=u'Aquest és el color per les comunitats tancades.'),
         required=True,
-        default=u"#f58d3d",
+        default=u'#f58d3d',
     )
 
     color_community_organizative = schema.TextLine(
-        title=_(u"color_community_organizative",
-                default=u"Color comunitat organitzativa"),
-        description=_(u"help_color_community_organizative",
-                default=u"Aquest és el color per les comunitats organitzatives."),
+        title=_(u'color_community_organizative',
+                default=u'Color comunitat organitzativa'),
+        description=_(u'help_color_community_organizative',
+                default=u'Aquest és el color per les comunitats organitzatives.'),
         required=True,
-        default=u"#b5c035",
+        default=u'#b5c035',
     )
 
     color_community_open = schema.TextLine(
-        title=_(u"color_community_open",
-                default=u"Color comunitat oberta"),
-        description=_(u"help_color_community_open",
-                default=u"Aquest és el color per les comunitats obertes."),
+        title=_(u'color_community_open',
+                default=u'Color comunitat oberta'),
+        description=_(u'help_color_community_open',
+                default=u'Aquest és el color per les comunitats obertes.'),
         required=True,
-        default=u"#888888",
+        default=u'#888888',
     )
 
     dexterity.write_permission(language='zope2.ViewManagementScreens')
@@ -313,12 +313,12 @@ class IUlearnControlPanelSettings(model.Schema):
         default=u'Darreres activitats')
 
     url_forget_password = schema.TextLine(
-        title=_(u"url_forget_password",
-                default=u"URL contrasenya oblidada"),
-        description=_(u"help_url_forget_password",
-                    default=u"Url per defecte: '/mail_password_form?userid='. Per a dominis externs indiqueu la url completa, 'http://www.domini.cat'"),
+        title=_(u'url_forget_password',
+                default=u'URL contrasenya oblidada'),
+        description=_(u'help_url_forget_password',
+                    default=u'Url per defecte: "/mail_password_form?userid=". Per a dominis externs indiqueu la url completa, "http://www.domini.cat"'),
         required=True,
-        default=u"/mail_password_form?userid=")
+        default=u'/mail_password_form?userid=')
 
 
 class UlearnControlPanelSettingsForm(controlpanel.RegistryEditForm):

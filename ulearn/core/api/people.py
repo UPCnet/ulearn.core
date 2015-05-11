@@ -170,8 +170,8 @@ class Subscriptions(REST):
 
         # Get all communities for the current user
         pc = api.portal.get_tool('portal_catalog')
-        r_results = pc.searchResults(portal_type="ulearn.community", community_type=[u"Closed", u"Organizative"])
-        ur_results = pc.unrestrictedSearchResults(portal_type="ulearn.community", community_type=u"Open")
+        r_results = pc.searchResults(portal_type='ulearn.community', community_type=[u'Closed', u'Organizative'])
+        ur_results = pc.unrestrictedSearchResults(portal_type='ulearn.community', community_type=u'Open')
         communities = r_results + ur_results
 
         self.is_role_manager = False

@@ -20,7 +20,7 @@ from mrs.max.utilities import IMAXClient
 
 import transaction
 
-TZNAME = "Europe/Vienna"
+TZNAME = 'Europe/Vienna'
 
 
 class RendererTest(uLearnTestBase):

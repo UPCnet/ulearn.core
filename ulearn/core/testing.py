@@ -88,16 +88,16 @@ class UlearncoreLayer(PloneSandboxLayer):
         login(portal, 'admin')
         setup_max(u'ulearn.testuser1', '99994183a')
         setup_user_max('ulearn.testuser2', '99994184a')
-        portal.portal_workflow.setDefaultChain("genweb_intranet")
+        portal.portal_workflow.setDefaultChain('genweb_intranet')
         logout()
         # setRoles(portal, TEST_USER_ID, ['Manager'])
 
 ULEARN_CORE_FIXTURE = UlearncoreLayer()
 ULEARN_CORE_INTEGRATION_TESTING = IntegrationTesting(
     bases=(ULEARN_CORE_FIXTURE,),
-    name="UlearncoreLayer:Integration"
+    name='UlearncoreLayer:Integration'
 )
 ULEARN_CORE_FUNCTIONAL_TESTING = FunctionalTesting(
     bases=(ULEARN_CORE_FIXTURE, z2.ZSERVER_FIXTURE),
-    name="UlearncoreLayer:Functional"
+    name='UlearncoreLayer:Functional'
 )
