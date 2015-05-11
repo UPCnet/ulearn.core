@@ -62,7 +62,7 @@ class UlearncoreLayer(PloneSandboxLayer):
         )
 
         # Needed to make p.a.iterate permissions available as g.core needs them
-        import plone.app.iterate.permissions
+        import plone.app.iterate.permissions  # noqa
 
 #    def tearDownZope(self, app):
 #        # Uninstall products installed above

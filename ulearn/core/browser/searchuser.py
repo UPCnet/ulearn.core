@@ -19,7 +19,7 @@ import random
 import unicodedata
 
 
-def searchUsersFunction(context, request, search_string):
+def searchUsersFunction(context, request, search_string):  # noqa
     portal = getSite()
     pm = api.portal.get_tool(name='portal_membership')
     nonvisibles = api.portal.get_registry_record(name='ulearn.core.controlpanel.IUlearnControlPanelSettings.nonvisibles')
