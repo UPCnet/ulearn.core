@@ -1,11 +1,6 @@
 # -*- coding: utf-8 -*-
-import unittest2 as unittest
-
 from zope.component import getUtility
 from plone.app.testing import login
-from plone.app.testing import logout
-
-from Products.CMFCore.utils import getToolByName
 
 from ulearn.core.tests import uLearnTestBase
 from ulearn.core.testing import ULEARN_CORE_FUNCTIONAL_TESTING

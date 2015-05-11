@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
-import unittest2 as unittest
 from hashlib import sha1
 from plone import api
 from AccessControl import Unauthorized
 from zope.event import notify
-from zope.lifecycleevent import ObjectAddedEvent
 from zope.lifecycleevent import ObjectModifiedEvent
 from zope.component import getUtility
 from zope.component import getMultiAdapter
@@ -12,14 +10,11 @@ from zope.component import getAdapter
 
 from plone.app.testing import login
 from plone.app.testing import logout
-from plone.app.testing import setRoles
-from plone.app.testing import TEST_USER_ID
 
 from Products.CMFCore.utils import getToolByName
 
 from repoze.catalog.query import Eq
 from souper.soup import get_soup
-from souper.soup import Record
 
 from genweb.core.gwuuid import IGWUUID
 
@@ -496,7 +491,7 @@ class TestExample(uLearnTestBase):
     def test_community_type_adapters(self):
         login(self.portal, 'ulearn.testuser1')
         community = self.create_test_community(id='community-test-notify', community_type='Closed')
-        adapter = getAdapter(community, ICommunityTyped, name='Closed')
+        getAdapter(community, ICommunityTyped, name='Closed')
 
     def test_delete_community(self):
         login(self.portal, 'ulearn.testuser1')

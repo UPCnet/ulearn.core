@@ -64,14 +64,13 @@ from ulearn.core import _
 from ulearn.core.interfaces import IDXFileFactory
 from ulearn.core.interfaces import IDocumentFolder
 from ulearn.core.interfaces import IEventsFolder
-from ulearn.core.interfaces import ILinksFolder
 from ulearn.core.interfaces import IPhotosFolder
 from ulearn.core.interfaces import IDiscussionFolder
 
 import json
 import logging
 import mimetypes
-import requests
+
 
 logger = logging.getLogger(__name__)
 VALID_COMMUNITY_ROLES = ['reader', 'writer', 'owner']

@@ -1,10 +1,7 @@
 # -*- coding: utf-8 -*-
 import unittest2 as unittest
 from plone import api
-from AccessControl import Unauthorized
-from zope.event import notify
 from zope.component import getMultiAdapter
-from zope.lifecycleevent import ObjectModifiedEvent
 
 from zope.component import getUtility
 from zope.interface import implementer
@@ -22,10 +19,6 @@ from souper.soup import get_soup
 from plone.app.testing import login
 from plone.app.testing import logout
 from plone.app.testing import setRoles
-from plone.app.testing import TEST_USER_ID
-
-from repoze.catalog.query import Eq
-from souper.soup import get_soup
 
 from genweb.core.utils import reset_user_catalog
 from genweb.core.utils import add_user_to_catalog
@@ -326,7 +319,6 @@ class TestExample(uLearnTestBase):
         # And it shows as legit
         result = [r for r in soup.query(Eq('searchable_text', normalized_query))]
         self.assertEqual(len(result), 2)
-
 
     def test_rebuild_user_catalog_with_user_extended_properties(self):
         """ This is the case when a client has customized user properties """
