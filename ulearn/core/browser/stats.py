@@ -6,7 +6,6 @@ from Products.CMFCore.utils import getToolByName
 from zope.component import getUtility
 
 from plone.memoize.view import memoize_contextless
-from zope.i18nmessageid import MessageFactory
 
 from ulearn.theme.browser.interfaces import IUlearnTheme
 from datetime import datetime

@@ -38,6 +38,7 @@ class IAppFile(Interface):
 class IVideo(Interface):
     """ Marker to identify content type Video """
 
+
 class IUlearnUtils(Interface):
     """ Marker describing the functionality of the convenience methods
         placeholder ulearn.utils view.

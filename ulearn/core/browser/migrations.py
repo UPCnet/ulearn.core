@@ -28,7 +28,6 @@ from Products.CMFPlone.interfaces import IPloneSiteRoot
 
 from ulearn.core.interfaces import IDocumentFolder, ILinksFolder, IPhotosFolder, IEventsFolder
 from ulearn.core.content.community import IInitializedCommunity
-from ulearn.core.content.community import ICommunity
 from ulearn.core.content.community import Community
 from genweb.core.browser.helpers import listPloneSites
 from genweb.core.gwuuid import ATTRIBUTE_NAME
@@ -101,7 +100,8 @@ def createMAXUser(username):
             logger.info('MAX user already created for user: %s' % username)
 
     except RequestError:
-        import ipdb;ipdb.set_trace()
+        import ipdb
+        ipdb.set_trace()
     except:
         logger.error('Error creating MAX user for user: %s' % username)
 
@@ -151,7 +151,7 @@ class CreateDiscussionFolders(grok.View):
         communities = pc.searchResults(portal_type='ulearn.community')
         for community in communities:
             community = community.getObject()
-            if not 'discussion' in community.objectIds():
+            if 'discussion' not in community.objectIds():
                 # Create the default discussion container and set title
                 discussion = createContentInContainer(community, 'Folder', title='discussion', checkConstraints=False)
                 discussion.setTitle(community.translate(_(u'Discussion')))

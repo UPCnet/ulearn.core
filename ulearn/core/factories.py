@@ -4,11 +4,8 @@ from thread import allocate_lock
 from zope.component import getMultiAdapter
 from zope.component import adapts
 from zope.container.interfaces import INameChooser
-from zope.lifecycleevent import ObjectModifiedEvent
-from zope.event import notify
 from zope.interface import implements
 
-from Products.Archetypes.event import ObjectInitializedEvent
 from Products.CMFCore.utils import getToolByName
 from Products.CMFCore.interfaces._content import IFolderish
 

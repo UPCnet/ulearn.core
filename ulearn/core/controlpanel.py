@@ -3,7 +3,6 @@ from five import grok
 from zope import schema
 from zope.component import getUtility
 from z3c.form import button
-from zope.schema.interfaces import IContextSourceBinder
 from zope.schema.vocabulary import SimpleVocabulary
 from zope.schema.interfaces import IVocabularyFactory
 
@@ -17,8 +16,6 @@ from genweb.core.widgets.select2_maxuser_widget import Select2MAXUserInputFieldW
 
 from ulearn.core import _
 from mrs.max.utilities import IMAXClient
-from plone.namedfile.field import NamedImage
-from zope.interface import Interface
 from collective.z3cform.datagridfield import DataGridFieldFactory
 from collective.z3cform.datagridfield.registry import DictRow
 
@@ -97,7 +94,7 @@ class IUlearnControlPanelSettings(model.Schema):
 
     model.fieldset('UPCnet only',
                   _(u'UPCnet only'),
-                  fields=['language', 'activity_view','url_forget_password'])
+                  fields=['language', 'activity_view', 'url_forget_password'])
 
     model.fieldset('Quick Links',
                   _(u'QuickLinks'),

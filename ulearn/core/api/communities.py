@@ -1,25 +1,17 @@
 from plone import api
 from five import grok
-from zope.component import getUtility
-from zope.event import notify
-from zope.lifecycleevent import ObjectModifiedEvent
 from zope.component import getAdapter
 from zope.component import getAdapters
 from Products.CMFPlone.interfaces import IPloneSiteRoot
 from repoze.catalog.query import Eq
 from souper.soup import get_soup
-from souper.soup import Record
-
-from mrs.max.utilities import IMAXClient
 
 from genweb.core.utils import json_response
-from genweb.core.gwuuid import IGWUUID
 from ulearn.core.content.community import ICommunityTyped
 from ulearn.core.content.community import ICommunityACL
 from ulearn.core.api import REST
 from ulearn.core.api import logger
 from ulearn.core.api.root import APIRoot
-from ulearn.core.api.security import execute_under_special_role
 
 import json
 

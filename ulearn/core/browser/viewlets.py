@@ -1,5 +1,4 @@
 from five import grok
-from plone import api
 from hashlib import sha1
 from plone.app.layout.viewlets.interfaces import IPortalHeader
 

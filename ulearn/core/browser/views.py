@@ -47,8 +47,8 @@ class IReservaBBB(form.Schema):
     )
 
     start_date = schema.Datetime(
-        title=_(u'Data d'inici'),
-        description=_(u'Indiqueu la data d'inici de la reserva.'),
+        title=_(u'Data d\'inici'),
+        description=_(u'Indiqueu la data d\'inici de la reserva.'),
         required=True,
         default=datetime.now()
     )
@@ -62,13 +62,13 @@ class IReservaBBB(form.Schema):
 
     invitats_convidats = schema.TextLine(
         title=_(u'Convidats moderadors'),
-        description=_(u'Llista d'emails dels convidats MODERADORS, separats per comes.'),
+        description=_(u'Llista d\'emails dels convidats MODERADORS, separats per comes.'),
         required=True
     )
 
     invitats_espectadors = schema.TextLine(
         title=_(u'Invitats espectadors'),
-        description=_(u'Llista d'emails dels convidats ESPECTADORS, separats per comes.'),
+        description=_(u'Llista d\'emails dels convidats ESPECTADORS, separats per comes.'),
         required=False
     )
 
@@ -109,7 +109,7 @@ class reservaBBB(form.SchemaForm):
 
         if not user_email:
             IStatusMessage(self.request).addStatusMessage(
-                _(u'La reunió no es pot crear perquè l'usuari no te informat la adreca de correu electrònic.'),
+                _(u'La reunió no es pot crear perquè l\'usuari no te informat la adreca de correu electrònic.'),
                 u'error'
             )
             self.request.response.redirect(portal.absolute_url())

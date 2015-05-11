@@ -39,7 +39,7 @@ class Omega13UserSearch(grok.View):
                             for r in soup.query(Eq('searchable_text', normalized_query))] + \
                             [dict(id=r.attrs.get('username'),
                                   displayName=r.attrs.get('fullname'))
-                            for r in soup.query(And(Or(Eq('username', normalized_query), Eq('fullname', normalized_query)), Eq('notlegit', True) ))]
+                            for r in soup.query(And(Or(Eq('username', normalized_query), Eq('fullname', normalized_query)), Eq('notlegit', True)))]
 
             too_much_results = len(users_in_soup) > result_threshold
 

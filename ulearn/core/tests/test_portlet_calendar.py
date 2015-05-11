@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-import unittest2 as unittest
-from datetime import datetime, timedelta
 from plone.app.event.base import localized_now
 from Products.CMFCore.utils import getToolByName
 from ulearn.theme.portlets import calendar as portlet_calendar
@@ -17,8 +15,6 @@ from zope.component.hooks import setHooks
 from zope.component.hooks import setSite
 from ulearn.core.tests import uLearnTestBase
 from mrs.max.utilities import IMAXClient
-
-import transaction
 
 TZNAME = 'Europe/Vienna'
 
@@ -78,7 +74,7 @@ class RendererTest(uLearnTestBase):
         login(self.portal, 'ulearn.testuser1')
 
         test_community = self.create_test_community()
-        event = self.create_event(test_community, 0, 2, 3)
+        self.create_event(test_community, 0, 2, 3)
 
         portlet = self.renderer(context=test_community, assignment=portlet_calendar.Assignment())
         portlet.update()
@@ -93,7 +89,7 @@ class RendererTest(uLearnTestBase):
     def test_nearest_event_today_tomorrow(self):
         login(self.portal, 'ulearn.testuser1')
         test_community = self.create_test_community()
-        event = self.create_event(test_community, 1, 2, 3)
+        self.create_event(test_community, 1, 2, 3)
 
         portlet = self.renderer(context=test_community, assignment=portlet_calendar.Assignment())
 
@@ -110,7 +106,7 @@ class RendererTest(uLearnTestBase):
         login(self.portal, 'ulearn.testuser1')
         test_community = self.create_test_community()
         event = self.create_event(test_community, 0, 2, 3)
-        event_must_not_show = self.create_event(test_community, 0, 4, 5, event_id='e2')
+        self.create_event(test_community, 0, 4, 5, event_id='e2')
 
         portlet = self.renderer(context=test_community, assignment=portlet_calendar.Assignment())
 
@@ -126,7 +122,7 @@ class RendererTest(uLearnTestBase):
     def test_next_three_events_today_two_events(self):
         login(self.portal, 'ulearn.testuser1')
         test_community = self.create_test_community()
-        event = self.create_event(test_community, 0, 2, 3)
+        self.create_event(test_community, 0, 2, 3)
         event_must_show = self.create_event(test_community, 0, 4, 5, event_id='e2')
 
         portlet = self.renderer(context=test_community, assignment=portlet_calendar.Assignment())
@@ -145,9 +141,9 @@ class RendererTest(uLearnTestBase):
         portlet = self.renderer(context=self.portal, assignment=portlet_calendar.Assignment())
 
         portlet.update()
-        rd = portlet.render()
+        portlet.render()
 
-        today = portlet.today()
+        portlet.today()
 
         # self.assertTrue(near_event)
         # self.assertTrue('e1' in rd)

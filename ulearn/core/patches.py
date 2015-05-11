@@ -9,8 +9,7 @@ from souper.interfaces import ICatalogFactory
 
 # We are patching the enumerateUsers method of the mutable_properties plugin to
 # make it return all the available user properties extension
-def enumerateUsers(self, id=None, login=None,
-                       exact_match=False, **kw):
+def enumerateUsers(self, id=None, login=None, exact_match=False, **kw):
         """ See IUserEnumerationPlugin.
         """
         plugin_id = self.getId()

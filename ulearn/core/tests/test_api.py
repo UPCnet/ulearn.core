@@ -1,14 +1,8 @@
 # -*- coding: utf-8 -*-
-import unittest2 as unittest
-from hashlib import sha1
-from plone import api
 from zope.component import getUtility
 from zope.component import getMultiAdapter
 from zope.publisher.browser import TestRequest
 
-from plone.testing.z2 import Browser
-from plone.app.testing import TEST_USER_ID
-from plone.app.testing import setRoles
 from plone.app.testing import login
 from plone.app.testing import logout
 
@@ -20,7 +14,6 @@ from ulearn.core.content.community import ICommunityACL
 from ulearn.core.testing import ULEARN_CORE_FUNCTIONAL_TESTING
 from ulearn.core.content.community import OPEN_PERMISSIONS
 from ulearn.core.content.community import CLOSED_PERMISSIONS
-from ulearn.core.content.community import ORGANIZATIVE_PERMISSIONS
 from ulearn.core.api import queryRESTComponent
 from ulearn.core.tests.mockers import http_mock_hub_syncacl
 
@@ -208,8 +201,7 @@ class TestAPI(uLearnTestBase):
         """ Gets all communities and its properties for the requester user. """
         username = 'ulearn.testuser1'
         login(self.portal, username)
-        community = self.create_test_community(community_type='Open')
-        gwuuid = IGWUUID(community)
+        self.create_test_community(community_type='Open')
 
         communities_view = self.request_API_endpoint(username, ['api', 'communities'])
         response = communities_view.GET()

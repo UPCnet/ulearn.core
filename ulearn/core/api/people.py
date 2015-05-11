@@ -10,12 +10,10 @@ from souper.soup import get_soup
 from mrs.max.utilities import IMAXClient
 
 from genweb.core.utils import json_response
-from ulearn.core.api import logger
 from ulearn.core.api import REST
 from ulearn.core.api.root import APIRoot
 
 from plone import api
-
 
 
 class People(REST):
