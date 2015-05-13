@@ -3,6 +3,7 @@ from hashlib import sha1
 from plone.app.layout.viewlets.interfaces import IPortalHeader
 
 from genweb.core.gwuuid import IGWUUID
+from genweb.core.gwuuid import IMutableGWUUID
 from ulearn.core.content.community import ICommunity
 
 
@@ -13,5 +14,5 @@ class CommunityNGDirective(grok.Viewlet):
 
     def update(self):
         self.community_hash = sha1(self.context.absolute_url()).hexdigest()
-        self.community_gwuuid = IGWUUID(self.context)
+        self.community_gwuuid = IGWUUID(self.context, IMutableGWUUID(self.context).get())
         self.community_url = self.context.absolute_url()
