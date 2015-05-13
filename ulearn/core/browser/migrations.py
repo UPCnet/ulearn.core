@@ -300,7 +300,7 @@ class GiveAllCommunitiesGWUUID(grok.View):
 
         for community in communities:
             obj = community.getObject()
-            if getattr(obj, ATTRIBUTE_NAME, False):
+            if not getattr(obj, ATTRIBUTE_NAME, False):
                 uuid = generator()
                 if not uuid:
                     return
