@@ -3,7 +3,7 @@
   <version>0002</version>
     <dependencies>
         <dependency>profile-ulearn.core:uninstall</dependency>
-        <dependency>profile-experimental.securityindexing:default</dependency>
+        <!-- <dependency>profile-experimental.securityindexing:default</dependency> -->
         <dependency>profile-collective.z3cform.datagridfield:default</dependency>
         <dependency>profile-pas.plugins.preauth:default</dependency>
         <dependency>profile-pas.plugins.osiris:default</dependency>
