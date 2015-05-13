@@ -24,6 +24,11 @@
         title="Ulearn: API Access"
         />
 
+    <permission
+      id="ulearn.addPrivateFolder"
+      title="Ulearn: Add Private Folder"
+      />
+
     <permission id="ulearn.core.setup"
                 title="Plone Site Setup: uLearn">
       <role name="Manager"/>

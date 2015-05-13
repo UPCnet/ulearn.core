@@ -97,20 +97,23 @@ def Added(content, event):
         'en': u'I\'ve added {un} {type} "{name}" a {link}',
     }
 
-    if (content.portal_type == 'Image' or
-       content.portal_type == 'File') and \
-       content.description:
-        activity_text = u'{} {}'.format(content.title, u'{}/view'.format(content.absolute_url()))
+    addPost = addActivityPost(content)
 
-        try:
-            maxclient.people[username].activities.post(object_content=activity_text, contexts=[dict(url=community.absolute_url(), objectType='context')])
-        except:
-            logger.warning('The username {} has been unable to post the default object creation message'.format(username))
-    else:
-        try:
-            maxclient.people[username].activities.post(object_content=activity_text[default_lang].format(**parts), contexts=[dict(url=community.absolute_url(), objectType='context')])
-        except:
-            logger.warning('The username {} has been unable to post the default object creation message'.format(username))
+    if addPost:
+        if (content.portal_type == 'Image' or
+           content.portal_type == 'File') and \
+           content.description:
+            activity_text = u'{} {}'.format(content.title, u'{}/view'.format(content.absolute_url()))
+
+            try:
+                maxclient.people[username].activities.post(object_content=activity_text, contexts=[dict(url=community.absolute_url(), objectType='context')])
+            except:
+                logger.warning('The username {} has been unable to post the default object creation message'.format(username))
+        else:
+            try:
+                maxclient.people[username].activities.post(object_content=activity_text[default_lang].format(**parts), contexts=[dict(url=community.absolute_url(), objectType='context')])
+            except:
+                logger.warning('The username {} has been unable to post the default object creation message'.format(username))
 
 
 def Modified(content, event):
@@ -144,26 +147,39 @@ def Modified(content, event):
         'en': u'I\'ve modified {un} {type} "{name}" a {link}',
     }
 
-    if (content.portal_type == 'Image' or
-       content.portal_type == 'File') and \
-       content.description:
-        activity_text = u'{} {}'.format(content.title, u'{}/view'.format(content.absolute_url()))
+    addPost = addActivityPost(content)
 
-        try:
-            maxclient.people[username].activities.post(object_content=activity_text, contexts=[dict(url=community.absolute_url(), objectType='context')])
-        except:
-            logger.warning('The username {} has been unable to post the default object creation message'.format(username))
-    else:
-        try:
-            maxclient.people[username].activities.post(object_content=activity_text[default_lang].format(**parts), contexts=[dict(url=community.absolute_url(), objectType='context')])
-        except:
-            logger.warning('The username {} has been unable to post the default object creation message'.format(username))
+    if addPost:
+        if (content.portal_type == 'Image' or
+           content.portal_type == 'File') and \
+           content.description:
+            activity_text = u'{} {}'.format(content.title, u'{}/view'.format(content.absolute_url()))
+
+            try:
+                maxclient.people[username].activities.post(object_content=activity_text, contexts=[dict(url=community.absolute_url(), objectType='context')])
+            except:
+                logger.warning('The username {} has been unable to post the default object creation message'.format(username))
+        else:
+            try:
+                maxclient.people[username].activities.post(object_content=activity_text[default_lang].format(**parts), contexts=[dict(url=community.absolute_url(), objectType='context')])
+            except:
+                logger.warning('The username {} has been unable to post the default object creation message'.format(username))
 
 
 def findContainerCommunity(content):
     for parent in aq_chain(content):
         if ICommunity.providedBy(parent):
             return parent
+
+    return None
+
+
+def addActivityPost(content):
+    for parent in aq_chain(content):
+        if parent.portal_type == 'privateFolder':
+            return False
+        elif ICommunity.providedBy(parent):
+            return True
 
     return None
 

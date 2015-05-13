@@ -39,5 +39,10 @@
     <permission name="Ulearn: API Access" acquire="True">
       <role name="Api"/>
     </permission>
+    <permission name="Ulearn: Add Private Folder" acquire="True">
+      <role name="Editor"/>
+      <role name="Site Administrator"/>
+      <role name="Manager"/>
+    </permission>
   </permissions>
 </rolemap>

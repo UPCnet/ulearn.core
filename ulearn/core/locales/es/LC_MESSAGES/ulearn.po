@@ -776,6 +776,12 @@ msgstr "Teléfono"
 msgid "twitter_username"
 msgstr "Usuario de Twitter"
 
+msgid "privateFolder"
+msgstr "Carpeta privada"
+
+msgid "Add a new private folder"
+msgstr "Añadir una carpeta privada"
+
 #. Properties extended Credit Andorra
 msgid "number_operator"
 msgstr "Número de Operador"
