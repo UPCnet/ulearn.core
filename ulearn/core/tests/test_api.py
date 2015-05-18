@@ -69,7 +69,7 @@ class TestAPI(uLearnTestBase):
         username = 'ulearn.testuser1'
         login(self.portal, username)
         community = self.create_test_community()
-        gwuuid = IGWUUID(community)
+        gwuuid = IGWUUID(community).get()
 
         acl = dict(users=[dict(id=u'janet.dura', displayName=u'Janet Durà', role=u'writer'),
                           dict(id=u'victor.fernandez', displayName=u'Víctor Fernández de Alba', role=u'reader')],
@@ -127,7 +127,7 @@ class TestAPI(uLearnTestBase):
         username = 'ulearn.testuser1'
         login(self.portal, username)
         community = self.create_test_community()
-        gwuuid = IGWUUID(community)
+        gwuuid = IGWUUID(community).get()
 
         subscriptions_view = self.request_API_endpoint(username, ['api', 'communities', gwuuid, 'subscriptions'])
         response = subscriptions_view.GET()
@@ -140,7 +140,7 @@ class TestAPI(uLearnTestBase):
         username = 'ulearn.testuser1'
         login(self.portal, username)
         community = self.create_test_community()
-        gwuuid = IGWUUID(community)
+        gwuuid = IGWUUID(community).get()
 
         data = dict(community_type='Open')
         community_view = self.request_API_endpoint(username, ['api', 'communities', gwuuid], body=data)
@@ -217,7 +217,7 @@ class TestAPI(uLearnTestBase):
         username = 'ulearn.testuser1'
         login(self.portal, username)
         community = self.create_test_community(community_type='Open')
-        gwuuid = IGWUUID(community)
+        gwuuid = IGWUUID(community).get()
 
         community_view = self.request_API_endpoint(username, ['api', 'communities', gwuuid])
         community_view.DELETE()

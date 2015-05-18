@@ -54,7 +54,6 @@ from souper.soup import Record
 
 from genweb.core.utils import json_response
 from genweb.core.gwuuid import IGWUUID
-from genweb.core.gwuuid import IMutableGWUUID
 from genweb.core.adapters.favorites import IFavorite
 from genweb.core.widgets.select2_maxuser_widget import Select2MAXUserInputFieldWidget
 from genweb.core.widgets.select2_user_widget import SelectWidgetConverter
@@ -227,7 +226,7 @@ class GetCommunityACL(object):
     def __call__(self):
         portal = api.portal.get()
         soup = get_soup('communities_acl', portal)
-        gwuuid = IGWUUID(self.context, IMutableGWUUID(self.context).get())
+        gwuuid = IGWUUID(self.context).get()
         records = [r for r in soup.query(Eq('gwuuid', gwuuid))]
 
         if records:
@@ -319,7 +318,7 @@ class CommunityAdapterMixin(object):
         return ICommunityACL(self.context)().attrs.get('acl', '')
 
     def update_acl(self, acl):
-        gwuuid = IGWUUID(self.context, IMutableGWUUID(self.context).get())
+        gwuuid = IGWUUID(self.context).get()
         portal = api.portal.get()
         soup = get_soup('communities_acl', portal)
 
@@ -344,7 +343,7 @@ class CommunityAdapterMixin(object):
 
     def delete_acl(self):
         """ In case that we delete the community, delete its ACL record. """
-        gwuuid = IGWUUID(self.context, IMutableGWUUID(self.context).get())
+        gwuuid = IGWUUID(self.context).get()
         portal = api.portal.get()
         soup = get_soup('communities_acl', portal)
 
@@ -636,7 +635,7 @@ class EditACL(grok.View):
     grok.context(ICommunity)
 
     def get_gwuuid(self):
-        return IGWUUID(self.context, IMutableGWUUID(self.context).get())
+        return IGWUUID(self.context).get()
 
     def get_acl(self):
         return json.dumps(ICommunityACL(self.context)().attrs.get('acl', ''))

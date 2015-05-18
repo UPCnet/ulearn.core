@@ -97,9 +97,9 @@ class TestExample(uLearnTestBase):
         # Test for the acl registry
         soup = get_soup('communities_acl', self.portal)
         # By the gwuuid
-        records = [r for r in soup.query(Eq('gwuuid', IGWUUID(community)))]
+        records = [r for r in soup.query(Eq('gwuuid', IGWUUID(community).get()))]
         self.assertEqual(len(records), 1)
-        self.assertEqual(records[0].attrs.get('gwuuid', ''), IGWUUID(community))
+        self.assertEqual(records[0].attrs.get('gwuuid', ''), IGWUUID(community).get())
         self.assertEqual(records[0].attrs.get('path', ''), '/'.join(community.getPhysicalPath()))
         self.assertEqual(records[0].attrs.get('hash', ''), sha1(community.absolute_url()).hexdigest())
         self.assertEqual(records[0].attrs.get('acl', '').get('users', [])[0]['role'], u'owner')
@@ -152,9 +152,9 @@ class TestExample(uLearnTestBase):
         # Test for the acl registry
         soup = get_soup('communities_acl', self.portal)
         # By the gwuuid
-        records = [r for r in soup.query(Eq('gwuuid', IGWUUID(community)))]
+        records = [r for r in soup.query(Eq('gwuuid', IGWUUID(community).get()))]
         self.assertEqual(len(records), 1)
-        self.assertEqual(records[0].attrs.get('gwuuid', ''), IGWUUID(community))
+        self.assertEqual(records[0].attrs.get('gwuuid', ''), IGWUUID(community).get())
         self.assertEqual(records[0].attrs.get('path', ''), '/'.join(community.getPhysicalPath()))
         self.assertEqual(records[0].attrs.get('hash', ''), sha1(community.absolute_url()).hexdigest())
         self.assertEqual(records[0].attrs.get('acl', '').get('users', [])[0]['role'], u'owner')
@@ -207,9 +207,9 @@ class TestExample(uLearnTestBase):
         # Test for the acl registry
         soup = get_soup('communities_acl', self.portal)
         # By the gwuuid
-        records = [r for r in soup.query(Eq('gwuuid', IGWUUID(community)))]
+        records = [r for r in soup.query(Eq('gwuuid', IGWUUID(community).get()))]
         self.assertEqual(len(records), 1)
-        self.assertEqual(records[0].attrs.get('gwuuid', ''), IGWUUID(community))
+        self.assertEqual(records[0].attrs.get('gwuuid', ''), IGWUUID(community).get())
         self.assertEqual(records[0].attrs.get('path', ''), '/'.join(community.getPhysicalPath()))
         self.assertEqual(records[0].attrs.get('hash', ''), sha1(community.absolute_url()).hexdigest())
         self.assertEqual(records[0].attrs.get('acl', '').get('users', [])[0]['role'], u'owner')
@@ -300,7 +300,7 @@ class TestExample(uLearnTestBase):
         httpretty.reset()
 
         soup = get_soup('communities_acl', self.portal)
-        records = [r for r in soup.query(Eq('gwuuid', IGWUUID(community)))]
+        records = [r for r in soup.query(Eq('gwuuid', IGWUUID(community).get()))]
 
         self.assertEqual(cmp(records[0].attrs['acl'], acl), 0)
 
@@ -496,7 +496,7 @@ class TestExample(uLearnTestBase):
     def test_delete_community(self):
         login(self.portal, 'ulearn.testuser1')
         community = self.create_test_community()
-        gwuuid = IGWUUID(community)
+        gwuuid = IGWUUID(community).get()
         api.content.delete(obj=community)
 
         soup = get_soup('communities_acl', self.portal)
