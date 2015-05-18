@@ -331,7 +331,7 @@ class MigrateOldStyleACLs(grok.View):
             community = brain.getObject()
             adapter = getAdapter(community, ICommunityTyped, name=community.community_type)
 
-            logger.warn("{} -- {}".format(community.id, community.absolute_url()))
+            logger.warn('{} -- {}'.format(community.id, community.absolute_url()))
 
             for old_role in permission_map:
                 users = getattr(community, old_role)
