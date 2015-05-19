@@ -13,6 +13,11 @@ from ulearn.core.interfaces import IAppFile
 from ulearn.core.content.community import ICommunity
 
 from mrs.max.utilities import IMAXClient
+from plone import api
+from souper.soup import get_soup
+from souper.soup import Record
+from repoze.catalog.query import Eq
+from DateTime.DateTime import DateTime
 
 import logging
 
@@ -204,3 +209,22 @@ def connectMaxclient(username, oauth_token):
     maxclient.setToken(oauth_token)
 
     return maxclient
+
+
+def UpdateUserCommunityAccess(content, event):
+    """ Update data access to the user community when you add content to the community
+    """
+    portal = getSite()
+    community = findContainerCommunity(content)
+    current_user = api.user.get_current()
+    user_community = current_user.id + '_' + community.id
+    soup_access = get_soup('user_community_access', portal)
+    exist = [r for r in soup_access.query(Eq('user_community', user_community))]
+    if not exist:
+        record = Record()
+        record.attrs['user_community'] = user_community
+        record.attrs['data_access'] = DateTime()
+        soup_access.add(record)
+    else:
+        exist[0].attrs['data_access'] = DateTime()
+    soup_access.reindex()

@@ -46,6 +46,7 @@ from ZPublisher.HTTPRequest import FileUpload
 from repoze.catalog.catalog import Catalog
 from repoze.catalog.indexes.field import CatalogFieldIndex
 from repoze.catalog.indexes.keyword import CatalogKeywordIndex
+from repoze.catalog.indexes.text import CatalogTextIndex
 from souper.interfaces import ICatalogFactory
 from souper.soup import NodeAttributeIndexer
 from repoze.catalog.query import Eq
@@ -70,6 +71,7 @@ from ulearn.core.interfaces import IDiscussionFolder
 import json
 import logging
 import mimetypes
+from DateTime.DateTime import DateTime
 
 
 logger = logging.getLogger(__name__)
@@ -589,6 +591,27 @@ grok.global_adapter(community_hash, name='community_hash')
 
 class View(grok.View):
     grok.context(ICommunity)
+
+    def __call__(self, *args, **kwargs):
+        """Quan accedeixes a la comunitat, actualitza la data d'accès de l'usuari a la comunitat
+           i per tant, el comptador de pendents queda a 0.
+        """
+        super(View, self).__call__(*args, **kwargs)
+        portal = api.portal.get()
+        current_user = api.user.get_current()
+        user_community = current_user.id + '_' + self.context.id
+        soup_access = get_soup('user_community_access', portal)
+        exist = [r for r in soup_access.query(Eq('user_community', user_community))]
+        if not exist:
+            record = Record()
+            record.attrs['user_community'] = user_community
+            record.attrs['data_access'] = DateTime()
+            soup_access.add(record)
+        else:
+            exist[0].attrs['data_access'] = DateTime()
+        soup_access.reindex()
+
+        return super(View, self).__call__(*args, **kwargs)
 
     def canEditCommunity(self):
         return checkPermission('cmf.RequestReview', self.context)
@@ -1231,3 +1254,23 @@ class ACLSoupCatalog(object):
         catalog['groups'] = CatalogKeywordIndex(groups)
         return catalog
 grok.global_utility(ACLSoupCatalog, name='communities_acl')
+
+
+@implementer(ICatalogFactory)
+class UserCommunityAccessCatalogFactory(object):
+    """ Save the date of user access to the community
+
+        :index user_community: TextIndex - user_community = current_user + '_' + community
+        :index data_access: FieldIndex -  DateTime of user access to the community
+
+    """
+
+    def __call__(self, context):
+        catalog = Catalog()
+        idindexer = NodeAttributeIndexer('user_community')
+        catalog['user_community'] = CatalogTextIndex(idindexer)
+        dataindexer = NodeAttributeIndexer('data_access')
+        catalog['data_access'] = CatalogFieldIndex(dataindexer)
+        return catalog
+
+grok.global_utility(UserCommunityAccessCatalogFactory, name="user_community_access")
