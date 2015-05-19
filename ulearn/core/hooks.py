@@ -211,6 +211,7 @@ def connectMaxclient(username, oauth_token):
     return maxclient
 
 
+@grok.subscribe(ICommunity, IObjectAddedEvent)
 def UpdateUserCommunityAccess(content, event):
     """ Update data access to the user community when you add content to the community
     """

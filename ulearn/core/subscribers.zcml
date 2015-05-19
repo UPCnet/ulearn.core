@@ -35,12 +35,6 @@
              zope.app.container.interfaces.IObjectAddedEvent"
         />
 
-    <subscriber
-        handler=".hooks.UpdateUserCommunityAccess"
-        for="plone.dexterity.interfaces.IDexterityContent
-             zope.app.container.interfaces.IObjectAddedEvent"
-        />
-
     <!-- Modified Event Subscriber -->
     <subscriber
         handler=".hooks.Modified"
