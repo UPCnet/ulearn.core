@@ -95,19 +95,23 @@ ORGANIZATIVE_PERMISSIONS = dict(read='subscribed',
 
 @grok.provider(IContextSourceBinder)
 def availableCommunityTypes(context):
-    proot = getSite()
-    pm = getToolByName(proot, 'portal_membership')
-    sm = getSecurityManager()
-    user = pm.getAuthenticatedMember()
     terms = []
 
-    terms.append(SimpleVocabulary.createTerm(u'Closed', 'closed', _(u'Closed')))
-    terms.append(SimpleVocabulary.createTerm(u'Open', 'open', _(u'Open')))
+    user_roles = api.user.get_roles()
 
-    if sm.checkPermission('Modify portal content', context) or \
-       ('Manager' in user.getRoles()) or \
-       ('WebMaster' in user.getRoles()) or \
-       ('Site Administrator' in user.getRoles()):
+    if 'CC open' in user_roles or \
+       'WebMaster' in user_roles or \
+       'Manager' in user_roles:
+        terms.append(SimpleVocabulary.createTerm(u'Open', 'open', _(u'Open')))
+
+    if 'CC closed' in user_roles or \
+       'WebMaster' in user_roles or \
+       'Manager' in user_roles:
+        terms.append(SimpleVocabulary.createTerm(u'Closed', 'closed', _(u'Closed')))
+
+    if 'CC organizative' in user_roles or \
+       'WebMaster' in user_roles or \
+       'Manager' in user_roles:
         terms.append(SimpleVocabulary.createTerm(u'Organizative', 'organizative', _(u'Organizative')))
 
     return SimpleVocabulary(terms)

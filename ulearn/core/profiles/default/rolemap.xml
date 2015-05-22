@@ -2,6 +2,9 @@
 <rolemap>
   <roles>
     <role name="Api"/>
+    <role name="CC organizative"/>
+    <role name="CC open"/>
+    <role name="CC closed"/>
   </roles>
   <permissions>
     <permission name="Ulearn: Add Oportunitat" acquire="True">
@@ -14,6 +17,9 @@
     <permission name="Ulearn: Add Community" acquire="True">
       <role name="Manager"/>
       <role name="Site Administrator"/>
+      <role name="CC organizative"/>
+      <role name="CC open"/>
+      <role name="CC closed"/>
       <role name="WebMaster"/>
       <role name="Contributor"/>
     </permission>
