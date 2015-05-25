@@ -1,11 +1,12 @@
 Changelog
 =========
 
-2.1 (unreleased)
+2.1 (2015-05-25)
 ----------------
 
-- Nothing changed yet.
-
+* Add granularity to community creation by adding a role for each community type. CC open, CC closed, CC organizative. WebMasters retain their full permissions, and they are the only ones that could change the community type. [Victor Fernandez de Alba]
+* Modify hook Save date of user access to the community [Pilar Marinas]
+* Save date of user access to the community [Pilar Marinas]
 
 2.0 (2015-05-18)
 ----------------
