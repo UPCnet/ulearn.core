@@ -147,6 +147,7 @@ def searchUsersFunction(context, request, search_string):  # noqa
                 users_profile.append(user_dict)
 
             else:
+                # User is NOT an standard Plone user!! is a dict provided by the patched enumerateUsers
                 user_dict = {}
                 for user_property in user_properties_utility.properties:
                     user_dict.update({user_property: user.get(user_property, '')})
