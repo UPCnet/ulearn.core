@@ -141,7 +141,7 @@ class TestExample(uLearnTestBase):
         login(self.portal, u'ulearn.testuser1')
         # We provide here the required initialization for a user custom properties catalog
         provideUtility(TestUserExtendedPropertiesSoupCatalogFactory(), name='user_properties_exttest')
-        api.portal.set_registry_record(name='mrs.max.browser.controlpanel.IMAXUISettings.domain', value=u'exttest')
+        api.portal.set_registry_record(name='genweb.controlpanel.core.IGenwebCoreControlPanelSettings.user_properties_extender', value=u'user_properties_exttest')
 
         # Modify an user to accomodate new properties from extended catalog
         # Force it as we are not faking the extension of the user properties
@@ -325,7 +325,7 @@ class TestExample(uLearnTestBase):
         login(self.portal, u'ulearn.testuser1')
         # We provide here the required initialization for a user custom properties catalog
         provideUtility(TestUserExtendedPropertiesSoupCatalogFactory(), name='user_properties_exttest')
-        api.portal.set_registry_record(name='mrs.max.browser.controlpanel.IMAXUISettings.domain', value=u'exttest')
+        api.portal.set_registry_record(name='genweb.controlpanel.core.IGenwebCoreControlPanelSettings.user_properties_extender', value=u'user_properties_exttest')
 
         # Fake extended Plone user properties
         pmd = api.portal.get_tool('portal_memberdata')
@@ -366,8 +366,8 @@ class TestUserExtendedPropertiesSoupCatalogFactory(object):
     profile_properties = ['unit_organizational', 'twitter_username']
 
     # The directory properties for display on the directory views
-    directory_properties = ['email', 'telefon', 'location', 'ubicacio']
-    directory_icons = {'email': 'fa fa-envelope', 'telefon': 'fa fa-mobile', 'location': 'fa fa-building-o', 'ubicacio': 'fa fa-user'}
+    directory_properties = ['email', 'telefon', 'location', 'ubicacio', 'position']
+    directory_icons = {'email': 'fa fa-envelope', 'telefon': 'fa fa-mobile', 'location': 'fa fa-building-o', 'ubicacio': 'fa fa-user', 'position': 'fa fa-user'}
 
     def __call__(self, context):
         catalog = Catalog()

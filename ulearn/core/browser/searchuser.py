@@ -31,6 +31,11 @@ def searchUsersFunction(context, request, search_string):  # noqa
     maxclient.setActor(current_user.getId())
     maxclient.setToken(oauth_token)
 
+    # If it's absolutely necessary this line should be substituted by:
+    # plugins = portal.acl_users.plugins.listPlugins(IPropertiesPlugin)
+    # # We use the most preferent plugin
+    # pplugin = plugins[0][1]
+    # users = pplugin.enumerateUsers()
     users = portal.acl_users.mutable_properties.enumerateUsers()
 
     if IPloneSiteRoot.providedBy(context):
@@ -122,10 +127,10 @@ def searchUsersFunction(context, request, search_string):  # noqa
                 users = filtered
 
     has_extended_properties = False
-    client = api.portal.get_registry_record('mrs.max.browser.controlpanel.IMAXUISettings.domain')
-    if 'user_properties_{}'.format(client) in [a[0] for a in getUtilitiesFor(ICatalogFactory)]:
+    extender_name = api.portal.get_registry_record('genweb.controlpanel.core.IGenwebCoreControlPanelSettings.user_properties_extender')
+    if extender_name in [a[0] for a in getUtilitiesFor(ICatalogFactory)]:
         has_extended_properties = True
-        extended_user_properties_utility = getUtility(ICatalogFactory, name='user_properties_{}'.format(client))
+        extended_user_properties_utility = getUtility(ICatalogFactory, name=extender_name)
 
     user_properties_utility = getUtility(ICatalogFactory, name='user_properties')
 

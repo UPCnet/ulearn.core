@@ -23,14 +23,15 @@ def enumerateUsers(self, id=None, login=None, exact_match=False, **kw):
         criteria = copy.copy(kw)
 
         users = [(user, data) for (user, data) in self._storage.items()
-                    if self.testMemberData(data, criteria, exact_match)
-                        and not data.get('isGroup', False)]
+                if self.testMemberData(data, criteria, exact_match)
+                and not data.get('isGroup', False)]
 
         has_extended_properties = False
-        client = api.portal.get_registry_record('mrs.max.browser.controlpanel.IMAXUISettings.domain')
-        if 'user_properties_{}'.format(client) in [a[0] for a in getUtilitiesFor(ICatalogFactory)]:
+        extender_name = api.portal.get_registry_record('genweb.controlpanel.core.IGenwebCoreControlPanelSettings.user_properties_extender')
+
+        if extender_name in [a[0] for a in getUtilitiesFor(ICatalogFactory)]:
             has_extended_properties = True
-            extended_user_properties_utility = getUtility(ICatalogFactory, name='user_properties_{}'.format(client))
+            extended_user_properties_utility = getUtility(ICatalogFactory, name=extender_name)
 
         user_properties_utility = getUtility(ICatalogFactory, name='user_properties')
 
