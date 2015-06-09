@@ -66,13 +66,8 @@ class TestExample(uLearnTestBase):
         login(self.portal, u'ulearn.testuser1')
         users = searchUsersFunction(self.portal, self.request, '')
         logout()
-        # self.assertTrue(len(users['content']) == 2)
-        # self.assertEqual(users['content'][0]['id'], u'janet.dura')
-        # Refer i repensar la cerca de tots els usuaris
 
-        # Three users with mutable_properties
         self.assertTrue(len(users['content']) == 3)
-        self.assertEqual(users['content'][0]['id'], u'janet.dura')
 
     def test_search_portal_with_search_string(self):
         search_string = 'janet'

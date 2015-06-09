@@ -5,6 +5,7 @@ from zope.component import getUtility
 from zope.component import getUtilitiesFor
 
 from Products.CMFPlone.interfaces import IPloneSiteRoot
+from Products.PluggableAuthService.interfaces.plugins import IPropertiesPlugin
 
 from souper.soup import Record
 from souper.interfaces import ICatalogFactory
@@ -31,12 +32,12 @@ def searchUsersFunction(context, request, search_string):  # noqa
     maxclient.setActor(current_user.getId())
     maxclient.setToken(oauth_token)
 
-    # If it's absolutely necessary this line should be substituted by:
     # plugins = portal.acl_users.plugins.listPlugins(IPropertiesPlugin)
     # # We use the most preferent plugin
     # pplugin = plugins[0][1]
     # users = pplugin.enumerateUsers()
-    users = portal.acl_users.mutable_properties.enumerateUsers()
+
+    soup = get_soup('user_properties', portal)
 
     if IPloneSiteRoot.providedBy(context):
         # Search by string (partial) and return a list of Records from the user
@@ -45,13 +46,12 @@ def searchUsersFunction(context, request, search_string):  # noqa
             if isinstance(search_string, str):
                 search_string = search_string.decode('utf-8')
 
-            soup = get_soup('user_properties', portal)
             normalized_query = unicodedata.normalize('NFKD', search_string).encode('ascii', errors='ignore')
             normalized_query = normalized_query.replace('.', ' ') + '*'
             users = [r for r in soup.query(Eq('searchable_text', normalized_query))]
         else:
-            # User information directly from mutable_properties to avoid LDAP
-            # searches and force to show only the truly registered users
+            # Query for all users in the user_properties, showing only the legit ones
+            users = [r for r in soup.query(Eq('notlegit', False))]
             if nonvisibles:
                 filtered = []
                 for user in users:
@@ -67,7 +67,6 @@ def searchUsersFunction(context, request, search_string):  # noqa
             maxclientrestricted.setToken(settings.max_restricted_token)
             max_users = maxclientrestricted.contexts[context.absolute_url()].subscriptions.get(qs={'username': search_string, 'limit': 0})
 
-            soup = get_soup('user_properties', portal)
             if isinstance(search_string, str):
                 search_string = search_string.decode('utf-8')
 
@@ -102,7 +101,6 @@ def searchUsersFunction(context, request, search_string):  # noqa
                             pass
 
         else:
-            soup = get_soup('user_properties', portal)
             maxclientrestricted, settings = getUtility(IMAXClient)()
             maxclientrestricted.setActor(settings.max_restricted_username)
             maxclientrestricted.setToken(settings.max_restricted_token)
