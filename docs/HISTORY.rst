@@ -1,11 +1,12 @@
 Changelog
 =========
 
-2.2 (unreleased)
+2.2 (2015-06-10)
 ----------------
 
-- Nothing changed yet.
-
+* Fix search user for using the soup instead of the mutable_properties [Victor Fernandez de Alba]
+* Improve the method of acquiring the current (if enabled) user properties extender, and make the default property backend (IPropertiesPlugin) the more preferent one. [Victor Fernandez de Alba]
+* Searchuser [Pilar Marinas]
 
 2.1 (2015-05-25)
 ----------------
