@@ -1,11 +1,10 @@
 Changelog
 =========
 
-2.3 (unreleased)
+2.3 (2015-06-17)
 ----------------
 
-- Nothing changed yet.
-
+* View displayName not id acl community [Pilar Marinas]
 
 2.2 (2015-06-10)
 ----------------
