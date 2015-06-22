@@ -65,6 +65,34 @@ def add_catalog_indexes(context, logger=None):
         catalog.manage_reindexIndex(ids=indexables)
 
 
+def setup_safe_html_transform(portal):
+    transforms = api.portal.get_tool('portal_transforms')
+    transform = getattr(transforms, 'safe_html')
+
+    valid = transform.get_parameter_value('valid_tags')
+    nasty = transform.get_parameter_value('nasty_tags')
+    stripped = transform.get_parameter_value('stripped_attributes')
+
+    current_style_whitelist = [a for a in transform.get_parameter_value('style_whitelist')]
+    current_style_whitelist.append('color')
+
+    kwargs = {}
+    kwargs['valid_tags'] = valid
+    kwargs['nasty_tags'] = nasty
+    kwargs['stripped_attributes'] = stripped
+    kwargs['style_whitelist'] = current_style_whitelist
+    for k in list(kwargs):
+        if isinstance(kwargs[k], dict):
+            v = kwargs[k]
+            kwargs[k + '_key'] = v.keys()
+            kwargs[k + '_value'] = [str(s) for s in v.values()]
+            del kwargs[k]
+
+    transform.set_parameters(**kwargs)
+    transform._p_changed = True
+    transform.reload()
+
+
 def setupVarious(context):
 
     # Ordinarily, GenericSetup handlers check for the existence of XML files.
@@ -79,6 +107,7 @@ def setupVarious(context):
     logger = logging.getLogger(__name__)
 
     add_catalog_indexes(portal, logger)
+    setup_safe_html_transform(portal)
 
     # Fix the DXCT site and add permission to the default page which the
     # portlets are defined to, failing to do so turns in the users can't see the
