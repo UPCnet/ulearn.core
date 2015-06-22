@@ -65,7 +65,7 @@ def add_catalog_indexes(context, logger=None):
         catalog.manage_reindexIndex(ids=indexables)
 
 
-def setup_safe_html_transform(portal):
+def setup_safe_html_transform():
     transforms = api.portal.get_tool('portal_transforms')
     transform = getattr(transforms, 'safe_html')
 
@@ -93,6 +93,19 @@ def setup_safe_html_transform(portal):
     transform.reload()
 
 
+def setup_ulearn_icon_set():
+    # The list is composed of up to four rows of icons, each row being a string
+    # with the name (comma separated) of each icon. There should be all four
+    # rows in place, even if they are empty
+    ulearn_custom_icons = [u'fullscreen,|,code,|,save,|,plonetemplates,|,bold,italic,underline,strikethrough,|,forecolor,|,justifyleft,justifycenter,justifyright,|,cut,copy,paste,pastetext,pasteword,|,search,replace,|,bullist,numlist,|,outdent,indent,blockquote,|,undo,redo,|,link,unlink,anchor',
+                           u'formatselect,style,|,cleanup,removeformat,|,image,media,|,tablecontrols,styleprops,|,visualaid,|,sub,sup,|,charmap',
+                           u'',
+                           u''
+                           ]
+
+    api.portal.set_registry_record('genweb.controlpanel.core.IGenwebCoreControlPanelSettings.custom_editor_icons', ulearn_custom_icons)
+
+
 def setupVarious(context):
 
     # Ordinarily, GenericSetup handlers check for the existence of XML files.
@@ -107,7 +120,8 @@ def setupVarious(context):
     logger = logging.getLogger(__name__)
 
     add_catalog_indexes(portal, logger)
-    setup_safe_html_transform(portal)
+    setup_safe_html_transform()
+    setup_ulearn_icon_set()
 
     # Fix the DXCT site and add permission to the default page which the
     # portlets are defined to, failing to do so turns in the users can't see the
