@@ -1,11 +1,12 @@
 Changelog
 =========
 
-2.4 (unreleased)
+2.4 (2015-06-25)
 ----------------
 
-- Nothing changed yet.
-
+* Fix migrations [Victor Fernandez de Alba]
+* Add support for custom icon list on TinyMCE. [Victor Fernandez de Alba]
+* Add support for custom icon list on TinyMCE. [Victor Fernandez de Alba]
 
 2.3 (2015-06-17)
 ----------------
