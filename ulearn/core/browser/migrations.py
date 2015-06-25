@@ -306,8 +306,9 @@ class GiveAllCommunitiesGWUUID(grok.View):
                     return
 
                 setattr(obj, ATTRIBUTE_NAME, uuid)
+                obj.reindexObject(idxs=['gwuuid'])
 
-        pc.clearFindAndRebuild()
+        # pc.clearFindAndRebuild()
 
         return 'Done'
 
@@ -357,6 +358,10 @@ class MigrateOldStyleFolders(grok.View):
 
         for brain in communities:
             obj = brain.getObject()
+
+            # Set the default view to 'documents' folder
+            obj['documents'].setLayout('filtered_contents_search_view')
+
             if 'media' in obj.objectIds():
                 if IPhotosFolder.providedBy(obj['media']):
                     try:
