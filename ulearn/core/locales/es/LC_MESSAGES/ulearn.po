@@ -797,3 +797,21 @@ msgstr "Pais"
 
 msgid "language"
 msgstr "Idioma"
+
+msgid "telefon_ip"
+msgstr "Teléfono IP"
+
+msgid "mobil"
+msgstr "Móvil"
+
+msgid "skype"
+msgstr "Skype"
+
+msgid "usuari_grup"
+msgstr "Usuario de grupo"
+
+msgid "company"
+msgstr "Compañia"
+
+msgid "department"
+msgstr "Departamento"

@@ -829,3 +829,21 @@ msgstr "País"
 
 msgid "language"
 msgstr "Idioma"
+
+msgid "telefon_ip"
+msgstr "Telèfon IP"
+
+msgid "mobil"
+msgstr "Mòbil"
+
+msgid "skype"
+msgstr "Skype"
+
+msgid "usuari_grup"
+msgstr "Usuari de grup"
+
+msgid "company"
+msgstr "Companyia"
+
+msgid "department"
+msgstr "Departament"
