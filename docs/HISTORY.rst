@@ -1,11 +1,10 @@
 Changelog
 =========
 
-2.5 (unreleased)
+2.5 (2015-07-01)
 ----------------
 
-- Nothing changed yet.
-
+* Translations properties extended Credit Andorra [Pilar Marinas]
 
 2.4 (2015-06-25)
 ----------------
