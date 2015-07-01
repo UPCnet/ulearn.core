@@ -529,14 +529,8 @@ msgstr "Nombre"
 msgid "last_name"
 msgstr "Apellidos"
 
-msgid "company"
-msgstr "Compañía"
-
 msgid "area"
 msgstr "Area"
-
-msgid "department"
-msgstr "Departamento"
 
 msgid "division"
 msgstr "División"
@@ -699,9 +693,6 @@ msgstr "Todos los usuarios"
 
 msgid "activity"
 msgstr "Actividad"
-
-msgid "comments"
-msgstr "Comentarios"
 
 msgid "documents"
 msgstr "Documentos"

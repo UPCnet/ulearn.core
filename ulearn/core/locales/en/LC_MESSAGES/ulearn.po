@@ -248,11 +248,6 @@ msgstr ""
 msgid "campus_url"
 msgstr "Web address of the Campus"
 
-#. Default: "Comments portlet"
-#: ../../../../../../ulearn.theme/ulearn/theme/portlets/comments.py:29
-msgid "comments"
-msgstr "comments"
-
 #. Default: "Comunidades"
 #: ../../../../../../ulearn.theme/ulearn/theme/portlets/communities.py:29
 #: ../../../../../../ulearn.theme/ulearn/theme/portlets/templates/communities.pt:4

@@ -732,9 +732,6 @@ msgstr "Tots els usuaris"
 msgid "activity"
 msgstr "Activitat"
 
-msgid "comments"
-msgstr "Comentaris"
-
 msgid "documents"
 msgstr "Documents"
 
