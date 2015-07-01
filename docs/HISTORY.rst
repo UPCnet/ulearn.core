@@ -1,11 +1,10 @@
 Changelog
 =========
 
-2.6 (unreleased)
+2.6 (2015-07-01)
 ----------------
 
-- Nothing changed yet.
-
+* updated i18n [Pilar Marinas]
 
 2.5 (2015-07-01)
 ----------------
