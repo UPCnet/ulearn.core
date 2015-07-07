@@ -383,3 +383,61 @@ class MigrateOldStyleFolders(grok.View):
                         logger.warn('The links folder in {} is empty. Doing nothing.'.format(obj.absolute_url()))
 
         return 'Done'
+
+
+class BulkRestrictTransformuLearn(grok.View):
+    """
+        Restrict script and other nasty tags to uLearn
+    """
+    grok.context(IApplication)
+    grok.name('bulk_restrict_transform')
+    grok.require('cmf.ManagePortal')
+
+    def setup_safe_html_transform(self, portal):
+        transforms = getToolByName(portal, 'portal_transforms')
+        transform = getattr(transforms, 'safe_html')
+
+        valid = transform.get_parameter_value('valid_tags')
+        nasty = transform.get_parameter_value('nasty_tags')
+        stripped = transform.get_parameter_value('stripped_attributes')
+
+        # uLearn nasty tags
+        ulearn_nasty = ['script', 'applet', 'iframe']
+        for tag in ulearn_nasty:
+            if tag in valid:
+                # Delete from valid
+                valid[tag] = 0
+                del valid[tag]
+            # Add to nasty
+            if tag not in nasty:
+                nasty[tag] = 1
+
+        current_style_whitelist = [a for a in transform.get_parameter_value('style_whitelist')]
+        current_style_whitelist.append('color')
+
+        kwargs = {}
+        kwargs['valid_tags'] = valid
+        kwargs['nasty_tags'] = nasty
+        kwargs['stripped_attributes'] = stripped
+        kwargs['style_whitelist'] = current_style_whitelist
+        for k in list(kwargs):
+            if isinstance(kwargs[k], dict):
+                v = kwargs[k]
+                kwargs[k + '_key'] = v.keys()
+                kwargs[k + '_value'] = [str(s) for s in v.values()]
+                del kwargs[k]
+
+        transform.set_parameters(**kwargs)
+        transform._p_changed = True
+        transform.reload()
+
+    def render(self):
+        context = aq_inner(self.context)
+        plonesites = listPloneSites(context)
+        output = []
+        for plonesite in plonesites:
+            self.setup_safe_html_transform(plonesite)
+            output.append('Restricted {}'.format(plonesite.id))
+            # response = subrequest('/'.join(plonesite.getPhysicalPath()) + '/reinstall_ulearncontrolpanel')
+            # output.append(response.getBody())
+        return '\n'.join(output)
