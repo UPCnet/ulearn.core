@@ -116,18 +116,16 @@ class Community(REST):
         if check_permission is not True:
             return check_permission
 
-        self.data = json.loads(self.request['BODY'])
-
-        if 'community_type' in self.data:
+        if 'community_type' in self.payload:
             # We are changing the type of the community
             # Check if it's a legit change
-            if self.data['community_type'] in [a[0] for a in getAdapters((self.community,), ICommunityTyped)]:
-                adapter = getAdapter(self.community, ICommunityTyped, name=self.data['community_type'])
+            if self.params['community_type'] in [a[0] for a in getAdapters((self.community,), ICommunityTyped)]:
+                adapter = getAdapter(self.community, ICommunityTyped, name=self.params['community_type'])
             else:
                 self.response.setStatus(400)
                 return self.json_response(dict(error='Bad request, wrong community type', status_code=400))
 
-            if self.data['community_type'] == self.community.community_type:
+            if self.params['community_type'] == self.community.community_type:
                 self.response.setStatus(400)
                 return self.json_response(dict(error='Bad request, already that community type', status_code=400))
 
@@ -227,8 +225,6 @@ class Subscriptions(REST):
         if check_permission is not True:
             return check_permission
 
-        self.data = json.loads(self.request['BODY'])
-
         result = self.update_subscriptions()
 
         self.response.setStatus(result['status_code'])
@@ -238,8 +234,8 @@ class Subscriptions(REST):
         adapter = getAdapter(self.community, ICommunityTyped, name=self.community.community_type)
 
         # Change the uLearn part of the community
-        adapter.update_acl(self.data)
-        adapter.set_plone_permissions(self.data)
+        adapter.update_acl(self.payload)
+        adapter.set_plone_permissions(self.payload)
 
         # Communicate the change in the community subscription to the uLearnHub
         # XXX: Until we do not have a proper Hub online

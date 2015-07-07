@@ -79,7 +79,6 @@ class Person(REST):
         maxclient, settings = getUtility(IMAXClient)()
         maxclient.setActor(settings.max_restricted_username)
         maxclient.setToken(settings.max_restricted_token)
-
         if not existing_user:
             args = dict(
                 email=email,

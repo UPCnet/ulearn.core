@@ -13,6 +13,7 @@ from plone.registry.interfaces import IRegistry
 
 from maxclient import MaxClient
 from mrs.max.browser.controlpanel import IMAXUISettings
+import json
 
 
 _marker = object()
@@ -144,6 +145,12 @@ class REST(REST_BASE):
         self.params = {}
         self.params.update(self.__matchdict__)
         self.params.update(self.request.form)
+        try:
+            self.payload = json.loads(self.request['BODY'])
+        except:
+            pass
+        else:
+            self.params.update(self.payload)
 
         # Return False if param not found or empty
         for param_name in required:

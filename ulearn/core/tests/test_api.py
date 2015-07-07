@@ -65,6 +65,56 @@ class TestAPI(uLearnTestBase):
 
         return partial_view
 
+    def test_people_post(self):
+        username_plone = 'ulearn.testuser1'
+        login(self.portal, username_plone)
+        username = 'usertest'
+        perfil = dict(fullname=u'Test User',
+                      password=u'test123',
+                      alias=u'testUser',
+                      email_bqn=u'test@blanquerna.es',
+                      email=u'test@email.es',
+                      phone=u'96 234 02 23',
+                      collectiveFaculty='PAS&&BQN||EST&&BQN',
+                      degree=u'Informática',
+                      description=u'Información personal y biografía',
+                      office_location=u'Nexus',
+                      office_phone=u'54560',
+                      department=u'Sistemas y seguridad',
+                      personalized_attention=u'Lunes a viernes de 8:00 a 15:00',
+                      social_networks=u'www.link.com/twitter')
+
+        people_view = self.request_API_endpoint(username_plone, ['api', 'people', username], body=perfil)
+        response = people_view.POST()
+        response = json.loads(response)
+        self.assertEqual(response['message'], 'User {} created'.format(username))
+
+    # def test_people_delete(self):
+    #     """ Delete the given community. """
+    #     username_plone = 'ulearn.testuser1'
+    #     login(self.portal, username_plone)
+    #     username = 'usertest'
+
+    #     user_view = self.request_API_endpoint(username, ['api', 'people', username])
+    #     user_view.DELETE()
+
+    #     self.assertTrue(username not in self.portal.objectIds())
+
+    def test_news_post(self):
+        username_plone = 'ulearn.testuser1'
+        login(self.portal, username_plone)
+        newid = u'noticia-prueba'
+        new = dict(title=u'Noticia de Prueba',
+                   description=u'Noticia prueba test',
+                   imgUrl='http://www.janquim.cat/wp-content/uploads/2012/05/LogoBlanquerna.jpg',
+                   body=u'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus.')
+
+        new_view = self.request_API_endpoint(username_plone, ['api', 'news', newid], body=new)
+        response = new_view.POST()
+        response = json.loads(response)
+        self.assertEqual(response['message'], 'New {} created'.format(newid))
+
+
     def test_community_subscribe_post(self):
         username = 'ulearn.testuser1'
         login(self.portal, username)
@@ -83,7 +133,6 @@ class TestAPI(uLearnTestBase):
         response = subscriptions_view.POST()
 
         response = json.loads(response)
-
         self.assertEqual(response['status_code'], 200)
         self.assertTrue('message' in response)
         self.assertEqual(ICommunityACL(community)().attrs['acl'], acl)
