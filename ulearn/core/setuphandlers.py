@@ -73,6 +73,17 @@ def setup_safe_html_transform():
     nasty = transform.get_parameter_value('nasty_tags')
     stripped = transform.get_parameter_value('stripped_attributes')
 
+    # uLearn nasty tags
+    ulearn_nasty = ['script', 'applet', 'iframe']
+    for tag in ulearn_nasty:
+        if tag in valid:
+            # Delete from valid
+            valid[tag] = 0
+            del valid[tag]
+        # Add to nasty
+        if tag not in nasty:
+            nasty[tag] = 1
+
     current_style_whitelist = [a for a in transform.get_parameter_value('style_whitelist')]
     current_style_whitelist.append('color')
 
