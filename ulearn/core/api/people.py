@@ -15,7 +15,7 @@ from ulearn.core.api.root import APIRoot
 
 from Products.CMFCore.utils import getToolByName
 from mrs.max.portrait import changeMemberPortrait
-from ulearn.blanquerna.browser.security import execute_under_special_role
+from ulearn.core.browser.security import execute_under_special_role
 from plone import api
 import requests
 
