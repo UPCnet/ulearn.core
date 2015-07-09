@@ -6,7 +6,7 @@ from ulearn.core.api.root import APIRoot
 from plone.namedfile.file import NamedBlobImage
 from plone.dexterity.utils import createContentInContainer
 from plone.app.contenttypes.behaviors.richtext import IRichText
-
+from datetime import datetime
 from plone import api
 import requests
 
@@ -45,17 +45,31 @@ class New(REST):
         title = self.params.pop('title')
         desc = self.params.pop('description')
         body = self.params.pop('body')
-        img = self.params.pop('imgUrl')
-        if img != '':
+        date_start = self.params.pop('start')
+        date_end = self.params.pop('end', None)
+        img = self.params.pop('imgUrl', None)
+        if img:
             imgName = (img.split('/')[-1]).decode('utf-8')
             imgData = requests.get(img).content
 
-        result = self.create_new(newid, title, desc, body, imgData, imgName)
+        result = self.create_new(newid,
+                                 title,
+                                 desc,
+                                 body,
+                                 imgData,
+                                 imgName,
+                                 date_start,
+                                 date_end)
 
         self.response.setStatus(result.pop('status'))
         return self.json_response(result)
 
-    def create_new(self, newid, title, desc, body, imgData, imgName):
+    def create_new(self, newid, title, desc, body, imgData, imgName, date_start, date_end):
+        date_start = date_start.split('/')
+        time_start = date_start[3].split(':')
+        date_end = date_end.split('/')
+        time_end = date_end[3].split(':')
+
         portal_url = api.portal.get()
         news_url = portal_url['news']
         pc = api.portal.get_tool('portal_catalog')
@@ -69,24 +83,53 @@ class New(REST):
                                                                         filename=imgName,
                                                                         contentType='image/jpeg'),
                                                    description=desc,
+                                                   timezone="Europe/Madrid",
                                                    checkConstraints=False)
-                new_new.title = title
-                new_new.text = IRichText['text'].fromUnicode(body)
-                new_new.reindexObject()
             else:
                 new_new = createContentInContainer(news_url,
                                                    'News Item',
                                                    title=newid,
                                                    description=desc,
+                                                   timezone="Europe/Madrid",
                                                    checkConstraints=False)
-                new_new.title = title
-                new_new.text = IRichText['text'].fromUnicode(body)
-                new_new.reindexObject()
+            new_new.title = title
+            new_new.setEffectiveDate(datetime(int(date_start[2]),
+                                              int(date_start[1]),
+                                              int(date_start[0]),
+                                              int(time_start[0]),
+                                              int(time_start[1])
+                                              )
+                                     )
+            if date_end:
+                new_new.setExpirationDate(datetime(int(date_end[2]),
+                                                   int(date_end[1]),
+                                                   int(date_end[0]),
+                                                   int(time_end[0]),
+                                                   int(time_end[1])
+                                                   )
+                                          )
+            new_new.text = IRichText['text'].fromUnicode(body)
+            new_new.reindexObject()
             resp = {'message': 'New {} created'.format(newid), 'status': 201}
         else:
             new = brains[0].getObject()
             new.title = title
             new.description = desc
+            new.setEffectiveDate(datetime(int(date_start[2]),
+                                          int(date_start[1]),
+                                          int(date_start[0]),
+                                          int(time_start[0]),
+                                          int(time_start[1])
+                                          )
+                                 )
+            if date_end:
+                new.setExpirationDate(datetime(int(date_end[2]),
+                                               int(date_end[1]),
+                                               int(date_end[0]),
+                                               int(time_end[0]),
+                                               int(time_end[1])
+                                               )
+                                      )
             if imgName != '':
                 new.image = NamedBlobImage(data=imgData,
                                            filename=imgName,

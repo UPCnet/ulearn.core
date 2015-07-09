@@ -8,12 +8,16 @@ from repoze.catalog.query import Eq
 from souper.soup import get_soup
 
 from mrs.max.utilities import IMAXClient
-
+from StringIO import StringIO
 from genweb.core.utils import json_response
 from ulearn.core.api import REST
 from ulearn.core.api.root import APIRoot
 
+from Products.CMFCore.utils import getToolByName
+from mrs.max.portrait import changeMemberPortrait
+from ulearn.blanquerna.browser.security import execute_under_special_role
 from plone import api
+import requests
 
 
 class People(REST):
@@ -79,6 +83,9 @@ class Person(REST):
         maxclient, settings = getUtility(IMAXClient)()
         maxclient.setActor(settings.max_restricted_username)
         maxclient.setToken(settings.max_restricted_token)
+
+        avatar = self.params.pop('avatar', None)
+
         if not existing_user:
             args = dict(
                 email=email,
@@ -89,6 +96,24 @@ class Person(REST):
                 args['password'] = password
             api.user.create(**args)
             maxclient.people[username].put(displayName=properties['fullname'])
+            # Save the image into the Plone user profile if provided
+            if avatar:
+                portal = api.portal.get()
+                membership_tool = getToolByName(portal, 'portal_membership')
+                token = maxclient.getToken(username, password)
+                member = membership_tool.getMemberById(username)
+                member.setMemberProperties({'oauth_token': token})
+                imgName = (avatar.split('/')[-1]).decode('utf-8')
+                imgData = requests.get(avatar).content
+                image = StringIO(imgData)
+                image.filename = imgName
+                execute_under_special_role(portal,
+                                           "Manager",
+                                           changeMemberPortrait,
+                                           membership_tool,
+                                           image,
+                                           username)
+
             created = 201
 
         else:
@@ -103,6 +128,23 @@ class Person(REST):
             maxclient.people[username].post()  # Just to make sure user exists (in case it was only on ldap)
             created = maxclient.last_response_code
             maxclient.people[username].put(displayName=properties['fullname'])
+
+            if avatar:
+                portal = api.portal.get()
+                membership_tool = getToolByName(portal, 'portal_membership')
+                token = maxclient.getToken(username, password)
+                member = membership_tool.getMemberById(username)
+                member.setMemberProperties({'oauth_token': token})
+                imgName = (avatar.split('/')[-1]).decode('utf-8')
+                imgData = requests.get(avatar).content
+                image = StringIO(imgData)
+                image.filename = imgName
+                execute_under_special_role(portal,
+                                           "Manager",
+                                           changeMemberPortrait,
+                                           membership_tool,
+                                           image,
+                                           username)
 
         if created == 201:
             return {'message': 'User {} created'.format(username), 'status': created}
