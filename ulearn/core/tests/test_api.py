@@ -2,6 +2,7 @@
 from zope.component import getUtility
 from zope.component import getMultiAdapter
 from zope.publisher.browser import TestRequest
+from zope.component import getAdapter
 
 from plone.app.testing import login
 from plone.app.testing import logout
@@ -9,6 +10,7 @@ from plone.app.testing import logout
 from mrs.max.utilities import IMAXClient
 from genweb.core.gwuuid import IGWUUID
 
+from ulearn.core.content.community import ICommunityTyped
 from ulearn.core.tests import uLearnTestBase
 from ulearn.core.content.community import ICommunityACL
 from ulearn.core.testing import ULEARN_CORE_FUNCTIONAL_TESTING
@@ -272,3 +274,28 @@ class TestAPI(uLearnTestBase):
         community_view.DELETE()
 
         self.assertTrue('community-test' not in self.portal.objectIds())
+
+    def test_groups_get(self):
+        """ Get the communities by the given group. """
+        username = 'ulearn.testuser1'
+        login(self.portal, username)
+        community = self.create_test_community(community_type='Closed')
+        gwuuid = IGWUUID(community).get()
+        acl = dict(users=[dict(id=u'janet.dura', displayName=u'Janet Durà', role=u'writer'),
+                          dict(id=u'victor.fernandez', displayName=u'Víctor Fernández de Alba', role=u'reader')],
+                   groups=[dict(id=u'PAS', displayName=u'PAS UPC', role=u'writer'),
+                           dict(id=u'UPCnet', displayName=u'UPCnet', role=u'reader')]
+                   )
+
+        adapter = getAdapter(community, ICommunityTyped, name=community.community_type)
+        adapter.update_acl(acl)
+
+        group = u'UPCnet'
+
+        group_view = self.request_API_endpoint(username, ['api', 'groups', group, 'communities'])
+        response = group_view.GET()
+        response = json.loads(response)
+
+        self.assertTrue(group in response[0]['groups'])
+        self.assertTrue('janet.dura' in response[0]['users'])
+        self.assertTrue('victor.fernandez' in response[0]['users'])
