@@ -67,8 +67,6 @@ class New(REST):
     def create_new(self, newid, title, desc, body, imgData, imgName, date_start, date_end):
         date_start = date_start.split('/')
         time_start = date_start[3].split(':')
-        date_end = date_end.split('/')
-        time_end = date_end[3].split(':')
 
         portal_url = api.portal.get()
         news_url = portal_url['news']
@@ -101,6 +99,8 @@ class New(REST):
                                               )
                                      )
             if date_end:
+                date_end = date_end.split('/')
+                time_end = date_end[3].split(':')
                 new_new.setExpirationDate(datetime(int(date_end[2]),
                                                    int(date_end[1]),
                                                    int(date_end[0]),
