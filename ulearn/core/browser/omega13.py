@@ -34,12 +34,29 @@ class Omega13UserSearch(grok.View):
 
             normalized_query = unicodedata.normalize('NFKD', query).encode('ascii', errors='ignore')
             normalized_query = normalized_query.replace('.', ' ') + '*'
-            users_in_soup = [dict(id=r.attrs.get('username'),
-                                  displayName=r.attrs.get('fullname'))
-                            for r in soup.query(Eq('searchable_text', normalized_query))] + \
-                            [dict(id=r.attrs.get('username'),
-                                  displayName=r.attrs.get('fullname'))
-                            for r in soup.query(And(Or(Eq('username', normalized_query), Eq('fullname', normalized_query)), Eq('notlegit', True)))]
+
+            def user_entry(record):
+                username = record.attrs.get('username')
+                fullname = record.attrs.get('fullname')
+                return dict(
+                    id=username,
+                    displayName=fullname if fullname else username
+                )
+
+            def searchable_text():
+                return soup.query(Eq('searchable_text', normalized_query))
+
+            def not_legit_users():
+                soup.query(And(
+                    Or(
+                        Eq('username', normalized_query),
+                        Eq('fullname', normalized_query)
+                    ),
+                    Eq('notlegit', True)
+                ))
+
+            users_in_soup = [user_entry(r) for r in searchable_text()] + \
+                            [user_entry(r) for r in not_legit_users]
 
             too_much_results = len(users_in_soup) > result_threshold
 
