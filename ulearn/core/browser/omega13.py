@@ -56,7 +56,7 @@ class Omega13UserSearch(grok.View):
                 ))
 
             users_in_soup = [user_entry(r) for r in searchable_text()] + \
-                            [user_entry(r) for r in not_legit_users]
+                            [user_entry(r) for r in not_legit_users()]
 
             too_much_results = len(users_in_soup) > result_threshold
 
