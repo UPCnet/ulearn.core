@@ -47,7 +47,7 @@ class Omega13UserSearch(grok.View):
                 return soup.query(Eq('searchable_text', normalized_query))
 
             def not_legit_users():
-                soup.query(And(
+                return soup.query(And(
                     Or(
                         Eq('username', normalized_query),
                         Eq('fullname', normalized_query)
