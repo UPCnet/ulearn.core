@@ -1,11 +1,19 @@
 Changelog
 =========
 
-2.7 (unreleased)
+2.7 (2015-07-14)
 ----------------
 
-- Nothing changed yet.
-
+* Fix Document translation [Pilar Marinas]
+* modify news_post test [Paco Gregori]
+* Fix File translation [Pilar Marinas]
+* Default to username if fullname empty [Carles Bruguera]
+* API for groups and f-type interactions [Victor Fernandez de Alba]
+* add security file [Paco Gregori]
+* add manage user avatar on API [Paco Gregori]
+* New transform migration [Victor Fernandez de Alba]
+* Restrict script tag and others to the nasty tags for ulearn [Victor Fernandez de Alba]
+* add API news and test [Paco Gregori]
 
 2.6 (2015-07-01)
 ----------------
