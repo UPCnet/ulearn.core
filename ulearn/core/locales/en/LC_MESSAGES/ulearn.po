@@ -744,3 +744,28 @@ msgstr "Company"
 
 msgid "department"
 msgstr "Department"
+
+# BLANQUERNA USER EXTENDER
+msgid "email_bqn"
+msgstr "Email Blanquerna"
+
+msgid "phone"
+msgstr "Phone"
+
+msgid "collectiveFaculty"
+msgstr "Collective/Faculty"
+
+msgid "degree"
+msgstr "Degree"
+
+msgid "social_networks"
+msgstr "Social Networks"
+
+msgid "office_location"
+msgstr "Office"
+
+msgid "office_phone"
+msgstr "Phone"
+
+msgid "personalized_attention"
+msgstr "Business hours"

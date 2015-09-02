@@ -844,3 +844,28 @@ msgstr "Companyia"
 
 msgid "department"
 msgstr "Departament"
+
+# BLANQUERNA USER EXTENDER
+msgid "email_bqn"
+msgstr "Email Blanquerna"
+
+msgid "phone"
+msgstr "Telèfon"
+
+msgid "collectiveFaculty"
+msgstr "col·lectiu/Facultat"
+
+msgid "degree"
+msgstr "Grau"
+
+msgid "social_networks"
+msgstr "Xarxes socials"
+
+msgid "office_location"
+msgstr "Despatx"
+
+msgid "office_phone"
+msgstr "Telèfon"
+
+msgid "personalized_attention"
+msgstr "Horari d'atenció"

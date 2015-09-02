@@ -806,3 +806,28 @@ msgstr "Compañia"
 
 msgid "department"
 msgstr "Departamento"
+
+# BLANQUERNA USER EXTENDER
+msgid "email_bqn"
+msgstr "Email Blanquerna"
+
+msgid "phone"
+msgstr "Teléfono"
+
+msgid "collectiveFaculty"
+msgstr "Colectivo/Facultad"
+
+msgid "degree"
+msgstr "Grado"
+
+msgid "social_networks"
+msgstr "Redes sociales"
+
+msgid "office_location"
+msgstr "Despacho"
+
+msgid "office_phone"
+msgstr "Teléfono"
+
+msgid "personalized_attention"
+msgstr "Horario de atención"
