@@ -17,6 +17,8 @@ from Products.CMFCore.utils import getToolByName
 from mrs.max.portrait import changeMemberPortrait
 from ulearn.core.browser.security import execute_under_special_role
 from plone import api
+from genweb.core.utils import add_user_to_catalog
+from genweb.core.utils import get_all_user_properties
 import requests
 
 
@@ -30,6 +32,38 @@ class People(REST):
 
     grok.adapts(APIRoot, IPloneSiteRoot)
     grok.require('genweb.authenticated')
+
+
+class Sync(REST):
+    """
+        /api/people/sync
+    """
+    grok.adapts(People, IPloneSiteRoot)
+    grok.require('genweb.authenticated')
+
+    def __init__(self, context, request):
+        super(Sync, self).__init__(context, request)
+
+    __required_params__ = ['users']
+
+    def POST(self):
+        """
+            Syncs user local registry with remote ldap attributes
+        """
+        validation = self.validate()
+        if validation is not True:
+            return validation
+
+        maxclient, settings = getUtility(IMAXClient)()
+        maxclient.setActor(settings.max_restricted_username)
+        maxclient.setToken(settings.max_restricted_token)
+        users = self.params['users']
+
+        for username in users:
+            user_memberdata = api.user.get(username=username)
+            plone_user = user_memberdata.getUser()
+            properties = get_all_user_properties(plone_user)
+            add_user_to_catalog(plone_user, properties)
 
 
 class Person(REST):
