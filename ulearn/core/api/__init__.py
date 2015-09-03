@@ -148,7 +148,7 @@ class REST(REST_BASE):
         try:
             self.payload = json.loads(self.request['BODY'])
         except:
-            pass
+            self.payload = self.request.form
         else:
             self.params.update(self.payload)
 
