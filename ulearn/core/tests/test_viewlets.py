@@ -21,7 +21,7 @@ class TestExample(uLearnTestBase):
         self.request = self.layer['request']
 
         ulearnjsegg = pkg_resources.get_distribution('ulearn.js')
-        resource_file = open('{}/config.json'.format(ulearnjsegg.location))
+        resource_file = open('{}/ulearn/core/config.json'.format(ulearnjsegg.location))
         self.resources_conf = json.loads(resource_file.read())
 
     def test_js_development_resource_viewlet(self):
