@@ -1,11 +1,12 @@
 Changelog
 =========
 
-2.8 (unreleased)
+2.8 (2015-09-04)
 ----------------
 
-- Nothing changed yet.
-
+* Sync api to simulat an arbitrary user login [Carles Bruguera]
+* Try to decode form data if not json data [Carles Bruguera]
+* New test for viewlets resources [Victor Fernandez de Alba]
 
 2.7 (2015-07-14)
 ----------------
