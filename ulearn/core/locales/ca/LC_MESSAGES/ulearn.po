@@ -353,7 +353,7 @@ msgstr "Les meves comunitats"
 #. Default: "Create a new event"
 #: ../../../../ulearn.theme/ulearn/theme/portlets/templates/calendar.pt:97
 msgid "newevent"
-msgstr "Crear un evento"
+msgstr "Crear un esdeveniment"
 
 #. Default: "nom.usuari"
 #: ../../../../ulearn.theme/ulearn/theme/skins/ulearntheme_custom/login_form.cpt:178

@@ -38,6 +38,7 @@ def searchUsersFunction(context, request, search_string):  # noqa
     # users = pplugin.enumerateUsers()
 
     soup = get_soup('user_properties', portal)
+    users = []
 
     if IPloneSiteRoot.providedBy(context):
         # Search by string (partial) and return a list of Records from the user
@@ -116,6 +117,27 @@ def searchUsersFunction(context, request, search_string):  # noqa
                     # User subscribed, but no local profile found, append empty profile for display
                     pass
 
+            if nonvisibles:
+                filtered = []
+                for user in users:
+                    if user is not None:
+                        if user.attrs['username'] not in nonvisibles:
+                            filtered.append(user)
+                users = filtered
+
+    # solución provisional para que no pete cuando estas en la biblioteca o en cualquier carpeta dentro de una comunidad
+    # pendiente decidir cual sera el funcionamiento
+    if users == []:
+        if search_string:
+            if isinstance(search_string, str):
+                search_string = search_string.decode('utf-8')
+
+            normalized_query = unicodedata.normalize('NFKD', search_string).encode('ascii', errors='ignore')
+            normalized_query = normalized_query.replace('.', ' ') + '*'
+            users = [r for r in soup.query(Eq('searchable_text', normalized_query))]
+        else:
+            # Query for all users in the user_properties, showing only the legit ones
+            users = [r for r in soup.query(Eq('notlegit', False))]
             if nonvisibles:
                 filtered = []
                 for user in users:
