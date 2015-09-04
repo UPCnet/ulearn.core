@@ -818,7 +818,7 @@ msgid "collectiveFaculty"
 msgstr "Colectivo/Facultad"
 
 msgid "degree"
-msgstr "Grado"
+msgstr "Estudios"
 
 msgid "social_networks"
 msgstr "Redes sociales"

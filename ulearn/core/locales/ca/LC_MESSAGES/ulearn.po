@@ -856,7 +856,7 @@ msgid "collectiveFaculty"
 msgstr "col·lectiu/Facultat"
 
 msgid "degree"
-msgstr "Grau"
+msgstr "Estudis"
 
 msgid "social_networks"
 msgstr "Xarxes socials"
