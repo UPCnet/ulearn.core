@@ -51,17 +51,21 @@ def searchUsersFunction(context, request, search_string):  # noqa
             normalized_query = normalized_query.replace('.', ' ') + '*'
             users = [r for r in soup.query(Eq('searchable_text', normalized_query))]
         else:
-            # Query for all users in the user_properties, showing only the legit ones
-            users = [r for r in soup.query(Eq('notlegit', False))]
-            if nonvisibles:
-                filtered = []
-                for user in users:
-                    if user is not None:
-                        if user.attrs['username'] not in nonvisibles:
-                            filtered.append(user)
-                users = filtered
+            too_many_users = api.portal.get_tool('portal_properties').site_properties.many_users
+            if too_many_users:
+                users = []
+            else:
+                # Query for all users in the user_properties, showing only the legit ones
+                users = [r for r in soup.query(Eq('notlegit', False))]
+                if nonvisibles:
+                    filtered = []
+                    for user in users:
+                        if user is not None:
+                            if user.attrs['username'] not in nonvisibles:
+                                filtered.append(user)
+                    users = filtered
 
-    if ICommunity.providedBy(context):
+    elif ICommunity.providedBy(context):
         if search_string:
             maxclientrestricted, settings = getUtility(IMAXClient)()
             maxclientrestricted.setActor(settings.max_restricted_username)
@@ -127,7 +131,7 @@ def searchUsersFunction(context, request, search_string):  # noqa
 
     # solución provisional para que no pete cuando estas en la biblioteca o en cualquier carpeta dentro de una comunidad
     # pendiente decidir cual sera el funcionamiento
-    if users == []:
+    else:
         if search_string:
             if isinstance(search_string, str):
                 search_string = search_string.decode('utf-8')
@@ -136,15 +140,19 @@ def searchUsersFunction(context, request, search_string):  # noqa
             normalized_query = normalized_query.replace('.', ' ') + '*'
             users = [r for r in soup.query(Eq('searchable_text', normalized_query))]
         else:
-            # Query for all users in the user_properties, showing only the legit ones
-            users = [r for r in soup.query(Eq('notlegit', False))]
-            if nonvisibles:
-                filtered = []
-                for user in users:
-                    if user is not None:
-                        if user.attrs['username'] not in nonvisibles:
-                            filtered.append(user)
-                users = filtered
+            too_many_users = api.portal.get_tool('portal_properties').site_properties.many_users
+            if too_many_users:
+                users = []
+            else:
+                # Query for all users in the user_properties, showing only the legit ones
+                users = [r for r in soup.query(Eq('notlegit', False))]
+                if nonvisibles:
+                    filtered = []
+                    for user in users:
+                        if user is not None:
+                            if user.attrs['username'] not in nonvisibles:
+                                filtered.append(user)
+                    users = filtered
 
     has_extended_properties = False
     extender_name = api.portal.get_registry_record('genweb.controlpanel.core.IGenwebCoreControlPanelSettings.user_properties_extender')
