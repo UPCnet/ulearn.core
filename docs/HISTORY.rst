@@ -1,11 +1,10 @@
 Changelog
 =========
 
-2.10 (unreleased)
+2.10 (2015-09-07)
 -----------------
 
-- Nothing changed yet.
-
+* Force username to lowercase for global consistency with username casing [Victor Fernandez de Alba]
 
 2.9 (2015-09-07)
 ----------------
