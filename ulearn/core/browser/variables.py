@@ -41,7 +41,8 @@ class communityVariables(grok.View):
             oauth_token = ''
         else:
             user = api.user.get_current()
-            username = user.id
+            # Force username to lowercase
+            username = user.id.lower()
             oauth_token = user.getProperty('oauth_token', None)
 
         pl = api.portal.get_tool('portal_languages')
