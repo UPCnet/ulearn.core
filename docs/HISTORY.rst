@@ -1,11 +1,10 @@
 Changelog
 =========
 
-2.11 (unreleased)
+2.11 (2015-09-07)
 -----------------
 
-- Nothing changed yet.
-
+* Improvements to the sync and create users [Victor Fernandez de Alba]
 
 2.10 (2015-09-07)
 -----------------
