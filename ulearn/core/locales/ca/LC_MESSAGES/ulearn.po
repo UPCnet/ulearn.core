@@ -853,7 +853,7 @@ msgid "phone"
 msgstr "Telèfon"
 
 msgid "collectiveFaculty"
-msgstr "col·lectiu/Facultat"
+msgstr "Col·lectiu/Facultat"
 
 msgid "degree"
 msgstr "Estudis"
