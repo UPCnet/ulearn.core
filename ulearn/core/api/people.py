@@ -19,7 +19,11 @@ from ulearn.core.browser.security import execute_under_special_role
 from plone import api
 from genweb.core.utils import add_user_to_catalog
 from genweb.core.utils import get_all_user_properties
+
+import logging
 import requests
+
+logger = logging.getLogger(__name__)
 
 
 class People(REST):
@@ -61,9 +65,12 @@ class Sync(REST):
 
         for username in users:
             user_memberdata = api.user.get(username=username)
-            plone_user = user_memberdata.getUser()
-            properties = get_all_user_properties(plone_user)
-            add_user_to_catalog(plone_user, properties)
+            try:
+                plone_user = user_memberdata.getUser()
+                properties = get_all_user_properties(plone_user)
+                add_user_to_catalog(plone_user, properties)
+            except:
+                logger.error('User {} cannot be found in LDAP repository'.format(username))
 
 
 class Person(REST):
@@ -134,9 +141,6 @@ class Person(REST):
             if avatar:
                 portal = api.portal.get()
                 membership_tool = getToolByName(portal, 'portal_membership')
-                token = maxclient.getToken(username, password)
-                member = membership_tool.getMemberById(username)
-                member.setMemberProperties({'oauth_token': token})
                 imgName = (avatar.split('/')[-1]).decode('utf-8')
                 imgData = requests.get(avatar).content
                 image = StringIO(imgData)
