@@ -1,11 +1,16 @@
 Changelog
 =========
 
-2.9 (unreleased)
+2.9 (2015-09-07)
 ----------------
 
-- Nothing changed yet.
-
+* Add too_many_users to user search [Victor Fernandez de Alba]
+* Fix test [Victor Fernandez de Alba]
+* CSS tests [Victor Fernandez de Alba]
+* translate blanquerna [Paco Gregori]
+* translate userextender blanquerna [Paco Gregori]
+* Solucio provisional perque no peti cerca usuaris dins una carpeta [Pilar Marinas]
+* Fix config.js location for tests [Carles Bruguera]
 
 2.8 (2015-09-04)
 ----------------
