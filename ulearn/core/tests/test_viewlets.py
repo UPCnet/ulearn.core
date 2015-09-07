@@ -22,8 +22,8 @@ class TestExample(uLearnTestBase):
         ulearnthemeegg = pkg_resources.get_distribution('ulearn.theme')
         ulearnjsegg = pkg_resources.get_distribution('ulearn.js')
 
-        resource_file_css = open('{}/ulearn/core/config.json'.format(ulearnthemeegg.location))
-        resource_file_js = open('{}/ulearn/core/config.json'.format(ulearnjsegg.location))
+        resource_file_css = open('{}/ulearn/theme/config.json'.format(ulearnthemeegg.location))
+        resource_file_js = open('{}/ulearn/js/config.json'.format(ulearnjsegg.location))
         self.resources_conf_css = json.loads(resource_file_css.read())
         self.resources_conf_js = json.loads(resource_file_js.read())
 
