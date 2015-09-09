@@ -3,8 +3,8 @@
    i18n:domain="ulearn" xmlns:i18n="http://xml.zope.org/namespaces/i18n">
 
  <!-- Basic metadata -->
- <property name="title" i18n:translate="video_embed">Video incrustat</property>
- <property name="description" i18n:translate="video_embed_description">Un video incrustat</property>
+ <property name="title" i18n:translate="video_embed">video_embed</property>
+ <property name="description" i18n:translate="video_embed_description">video_embed_description</property>
  <property name="content_icon">folder.gif</property>
  <property name="allow_discussion">False</property>
  <property name="global_allow">True</property>

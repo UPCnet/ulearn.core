@@ -763,16 +763,16 @@ msgid "label_delete_community"
 msgstr "Esborrar comunitat"
 
 msgid "video_url"
-msgstr "URL del vídeo"
+msgstr "URL del video"
 
 msgid "video_url_description"
-msgstr "Afegeix l'adreça web del vídeo de youtube"
+msgstr "Afegeix l'adreça web del video de youtube"
 
 msgid "video_embed"
-msgstr "Vídeo incrustat"
+msgstr "Video incrustat"
 
 msgid "video_embed_description"
-msgstr "Un vídeo incrustat"
+msgstr "Afegir un video incrustat"
 
 msgid "change_community_type"
 msgstr "Canvia el tipus"
