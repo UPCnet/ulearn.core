@@ -1,11 +1,11 @@
 Changelog
 =========
 
-2.13 (unreleased)
+2.13 (2015-09-10)
 -----------------
 
-- Nothing changed yet.
-
+* Update sync api with max sync, and more exc handling and logging [Carles Bruguera]
+* Set response and code [Carles Bruguera]
 
 2.12 (2015-09-09)
 -----------------
