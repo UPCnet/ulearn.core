@@ -72,6 +72,9 @@ class Sync(REST):
             except:
                 logger.error('User {} cannot be found in LDAP repository'.format(username))
 
+        self.response.setStatus(200)
+        return self.json_response({})
+
 
 class Person(REST):
     """
