@@ -63,17 +63,47 @@ class Sync(REST):
         maxclient.setToken(settings.max_restricted_token)
         users = self.params['users']
 
+        notfound_errors = []
+        properties_errors = []
+        max_errors = []
+
         for username in users:
             user_memberdata = api.user.get(username=username)
             try:
                 plone_user = user_memberdata.getUser()
-                properties = get_all_user_properties(plone_user)
-                add_user_to_catalog(plone_user, properties)
             except:
+                notfound_errors.append(username)
                 logger.error('User {} cannot be found in LDAP repository'.format(username))
+            else:
+                try:
+                    properties = get_all_user_properties(plone_user)
+                    add_user_to_catalog(plone_user, properties)
+                except:
+                    logger.error('Cannot update properties catalog for user {}'.format(username))
+                    properties_errors.append(username)
+
+                try:
+                    fullname = properties.get('fullname', '')
+                    maxclient.people.post(username=username, displayName=fullname)
+
+                    # If user hasn't been created right now, update displayName
+                    if maxclient.last_response_code == 200:
+                        maxclient.people[username].put(displayName=fullname)
+
+                except:
+                    logger.error('User {} couldn\'t be created or updated on max'.format(username))
+                    max_errors.append(username)
 
         self.response.setStatus(200)
-        return self.json_response({})
+        response = {}
+        if notfound_errors:
+            response['not_found'] = notfound_errors
+        if properties_errors:
+            response['properties_errors'] = properties_errors
+        if max_errors:
+            response['max_errors'] = max_errors
+
+        return self.json_response(response)
 
 
 class Person(REST):
