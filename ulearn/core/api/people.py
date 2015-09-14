@@ -67,7 +67,8 @@ class Sync(REST):
         properties_errors = []
         max_errors = []
 
-        for username in users:
+        for userid in users:
+            username = userid.lower()
             user_memberdata = api.user.get(username=username)
             try:
                 plone_user = user_memberdata.getUser()
