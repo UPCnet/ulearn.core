@@ -1,11 +1,10 @@
 Changelog
 =========
 
-2.14 (unreleased)
+2.14 (2015-09-14)
 -----------------
 
-- Nothing changed yet.
-
+* Lowercase user [Carles Bruguera]
 
 2.13 (2015-09-10)
 -----------------
