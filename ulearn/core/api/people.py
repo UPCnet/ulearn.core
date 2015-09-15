@@ -128,7 +128,8 @@ class Person(REST):
         if validation is not True:
             return validation
 
-        username = self.params.pop('username')
+        userid = self.params.pop('username')
+        username = userid.lower()
         email = self.params.pop('email')
         password = self.params.pop('password', None)
 
