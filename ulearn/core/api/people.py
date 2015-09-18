@@ -18,6 +18,7 @@ from mrs.max.portrait import changeMemberPortrait
 from ulearn.core.browser.security import execute_under_special_role
 from plone import api
 from genweb.core.utils import add_user_to_catalog
+from genweb.core.utils import remove_user_from_catalog
 from genweb.core.utils import get_all_user_properties
 
 import logging
@@ -151,6 +152,7 @@ class Person(REST):
             return validation
 
         self.deleteMembers([self.params['username']])
+        remove_user_from_catalog(self.params['username'].lower())
         self.response.setStatus(204)
         return self.json_response({})
 
