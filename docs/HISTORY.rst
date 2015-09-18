@@ -1,11 +1,11 @@
 Changelog
 =========
 
-2.15 (unreleased)
+2.15 (2015-09-18)
 -----------------
 
-- Nothing changed yet.
-
+* Remove entry from catalog on delete [Carles Bruguera]
+* add lower to username in api/people [Paco Gregori]
 
 2.14 (2015-09-14)
 -----------------
