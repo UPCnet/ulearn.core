@@ -1,11 +1,10 @@
 Changelog
 =========
 
-2.16 (unreleased)
+2.16 (2015-09-23)
 -----------------
 
-- Nothing changed yet.
-
+* Modify write per writer [Pilar Marinas]
 
 2.15 (2015-09-18)
 -----------------
