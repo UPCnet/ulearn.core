@@ -861,7 +861,7 @@ class Subscribe(grok.View):
 
             # For this use case, the user is able to auto-subscribe to the
             # community with write permissions
-            adapter.update_acl_atomic(current_user.id, u'write')
+            adapter.update_acl_atomic(current_user.id, u'writer')
 
             acl = adapter.get_acl()
             # Finally, we update the plone permissions
