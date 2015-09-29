@@ -596,27 +596,6 @@ grok.global_adapter(community_hash, name='community_hash')
 class View(grok.View):
     grok.context(ICommunity)
 
-    def __call__(self, *args, **kwargs):
-        """Quan accedeixes a la comunitat, actualitza la data d'accès de l'usuari a la comunitat
-           i per tant, el comptador de pendents queda a 0.
-        """
-        super(View, self).__call__(*args, **kwargs)
-        portal = api.portal.get()
-        current_user = api.user.get_current()
-        user_community = current_user.id + '_' + self.context.id
-        soup_access = get_soup('user_community_access', portal)
-        exist = [r for r in soup_access.query(Eq('user_community', user_community))]
-        if not exist:
-            record = Record()
-            record.attrs['user_community'] = user_community
-            record.attrs['data_access'] = DateTime()
-            soup_access.add(record)
-        else:
-            exist[0].attrs['data_access'] = DateTime()
-        soup_access.reindex()
-
-        return super(View, self).__call__(*args, **kwargs)
-
     def canEditCommunity(self):
         return checkPermission('cmf.RequestReview', self.context)
 
@@ -656,6 +635,31 @@ class View(grok.View):
             return True
         else:
             return False
+
+
+class UpdateUserAccessDateTime(grok.View):
+    grok.context(ICommunity)
+
+    @json_response
+    def render(self):
+        """ Quan accedeixes a la comunitat, actualitza la data d'accès de l'usuari a la comunitat
+            i per tant, el comptador de pendents queda a 0.
+        """
+        portal = api.portal.get()
+        current_user = api.user.get_current()
+        user_community = current_user.id + '_' + self.context.id
+        soup_access = get_soup('user_community_access', portal)
+        exist = [r for r in soup_access.query(Eq('user_community', user_community))]
+        if not exist:
+            record = Record()
+            record.attrs['user_community'] = user_community
+            record.attrs['data_access'] = DateTime()
+            soup_access.add(record)
+        else:
+            exist[0].attrs['data_access'] = DateTime()
+        soup_access.reindex()
+
+        return dict(message='Done', status_code=200)
 
 
 class EditACL(grok.View):

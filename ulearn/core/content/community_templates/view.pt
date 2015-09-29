@@ -14,6 +14,12 @@
     <script type="text/javascript"
       tal:attributes="src string:${view/portal_url}/++maxui++static/maxui.loader.js">
     </script>
+    <script>
+      $(document).ready(function(){
+        $.get(window.location.href + "/updateuseraccessdatetime", function(data){
+        });
+      });
+    </script>
   </div>
   <metal:block fill-slot="top_slot"
                  tal:define="dummy python:request.set('disable_border',1)" />
