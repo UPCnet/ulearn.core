@@ -1,11 +1,10 @@
 Changelog
 =========
 
-2.17 (unreleased)
+2.17 (2015-09-29)
 -----------------
 
-- Nothing changed yet.
-
+* Fix conflict error by traspassing the access time update to an async JavaScript request [Victor Fernandez de Alba]
 
 2.16 (2015-09-23)
 -----------------
