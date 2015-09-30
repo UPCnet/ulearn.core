@@ -17,8 +17,8 @@ from zope.interface import alsoProvides
 from mrs.max.utilities import IMAXClient
 from mrs.max.utilities import set_user_oauth_token
 
-from genweb.core.testing import GENWEBUPC_FIXTURE
 from ulearn.theme.browser.interfaces import IUlearnTheme
+from plone.app.contenttypes.testing import PLONE_APP_CONTENTTYPES_FIXTURE
 
 import requests.packages.urllib3
 requests.packages.urllib3.disable_warnings()
@@ -50,10 +50,15 @@ def set_browserlayer(request):
 
 class UlearncoreLayer(PloneSandboxLayer):
 
-    defaultBases = (GENWEBUPC_FIXTURE, PLONE_FIXTURE,)
+    defaultBases = (PLONE_APP_CONTENTTYPES_FIXTURE, PLONE_FIXTURE,)
 
     def setUpZope(self, app, configurationContext):
         # Load ZCML
+        import genweb.core
+        xmlconfig.file('configure.zcml',
+                       genweb.core,
+                       context=configurationContext)
+
         import ulearn.core
         xmlconfig.file(
             'configure.zcml',
@@ -69,6 +74,10 @@ class UlearncoreLayer(PloneSandboxLayer):
 #        z2.uninstallProduct(app, 'Products.PloneFormGen')
 
     def setUpPloneSite(self, portal):
+        # Needed for PAC not complain about not having one... T_T
+        portal.portal_workflow.setDefaultChain("simple_publication_workflow")
+
+        applyProfile(portal, 'genweb.core:default')
         applyProfile(portal, 'ulearn.core:default')
 
         # portal.acl_users.userFolderAddUser('admin', 'secret', ['Manager'], [])
