@@ -54,11 +54,6 @@ class UlearncoreLayer(PloneSandboxLayer):
 
     def setUpZope(self, app, configurationContext):
         # Load ZCML
-        import genweb.core
-        xmlconfig.file('configure.zcml',
-                       genweb.core,
-                       context=configurationContext)
-
         import ulearn.core
         xmlconfig.file(
             'configure.zcml',
@@ -69,15 +64,10 @@ class UlearncoreLayer(PloneSandboxLayer):
         # Needed to make p.a.iterate permissions available as g.core needs them
         import plone.app.iterate.permissions  # noqa
 
-#    def tearDownZope(self, app):
-#        # Uninstall products installed above
-#        z2.uninstallProduct(app, 'Products.PloneFormGen')
-
     def setUpPloneSite(self, portal):
         # Needed for PAC not complain about not having one... T_T
         portal.portal_workflow.setDefaultChain("simple_publication_workflow")
 
-        applyProfile(portal, 'genweb.core:default')
         applyProfile(portal, 'ulearn.core:default')
 
         # portal.acl_users.userFolderAddUser('admin', 'secret', ['Manager'], [])
