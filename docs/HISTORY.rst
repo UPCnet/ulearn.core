@@ -1,11 +1,10 @@
 Changelog
 =========
 
-2.18 (unreleased)
+2.18 (2015-10-06)
 -----------------
 
-- Nothing changed yet.
-
+* Bullet proof testing boilerplate [Victor Fernandez de Alba]
 
 2.17 (2015-09-29)
 -----------------
