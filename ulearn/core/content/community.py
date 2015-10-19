@@ -535,13 +535,13 @@ class ClosedCommunity(CommunityAdapterMixin):
                                            writer=['read', 'write', 'unsubscribe'],
                                            owner=['read', 'write', 'unsubscribe', 'flag', 'invite', 'kick'])
 
-    def set_plone_permissions(self, acl, changed=False):
+    # def set_plone_permissions(self, acl, changed=False):
 
-        if self.context.get_local_roles_for_userid(userid='AuthenticatedUsers'):
-            self.context.manage_delLocalRoles(['AuthenticatedUsers'])
-            changed = True
+    #     if self.context.get_local_roles_for_userid(userid='AuthenticatedUsers'):
+    #         self.context.manage_delLocalRoles(['AuthenticatedUsers'])
+    #         changed = True
 
-        super(ClosedCommunity, self).set_plone_permissions(acl, changed)
+    #     super(ClosedCommunity, self).set_plone_permissions(acl, changed)
 
 
 class Community(Container):
