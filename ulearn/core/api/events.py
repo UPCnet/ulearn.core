@@ -1,6 +1,6 @@
 from five import grok
 from Products.CMFPlone.interfaces import IPloneSiteRoot
-from genweb.core.utils import json_response
+from ulearn.core.api import api_resource
 from ulearn.core.api import REST
 from ulearn.core.api.root import APIRoot
 from plone.dexterity.utils import createContentInContainer
@@ -31,12 +31,8 @@ class Event(REST):
     def __init__(self, context, request):
         super(Event, self).__init__(context, request)
 
+    @api_resource(required=['eventid', 'title', 'description', 'body', 'start', 'end'])
     def POST(self):
-
-        validation = self.validate()
-        if validation is not True:
-            return validation
-
         eventid = self.params.pop('eventid')
         title = self.params.pop('title')
         desc = self.params.pop('description')
@@ -51,8 +47,7 @@ class Event(REST):
                                    date_start,
                                    date_end)
 
-        self.response.setStatus(result.pop('status'))
-        return self.json_response(result)
+        return result['message'], result['status']
 
     def create_event(self, eventid, title, desc, body, date_start, date_end):
         date_start = date_start.split('/')

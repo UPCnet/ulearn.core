@@ -1,8 +1,8 @@
 from five import grok
 from Products.CMFPlone.interfaces import IPloneSiteRoot
-from genweb.core.utils import json_response
 from ulearn.core.api import REST
 from ulearn.core.api.root import APIRoot
+from ulearn.core.api import api_resource
 from plone.namedfile.file import NamedBlobImage
 from plone.dexterity.utils import createContentInContainer
 from plone.app.contenttypes.behaviors.richtext import IRichText
@@ -33,12 +33,8 @@ class New(REST):
     def __init__(self, context, request):
         super(New, self).__init__(context, request)
 
+    @api_resource(required=['newid', 'title', 'description', 'body', 'start'])
     def POST(self):
-
-        validation = self.validate()
-        if validation is not True:
-            return validation
-
         imgName = ''
         imgData = ''
         newid = self.params.pop('newid')
@@ -61,8 +57,8 @@ class New(REST):
                                  date_start,
                                  date_end)
 
-        self.response.setStatus(result.pop('status'))
-        return self.json_response(result)
+        self.response.setStatus()
+        return result['message'], result['status']
 
     def create_new(self, newid, title, desc, body, imgData, imgName, date_start, date_end):
         date_start = date_start.split('/')

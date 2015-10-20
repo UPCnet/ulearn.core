@@ -9,8 +9,8 @@ from souper.soup import get_soup
 
 from mrs.max.utilities import IMAXClient
 from StringIO import StringIO
-from genweb.core.utils import json_response
 from ulearn.core.api import REST
+from ulearn.core.api import api_resource
 from ulearn.core.api.root import APIRoot
 
 from Products.CMFCore.utils import getToolByName
@@ -49,16 +49,11 @@ class Sync(REST):
     def __init__(self, context, request):
         super(Sync, self).__init__(context, request)
 
-    __required_params__ = ['users']
-
+    @api_resource(required=['users'])
     def POST(self):
         """
             Syncs user local registry with remote ldap attributes
         """
-        validation = self.validate()
-        if validation is not True:
-            return validation
-
         maxclient, settings = getUtility(IMAXClient)()
         maxclient.setActor(settings.max_restricted_username)
         maxclient.setToken(settings.max_restricted_token)
@@ -96,7 +91,6 @@ class Sync(REST):
                     logger.error('User {} couldn\'t be created or updated on max'.format(username))
                     max_errors.append(username)
 
-        self.response.setStatus(200)
         response = {}
         if notfound_errors:
             response['not_found'] = notfound_errors
@@ -105,7 +99,7 @@ class Sync(REST):
         if max_errors:
             response['max_errors'] = max_errors
 
-        return self.json_response(response)
+        return response, 200
 
 
 class Person(REST):
@@ -119,16 +113,11 @@ class Person(REST):
     def __init__(self, context, request):
         super(Person, self).__init__(context, request)
 
-    __required_params__ = ['username', 'fullname', 'email', 'password']
-
+    @api_resource(required=['username', 'fullname', 'email', 'password'])
     def POST(self):
         """
             Creates a user
         """
-        validation = self.validate()
-        if validation is not True:
-            return validation
-
         userid = self.params.pop('username')
         username = userid.lower()
         email = self.params.pop('email')
@@ -140,21 +129,17 @@ class Person(REST):
             password,
             **self.params
         )
-        self.response.setStatus(result.pop('status'))
-        return self.json_response(result)
 
+        return result['message'], result['status']
+
+    @api_resource()
     def DELETE(self):
         """
             Deletes a user from the plone & max
         """
-        validation = self.validate()
-        if validation is not True:
-            return validation
-
         self.deleteMembers([self.params['username']])
         remove_user_from_catalog(self.params['username'].lower())
-        self.response.setStatus(204)
-        return self.json_response({})
+        return {}, 204
 
     def create_user(self, username, email, password, **properties):
         existing_user = api.user.get(username=username)
@@ -255,8 +240,8 @@ class Person(REST):
                 mdtool.deleteMemberData(member_id)
 
         # Delete members' local roles.
-        mtool.deleteLocalRoles(getUtility(ISiteRoot), member_ids,
-                               reindex=1, recursive=1)
+        #mtool.deleteLocalRoles(getUtility(ISiteRoot), member_ids,
+        #                       reindex=1, recursive=1)
 
 
 class Subscriptions(REST):
@@ -269,14 +254,9 @@ class Subscriptions(REST):
     grok.adapts(Person, IPloneSiteRoot)
     grok.require('genweb.authenticated')
 
-    @json_response
+    @api_resource()
     def GET(self):
         """ Returns all the user communities."""
-        # Parameters validation
-        validation = self.validate()
-        if validation is not True:
-            return validation
-
         # Hard security validation as the view is soft checked
         check_permission = self.check_roles(roles=['Member', ])
         if check_permission is not True:
@@ -308,7 +288,7 @@ class Subscriptions(REST):
                              can_manage=self.is_community_manager(brain))
             result.append(community)
 
-        return result
+        return result, 200
 
     def get_favorites(self):
         pc = api.portal.get_tool('portal_catalog')

@@ -6,14 +6,33 @@ from Products.CMFPlone.interfaces import IPloneSiteRoot
 from repoze.catalog.query import Eq
 from souper.soup import get_soup
 
-from genweb.core.utils import json_response
 from ulearn.core.content.community import ICommunityTyped
 from ulearn.core.content.community import ICommunityACL
 from ulearn.core.api import REST
 from ulearn.core.api import logger
 from ulearn.core.api.root import APIRoot
+from ulearn.core.api import api_resource
+from ulearn.core.api import BadParameters
 
-import json
+
+class CommunityMixin(object):
+    def lookup_community(self):
+        pc = api.portal.get_tool(name='portal_catalog')
+        result = pc.searchResults(community_hash=self.params['community'])
+
+        if not result:
+            # Fallback search by gwuuid
+            result = pc.searchResults(gwuuid=self.params['community'])
+
+            if not result:
+                # Not found either by hash nor by gwuuid
+                self.response.setStatus(404)
+                error_response = 'Community hash not found: {}'.format(self.params['community'])
+                logger.error(error_response)
+                return self.json_response(dict(error=error_response, status_code=404))
+
+        self.community = result[0].getObject()
+        return True
 
 
 class Communities(REST):
@@ -27,12 +46,9 @@ class Communities(REST):
     grok.adapts(APIRoot, IPloneSiteRoot)
     grok.require('genweb.authenticated')
 
+    @api_resource()
     def GET(self):
         """ Returns all the user communities and the open ones. """
-        # Parameters validation
-        validation = self.validate()
-        if validation is not True:
-            return validation
 
         # Hard security validation as the view is soft checked
         check_permission = self.check_roles(roles=['Member', 'Manager'])
@@ -65,8 +81,7 @@ class Communities(REST):
                              can_manage=self.is_community_manager(brain))
             result.append(community)
 
-        self.response.setStatus(200)
-        return self.json_response(result)
+        return result, 200
 
     def get_favorites(self):
         pc = api.portal.get_tool('portal_catalog')
@@ -88,7 +103,7 @@ class Communities(REST):
             return self.username in [a['id'] for a in records[0].attrs['acl']['users'] if a['role'] == u'owner']
 
 
-class Community(REST):
+class Community(REST, CommunityMixin):
     """
         /api/communities/{community}
     """
@@ -99,13 +114,9 @@ class Community(REST):
     def __init__(self, context, request):
         super(Community, self).__init__(context, request)
 
+    @api_resource(required=['community_type'])
     def PUT(self):
         """ Modifies the community itself. """
-        # Parameters validation
-        validation = self.validate()
-        if validation is not True:
-            return validation
-
         # Check if there's a valid community with the requested hash
         lookedup_obj = self.lookup_community()
         if lookedup_obj is not True:
@@ -122,28 +133,20 @@ class Community(REST):
             if self.params['community_type'] in [a[0] for a in getAdapters((self.community,), ICommunityTyped)]:
                 adapter = getAdapter(self.community, ICommunityTyped, name=self.params['community_type'])
             else:
-                self.response.setStatus(400)
-                return self.json_response(dict(error='Bad request, wrong community type', status_code=400))
+                raise BadParameters('Bad request, wrong community type')
 
             if self.params['community_type'] == self.community.community_type:
-                self.response.setStatus(400)
-                return self.json_response(dict(error='Bad request, already that community type', status_code=400))
+                raise BadParameters('Bad request, already that community type')
 
             # Everything is ok, proceed
             adapter.update_community_type()
 
-        self.response.setStatus(200)
         success_response = 'Updated community "{}"'.format(self.community.absolute_url())
         logger.info(success_response)
-        return self.json_response(dict(message=success_response, status_code=200))
+        return dict(message=success_response, status_code=200), 200
 
-    @json_response
+    @api_resource()
     def DELETE(self):
-        # Parameters validation
-        validation = self.validate()
-        if validation is not True:
-            return validation
-
         # Check if there's a valid community with the requested hash
         lookedup_obj = self.lookup_community()
         if lookedup_obj is not True:
@@ -156,10 +159,10 @@ class Community(REST):
 
         api.content.delete(obj=self.community)
 
-        return dict(status_code=204)
+        return {}, 204
 
 
-class Subscriptions(REST):
+class Subscriptions(REST, CommunityMixin):
     """
         /api/communities/{community}/subscriptions
 
@@ -176,6 +179,7 @@ class Subscriptions(REST):
     grok.adapts(Community, IPloneSiteRoot)
     grok.require('genweb.authenticated')
 
+    @api_resource()
     def GET(self):
         """
             Get the subscriptions for the community. The security is given an
@@ -200,9 +204,9 @@ class Subscriptions(REST):
 
         result = ICommunityACL(self.community)().attrs.get('acl', '')
 
-        self.response.setStatus(200)
-        return self.json_response(result)
+        return result, 200
 
+    @api_resource()
     def POST(self):
         """
             Subscribes a bunch of users to a community the security is given an
@@ -210,11 +214,6 @@ class Subscriptions(REST):
             then by checking explicitly if the requester user has permission on
             the target community.
         """
-        # Parameters validation
-        validation = self.validate()
-        if validation is not True:
-            return validation
-
         # Lookup for object
         lookedup_obj = self.lookup_community()
         if lookedup_obj is not True:
@@ -228,7 +227,7 @@ class Subscriptions(REST):
         result = self.update_subscriptions()
 
         self.response.setStatus(result['status_code'])
-        return self.json_response(result)
+        return result, result['status_code']
 
     def update_subscriptions(self):
         adapter = getAdapter(self.community, ICommunityTyped, name=self.community.community_type)

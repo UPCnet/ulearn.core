@@ -14,13 +14,82 @@ from plone.registry.interfaces import IRegistry
 from maxclient import MaxClient
 from mrs.max.browser.controlpanel import IMAXUISettings
 import json
-
+import sys
+from Acquisition import aq_acquire
 
 _marker = object()
 ALLOWED_REST_METHODS = ('GET', 'POST', 'HEAD', 'PUT', 'DELETE')
 
 import logging
 logger = logging.getLogger(__name__)
+
+
+class BadParameters(Exception):
+    pass
+
+
+class MissingParameters(Exception):
+    pass
+
+
+class api_resource(object):
+    """
+        Decorator to validate ws paramenters and format output
+    """
+
+    def __init__(self, **settings):
+        self.__dict__.update(settings)
+
+    def __call__(self, fun):
+        settings = self.__dict__.copy()
+        self.required = settings.pop('required', [])
+
+        def wrapped(resource, *args):
+            response_content = {}
+            response_code = 200
+
+            try:
+                resource.extract_params(required=self.required)
+                response_content, response_code = fun(resource, *args)
+
+            except BadParameters as exc:
+                response_code = 400
+                response_content = {
+                    'error_type': 'Bad parameters',
+                    'error': exc.args[0]
+                }
+
+            except MissingParameters as exc:
+                response_code = 400
+                response_content = {
+                    'error_type': 'Missing parameters',
+                    'error': 'Those parameters are missing: {}'.format(', '.join([a for a in exc.args[0]]))
+                }
+
+            except Exception as exc:
+                traceback = sys.exc_info()[2]
+                log = aq_acquire(resource, '__error_log__', containment=1)
+                error_log_url = log.raising((type(exc), exc, traceback))
+                instance_id = '{SERVER_NAME}:{SERVER_PORT}'.format(**resource.request.environ)
+                response_code = 500
+
+                response_content = {
+                    'error_type': 'Internal server error',
+                    'error': '{}: {}'.format(type(exc).__name__, exc.message),
+                    'error_url': error_log_url,
+                    'error_instance': instance_id
+                }
+
+            resource.response.setHeader(
+                'Content-Type',
+                'application/json; charset=utf-8'
+            )
+
+            resource.response.setStatus(response_code)
+            response_content = json.dumps(response_content, indent=2, sort_keys=True)
+            return response_content
+
+        return wrapped
 
 
 class MethodNotImplemented(Exception):
@@ -96,16 +165,29 @@ class REST(REST_BASE):
 
         return maxclient
 
-    def validate(self):
+    def extract_params(self, required=[]):
         """
-            Validates request params
+            Extract parameters from request and stores them ass class attributes
+            Returns false if some required parameter is missing
+        """
+        required_params = list(required)
+        required_params += self.__matchdict__.keys()
+        self.params = {}
+        self.params.update(self.__matchdict__)
+        self.params.update(self.request.form)
+        try:
+            self.payload = json.loads(self.request['BODY'])
+        except:
+            self.payload = self.request.form
+        else:
+            self.params.update(self.payload)
 
-            Returns True if request is correct otherwise returns an error
-        """
-        if not self.extract_params():
-            self.response.setStatus(404)
-            return self.json_response(dict(error='Missing parameters',
-                                           status_code=404))
+        # Return False if param not found or empty
+        for param_name in required_params:
+            parameter_missing = param_name not in self.params
+            parameter_empty = self.params.get(param_name, None) in [[], {}, None, '']
+            if parameter_missing or parameter_empty:
+                raise MissingParameters(set(required_params) - set(self.params.keys()))
 
         return True
 
@@ -132,32 +214,6 @@ class REST(REST_BASE):
             self.response.setStatus(401)
             return self.json_response(dict(error='You are not allowed to modify this object',
                                            status_code=401))
-
-        return True
-
-    def extract_params(self):
-        """
-            Extract parameters from request and stores them ass class attributes
-            Returns false if some required parameter is missing
-        """
-        required = getattr(self, '__required_params__', [])
-        required += self.__matchdict__.keys()
-        self.params = {}
-        self.params.update(self.__matchdict__)
-        self.params.update(self.request.form)
-        try:
-            self.payload = json.loads(self.request['BODY'])
-        except:
-            self.payload = self.request.form
-        else:
-            self.params.update(self.payload)
-
-        # Return False if param not found or empty
-        for param_name in required:
-            if param_name not in self.params:
-                return False
-            elif self.params[param_name] in [[], {}, None, '']:
-                return False
 
         return True
 
@@ -199,21 +255,3 @@ class REST(REST_BASE):
         if view is None:
             raise NotFound(name)
         return view
-
-    def lookup_community(self):
-        pc = api.portal.get_tool(name='portal_catalog')
-        result = pc.searchResults(community_hash=self.params['community'])
-
-        if not result:
-            # Fallback search by gwuuid
-            result = pc.searchResults(gwuuid=self.params['community'])
-
-            if not result:
-                # Not found either by hash nor by gwuuid
-                self.response.setStatus(404)
-                error_response = 'Community hash not found: {}'.format(self.params['community'])
-                logger.error(error_response)
-                return self.json_response(dict(error=error_response, status_code=404))
-
-        self.community = result[0].getObject()
-        return True
