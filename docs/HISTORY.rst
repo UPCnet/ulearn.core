@@ -1,11 +1,11 @@
 Changelog
 =========
 
-2.20 (unreleased)
+2.20 (2015-10-20)
 -----------------
 
-- Nothing changed yet.
-
+* Fix errors on using new api_resource [Carles Bruguera]
+* Que a les comunitas tancades no et puguis subscriure [Pilar Marinas]
 
 2.19 (2015-10-20)
 -----------------
