@@ -1,16 +1,15 @@
-from plone import api
+# -*- coding: utf-8 -*-
 from five import grok
-from zope.component import getAdapter
-from zope.component import getAdapters
+
 from Products.CMFPlone.interfaces import IPloneSiteRoot
+from plone import api
+
 from repoze.catalog.query import Eq
 from souper.soup import get_soup
 
-from genweb.core.utils import json_response
-from ulearn.core.content.community import ICommunityTyped
-from ulearn.core.content.community import ICommunityACL
 from ulearn.core.api import REST
-from ulearn.core.api import logger
+from ulearn.core.api import api_resource
+
 from ulearn.core.api.root import APIRoot
 
 
@@ -52,16 +51,11 @@ class Communities(REST):
     grok.adapts(Group, IPloneSiteRoot)
     grok.require('ulearn.APIAccess')
 
-    @json_response
+    @api_resource()
     def GET(self):
         """
 
         """
-        # Parameters validation
-        validation = self.validate()
-        if validation is not True:
-            return validation
-
         portal = api.portal.get()
         soup = get_soup('communities_acl', portal)
         records = [r for r in soup.query(Eq('groups', self.params['group']))]
@@ -75,4 +69,4 @@ class Communities(REST):
                 users=users,
             ))
 
-        return dict(data=result)
+        return dict(data=result), 200

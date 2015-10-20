@@ -70,7 +70,9 @@ class api_resource(object):
                 traceback = sys.exc_info()[2]
                 log = aq_acquire(resource, '__error_log__', containment=1)
                 error_log_url = log.raising((type(exc), exc, traceback))
-                instance_id = '{SERVER_NAME}:{SERVER_PORT}'.format(**resource.request.environ)
+                server_name = resource.request.environ.get('SERVER_NAME', 'localhost')
+                server_port = resource.request.environ.get('SERVER_PORT', '8080')
+                instance_id = '{}:{}'.format(server_name, server_port)
                 response_code = 500
 
                 response_content = {

@@ -130,7 +130,7 @@ class Person(REST):
             **self.params
         )
 
-        return result['message'], result['status']
+        return result, result['status']
 
     @api_resource()
     def DELETE(self):
