@@ -1,11 +1,11 @@
 Changelog
 =========
 
-2.19 (unreleased)
+2.19 (2015-10-20)
 -----------------
 
-- Nothing changed yet.
-
+* Update apis with a decorator [Carles Bruguera]
+* Que a les comunitats tancades no et puguis subscriure [Pilar Marinas]
 
 2.18 (2015-10-06)
 -----------------
