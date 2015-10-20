@@ -69,4 +69,4 @@ class Communities(REST):
                 users=users,
             ))
 
-        return dict(data=result), 200
+        return result, 200

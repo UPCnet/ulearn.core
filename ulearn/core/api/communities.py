@@ -12,7 +12,7 @@ from ulearn.core.api import REST
 from ulearn.core.api import logger
 from ulearn.core.api.root import APIRoot
 from ulearn.core.api import api_resource
-from ulearn.core.api import BadParameters
+from ulearn.core.api import BadParameters, ObjectNotFound
 
 
 class CommunityMixin(object):
@@ -26,10 +26,9 @@ class CommunityMixin(object):
 
             if not result:
                 # Not found either by hash nor by gwuuid
-                self.response.setStatus(404)
-                error_response = 'Community hash not found: {}'.format(self.params['community'])
-                logger.error(error_response)
-                return self.json_response(dict(error=error_response, status_code=404))
+                error_message = 'Community with has {} not found.'.format(self.params['community'])
+                logger.error(error_message)
+                raise ObjectNotFound(error_message)
 
         self.community = result[0].getObject()
         return True
@@ -187,11 +186,6 @@ class Subscriptions(REST, CommunityMixin):
             then by checking explicitly if the requester user has permission on
             the target community.
         """
-        # Parameters validation
-        validation = self.validate()
-        if validation is not True:
-            return validation
-
         # Lookup for object
         lookedup_obj = self.lookup_community()
         if lookedup_obj is not True:
@@ -226,7 +220,6 @@ class Subscriptions(REST, CommunityMixin):
 
         result = self.update_subscriptions()
 
-        self.response.setStatus(result['status_code'])
         return result, result['status_code']
 
     def update_subscriptions(self):

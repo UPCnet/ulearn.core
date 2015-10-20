@@ -32,6 +32,10 @@ class MissingParameters(Exception):
     pass
 
 
+class ObjectNotFound(Exception):
+    pass
+
+
 class api_resource(object):
     """
         Decorator to validate ws paramenters and format output
@@ -52,9 +56,18 @@ class api_resource(object):
                 resource.extract_params(required=self.required)
                 response_content, response_code = fun(resource, *args)
 
+            except ObjectNotFound as exc:
+                response_code = 404
+                response_content = {
+                    'status_code': response_code,
+                    'error_type': 'Object Not Found',
+                    'error': exc.args[0]
+                }
+
             except BadParameters as exc:
                 response_code = 400
                 response_content = {
+                    'status_code': response_code,
                     'error_type': 'Bad parameters',
                     'error': exc.args[0]
                 }
@@ -62,20 +75,31 @@ class api_resource(object):
             except MissingParameters as exc:
                 response_code = 400
                 response_content = {
+                    'status_code': response_code,
                     'error_type': 'Missing parameters',
                     'error': 'Those parameters are missing: {}'.format(', '.join([a for a in exc.args[0]]))
                 }
 
             except Exception as exc:
+                import ipdb;ipdb.set_trace()
                 traceback = sys.exc_info()[2]
                 log = aq_acquire(resource, '__error_log__', containment=1)
                 error_log_url = log.raising((type(exc), exc, traceback))
-                server_name = resource.request.environ.get('SERVER_NAME', 'localhost')
-                server_port = resource.request.environ.get('SERVER_PORT', '8080')
+
+                # For testing purposes, requests doesn't have environ
+                # And a convenient way to see the traceback
+                environ = getattr(resource.request, 'environ', {})
+                server_name = environ.get('SERVER_NAME', 'testing')
+                server_port = environ.get('SERVER_PORT', '8080')
+                if server_name == 'testing':
+                    import traceback as trbk
+                    print trbk.format_exc()
+
                 instance_id = '{}:{}'.format(server_name, server_port)
                 response_code = 500
 
                 response_content = {
+                    'status_code': response_code,
                     'error_type': 'Internal server error',
                     'error': '{}: {}'.format(type(exc).__name__, exc.message),
                     'error_url': error_log_url,

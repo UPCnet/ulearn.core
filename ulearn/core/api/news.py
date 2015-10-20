@@ -57,8 +57,7 @@ class New(REST):
                                  date_start,
                                  date_end)
 
-        self.response.setStatus()
-        return result['message'], result['status']
+        return result, result['status']
 
     def create_new(self, newid, title, desc, body, imgData, imgName, date_start, date_end):
         date_start = date_start.split('/')
