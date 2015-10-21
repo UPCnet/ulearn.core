@@ -1,28 +1,31 @@
+# -*- coding: utf-8 -*-
 from Acquisition import aq_inner
 from five import grok
 from zope.component import getUtility
 
-from Products.CMFCore.interfaces import ISiteRoot
+from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.interfaces import IPloneSiteRoot
-from repoze.catalog.query import Eq
-from souper.soup import get_soup
+from plone import api
 
+from mrs.max.portrait import changeMemberPortrait
 from mrs.max.utilities import IMAXClient
-from StringIO import StringIO
+
+from ulearn.core.api import ApiResponse
 from ulearn.core.api import REST
 from ulearn.core.api import api_resource
 from ulearn.core.api.root import APIRoot
-
-from Products.CMFCore.utils import getToolByName
-from mrs.max.portrait import changeMemberPortrait
 from ulearn.core.browser.security import execute_under_special_role
-from plone import api
+
+from StringIO import StringIO
 from genweb.core.utils import add_user_to_catalog
-from genweb.core.utils import remove_user_from_catalog
 from genweb.core.utils import get_all_user_properties
+from genweb.core.utils import remove_user_from_catalog
+from repoze.catalog.query import Eq
+from souper.soup import get_soup
 
 import logging
 import requests
+
 
 logger = logging.getLogger(__name__)
 
@@ -99,7 +102,7 @@ class Sync(REST):
         if max_errors:
             response['max_errors'] = max_errors
 
-        return response, 200
+        return ApiResponse(response)
 
 
 class Person(REST):
@@ -123,14 +126,14 @@ class Person(REST):
         email = self.params.pop('email')
         password = self.params.pop('password', None)
 
-        result = self.create_user(
+        response = self.create_user(
             username,
             email,
             password,
             **self.params
         )
 
-        return result, result['status']
+        return response
 
     @api_resource()
     def DELETE(self):
@@ -139,7 +142,7 @@ class Person(REST):
         """
         self.deleteMembers([self.params['username']])
         remove_user_from_catalog(self.params['username'].lower())
-        return {}, 204
+        return ApiResponse({}, code=204)
 
     def create_user(self, username, email, password, **properties):
         existing_user = api.user.get(username=username)
@@ -174,7 +177,7 @@ class Person(REST):
                                            image,
                                            username)
 
-            created = 201
+            status = 201
 
         else:
             # Update portal membership user properties
@@ -186,7 +189,7 @@ class Person(REST):
 
             # Update MAX properties
             maxclient.people[username].post()  # Just to make sure user exists (in case it was only on ldap)
-            created = maxclient.last_response_code
+            status = maxclient.last_response_code
             maxclient.people[username].put(displayName=properties['fullname'])
 
             if avatar:
@@ -206,10 +209,10 @@ class Person(REST):
                                            image,
                                            username)
 
-        if created == 201:
-            return {'message': 'User {} created'.format(username), 'status': created}
+        if status == 201:
+            return ApiResponse.from_string('User {} created'.format(username), code=status)
         else:
-            return {'message': 'User {} updated'.format(username), 'status': created}
+            return ApiResponse.from_string('User {} updated'.format(username), code=status)
 
     def deleteMembers(self, member_ids):
         # this method exists to bypass the 'Manage Users' permission check
@@ -240,7 +243,7 @@ class Person(REST):
                 mdtool.deleteMemberData(member_id)
 
         # Delete members' local roles.
-        #mtool.deleteLocalRoles(getUtility(ISiteRoot), member_ids,
+        # mtool.deleteLocalRoles(getUtility(ISiteRoot), member_ids,
         #                       reindex=1, recursive=1)
 
 
@@ -288,7 +291,7 @@ class Subscriptions(REST):
                              can_manage=self.is_community_manager(brain))
             result.append(community)
 
-        return result, 200
+        return ApiResponse(result)
 
     def get_favorites(self):
         pc = api.portal.get_tool('portal_catalog')

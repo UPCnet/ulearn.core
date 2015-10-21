@@ -1,18 +1,23 @@
-from plone import api
+# -*- coding: utf-8 -*-
 from five import grok
 from zope.component import getAdapter
 from zope.component import getAdapters
-from Products.CMFPlone.interfaces import IPloneSiteRoot
-from repoze.catalog.query import Eq
-from souper.soup import get_soup
 
-from ulearn.core.content.community import ICommunityTyped
-from ulearn.core.content.community import ICommunityACL
+from Products.CMFPlone.interfaces import IPloneSiteRoot
+from plone import api
+
+from ulearn.core.api import ApiResponse
+from ulearn.core.api import BadParameters
+from ulearn.core.api import ObjectNotFound
 from ulearn.core.api import REST
+from ulearn.core.api import api_resource
 from ulearn.core.api import logger
 from ulearn.core.api.root import APIRoot
-from ulearn.core.api import api_resource
-from ulearn.core.api import BadParameters, ObjectNotFound
+from ulearn.core.content.community import ICommunityACL
+from ulearn.core.content.community import ICommunityTyped
+
+from repoze.catalog.query import Eq
+from souper.soup import get_soup
 
 
 class CommunityMixin(object):
@@ -80,7 +85,7 @@ class Communities(REST):
                              can_manage=self.is_community_manager(brain))
             result.append(community)
 
-        return result, 200
+        return ApiResponse(result)
 
     def get_favorites(self):
         pc = api.portal.get_tool('portal_catalog')
@@ -142,7 +147,7 @@ class Community(REST, CommunityMixin):
 
         success_response = 'Updated community "{}"'.format(self.community.absolute_url())
         logger.info(success_response)
-        return dict(message=success_response, status_code=200), 200
+        return ApiResponse.from_string(success_response)
 
     @api_resource()
     def DELETE(self):
@@ -158,7 +163,7 @@ class Community(REST, CommunityMixin):
 
         api.content.delete(obj=self.community)
 
-        return {}, 204
+        return ApiResponse({}, code=204)
 
 
 class Subscriptions(REST, CommunityMixin):
@@ -198,7 +203,7 @@ class Subscriptions(REST, CommunityMixin):
 
         result = ICommunityACL(self.community)().attrs.get('acl', '')
 
-        return result, 200
+        return ApiResponse(result)
 
     @api_resource()
     def POST(self):
@@ -218,9 +223,12 @@ class Subscriptions(REST, CommunityMixin):
         if check_permission is not True:
             return check_permission
 
-        result = self.update_subscriptions()
+        self.update_subscriptions()
 
-        return result, result['status_code']
+        # Response successful
+        success_response = 'Updated community "{}" subscriptions'.format(self.community.absolute_url())
+        logger.info(success_response)
+        return ApiResponse.from_string(success_response)
 
     def update_subscriptions(self):
         adapter = getAdapter(self.community, ICommunityTyped, name=self.community.community_type)
@@ -233,7 +241,3 @@ class Subscriptions(REST, CommunityMixin):
         # XXX: Until we do not have a proper Hub online
         adapter.update_hub_subscriptions()
 
-        # Response successful
-        success_response = 'Updated community "{}" subscriptions'.format(self.community.absolute_url())
-        logger.info(success_response)
-        return {'message': success_response, 'status_code': 200}

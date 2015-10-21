@@ -36,6 +36,17 @@ class ObjectNotFound(Exception):
     pass
 
 
+class ApiResponse(object):
+    def __init__(self, data, code=200):
+        self.code = code
+        self.data = data
+
+    @classmethod
+    def from_string(cls, message, code=200):
+        obj = cls({'message': message}, code)
+        return obj
+
+
 class api_resource(object):
     """
         Decorator to validate ws paramenters and format output
@@ -54,7 +65,9 @@ class api_resource(object):
 
             try:
                 resource.extract_params(required=self.required)
-                response_content, response_code = fun(resource, *args)
+                response = fun(resource, *args)
+                response_content = response.data
+                response_code = response.code
 
             except ObjectNotFound as exc:
                 response_code = 404
@@ -81,7 +94,6 @@ class api_resource(object):
                 }
 
             except Exception as exc:
-                import ipdb;ipdb.set_trace()
                 traceback = sys.exc_info()[2]
                 log = aq_acquire(resource, '__error_log__', containment=1)
                 error_log_url = log.raising((type(exc), exc, traceback))

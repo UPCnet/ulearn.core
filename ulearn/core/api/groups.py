@@ -9,6 +9,7 @@ from souper.soup import get_soup
 
 from ulearn.core.api import REST
 from ulearn.core.api import api_resource
+from ulearn.core.api import ApiResponse
 
 from ulearn.core.api.root import APIRoot
 
@@ -69,4 +70,4 @@ class Communities(REST):
                 users=users,
             ))
 
-        return result, 200
+        return ApiResponse(result)

@@ -1,13 +1,19 @@
+# -*- coding: utf-8 -*-
 from five import grok
+
 from Products.CMFPlone.interfaces import IPloneSiteRoot
-from ulearn.core.api import REST
-from ulearn.core.api.root import APIRoot
-from ulearn.core.api import api_resource
-from plone.namedfile.file import NamedBlobImage
-from plone.dexterity.utils import createContentInContainer
-from plone.app.contenttypes.behaviors.richtext import IRichText
-from datetime import datetime
 from plone import api
+from plone.app.contenttypes.behaviors.richtext import IRichText
+from plone.dexterity.utils import createContentInContainer
+from plone.namedfile.file import NamedBlobImage
+
+from ulearn.core.api import ApiResponse
+from ulearn.core.api import REST
+from ulearn.core.api import api_resource
+from ulearn.core.api.root import APIRoot
+
+from datetime import datetime
+
 import requests
 
 
@@ -57,7 +63,7 @@ class New(REST):
                                  date_start,
                                  date_end)
 
-        return result, result['status']
+        return result
 
     def create_new(self, newid, title, desc, body, imgData, imgName, date_start, date_end):
         date_start = date_start.split('/')
@@ -105,7 +111,7 @@ class New(REST):
                                           )
             new_new.text = IRichText['text'].fromUnicode(body)
             new_new.reindexObject()
-            resp = {'message': 'New {} created'.format(newid), 'status': 201}
+            resp = ApiResponse.from_string('News Item {} created'.format(newid), code=201)
         else:
             new = brains[0].getObject()
             new.title = title
@@ -131,6 +137,6 @@ class New(REST):
                                            contentType='image/jpeg')
             new.text = IRichText['text'].fromUnicode(body)
             new.reindexObject()
-            resp = {'message': 'New {} updated'.format(newid), 'status': 201}
+            resp = ApiResponse.from_string('News Item {} updated'.format(newid), code=200)
 
         return resp

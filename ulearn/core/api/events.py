@@ -1,12 +1,17 @@
+# -*- coding: utf-8 -*-
 from five import grok
+
 from Products.CMFPlone.interfaces import IPloneSiteRoot
-from ulearn.core.api import api_resource
-from ulearn.core.api import REST
-from ulearn.core.api.root import APIRoot
-from plone.dexterity.utils import createContentInContainer
-from plone.app.contenttypes.behaviors.richtext import IRichText
-from datetime import datetime
 from plone import api
+from plone.app.contenttypes.behaviors.richtext import IRichText
+from plone.dexterity.utils import createContentInContainer
+
+from ulearn.core.api import ApiResponse
+from ulearn.core.api import REST
+from ulearn.core.api import api_resource
+from ulearn.core.api.root import APIRoot
+
+from datetime import datetime
 
 
 class Events(REST):
@@ -40,14 +45,16 @@ class Event(REST):
         date_start = self.params.pop('start')
         date_end = self.params.pop('end')
 
-        result = self.create_event(eventid,
-                                   title,
-                                   desc,
-                                   body,
-                                   date_start,
-                                   date_end)
+        response = self.create_event(
+            eventid,
+            title,
+            desc,
+            body,
+            date_start,
+            date_end
+        )
 
-        return result['message'], result['status']
+        return response
 
     def create_event(self, eventid, title, desc, body, date_start, date_end):
         date_start = date_start.split('/')
@@ -80,12 +87,12 @@ class Event(REST):
             new_event.description = desc
             new_event.text = IRichText['text'].fromUnicode(body)
             new_event.reindexObject()
-            resp = {'message': 'Event {} created'.format(eventid), 'status': 201}
+            resp = ApiResponse.from_string('Event {} created'.format(eventid), code=201)
         else:
             event = brains[0].getObject()
             event.title = title
             event.text = IRichText['text'].fromUnicode(body)
             event.reindexObject()
-            resp = {'message': 'Event {} updated'.format(eventid), 'status': 201}
+            resp = ApiResponse.from_string('Event {} updated'.format(eventid))
 
         return resp

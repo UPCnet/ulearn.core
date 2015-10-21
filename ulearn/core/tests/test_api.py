@@ -116,8 +116,7 @@ class TestAPI(uLearnTestBase):
         new_view = self.request_API_endpoint(username_plone, ['api', 'news', newid], body=new)
         response = new_view.POST()
         response = json.loads(response)
-        self.assertEqual(response['message'], 'New {} created'.format(newid))
-
+        self.assertEqual(response['message'], 'News Item {} created'.format(newid))
 
     def test_community_subscribe_post(self):
         username = 'ulearn.testuser1'
@@ -137,7 +136,7 @@ class TestAPI(uLearnTestBase):
         response = subscriptions_view.POST()
 
         response = json.loads(response)
-        self.assertEqual(response['status_code'], 200)
+        self.assertEqual(subscriptions_view.request.response.getStatus(), 200)
         self.assertTrue('message' in response)
         self.assertEqual(ICommunityACL(community)().attrs['acl'], acl)
         self.assertEqual(ICommunityACL(community)().attrs['groups'], ['PAS', 'UPCnet'])
@@ -150,7 +149,7 @@ class TestAPI(uLearnTestBase):
         response = subscriptions_view.POST()
         response = json.loads(response)
 
-        self.assertEqual(response['status_code'], 404)
+        self.assertEqual(subscriptions_view.request.response.getStatus(), 404)
         logout()
 
         # Subscribed to community but not Owner
@@ -170,7 +169,7 @@ class TestAPI(uLearnTestBase):
         response = subscriptions_view.POST()
         response = json.loads(response)
 
-        self.assertEqual(response['status_code'], 404)
+        self.assertEqual(subscriptions_view.request.response.getStatus(), 404)
         logout()
 
         httpretty.disable()
@@ -200,7 +199,7 @@ class TestAPI(uLearnTestBase):
         response = community_view.PUT()
         response = json.loads(response)
 
-        self.assertEqual(response['status_code'], 200)
+        self.assertEqual(community_view.request.response.getStatus(), 200)
         self.assertEqual(community.community_type, 'Open')
 
         self.assertTrue('Reader' in community.get_local_roles_for_userid(userid='AuthenticatedUsers'))
@@ -215,7 +214,7 @@ class TestAPI(uLearnTestBase):
         response = community_view.PUT()
         response = json.loads(response)
 
-        self.assertEqual(response['status_code'], 200)
+        self.assertEqual(community_view.request.response.getStatus(), 200)
         self.assertEqual(community.community_type, 'Closed')
 
         self.assertTrue('Reader' not in community.get_local_roles_for_userid(userid='AuthenticatedUsers'))
@@ -229,7 +228,7 @@ class TestAPI(uLearnTestBase):
         response = community_view.PUT()
         response = json.loads(response)
 
-        self.assertEqual(response['status_code'], 400)
+        self.assertEqual(community_view.request.response.getStatus(), 400)
         self.assertEqual(community.community_type, 'Closed')
 
         # Try to change it to an unknown type
@@ -238,7 +237,7 @@ class TestAPI(uLearnTestBase):
         response = community_view.PUT()
         response = json.loads(response)
 
-        self.assertEqual(response['status_code'], 400)
+        self.assertEqual(community_view.request.response.getStatus(), 400)
         self.assertEqual(community.community_type, 'Closed')
 
         # Try to change it to Organizative
@@ -247,7 +246,7 @@ class TestAPI(uLearnTestBase):
         response = community_view.PUT()
         response = json.loads(response)
 
-        self.assertEqual(response['status_code'], 200)
+        self.assertEqual(community_view.request.response.getStatus(), 200)
         self.assertEqual(community.community_type, 'Organizative')
 
     def test_communities_get(self):
