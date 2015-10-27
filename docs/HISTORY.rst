@@ -1,11 +1,12 @@
 Changelog
 =========
 
-2.21 (unreleased)
+2.21 (2015-10-27)
 -----------------
 
-- Nothing changed yet.
-
+* Remove ipdb [Carles Bruguera]
+* Unify way to return responses [Carles Bruguera]
+* Remove 'status' key from json responses [Carles Bruguera]
 
 2.20 (2015-10-20)
 -----------------
