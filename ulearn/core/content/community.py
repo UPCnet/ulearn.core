@@ -320,6 +320,8 @@ class CommunityAdapterMixin(object):
         # and related permissions
         self.set_plone_permissions(self.get_acl())
 
+        self.context.reindexObject()
+
     def get_acl(self):
         return ICommunityACL(self.context)().attrs.get('acl', '')
 
