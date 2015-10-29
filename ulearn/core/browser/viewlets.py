@@ -15,3 +15,4 @@ class CommunityNGDirective(grok.Viewlet):
         self.community_hash = sha1(self.context.absolute_url()).hexdigest()
         self.community_gwuuid = IGWUUID(self.context).get()
         self.community_url = self.context.absolute_url()
+        self.community_type = self.context.community_type
