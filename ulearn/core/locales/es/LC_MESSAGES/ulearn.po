@@ -712,8 +712,11 @@ msgstr "Comunidad"
 msgid "seemore_stats"
 msgstr "Ver más estadísticas"
 
-msgid "label_check_favorite"
+msgid "label_check_unfavorite"
 msgstr "Marcar como favorito"
+
+msgid "label_check_favorite"
+msgstr "Desmarcar como favorito"
 
 msgid "label_subscribe_to_community"
 msgstr "Subscribirse a la comunidad"

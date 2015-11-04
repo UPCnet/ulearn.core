@@ -657,6 +657,9 @@ msgid "seemore_stats"
 msgstr "See more stats"
 
 msgid "label_check_favorite"
+msgstr "Remove to favorites"
+
+msgid "label_check_unfavorite"
 msgstr "Add to favorites"
 
 msgid "label_subscribe_to_community"

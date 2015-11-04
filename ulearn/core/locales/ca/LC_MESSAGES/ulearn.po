@@ -751,6 +751,9 @@ msgid "seemore_stats"
 msgstr "Veure més estadístiques"
 
 msgid "label_check_favorite"
+msgstr "Desmarcar com a favorit"
+
+msgid "label_check_unfavorite"
 msgstr "Marcar com a favorit"
 
 msgid "label_subscribe_to_community"
