@@ -7,7 +7,7 @@ from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.interfaces import IPloneSiteRoot
 from plone import api
 
-from mrs.max.portrait import changeMemberPortrait
+from genweb.core.patches import changeMemberPortrait
 from mrs.max.utilities import IMAXClient
 
 from ulearn.core.api import ApiResponse
