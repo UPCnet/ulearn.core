@@ -1,11 +1,15 @@
 Changelog
 =========
 
-2.22 (unreleased)
+2.22 (2015-11-10)
 -----------------
 
-- Nothing changed yet.
-
+* Fix imports from mrs.max changeMemberPortrait [Victor Fernandez de Alba]
+* New pluggable changeMemberPortrait more specific for ulearn [Victor Fernandez de Alba]
+* Testing refactor [Victor Fernandez de Alba]
+* translate title favorites icon [Paco Gregori]
+* Añadir tipo de comunidad para que alert de subscribir solo salga en abiertas [Pilar Marinas]
+* Update community type [Pilar Marinas]
 
 2.21 (2015-10-27)
 -----------------
