@@ -872,3 +872,24 @@ msgstr "Telèfon"
 
 msgid "personalized_attention"
 msgstr "Horari d'atenció"
+
+msgid "Documentacio general"
+msgstr "Documentació general"
+
+msgid "Documentacio de seguiment"
+msgstr "Documentació de seguiment"
+
+msgid "Actes"
+msgstr "Actes"
+
+msgid "Requeriments"
+msgstr "Requeriments"
+
+msgid "Lliurables"
+msgstr "Lliurables"
+
+msgid "Gestio de canvis"
+msgstr "Gestió de canvis"
+
+msgid "Gestio de riscos"
+msgstr "Gestió de riscos"

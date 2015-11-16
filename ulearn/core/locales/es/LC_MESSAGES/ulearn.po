@@ -834,3 +834,24 @@ msgstr "Teléfono"
 
 msgid "personalized_attention"
 msgstr "Horario de atención"
+
+msgid "Documentacio general"
+msgstr "Documentación general"
+
+msgid "Documentacio de seguiment"
+msgstr "Documentación de seguimiento"
+
+msgid "Actes"
+msgstr "Actas"
+
+msgid "Requeriments"
+msgstr "Requerimientos"
+
+msgid "Lliurables"
+msgstr "Entregables"
+
+msgid "Gestio de canvis"
+msgstr "Gestión de cambios"
+
+msgid "Gestio de riscos"
+msgstr "Gestión de riesgos"

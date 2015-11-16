@@ -772,3 +772,24 @@ msgstr "Phone"
 
 msgid "personalized_attention"
 msgstr "Business hours"
+
+msgid "Documentacio general"
+msgstr "General documentation"
+
+msgid "Documentacio de seguiment"
+msgstr "Documentation Monitoring"
+
+msgid "Actes"
+msgstr "Proceedings"
+
+msgid "Requeriments"
+msgstr "Requirements"
+
+msgid "Lliurables"
+msgstr "Deliverables"
+
+msgid "Gestio de canvis"
+msgstr "Change management"
+
+msgid "Gestio de riscos"
+msgstr "Risk management"

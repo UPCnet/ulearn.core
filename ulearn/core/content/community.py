@@ -1133,6 +1133,117 @@ class communityEdit(form.SchemaForm):
             self.request.response.redirect(self.context.absolute_url())
 
 
+class ICommunityInitializeAdapter(Interface):
+    """ The marker interface for initialize community adapter used for a especific
+        folders and templates. The idea is to have a default (core) action and
+        then other that override the default one using IBrowserLayer
+    """
+
+
+@grok.implementer(ICommunityInitializeAdapter)
+@grok.adapter(ICommunity, Interface)
+class CommunityInitializeAdapter(object):
+    """ Default adapter for initialize community custom actions """
+    def __init__(self, context, request):
+        self.context = context
+        self.request = request
+
+    def __call__(self, community):
+        """ On creation we only initialize the community based on its type and all
+            the Plone-based processes. On the MAX side, for convenience we create
+            the context directly into the MAX server with only the creator as
+            subscriber (and owner).
+        """
+        initial_acl = dict(users=[dict(id=unicode(community.Creator().encode('utf-8')), role='owner')])
+        adapter = getAdapter(community, ICommunityTyped, name=community.community_type)
+
+        adapter.create_max_context()
+        adapter.set_initial_max_metadata()
+        adapter.set_initial_subscription(initial_acl)
+        adapter.set_plone_permissions(initial_acl)
+
+        # Disable Inheritance
+        community.__ac_local_roles_block__ = True
+
+        # Auto-favorite the creator user to this community
+        IFavorite(community).add(community.Creator())
+
+        # Create default content containers
+        documents = createContentInContainer(community, 'Folder', title='documents', checkConstraints=False)
+        media = createContentInContainer(documents, 'Folder', title='media', checkConstraints=False)
+        events = createContentInContainer(community, 'Folder', title='events', checkConstraints=False)
+
+        # Set the correct title, translated
+        documents.setTitle(community.translate(_(u'Documents')))
+        media.setTitle(community.translate(_(u'Media')))
+        events.setTitle(community.translate(_(u'Esdeveniments')))
+
+        # Create the default discussion container and set title
+        discussion = createContentInContainer(community, 'Folder', title='discussion', checkConstraints=False)
+        discussion.setTitle(community.translate(_(u'Discussion')))
+
+        # Set default view layout
+        documents.setLayout('filtered_contents_search_view')
+        media.setLayout('folder_summary_view')
+        events.setLayout('folder_summary_view')
+        discussion.setLayout('discussion_folder_view')
+
+        # Mark them with a marker interface
+        alsoProvides(documents, IDocumentFolder)
+        alsoProvides(media, IPhotosFolder)
+        alsoProvides(events, IEventsFolder)
+        alsoProvides(discussion, IDiscussionFolder)
+
+        # Set on them the allowable content types
+        behavior = ISelectableConstrainTypes(documents)
+        behavior.setConstrainTypesMode(1)
+        behavior.setLocallyAllowedTypes(('Document', 'File', 'Folder', 'Link', 'Image', 'privateFolder'))
+        behavior.setImmediatelyAddableTypes(('Document', 'File', 'Folder', 'Link', 'Image', 'privateFolder'))
+        behavior = ISelectableConstrainTypes(media)
+        behavior.setConstrainTypesMode(1)
+        behavior.setLocallyAllowedTypes(('Image', 'Folder'))
+        behavior.setImmediatelyAddableTypes(('Image', 'Folder'))
+        behavior = ISelectableConstrainTypes(events)
+        behavior.setConstrainTypesMode(1)
+        behavior.setLocallyAllowedTypes(('Event', 'Folder'))
+        behavior.setImmediatelyAddableTypes(('Event', 'Folder'))
+        behavior = ISelectableConstrainTypes(discussion)
+        behavior.setConstrainTypesMode(1)
+        behavior.setLocallyAllowedTypes(('ulearn.discussion', 'Folder'))
+        behavior.setImmediatelyAddableTypes(('ulearn.discussion', 'Folder'))
+
+        # Blacklist the right column portlets on documents
+        right_manager = queryUtility(IPortletManager, name=u'plone.rightcolumn')
+        blacklist = getMultiAdapter((documents, right_manager), ILocalPortletAssignmentManager)
+        blacklist.setBlacklistStatus(CONTEXT_CATEGORY, True)
+
+        # Blacklist the right column portlets on media
+        right_manager = queryUtility(IPortletManager, name=u'plone.rightcolumn')
+        blacklist = getMultiAdapter((media, right_manager), ILocalPortletAssignmentManager)
+        blacklist.setBlacklistStatus(CONTEXT_CATEGORY, True)
+
+        # Blacklist the right column portlets on events
+        right_manager = queryUtility(IPortletManager, name=u'plone.rightcolumn')
+        blacklist = getMultiAdapter((events, right_manager), ILocalPortletAssignmentManager)
+        blacklist.setBlacklistStatus(CONTEXT_CATEGORY, True)
+
+        # Blacklist the right column portlets on discussion
+        right_manager = queryUtility(IPortletManager, name=u'plone.rightcolumn')
+        blacklist = getMultiAdapter((discussion, right_manager), ILocalPortletAssignmentManager)
+        blacklist.setBlacklistStatus(CONTEXT_CATEGORY, True)
+
+        # Reindex all created objects
+        community.reindexObject()
+        documents.reindexObject()
+        media.reindexObject()
+        events.reindexObject()
+        discussion.reindexObject()
+
+        # Mark community as initialitzated, to avoid previous
+        # folder creations to trigger modify event
+        alsoProvides(community, IInitializedCommunity)
+
+
 @grok.subscribe(ICommunity, IObjectAddedEvent)
 def initialize_community(community, event):
     """ On creation we only initialize the community based on its type and all
@@ -1140,94 +1251,8 @@ def initialize_community(community, event):
         the context directly into the MAX server with only the creator as
         subscriber (and owner).
     """
-    initial_acl = dict(users=[dict(id=unicode(community.Creator().encode('utf-8')), role='owner')])
-    adapter = getAdapter(community, ICommunityTyped, name=community.community_type)
-
-    adapter.create_max_context()
-    adapter.set_initial_max_metadata()
-    adapter.set_initial_subscription(initial_acl)
-    adapter.set_plone_permissions(initial_acl)
-
-    # Disable Inheritance
-    community.__ac_local_roles_block__ = True
-
-    # Auto-favorite the creator user to this community
-    IFavorite(community).add(community.Creator())
-
-    # Create default content containers
-    documents = createContentInContainer(community, 'Folder', title='documents', checkConstraints=False)
-    media = createContentInContainer(documents, 'Folder', title='media', checkConstraints=False)
-    events = createContentInContainer(community, 'Folder', title='events', checkConstraints=False)
-
-    # Set the correct title, translated
-    documents.setTitle(community.translate(_(u'Documents')))
-    media.setTitle(community.translate(_(u'Media')))
-    events.setTitle(community.translate(_(u'Esdeveniments')))
-
-    # Create the default discussion container and set title
-    discussion = createContentInContainer(community, 'Folder', title='discussion', checkConstraints=False)
-    discussion.setTitle(community.translate(_(u'Discussion')))
-
-    # Set default view layout
-    documents.setLayout('filtered_contents_search_view')
-    media.setLayout('folder_summary_view')
-    events.setLayout('folder_summary_view')
-    discussion.setLayout('discussion_folder_view')
-
-    # Mark them with a marker interface
-    alsoProvides(documents, IDocumentFolder)
-    alsoProvides(media, IPhotosFolder)
-    alsoProvides(events, IEventsFolder)
-    alsoProvides(discussion, IDiscussionFolder)
-
-    # Set on them the allowable content types
-    behavior = ISelectableConstrainTypes(documents)
-    behavior.setConstrainTypesMode(1)
-    behavior.setLocallyAllowedTypes(('Document', 'File', 'Folder', 'Link', 'Image', 'privateFolder'))
-    behavior.setImmediatelyAddableTypes(('Document', 'File', 'Folder', 'Link', 'Image', 'privateFolder'))
-    behavior = ISelectableConstrainTypes(media)
-    behavior.setConstrainTypesMode(1)
-    behavior.setLocallyAllowedTypes(('Image', 'Folder'))
-    behavior.setImmediatelyAddableTypes(('Image', 'Folder'))
-    behavior = ISelectableConstrainTypes(events)
-    behavior.setConstrainTypesMode(1)
-    behavior.setLocallyAllowedTypes(('Event', 'Folder'))
-    behavior.setImmediatelyAddableTypes(('Event', 'Folder'))
-    behavior = ISelectableConstrainTypes(discussion)
-    behavior.setConstrainTypesMode(1)
-    behavior.setLocallyAllowedTypes(('ulearn.discussion', 'Folder'))
-    behavior.setImmediatelyAddableTypes(('ulearn.discussion', 'Folder'))
-
-    # Blacklist the right column portlets on documents
-    right_manager = queryUtility(IPortletManager, name=u'plone.rightcolumn')
-    blacklist = getMultiAdapter((documents, right_manager), ILocalPortletAssignmentManager)
-    blacklist.setBlacklistStatus(CONTEXT_CATEGORY, True)
-
-    # Blacklist the right column portlets on media
-    right_manager = queryUtility(IPortletManager, name=u'plone.rightcolumn')
-    blacklist = getMultiAdapter((media, right_manager), ILocalPortletAssignmentManager)
-    blacklist.setBlacklistStatus(CONTEXT_CATEGORY, True)
-
-    # Blacklist the right column portlets on events
-    right_manager = queryUtility(IPortletManager, name=u'plone.rightcolumn')
-    blacklist = getMultiAdapter((events, right_manager), ILocalPortletAssignmentManager)
-    blacklist.setBlacklistStatus(CONTEXT_CATEGORY, True)
-
-    # Blacklist the right column portlets on discussion
-    right_manager = queryUtility(IPortletManager, name=u'plone.rightcolumn')
-    blacklist = getMultiAdapter((discussion, right_manager), ILocalPortletAssignmentManager)
-    blacklist.setBlacklistStatus(CONTEXT_CATEGORY, True)
-
-    # Reindex all created objects
-    community.reindexObject()
-    documents.reindexObject()
-    media.reindexObject()
-    events.reindexObject()
-    discussion.reindexObject()
-
-    # Mark community as initialitzated, to avoid previous
-    # folder creations to trigger modify event
-    alsoProvides(community, IInitializedCommunity)
+    adapter = getMultiAdapter((event.object, event.object.REQUEST), ICommunityInitializeAdapter)
+    adapter(community)
 
 
 @grok.subscribe(ICommunity, IObjectModifiedEvent)
