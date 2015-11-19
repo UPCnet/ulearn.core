@@ -3,6 +3,8 @@ from five import grok
 from zope.component import getAdapter
 from zope.component import getAdapters
 
+from zope.container.interfaces import INameChooser
+from Products.CMFPlone.utils import safe_unicode
 from Products.CMFPlone.interfaces import IPloneSiteRoot
 from plone import api
 
@@ -86,6 +88,46 @@ class Communities(REST):
             result.append(community)
 
         return ApiResponse(result)
+
+    @api_resource(required=['title', 'community_type'])
+    def POST(self):
+        nom = self.params.pop('title')
+        community_type = self.params.pop('community_type')
+        description = self.params.pop('description',None)
+        image = self.params.pop('image', None)
+        activity_view = self.params.pop('activity_viw', None)
+        twitter_hashtag = self.params.pop('twitter_hashtag', None)
+        notify_activity_via_push = self.params.pop('notify_activity_via_push', None)
+        notify_activity_via_push_comments_too = self.params.pop('notify_activity_via_push_comments_too', None)
+
+        pc = api.portal.get_tool('portal_catalog')
+        nom = safe_unicode(nom)
+        chooser = INameChooser(self.context)
+        id_normalized = chooser.chooseName(nom, self.context.aq_parent)
+        result = pc.unrestrictedSearchResults(portal_type='ulearn.community',
+                                              id=id_normalized)
+
+        if result:
+            # If user hasn't been created right now, update
+            success_response = 'community "{}" already exists.'.format(nom)
+            status = 200
+        else:
+            new_community_id = self.context.invokeFactory('ulearn.community', id_normalized,
+                                                          title=nom,
+                                                          description=description,
+                                                          image=image,
+                                                          community_type=community_type,
+                                                          activity_view=activity_view,
+                                                          twitter_hashtag=twitter_hashtag,
+                                                          notify_activity_via_push=notify_activity_via_push,
+                                                          notify_activity_via_push_comments_too=notify_activity_via_push_comments_too,
+                                                          checkConstraints=False)
+            new_community = self.context[new_community_id]
+
+            success_response = 'Created community "{}".'.format(new_community.absolute_url())
+            status = 201
+        logger.info(success_response)
+        return ApiResponse.from_string(success_response, code=status)
 
     def get_favorites(self):
         pc = api.portal.get_tool('portal_catalog')

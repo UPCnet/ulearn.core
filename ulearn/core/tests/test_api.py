@@ -264,6 +264,17 @@ class TestAPI(uLearnTestBase):
         self.assertTrue(response[0]['favorited'])
         self.assertTrue(response[0]['can_manage'])
 
+    def test_communities_post(self):
+        """ Post to add new community. """
+        username = 'ulearn.testuser1'
+        login(self.portal, username)
+        data = {'title': 'prova1', 'community_type': 'Open'}
+        community_view = self.request_API_endpoint(username, ['api', 'communities'], body=data)
+        response = community_view.POST()
+        response = json.loads(response)
+        self.assertEqual(community_view.request.response.getStatus(), 201)
+        self.assertTrue('message' in response)
+
     def test_communities_delete(self):
         """ Delete the given community. """
         username = 'ulearn.testuser1'
