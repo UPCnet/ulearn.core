@@ -48,4 +48,9 @@
              zope.lifecycleevent.interfaces.IObjectModifiedEvent"
         />
 
+    <subscriber
+        handler=".browser.sharing.SharingChanged"
+        for="plone.dexterity.interfaces.IDexterityContent
+             plone.app.workflow.interfaces.ILocalrolesModifiedEvent"
+        />
 </configure>
