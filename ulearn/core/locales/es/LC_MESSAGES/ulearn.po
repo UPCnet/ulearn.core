@@ -345,6 +345,11 @@ msgstr ""
 msgid "my_communities"
 msgstr "Mis comunidades"
 
+#. Default: "Shared with me"
+#: ../../../../../../ulearn.theme/ulearn/theme/portlets/templates/buttonbar.pt:24
+msgid "shared_with_me"
+msgstr "Compartido conmigo"
+
 #. Default: "nom.usuari"
 #: ../../../../ulearn.theme/ulearn/theme/skins/ulearntheme_custom/login_form.cpt:178
 msgid "nom_usuari"

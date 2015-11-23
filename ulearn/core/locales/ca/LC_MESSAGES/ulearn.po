@@ -350,6 +350,11 @@ msgstr "Més valorats"
 msgid "my_communities"
 msgstr "Les meves comunitats"
 
+#. Default: "Shared with me"
+#: ../../../../../../ulearn.theme/ulearn/theme/portlets/templates/buttonbar.pt:24
+msgid "shared_with_me"
+msgstr "Compartit amb mi"
+
 #. Default: "Create a new event"
 #: ../../../../ulearn.theme/ulearn/theme/portlets/templates/calendar.pt:97
 msgid "newevent"

@@ -346,6 +346,11 @@ msgstr "Most valued"
 msgid "my_communities"
 msgstr "My communities"
 
+#. Default: "Shared with me"
+#: ../../../../../../ulearn.theme/ulearn/theme/portlets/templates/buttonbar.pt:24
+msgid "shared_with_me"
+msgstr "Shared with me"
+
 #. Default: "Create a new event"
 #: ../../../../ulearn.theme/ulearn/theme/portlets/templates/calendar.pt:97
 msgid "newevent"
