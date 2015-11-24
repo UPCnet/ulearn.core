@@ -24,7 +24,7 @@
   <div id="librarysearch">
 
     <h1 class="documentFirstHeading" i18n:translate="shared_content">Shared content</h1>
-
+    <div class="documentDescription" i18n:translate="shared_content_description">Elements shared on this community</div>
     <section id="tagslist"
              tal:define="site_properties context/portal_properties/site_properties;
                         use_view_action site_properties/typesUseViewActionInListings|python:()">

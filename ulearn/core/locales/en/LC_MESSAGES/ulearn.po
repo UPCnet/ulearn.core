@@ -348,8 +348,23 @@ msgstr "My communities"
 
 #. Default: "Shared with me"
 #: ../../../../../../ulearn.theme/ulearn/theme/portlets/templates/buttonbar.pt:24
+msgid "no_content_shared_user"
+msgstr "There is no content shared with you right now"
+
+#. Default: "Shared with me"
+#: ../../../../../../ulearn.theme/ulearn/theme/portlets/templates/buttonbar.pt:24
 msgid "shared_with_me"
 msgstr "Shared with me"
+
+#. Default: "Shared content"
+#: ../../../../../../ulearn.core/ulearn/core/browser/sharing_templates/shared.pt:26
+msgid "shared_content"
+msgstr "Shared content"
+
+#. Default: "All content shared by any member of this community"
+#: ../../../../../../ulearn.core/ulearn/core/browser/sharing_templates/shared.pt:26
+msgid "shared_content_description"
+msgstr "All content shared by any member of this community"
 
 #. Default: "Create a new event"
 #: ../../../../ulearn.theme/ulearn/theme/portlets/templates/calendar.pt:97
