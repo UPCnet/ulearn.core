@@ -267,7 +267,7 @@ class SharedMarker(grok.Adapter):
         """
         self.context = context
         if getattr(self.context, '_shared', None) is None:
-            self.set_shared_mark()
+            self.unshare()
 
     def is_shared(self):
         """
