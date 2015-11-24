@@ -248,7 +248,6 @@ class Shared(grok.View):
         results = []
         sharing = queryUtility(IElasticSharing)
         results = sharing.shared_on(self.context)
-        import ipdb;ipdb.set_trace()
         return results
 
 
