@@ -18,6 +18,8 @@ from souper.soup import get_soup
 from souper.soup import Record
 from repoze.catalog.query import Eq
 from DateTime.DateTime import DateTime
+from zope.component import providedBy
+from plone.app.workflow.interfaces import ILocalrolesModifiedEvent
 
 import logging
 
@@ -123,6 +125,10 @@ def Added(content, event):
 
 def Modified(content, event):
     """ Max hooks modified handler """
+    # Avoid execution when trigered on sharing changes
+    is_sharing_event = providedBy(event)(ILocalrolesModifiedEvent)
+    if is_sharing_event:
+        return
 
     portal = getSite()
     pm = getToolByName(portal, 'portal_membership')
