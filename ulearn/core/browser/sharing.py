@@ -14,13 +14,14 @@ from ulearn.theme.browser.interfaces import IUlearnTheme
 
 from Products.Archetypes.interfaces import IBaseObject
 from genweb.core.utilities import IElasticSearch
+from genweb.core.gwuuid import IGWUUID
 
 import json
 import re
 
 
 class IElasticSharing(Interface):
-    """ Marker for ElasticSharingglobal utility """
+    """ Marker for ElasticSharing global utility """
 
 
 class ElasticSharing(object):
@@ -52,8 +53,8 @@ class ElasticSharing(object):
         return self._root_path
 
     def relative_path(self, object):
-        absolute_path = '/'.    join(object.getPhysicalPath())
-        return re.sub(r'^{}'.format(self.site_root_path), r'', '/'.join(absolute_path))
+        absolute_path = '/'.join(object.getPhysicalPath())
+        return re.sub(r'^{}'.format(self.site_root_path), r'', absolute_path)
 
     def object_local_roles(self, object):
         """
@@ -66,17 +67,39 @@ class ElasticSharing(object):
                 current_local_roles['principal'] = effective_roles
         return current_local_roles
 
-    def make_record(self, object):
+    def get_index_name(self):
+        """ We want to have an index name of the form of:
+            security.<name_of_the_instance>.<epoch_time_of_instance_creation>
+
+            e.g
+                security.plone.1448983804
+
+            to ensure unique index names.
+        """
+        portal = api.portal.get()
+        portal_path = '_'.join([a for a in portal.getPhysicalPath() if a])
+        portal_created = int(portal.created())
+        return 'security.{}.{}'.format(portal_path, portal_created)
+
+    def make_record(self, object, principal):
         """
             Constructs a record based on <object> properties, suitable
             to be inserted on ES
         """
         path = self.relative_path(object)
 
-        # XXX TODO
-        #
-        # Build object
-        return {}
+        record = dict(
+            index=self.get_index_name(),
+            doc_type='sharing',
+            body=dict(
+                path=path,
+                principal=principal,
+                roles=api.user.get_roles(username=principal, obj=object),
+                uuid=IGWUUID(object).get()
+            )
+        )
+
+        return record
 
     def get(self, object, principal=None):
         """
@@ -135,35 +158,49 @@ class ElasticSharing(object):
         """
             Adds a shared object index
         """
-        record = self.make_record(object)
+        record = self.make_record(object, principal)
         SharedMarker(object).share()
 
-        # XXX TODO
-        #
-        # Add record to ES for principal
-        pass
+        self.elastic().create(**record)
 
     def modify(self, object, principal, attributes):
         """
             Modifies an existing ES record
         """
-        path = self.relative_path(object)
-        # XXX TODO
-        #
-        # Modify record from ES matching path and principal
-        pass
+        # Unused?
+        # path = self.relative_path(object)
+        result = self.elastic().search(index=ElasticSharing().get_index_name(),
+                                       doc_type='sharing',
+                                       body={'query': {
+                                                'bool': {
+                                                    'must': [{'match': {'principal': principal}},
+                                                             {'match': {'uuid': IGWUUID(object).get()}}]
+                                                }}})
+
+        self.elastic().update(index=ElasticSharing().get_index_name(),
+                              doc_type='sharing',
+                              id=result['hits']['hits'][0]['_id'],
+                              body={'doc': attributes})
 
     def remove(self, object, principal):
         """
             Removes a shared object index
         """
-        path = self.relative_path(object)
+        # Unused?
+        # path = self.relative_path(object)
         SharedMarker(object).unshare()
 
-        # XXX TODO
-        #
-        # Remove record from ES matching path and principal
-        pass
+        result = self.elastic().search(index=ElasticSharing().get_index_name(),
+                                       doc_type='sharing',
+                                       body={'query': {
+                                                'bool': {
+                                                    'must': [{'match': {'principal': principal}},
+                                                             {'match': {'uuid': IGWUUID(object).get()}}]
+                                                }}})
+
+        self.elastic().delete(index=ElasticSharing().get_index_name(),
+                              doc_type='sharing',
+                              id=result['hits']['hits'][0]['_id'])
 
     def shared_on(self, object):
         """
