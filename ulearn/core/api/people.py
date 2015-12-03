@@ -195,9 +195,6 @@ class Person(REST):
             if avatar:
                 portal = api.portal.get()
                 membership_tool = getToolByName(portal, 'portal_membership')
-                token = maxclient.getToken(username, password)
-                member = membership_tool.getMemberById(username)
-                member.setMemberProperties({'oauth_token': token})
                 imgName = (avatar.split('/')[-1]).decode('utf-8')
                 imgData = requests.get(avatar).content
                 image = StringIO(imgData)
