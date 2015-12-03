@@ -10,7 +10,7 @@ from Products.PluggableAuthService.interfaces.plugins import IPropertiesPlugin
 from souper.soup import Record
 from souper.interfaces import ICatalogFactory
 from repoze.catalog.query import Eq
-from repoze.catalog.query import Or
+from repoze.catalog.query import And
 from souper.soup import get_soup
 
 from mrs.max.utilities import IMAXClient
@@ -84,7 +84,7 @@ def searchUsersFunction(context, request, search_string):  # noqa
                                       set([max_user['username'] for max_user in max_users]))
                 users = []
                 for user in merged_results:
-                    users.append([r for r in soup.query(Or(Eq('username', user + '*')))][0])
+                    users.append([r for r in soup.query(And(Eq('username', user), Eq('notlegit', False))) if r.attrs['username'] == user][0])
 
             else:
                 merged_results = []
