@@ -109,17 +109,29 @@ class ElasticSharing(object):
         path = self.relative_path(object)
 
         if principal is None:
-            # XXX TODO
-            #
             # Change to query elastic for a register matching principal and path
             # and return a list of items or None if query empty
+            es_results = self.elastic().search(index=ElasticSharing().get_index_name(),
+                                               doc_type='sharing',
+                                               body={'query': {
+                                                        {'match': {'uuid': IGWUUID(object).get()}}}})
             result = []
+            if es_results['hits']['total']:
+                result = es_results['hits']['hits'][0]['_source']
+
         else:
-            # XXX TODO
-            #
             # Change to Query elastic for all registers matching path
             # and returm ONE item
-            result = {}
+            es_results = self.elastic().search(index=ElasticSharing().get_index_name(),
+                                               doc_type='sharing',
+                                               body={'query': {
+                                                     'bool': {
+                                                        'must': [{'match': {'principal': principal}},
+                                                                 {'match': {'uuid': IGWUUID(object).get()}}]
+                                                     }}})
+            result = []
+            if es_results['hits']['total']:
+                result = es_results['hits']['hits'][0]['_source']
 
         return result
 
@@ -138,10 +150,6 @@ class ElasticSharing(object):
 
         for principal in principals_to_delete:
             self.remove(object, principal)
-
-        # XXX Remove the next self.remove when activating ES powered sharing
-        self.remove(object, None)
-
         # Add new records or modify existing ones
         for principal, roles in current_local_roles.items():
 

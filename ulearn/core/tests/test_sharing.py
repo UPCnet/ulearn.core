@@ -14,6 +14,7 @@ from ulearn.core.tests import uLearnTestBase
 from ulearn.core.testing import ULEARN_CORE_INTEGRATION_TESTING
 from ulearn.core.browser.sharing import ElasticSharing
 
+import os
 import time
 
 
@@ -70,3 +71,14 @@ class TestExample(uLearnTestBase):
                                        body={'query': {'match': {'principal': 'janet.dura'}}})
 
         self.assertTrue(result['hits']['total'] == 0)
+
+    def test_get(self):
+        folder = api.content.create(container=self.portal, type='Folder', title='Test folder')
+        api.user.grant_roles(username='janet.dura', obj=folder, roles=['Editor'])
+        ElasticSharing().add(folder, 'janet.dura')
+        time.sleep(1)
+
+        result = ElasticSharing().get(folder, 'janet.dura')
+        self.assertTrue('Editor' in result['roles'])
+        self.assertTrue(result['path'] == '/test-folder')
+        self.assertTrue(result['principal'] == 'janet.dura')
