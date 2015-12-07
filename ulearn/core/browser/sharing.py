@@ -232,7 +232,7 @@ class ElasticSharing(object):
         communities_by_path = {a.getPath(): a for a in portal_catalog.searchResults(portal_type='ulearn.community')}
 
         def format_item(item):
-            community_path = re.sub(r'(^{}\/[^\/]+)\/?.*$'.format(self.site_root_path), r'\1', item.getPath())
+            community_path = re.sub(r'(^{}\/[^\/]+)\/?.*$'.format(self.site_root_path), r'\1', item['path'])
             community = communities_by_path[community_path]
             return dict(
                 title=item.Title,
@@ -251,12 +251,27 @@ class ElasticSharing(object):
                     return True
             return False
 
-        shared_items = portal_catalog.searchResults(is_shared=True)
-        results = [format_item(a) for a in shared_items if is_shared(a)]
+        # shared_items = portal_catalog.searchResults(is_shared=True)
 
         # XXX TODO
-        #
-        # Query ES for all registers matching principals
+        # principals should return a list of all the principals for the current
+        # user
+
+        shared_items = self.elastic().search(index=ElasticSharing().get_index_name(),
+                                             doc_type='sharing',
+                                             body={'query': {
+                                                   'filtered': {
+                                                       'query': {'match_all': {}},
+                                                       'filter': {
+                                                           'terms': {
+                                                               'principal': principals
+                                                           }
+                                                       }
+                                                   }}})
+
+        shared_items = [a['_source'] for a in shared_items['hits']['hits']]
+        # Tha is_shared is still required?
+        results = [format_item(a) for a in shared_items if is_shared(a)]
 
         return results
 
