@@ -91,6 +91,10 @@ class Communities(REST):
 
     @api_resource(required=['title', 'community_type'])
     def POST(self):
+        from zope.interface import alsoProvides
+        from plone.protect.interfaces import IDisableCSRFProtection
+        alsoProvides(self.request, IDisableCSRFProtection)
+
         nom = self.params.pop('title')
         community_type = self.params.pop('community_type')
         description = self.params.pop('description',None)
@@ -119,8 +123,8 @@ class Communities(REST):
                                                           community_type=community_type,
                                                           activity_view=activity_view,
                                                           twitter_hashtag=twitter_hashtag,
-                                                          notify_activity_via_push=notify_activity_via_push,
-                                                          notify_activity_via_push_comments_too=notify_activity_via_push_comments_too,
+                                                          notify_activity_via_push=True if notify_activity_via_push == 'True' else None,
+                                                          notify_activity_via_push_comments_too=True if notify_activity_via_push_comments_too == 'True' else None,
                                                           checkConstraints=False)
             new_community = self.context[new_community_id]
 
