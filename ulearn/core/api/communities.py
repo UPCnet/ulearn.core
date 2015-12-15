@@ -7,6 +7,7 @@ from zope.container.interfaces import INameChooser
 from Products.CMFPlone.utils import safe_unicode
 from Products.CMFPlone.interfaces import IPloneSiteRoot
 from plone import api
+from Products.CMFPlone.utils import normalizeString
 
 from ulearn.core.api import ApiResponse
 from ulearn.core.api import BadParameters
@@ -91,40 +92,38 @@ class Communities(REST):
 
     @api_resource(required=['title', 'community_type'])
     def POST(self):
-        from zope.interface import alsoProvides
-        from plone.protect.interfaces import IDisableCSRFProtection
-        alsoProvides(self.request, IDisableCSRFProtection)
-
-        nom = self.params.pop('title')
-        community_type = self.params.pop('community_type')
-        description = self.params.pop('description',None)
-        image = self.params.pop('image', None)
-        activity_view = self.params.pop('activity_viw', None)
-        twitter_hashtag = self.params.pop('twitter_hashtag', None)
-        notify_activity_via_push = self.params.pop('notify_activity_via_push', None)
-        notify_activity_via_push_comments_too = self.params.pop('notify_activity_via_push_comments_too', None)
+	params = {}
+        params['nom'] = self.params.pop('title')
+        params['community_type'] = self.params.pop('community_type')
+        params['description'] = self.params.pop('description',None)
+        params['image'] = self.params.pop('image', None)
+        params['activity_view'] = self.params.pop('activity_viw', None)
+        params['twitter_hashtag'] = self.params.pop('twitter_hashtag', None)
+        params['notify_activity_via_push'] = self.params.pop('notify_activity_via_push', None)
+        params['notify_activity_via_push_comments_too'] = self.params.pop('notify_activity_via_push_comments_too', None)
 
         pc = api.portal.get_tool('portal_catalog')
-        nom = safe_unicode(nom)
-        chooser = INameChooser(self.context)
-        id_normalized = chooser.chooseName(nom, self.context.aq_parent)
+        nom = safe_unicode(params['nom'])
+	id_normalized = normalizeString(nom)
         result = pc.unrestrictedSearchResults(portal_type='ulearn.community',
                                               id=id_normalized)
 
         if result:
             # If user hasn't been created right now, update
-            success_response = 'community "{}" already exists.'.format(nom)
+	    community = result[0].getObject()
+	    self.update_community(community, **params)
+            success_response = 'community "{}" updated.'.format(nom)
             status = 200
         else:
             new_community_id = self.context.invokeFactory('ulearn.community', id_normalized,
-                                                          title=nom,
-                                                          description=description,
-                                                          image=image,
-                                                          community_type=community_type,
-                                                          activity_view=activity_view,
-                                                          twitter_hashtag=twitter_hashtag,
-                                                          notify_activity_via_push=True if notify_activity_via_push == 'True' else None,
-                                                          notify_activity_via_push_comments_too=True if notify_activity_via_push_comments_too == 'True' else None,
+                                                          title=params['nom'],
+                                                          description=params['description'],
+                                                          image=params['image'],
+                                                          community_type=params['community_type'],
+                                                          activity_view=params['activity_view'],
+                                                          twitter_hashtag=params['twitter_hashtag'],
+                                                          notify_activity_via_push=True if params['notify_activity_via_push'] == 'True' else None,
+                                                          notify_activity_via_push_comments_too=True if params['notify_activity_via_push_comments_too'] == 'True' else None,
                                                           checkConstraints=False)
             new_community = self.context[new_community_id]
 
@@ -132,6 +131,22 @@ class Communities(REST):
             status = 201
         logger.info(success_response)
         return ApiResponse.from_string(success_response, code=status)
+
+    def update_community(self, community,  **properties):
+        community.title=properties['nom'] if properties['nom'] is not None else None
+        community.description=properties['description'] if properties['description'] is not None else None
+        community.image=properties['image'] if properties['image'] is not None else None
+        community.community_type=properties['community_type'] if properties['community_type'] is not None else None
+        community.activity_view=properties['activity_view'] if properties['activity_view'] is not None else None
+        community.twitter_hashtag=properties['twitter_hashtag'] if properties['twitter_hashtag'] is not None else None
+        if properties['notify_activity_via_push'] is not None:
+            community.notify_activity_via_push=True if properties['notify_activity_via_push'] == 'True' else None
+        if properties['notify_activity_via_push_comments_too'] is not None:
+            community.notify_activity_via_push_comments_too=True if properties['notify_activity_via_push_comments_too'] == 'True' else None
+        community.reindexObject()
+
+
+
 
     def get_favorites(self):
         pc = api.portal.get_tool('portal_catalog')

@@ -8,6 +8,7 @@ from zeam.component import getComponent
 from zExceptions import NotFound
 from zope.event import notify
 from zope.component import queryUtility
+from zope.interface import alsoProvides
 
 from plone.registry.interfaces import IRegistry
 
@@ -23,6 +24,12 @@ ALLOWED_REST_METHODS = ('GET', 'POST', 'HEAD', 'PUT', 'DELETE')
 import logging
 logger = logging.getLogger(__name__)
 
+try:
+    from plone.protect.interfaces import IDisableCSRFProtection
+except:
+    DISABLE_CSRF = True
+else:
+    DISABLE_CSRF = False
 
 class BadParameters(Exception):
     pass
@@ -62,7 +69,8 @@ class api_resource(object):
         def wrapped(resource, *args):
             response_content = {}
             response_code = 200
-
+            if not DISABLE_CSRF:
+                alsoProvides(resource.request, IDisableCSRFProtection)
             try:
                 resource.extract_params(required=self.required)
                 response = fun(resource, *args)
