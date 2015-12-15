@@ -497,16 +497,20 @@ class CommunityAdapterMixin(object):
         community = self.context
         if community.community_type == u'Open' or community.community_type == u'Closed':
             adapter = getAdapter(self.context, ICommunityTyped, name=self.context.community_type)
-
+	    try:
+		user_id = user.id
+	    except:
+		# json with request
+		user_id = user['id']
             # Unsubscribe to context
             try:
-                adapter.remove_max_subscription_atomic(user.id)
+                adapter.remove_max_subscription_atomic(user_id)
             except:
                 return dict(error='Something bad happened while sending the related MAX request.',
                             status_code='502')
 
             # Remove from acl
-            adapter.remove_acl_atomic(user.id)
+            adapter.remove_acl_atomic(user_id)
 
             acl = adapter.get_acl()
             # Finally, we update the plone permissions

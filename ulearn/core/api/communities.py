@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from five import grok
+from hashlib import sha1
 from zope.component import getAdapter
 from zope.component import getAdapters
 
@@ -113,7 +114,7 @@ class Communities(REST):
             # If user hasn't been created right now, update
             community = result[0].getObject()
             self.update_community(community, **params)
-            success_response = 'community "{}" updated.'.format(nom)
+            success_response = 'community "{}" with hash "{}" updated.'.format(nom, sha1(community.absolute_url()).hexdigest())
             status = 200
         else:
             new_community_id = self.context.invokeFactory('ulearn.community', id_normalized,
@@ -127,8 +128,7 @@ class Communities(REST):
                                                           notify_activity_via_push_comments_too=True if params['notify_activity_via_push_comments_too'] == 'True' else None,
                                                           checkConstraints=False)
             new_community = self.context[new_community_id]
-
-            success_response = 'Created community "{}".'.format(new_community.absolute_url())
+            success_response = 'Created community "{}" with hash "{}".'.format(new_community.absolute_url(), sha1(new_community.absolute_url()).hexdigest())
             status = 201
         logger.info(success_response)
         return ApiResponse.from_string(success_response, code=status)
@@ -312,8 +312,9 @@ class Subscriptions(REST, CommunityMixin):
         if check_permission is not True:
             return check_permission
 
-        user = self.params.pop('user')
         adapter = getAdapter(self.community, ICommunityTyped, name=self.community.community_type)
-        message = adapter.unsubscribe_user(user)
+	users = self.params.pop('users')
+	for user in users:
+        	message = adapter.unsubscribe_user(user)
 
         return ApiResponse(message, code=204)
