@@ -92,10 +92,11 @@ class Communities(REST):
 
     @api_resource(required=['title', 'community_type'])
     def POST(self):
+
         params = {}
         params['nom'] = self.params.pop('title')
         params['community_type'] = self.params.pop('community_type')
-        params['description'] = self.params.pop('description',None)
+        params['description'] = self.params.pop('description', None)
         params['image'] = self.params.pop('image', None)
         params['activity_view'] = self.params.pop('activity_viw', None)
         params['twitter_hashtag'] = self.params.pop('twitter_hashtag', None)
@@ -299,3 +300,20 @@ class Subscriptions(REST, CommunityMixin):
         # XXX: Until we do not have a proper Hub online
         adapter.update_hub_subscriptions()
 
+    @api_resource()
+    def DELETE(self):
+        # Check if there's a valid community with the requested hash
+        lookedup_obj = self.lookup_community()
+        if lookedup_obj is not True:
+            return lookedup_obj
+
+        # Hard security validation as the view is soft checked
+        check_permission = self.check_roles(self.community, ['Owner', 'Manager'])
+        if check_permission is not True:
+            return check_permission
+
+        user = self.params.pop('user')
+        adapter = getAdapter(self.community, ICommunityTyped, name=self.community.community_type)
+        message = adapter.unsubscribe_user(user)
+
+        return ApiResponse(message, code=204)

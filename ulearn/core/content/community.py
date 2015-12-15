@@ -493,6 +493,35 @@ class CommunityAdapterMixin(object):
         if changed:
             self.context.reindexObjectSecurity()
 
+    def unsubscribe_user(self, user):
+        community = self.context
+        if community.community_type == u'Open' or community.community_type == u'Closed':
+            adapter = getAdapter(self.context, ICommunityTyped, name=self.context.community_type)
+
+            # Unsubscribe to context
+            try:
+                adapter.remove_max_subscription_atomic(user.id)
+            except:
+                return dict(error='Something bad happened while sending the related MAX request.',
+                            status_code='502')
+
+            # Remove from acl
+            adapter.remove_acl_atomic(user.id)
+
+            acl = adapter.get_acl()
+            # Finally, we update the plone permissions
+            adapter.set_plone_permissions(acl)
+
+            # Unfavorite
+            IFavorite(self.context).remove(user)
+
+            return dict(message='Unsubscription to the requested community done.')
+
+        elif community.community_type == u'Organizative':
+            # Bad, bad guy... You shouldn't been trying this...
+            return dict(error='Unsubscription from organizative community forbidden.',
+                        status_code='403')
+
 
 @grok.implementer(ICommunityTyped)
 @grok.adapter(ICommunity, name='Organizative')
@@ -888,36 +917,11 @@ class UnSubscribe(grok.View):
 
     @json_response
     def render(self):
-        community = self.context
         current_user = api.user.get_current()
 
         if self.request.method == 'POST':
-            if community.community_type == u'Open' or community.community_type == u'Closed':
-                adapter = getAdapter(self.context, ICommunityTyped, name=self.context.community_type)
-
-                # Unsubscribe to context
-                try:
-                    adapter.remove_max_subscription_atomic(current_user.id)
-                except:
-                    return dict(error='Something bad happened while sending the related MAX request.',
-                                status_code='502')
-
-                # Remove from acl
-                adapter.remove_acl_atomic(current_user.id)
-
-                acl = adapter.get_acl()
-                # Finally, we update the plone permissions
-                adapter.set_plone_permissions(acl)
-
-                # Unfavorite
-                IFavorite(self.context).remove(current_user)
-
-                return dict(message='Unsubscription to the requested community done.')
-
-            elif community.community_type == u'Organizative':
-                # Bad, bad guy... You shouldn't been trying this...
-                return dict(error='Unsubscription from organizative community forbidden.',
-                            status_code='403')
+            adapter = getAdapter(self.context, ICommunityTyped, name=self.context.community_type)
+            return adapter.unsubscribe_user(current_user)
 
         if self.request.method != 'POST':
             return dict(error='Bad request. POST request expected.',
