@@ -92,7 +92,7 @@ class Communities(REST):
 
     @api_resource(required=['title', 'community_type'])
     def POST(self):
-	params = {}
+        params = {}
         params['nom'] = self.params.pop('title')
         params['community_type'] = self.params.pop('community_type')
         params['description'] = self.params.pop('description',None)
@@ -104,14 +104,14 @@ class Communities(REST):
 
         pc = api.portal.get_tool('portal_catalog')
         nom = safe_unicode(params['nom'])
-	id_normalized = normalizeString(nom)
+        id_normalized = normalizeString(nom)
         result = pc.unrestrictedSearchResults(portal_type='ulearn.community',
                                               id=id_normalized)
 
         if result:
             # If user hasn't been created right now, update
-	    community = result[0].getObject()
-	    self.update_community(community, **params)
+            community = result[0].getObject()
+            self.update_community(community, **params)
             success_response = 'community "{}" updated.'.format(nom)
             status = 200
         else:
@@ -133,20 +133,17 @@ class Communities(REST):
         return ApiResponse.from_string(success_response, code=status)
 
     def update_community(self, community,  **properties):
-        community.title=properties['nom'] if properties['nom'] is not None else None
-        community.description=properties['description'] if properties['description'] is not None else None
-        community.image=properties['image'] if properties['image'] is not None else None
-        community.community_type=properties['community_type'] if properties['community_type'] is not None else None
-        community.activity_view=properties['activity_view'] if properties['activity_view'] is not None else None
-        community.twitter_hashtag=properties['twitter_hashtag'] if properties['twitter_hashtag'] is not None else None
+        community.title = properties['nom'] if properties['nom'] is not None else None
+        community.description = properties['description'] if properties['description'] is not None else None
+        community.image = properties['image'] if properties['image'] is not None else None
+        community.community_type = properties['community_type'] if properties['community_type'] is not None else None
+        community.activity_view = properties['activity_view'] if properties['activity_view'] is not None else None
+        community.twitter_hashtag = properties['twitter_hashtag'] if properties['twitter_hashtag'] is not None else None
         if properties['notify_activity_via_push'] is not None:
-            community.notify_activity_via_push=True if properties['notify_activity_via_push'] == 'True' else None
+            community.notify_activity_via_push = True if properties['notify_activity_via_push'] == 'True' else None
         if properties['notify_activity_via_push_comments_too'] is not None:
-            community.notify_activity_via_push_comments_too=True if properties['notify_activity_via_push_comments_too'] == 'True' else None
+            community.notify_activity_via_push_comments_too = True if properties['notify_activity_via_push_comments_too'] == 'True' else None
         community.reindexObject()
-
-
-
 
     def get_favorites(self):
         pc = api.portal.get_tool('portal_catalog')
