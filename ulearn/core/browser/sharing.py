@@ -311,6 +311,22 @@ class Shared(grok.View):
         return results
 
 
+# class Sharing(grok.View):
+#     """
+#        Substitution of the default sharing view
+#     """
+#     grok.context(Interface)
+#     grok.require('genweb.authenticated')
+#     grok.layer(IUlearnTheme)
+
+#     def get_acl(self):
+#         local_roles = self.context.__ac_local_roles__.keys()
+#         acl =
+
+
+#         return acl
+
+
 class IShared(Interface):
     def is_shared():
         """ Is this object shared outside a community? (true or false) """
