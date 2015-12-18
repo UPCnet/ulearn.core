@@ -3,6 +3,7 @@ from Products.Five.browser import BrowserView
 from zope.component import queryUtility
 from plone.registry.interfaces import IRegistry
 from Products.CMFCore.utils import getToolByName
+from Products.CMFPlone.interfaces.siteroot import IPloneSiteRoot
 
 from ulearn.core.controlpanel import IUlearnControlPanelSettings
 
@@ -23,3 +24,15 @@ class ulearnUtils(BrowserView):
             return settings.url_forget_password
         else:
             return base_path + settings.url_forget_password
+
+    def is_angularview(self):
+        if IPloneSiteRoot.providedBy(self.context):
+            return None
+        else:
+            return ''
+
+    def is_siteroot(self):
+        if IPloneSiteRoot.providedBy(self.context):
+            return True
+        else:
+            return False
