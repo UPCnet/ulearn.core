@@ -497,11 +497,11 @@ class CommunityAdapterMixin(object):
         community = self.context
         if community.community_type == u'Open' or community.community_type == u'Closed':
             adapter = getAdapter(self.context, ICommunityTyped, name=self.context.community_type)
-	    try:
-		user_id = user.id
-	    except:
-		# json with request
-		user_id = user['id']
+            try:
+                user_id = user.id
+            except:
+                # json with request
+                user_id = user['id']
             # Unsubscribe to context
             try:
                 adapter.remove_max_subscription_atomic(user_id)
