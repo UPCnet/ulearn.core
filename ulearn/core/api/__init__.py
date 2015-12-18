@@ -43,6 +43,15 @@ class ObjectNotFound(Exception):
     pass
 
 
+class Forbidden(Exception):
+    pass
+
+
+class Redirect(Exception):
+    def __init__(self, location):
+        self.location = location
+
+
 class ApiResponse(object):
     def __init__(self, data, code=200):
         self.code = code
@@ -56,7 +65,7 @@ class ApiResponse(object):
 
 class api_resource(object):
     """
-        Decorator to validate ws paramenters and format output
+        Decorator to validate ws parameters and format output
     """
 
     def __init__(self, **settings):
@@ -65,6 +74,8 @@ class api_resource(object):
     def __call__(self, fun):
         settings = self.__dict__.copy()
         self.required = settings.pop('required', [])
+        self.required_roles = settings.pop('required_roles', [])
+        self.get_target = settings.pop('get_target', False)
 
         def wrapped(resource, *args):
             response_content = {}
@@ -73,6 +84,11 @@ class api_resource(object):
                 alsoProvides(resource.request, IDisableCSRFProtection)
             try:
                 resource.extract_params(required=self.required)
+                if self.get_target:
+                    resource.lookup_community()
+                if self.required_roles:
+                    resource.check_roles(obj=resource.target, roles=self.required_roles)
+
                 response = fun(resource, *args)
                 response_content = response.data
                 response_code = response.code
@@ -100,6 +116,24 @@ class api_resource(object):
                     'error_type': 'Missing parameters',
                     'error': 'Those parameters are missing: {}'.format(', '.join([a for a in exc.args[0]]))
                 }
+
+            except Forbidden as exc:
+                response_code = 403
+                response_content = {
+                    'status_code': response_code,
+                    'error_type': 'Forbidden',
+                    'error': exc.args[0]
+                }
+
+            except Redirect as exc:
+                response_code = 301
+                response_content = {
+                    'status_code': response_code,
+                    'error_type': 'Redirect',
+                    'error': 'Redirecting, no such error',
+                    'redirecting_to': exc.location
+                }
+                resource.response.redirect(exc.location, trusted=True)
 
             except Exception as exc:
                 traceback = sys.exc_info()[2]
@@ -190,6 +224,8 @@ class REST(REST_BASE):
         will be treated as the nestes class.
     """
 
+    target = None
+
     def browserDefault(self, request):
         """Render the component using a method called the same way
         that the HTTP method name.
@@ -249,11 +285,25 @@ class REST(REST_BASE):
                 allowed = True
 
         if not allowed:
-            self.response.setStatus(401)
-            return self.json_response(dict(error='You are not allowed to modify this object',
-                                           status_code=401))
+            raise Forbidden('You are not allowed to modify this object')
 
         return allowed
+
+    def lookup_community(self):
+        pc = api.portal.get_tool(name='portal_catalog')
+        result = pc.searchResults(community_hash=self.params['community'])
+
+        if not result:
+            # Fallback search by gwuuid
+            result = pc.searchResults(gwuuid=self.params['community'])
+
+            if not result:
+                # Not found either by hash nor by gwuuid
+                error_message = 'Community with has {} not found.'.format(self.params['community'])
+                logger.error(error_message)
+                raise ObjectNotFound(error_message)
+
+        self.target = result[0].getObject()
 
     def check_permission(self, obj, permission):
         if not api.user.has_permission(permission, obj):

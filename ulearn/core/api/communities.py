@@ -12,7 +12,6 @@ from Products.CMFPlone.utils import normalizeString
 
 from ulearn.core.api import ApiResponse
 from ulearn.core.api import BadParameters
-from ulearn.core.api import ObjectNotFound
 from ulearn.core.api import REST
 from ulearn.core.api import api_resource
 from ulearn.core.api import logger
@@ -25,22 +24,24 @@ from souper.soup import get_soup
 
 
 class CommunityMixin(object):
-    def lookup_community(self):
-        pc = api.portal.get_tool(name='portal_catalog')
-        result = pc.searchResults(community_hash=self.params['community'])
-
-        if not result:
-            # Fallback search by gwuuid
-            result = pc.searchResults(gwuuid=self.params['community'])
-
-            if not result:
-                # Not found either by hash nor by gwuuid
-                error_message = 'Community with has {} not found.'.format(self.params['community'])
-                logger.error(error_message)
-                raise ObjectNotFound(error_message)
-
-        self.community = result[0].getObject()
-        return True
+    """ """
+    # Transferred to __init__
+    # def lookup_community(self):
+    #     pc = api.portal.get_tool(name='portal_catalog')
+    #     result = pc.searchResults(community_hash=self.params['community'])
+    #
+    #     if not result:
+    #         # Fallback search by gwuuid
+    #         result = pc.searchResults(gwuuid=self.params['community'])
+    #
+    #         if not result:
+    #             # Not found either by hash nor by gwuuid
+    #             error_message = 'Community with has {} not found.'.format(self.params['community'])
+    #             logger.error(error_message)
+    #             raise ObjectNotFound(error_message)
+    #
+    #     self.community = result[0].getObject()
+    #     return True
 
 
 class Communities(REST):
@@ -54,14 +55,14 @@ class Communities(REST):
     grok.adapts(APIRoot, IPloneSiteRoot)
     grok.require('genweb.authenticated')
 
-    @api_resource()
+    @api_resource(required_roles=['Member', 'Manager'])
     def GET(self):
         """ Returns all the user communities and the open ones. """
 
         # Hard security validation as the view is soft checked
-        check_permission = self.check_roles(roles=['Member', 'Manager'])
-        if check_permission is not True:
-            return check_permission
+        # check_permission = self.check_roles(roles=['Member', 'Manager'])
+        # if check_permission is not True:
+        #     return check_permission
 
         # Get all communities for the current user
         pc = api.portal.get_tool('portal_catalog')
@@ -93,7 +94,6 @@ class Communities(REST):
 
     @api_resource(required=['title', 'community_type'])
     def POST(self):
-
         params = {}
         params['nom'] = self.params.pop('title')
         params['community_type'] = self.params.pop('community_type')
@@ -177,50 +177,50 @@ class Community(REST, CommunityMixin):
     def __init__(self, context, request):
         super(Community, self).__init__(context, request)
 
-    @api_resource(required=['community_type'])
+    @api_resource(required=['community_type'], get_target=True, required_roles=['Owner', 'Manager'])
     def PUT(self):
         """ Modifies the community itself. """
         # Check if there's a valid community with the requested hash
-        lookedup_obj = self.lookup_community()
-        if lookedup_obj is not True:
-            return lookedup_obj
+        # lookedup_obj = self.lookup_community()
+        # if lookedup_obj is not True:
+        #     return lookedup_obj
 
         # Hard security validation as the view is soft checked
-        check_permission = self.check_roles(self.community, ['Owner', 'Manager'])
-        if check_permission is not True:
-            return check_permission
+        # check_permission = self.check_roles(self.community, ['Owner', 'Manager'])
+        # if check_permission is not True:
+        #     return check_permission
 
         if 'community_type' in self.payload:
             # We are changing the type of the community
             # Check if it's a legit change
-            if self.params['community_type'] in [a[0] for a in getAdapters((self.community,), ICommunityTyped)]:
-                adapter = getAdapter(self.community, ICommunityTyped, name=self.params['community_type'])
+            if self.params['community_type'] in [a[0] for a in getAdapters((self.target,), ICommunityTyped)]:
+                adapter = getAdapter(self.target, ICommunityTyped, name=self.params['community_type'])
             else:
                 raise BadParameters('Bad request, wrong community type')
 
-            if self.params['community_type'] == self.community.community_type:
+            if self.params['community_type'] == self.target.community_type:
                 raise BadParameters('Bad request, already that community type')
 
             # Everything is ok, proceed
             adapter.update_community_type()
 
-        success_response = 'Updated community "{}"'.format(self.community.absolute_url())
+        success_response = 'Updated community "{}"'.format(self.target.absolute_url())
         logger.info(success_response)
         return ApiResponse.from_string(success_response)
 
-    @api_resource()
+    @api_resource(get_target=True, required_roles=['Owner', 'Manager'])
     def DELETE(self):
         # Check if there's a valid community with the requested hash
-        lookedup_obj = self.lookup_community()
-        if lookedup_obj is not True:
-            return lookedup_obj
+        # lookedup_obj = self.lookup_community()
+        # if lookedup_obj is not True:
+        #     return lookedup_obj
 
         # Hard security validation as the view is soft checked
-        check_permission = self.check_roles(self.community, ['Owner', 'Manager'])
-        if check_permission is not True:
-            return check_permission
+        # check_permission = self.check_roles(self.community, ['Owner', 'Manager'])
+        # if check_permission is not True:
+        #     return check_permission
 
-        api.content.delete(obj=self.community)
+        api.content.delete(obj=self.target)
 
         return ApiResponse({}, code=204)
 
@@ -242,7 +242,7 @@ class Subscriptions(REST, CommunityMixin):
     grok.adapts(Community, IPloneSiteRoot)
     grok.require('genweb.authenticated')
 
-    @api_resource()
+    @api_resource(get_target=True, required_roles=['Owner', 'Manager'])
     def GET(self):
         """
             Get the subscriptions for the community. The security is given an
@@ -251,20 +251,20 @@ class Subscriptions(REST, CommunityMixin):
             the target community.
         """
         # Lookup for object
-        lookedup_obj = self.lookup_community()
-        if lookedup_obj is not True:
-            return lookedup_obj
+        # lookedup_obj = self.lookup_community()
+        # if lookedup_obj is not True:
+        #     return lookedup_obj
 
         # Hard security validation as the view is soft checked
-        check_permission = self.check_roles(self.community, ['Owner', 'Manager'])
-        if check_permission is not True:
-            return check_permission
+        # check_permission = self.check_roles(self.community, ['Owner', 'Manager'])
+        # if check_permission is not True:
+        #     return check_permission
 
-        result = ICommunityACL(self.community)().attrs.get('acl', '')
+        result = ICommunityACL(self.target)().attrs.get('acl', '')
 
         return ApiResponse(result)
 
-    @api_resource()
+    @api_resource(get_target=True, required_roles=['Owner', 'Manager'])
     def POST(self):
         """
             Subscribes a bunch of users to a community the security is given an
@@ -273,24 +273,24 @@ class Subscriptions(REST, CommunityMixin):
             the target community.
         """
         # Lookup for object
-        lookedup_obj = self.lookup_community()
-        if lookedup_obj is not True:
-            return lookedup_obj
+        # lookedup_obj = self.lookup_community()
+        # if lookedup_obj is not True:
+        #     return lookedup_obj
 
         # Hard security validation as the view is soft checked
-        check_permission = self.check_roles(self.community, ['Owner', 'Manager'])
-        if check_permission is not True:
-            return check_permission
+        # check_permission = self.check_roles(self.community, ['Owner', 'Manager'])
+        # if check_permission is not True:
+        #     return check_permission
 
         self.update_subscriptions()
 
         # Response successful
-        success_response = 'Updated community "{}" subscriptions'.format(self.community.absolute_url())
+        success_response = 'Updated community "{}" subscriptions'.format(self.target.absolute_url())
         logger.info(success_response)
         return ApiResponse.from_string(success_response)
 
     def update_subscriptions(self):
-        adapter = getAdapter(self.community, ICommunityTyped, name=self.community.community_type)
+        adapter = getAdapter(self.target, ICommunityTyped, name=self.target.community_type)
 
         # Change the uLearn part of the community
         adapter.update_acl(self.payload)
@@ -300,21 +300,22 @@ class Subscriptions(REST, CommunityMixin):
         # XXX: Until we do not have a proper Hub online
         adapter.update_hub_subscriptions()
 
-    @api_resource()
+    @api_resource(get_target=True, required_roles=['Owner', 'Manager'])
     def DELETE(self):
-        # Check if there's a valid community with the requested hash
-        lookedup_obj = self.lookup_community()
-        if lookedup_obj is not True:
-            return lookedup_obj
-
-        # Hard security validation as the view is soft checked
-        check_permission = self.check_roles(self.community, ['Owner', 'Manager'])
-        if check_permission is not True:
-            return check_permission
+        # # Check if there's a valid community with the requested hash
+        # lookedup_obj = self.lookup_community()
+        # if lookedup_obj is not True:
+        #     return lookedup_obj
+        #
+        # # Hard security validation as the view is soft checked
+        # check_permission = self.check_roles(self.community, ['Owner', 'Manager'])
+        # if check_permission is not True:
+        #     return check_permission
 
         adapter = getAdapter(self.community, ICommunityTyped, name=self.community.community_type)
-	users = self.params.pop('users')
-	for user in users:
-        	message = adapter.unsubscribe_user(user)
+        users = self.params.pop('users')
+
+        for user in users:
+            message = adapter.unsubscribe_user(user)
 
         return ApiResponse(message, code=204)

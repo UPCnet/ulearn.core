@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from plone import api
 from zope.component import getUtility
 from zope.component import getMultiAdapter
 from zope.publisher.browser import TestRequest
@@ -91,16 +92,16 @@ class TestAPI(uLearnTestBase):
         response = json.loads(response)
         self.assertEqual(response['message'], 'User {} created'.format(username))
 
-    # def test_people_delete(self):
-    #     """ Delete the given community. """
-    #     username_plone = 'ulearn.testuser1'
-    #     login(self.portal, username_plone)
-    #     username = 'usertest'
+    def test_people_delete(self):
+        """ Delete the given user. """
+        username_plone = 'ulearn.testuser1'
+        login(self.portal, username_plone)
+        username = 'ulearn.testuser2'
 
-    #     user_view = self.request_API_endpoint(username, ['api', 'people', username])
-    #     user_view.DELETE()
+        user_view = self.request_API_endpoint(username, ['api', 'people', username])
+        user_view.DELETE()
 
-    #     self.assertTrue(username not in self.portal.objectIds())
+        self.assertIsNone(api.user.get('ulearn.testuser2'))
 
     def test_news_post(self):
         username_plone = 'ulearn.testuser1'
@@ -248,6 +249,50 @@ class TestAPI(uLearnTestBase):
 
         self.assertEqual(community_view.request.response.getStatus(), 200)
         self.assertEqual(community.community_type, 'Organizative')
+
+    def test_community_subscribe_post_user_not_found(self):
+        """ Try to subscribe principals to a community which the user has no permissions at all. """
+        username = 'ulearn.testuser1'
+        login(self.portal, username)
+        community = self.create_test_community()
+        gwuuid = IGWUUID(community).get()
+
+        acl = dict(users=[dict(id=u'janet.dura', displayName=u'Janet Durà', role=u'writer'),
+                          dict(id=u'victor.fernandez', displayName=u'Víctor Fernández de Alba', role=u'reader')],
+                   groups=[dict(id=u'PAS', displayName=u'PAS UPC', role=u'writer'),
+                           dict(id=u'UPCnet', displayName=u'UPCnet', role=u'reader')]
+                   )
+
+        subscriptions_view = self.request_API_endpoint(username, ['api', 'communities', gwuuid, 'subscriptions'], body=acl)
+        httpretty.enable()
+        http_mock_hub_syncacl(acl, self.settings.hub_server)
+        login(self.portal, 'ulearn.testuser2')
+
+        response = subscriptions_view.POST()
+        response = json.loads(response)
+        self.assertTrue(response['status_code'] == 404)
+
+    def test_community_subscribe_post_user_not_allowed(self):
+        username = 'ulearn.testuser1'
+        login(self.portal, username)
+        community = self.create_test_community(community_type='Open')
+        gwuuid = IGWUUID(community).get()
+
+        acl = dict(users=[dict(id=u'janet.dura', displayName=u'Janet Durà', role=u'writer'),
+                          dict(id=u'victor.fernandez', displayName=u'Víctor Fernández de Alba', role=u'reader')],
+                   groups=[dict(id=u'PAS', displayName=u'PAS UPC', role=u'writer'),
+                           dict(id=u'UPCnet', displayName=u'UPCnet', role=u'reader')]
+                   )
+
+        subscriptions_view = self.request_API_endpoint(username, ['api', 'communities', gwuuid, 'subscriptions'], body=acl)
+        httpretty.enable()
+        http_mock_hub_syncacl(acl, self.settings.hub_server)
+        login(self.portal, 'ulearn.testuser2')
+
+        response = subscriptions_view.POST()
+        response = json.loads(response)
+
+        self.assertTrue(response['status_code'] == 403)
 
     def test_communities_get(self):
         """ Gets all communities and its properties for the requester user. """

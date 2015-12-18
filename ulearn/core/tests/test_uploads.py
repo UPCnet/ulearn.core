@@ -112,8 +112,8 @@ class TestUploads(uLearnTestBase):
         transaction.commit()
 
         self.assertEqual(res.status_code, 201)
-        self.assertTrue('avatar.png' in community['documents']['media'].objectIds())
-        self.assertTrue(community['documents']['media']['avatar.png'].title, activity_data)
+        self.assertTrue('this-is-my-fancy-file' in community['documents']['media'].objectIds())
+        self.assertTrue(community['documents']['media']['this-is-my-fancy-file'].title, activity_data)
 
     def test_upload_file_to_community_with_parameters_with_strange_chars(self):
         login(self.portal, 'ulearn.testuser1')
@@ -129,5 +129,5 @@ class TestUploads(uLearnTestBase):
         transaction.commit()
 
         self.assertEqual(res.status_code, 201)
-        self.assertTrue('avatar.png' in community['documents']['media'].objectIds())
-        self.assertEqual(community['documents']['media']['avatar.png'].title, activity_data['activity'])
+        self.assertTrue('this-is-my-fancy-file-c-a' in community['documents']['media'].objectIds())
+        self.assertEqual(community['documents']['media']['this-is-my-fancy-file-c-a'].title, activity_data['activity'])
