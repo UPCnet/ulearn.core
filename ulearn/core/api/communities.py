@@ -232,8 +232,8 @@ class Subscriptions(REST, CommunityMixin):
         Manages the community subscriptions (ACL) for a given list of
         users/groups in the form:
 
-        {'users': [{'id': 'user1', 'displayName': 'Display name', role: 'owner'}],
-         'groups': [{'id': 'group1', 'displayName': 'Display name', role: 'writer'}]}
+        {'users': [{'id': 'user1', 'displayName': 'Display name', 'role': 'owner'}],
+         'groups': [{'id': 'group1', 'displayName': 'Display name', 'role': 'writer'}]}
 
         At this time of writting (Feb2015), there are only three roles available
         and each other exclusive: owner, writer, reader.
@@ -282,23 +282,28 @@ class Subscriptions(REST, CommunityMixin):
         # if check_permission is not True:
         #     return check_permission
 
-        self.update_subscriptions()
+        self.set_subscriptions()
 
         # Response successful
         success_response = 'Updated community "{}" subscriptions'.format(self.target.absolute_url())
         logger.info(success_response)
         return ApiResponse.from_string(success_response)
 
-    def update_subscriptions(self):
-        adapter = getAdapter(self.target, ICommunityTyped, name=self.target.community_type)
+    @api_resource(get_target=True, required_roles=['Owner', 'Manager'])
+    def PUT(self):
+        """
+            Subscribes a bunch of users to a community the security is given an
+            initial soft check for authenticated users at the view level and
+            then by checking explicitly if the requester user has permission on
+            the target community.
+        """
 
-        # Change the uLearn part of the community
-        adapter.update_acl(self.payload)
-        adapter.set_plone_permissions(self.payload)
+        self.update_subscriptions()
 
-        # Communicate the change in the community subscription to the uLearnHub
-        # XXX: Until we do not have a proper Hub online
-        adapter.update_hub_subscriptions()
+        # Response successful
+        success_response = 'Updated community "{}" subscriptions'.format(self.target.absolute_url())
+        logger.info(success_response)
+        return ApiResponse.from_string(success_response)
 
     @api_resource(get_target=True, required_roles=['Owner', 'Manager'])
     def DELETE(self):
@@ -319,3 +324,25 @@ class Subscriptions(REST, CommunityMixin):
             message = adapter.unsubscribe_user(user)
 
         return ApiResponse(message, code=204)
+
+    def set_subscriptions(self):
+        adapter = getAdapter(self.target, ICommunityTyped, name=self.target.community_type)
+
+        # Change the uLearn part of the community
+        adapter.update_acl(self.payload)
+        adapter.set_plone_permissions(self.payload)
+
+        # Communicate the change in the community subscription to the uLearnHub
+        # XXX: Until we do not have a proper Hub online
+        adapter.update_hub_subscriptions()
+
+    def update_subscriptions(self):
+        adapter = getAdapter(self.target, ICommunityTyped, name=self.target.community_type)
+
+        # Change the uLearn part of the community
+
+        users = self.params.pop('users')
+        for user in users:
+            adapter.add_max_subscription_atomic(user['id'])
+            adapter.update_acl_atomic(user['id'], user['role'])
+        adapter.set_plone_permissions(self.payload)
