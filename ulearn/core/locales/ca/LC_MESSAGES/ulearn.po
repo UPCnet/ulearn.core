@@ -893,3 +893,43 @@ msgstr "Gestió de canvis"
 
 msgid "Gestio de riscos"
 msgstr "Gestió de riscos"
+
+#Stats Generali
+msgid "btnInfo"
+msgstr "Accés a informació diària"
+
+msgid "January"
+msgstr "Gener"
+
+msgid "February"
+msgstr "Febrer"
+
+msgid "March"
+msgstr "Març"
+
+msgid "April"
+msgstr "Abril"
+
+msgid "May"
+msgstr "Maig"
+
+msgid "June"
+msgstr "Juny"
+
+msgid "July"
+msgstr "Juliol"
+
+msgid "August"
+msgstr "Agost"
+
+msgid "September"
+msgstr "Setembre"
+
+msgid "October"
+msgstr "Octubre"
+
+msgid "November"
+msgstr "Novembre"
+
+msgid "December"
+msgstr "Desembre"
