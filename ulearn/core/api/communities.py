@@ -317,7 +317,7 @@ class Subscriptions(REST, CommunityMixin):
         # if check_permission is not True:
         #     return check_permission
 
-        adapter = getAdapter(self.community, ICommunityTyped, name=self.community.community_type)
+        adapter = getAdapter(self.target, ICommunityTyped, name=self.target.community_type)
         users = self.params.pop('users')
 
         for user in users:
