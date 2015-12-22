@@ -15,6 +15,7 @@ from ulearn.core.content.community import ICommunityTyped
 from ulearn.core.tests import uLearnTestBase
 from ulearn.core.content.community import ICommunityACL
 from ulearn.core.testing import ULEARN_CORE_FUNCTIONAL_TESTING
+from ulearn.core.testing import ULEARN_CORE_INTEGRATION_TESTING
 from ulearn.core.content.community import OPEN_PERMISSIONS
 from ulearn.core.content.community import CLOSED_PERMISSIONS
 from ulearn.core.api import queryRESTComponent
@@ -26,7 +27,7 @@ import json
 
 class TestAPI(uLearnTestBase):
 
-    layer = ULEARN_CORE_FUNCTIONAL_TESTING
+    layer = ULEARN_CORE_INTEGRATION_TESTING
 
     def setUp(self):
         self.app = self.layer['app']
@@ -118,6 +119,22 @@ class TestAPI(uLearnTestBase):
         response = new_view.POST()
         response = json.loads(response)
         self.assertEqual(response['message'], 'News Item {} created'.format(newid))
+
+    def test_community_subscribe_put(self):
+        username = 'ulearn.testuser1'
+        login(self.portal, username)
+        community = self.create_test_community()
+        gwuuid = IGWUUID(community).get()
+
+        acl = dict(users=[dict(id=u'janet.dura', displayName=u'Janet Durà', role=u'writer')])
+        subscriptions_view = self.request_API_endpoint(username, ['api', 'communities', gwuuid, 'subscriptions'], body=acl)
+        response = subscriptions_view.PUT()
+
+        response = json.loads(response)
+        self.assertEqual(subscriptions_view.request.response.getStatus(), 200)
+        self.assertTrue('message' in response)
+        self.assertTrue('janet.dura' == ICommunityACL(community)().attrs['acl']['users'][1]['id'])
+        logout()
 
     def test_community_subscribe_post(self):
         username = 'ulearn.testuser1'
