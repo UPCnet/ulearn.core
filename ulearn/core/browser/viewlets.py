@@ -29,7 +29,18 @@ class ULearnNGDirectives(grok.Viewlet):
     grok.viewletmanager(IPortalHeader)
 
     def get_communities(self):
+        """ Gets the communities to show in the stats selectize dropdown
+        """
         pc = api.portal.get_tool('portal_catalog')
         all_communities = [{'hash': 'all', 'title': _(u'Todas las comunidades')}]
         all_communities += [{'hash': community.community_hash, 'title': community.Title} for community in pc.searchResults(portal_type='ulearn.community')]
         return json.dumps(all_communities)
+
+    def show_extended(self):
+        """ This attribute from the directive is used to show special buttons or
+            links in the stats tabs. This is common in client packages.
+        """
+        pqi = api.portal.get_tool('portal_quickinstaller')
+        pid = 'ulearn.generali'
+        installed = [p['id'] for p in pqi.listInstalledProducts()]
+        return pid in installed
