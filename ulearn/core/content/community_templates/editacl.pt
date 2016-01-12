@@ -19,10 +19,14 @@
   <metal:content-core define-macro="main">
 
     <div ng-controller="uLearnEditACL as ctrl" ngCloak
-         tal:attributes="ng-init string:ctrl.gwuuid='${view/get_gwuuid}'">
+         tal:attributes="ng-init string:ctrl.gwuuid='${view/get_gwuuid}'"
+         tal:define="roles view/get_acl_roles">
 
       <input type="hidden"
              tal:attributes="acl view/get_acl" />
+
+      <input type="hidden"
+             tal:attributes="roles roles" />
 
       <div class="user_group btn-group" ng-cloak>
         <button class="btn active"
@@ -56,9 +60,7 @@
               <tr>
                 <th>{{'COMMUNITY_ACL.USERNAME' | translate}}</th>
                 <th>{{'COMMUNITY_ACL.DISPLAYNAME' | translate}}</th>
-                <th>{{'COMMUNITY_ACL.READER' | translate}}</th>
-                <th>{{'COMMUNITY_ACL.WRITER' | translate}}</th>
-                <th>{{'COMMUNITY_ACL.OWNER' | translate}}</th>
+                <th tal:repeat="role roles" tal:content="string:{{'COMMUNITY_ACL.${role/header}' | translate}}"></th>
                 <th>{{'COMMUNITY_ACL.ACTIONS' | translate}}</th>
               </tr>
             </thead>
@@ -66,9 +68,7 @@
               <tr ng-repeat="user in ctrl.users">
                 <td>{{ user.id }}</td>
                 <td>{{ user.displayName }}</td>
-                <td class="text-center"><input ng-model="user.role" type="radio" name="{{user.id}}" value="reader" checked></td>
-                <td class="text-center"><input ng-model="user.role" type="radio" name="{{user.id}}" value="writer"></td>
-                <td class="text-center"><input ng-model="user.role" type="radio" name="{{user.id}}" value="owner"></td>
+                <td tal:repeat="role roles" class="text-center"><input ng-model="user.role" type="radio" name="{{user.id}}" tal:attributes="value role/id" checked></td>
                 <td class="text-center">
                     <button type="button" ng-click="ctrl.deleteUser(user)" class="btn btn-danger"><i class="fa fa-trash-o"></i></button>
                 </td>
@@ -99,9 +99,7 @@
               <tr>
                 <th>{{'COMMUNITY_ACL.GROUPNAME' | translate}}</th>
                 <th>{{'COMMUNITY_ACL.DISPLAYNAME' | translate}}</th>
-                <th>{{'COMMUNITY_ACL.READER' | translate}}</th>
-                <th>{{'COMMUNITY_ACL.WRITER' | translate}}</th>
-                <th>{{'COMMUNITY_ACL.OWNER' | translate}}</th>
+                <th tal:repeat="role roles" tal:content="string:{{'COMMUNITY_ACL.${role/header}' | translate}}"></th>
                 <th>{{'COMMUNITY_ACL.ACTIONS' | translate}}</th>
               </tr>
             </thead>
@@ -109,9 +107,9 @@
               <tr ng-repeat="group in ctrl.groups">
                 <td>{{ group.id }}</td>
                 <td>{{ group.displayName }}</td>
-                <td class="text-center"><input ng-model="group.role" type="radio" name="{{group.id}}" value="reader" checked></td>
-                <td class="text-center"><input ng-model="group.role" type="radio" name="{{group.id}}" value="writer"></td>
-                <td class="text-center"><input ng-model="group.role" type="radio" name="{{group.id}}" value="owner"></td>
+
+                <td tal:repeat="role roles" class="text-center"><input ng-model="group.role" type="radio" name="{{group.id}}" tal:attributes="value role/id" checked></td>
+
                 <td class="text-center">
                     <button type="button" ng-click="ctrl.deleteGroup(group)" class="btn btn-danger"><i class="fa fa-trash-o"></i></button>
                 </td>

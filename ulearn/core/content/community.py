@@ -24,7 +24,8 @@ from zope.schema.interfaces import IContextSourceBinder
 from zope.schema.vocabulary import SimpleVocabulary
 from zope.security import checkPermission
 from zope.interface import implementer
-
+from zope.globalrequest import getRequest
+from zope.publisher.interfaces.browser import IBrowserRequest
 from plone.dexterity.content import Container
 from plone.dexterity.utils import createContentInContainer
 from plone.directives import form
@@ -91,6 +92,13 @@ ORGANIZATIVE_PERMISSIONS = dict(read='subscribed',
                                 write='restricted',
                                 subscribe='restricted',
                                 unsubscribe='restricted')
+
+
+class CommunityForbiddenAction(Exception):
+    """
+        Exception to be raised when trying to execute an action that
+        is forbidden in the context being executed
+    """
 
 
 @grok.provider(IContextSourceBinder)
@@ -250,6 +258,9 @@ class ICommunityTyped(Interface):
 
 class CommunityAdapterMixin(object):
     """ Common methods for community adapters """
+
+    available_roles = ['reader', 'writer', 'owner']
+
     def __init__(self, context):
         self.context = context
         self.get_max_client()
@@ -493,62 +504,48 @@ class CommunityAdapterMixin(object):
         if changed:
             self.context.reindexObjectSecurity()
 
-    def unsubscribe_user(self, user):
-        community = self.context
-        if community.community_type == u'Open' or community.community_type == u'Closed':
-            adapter = getAdapter(self.context, ICommunityTyped, name=self.context.community_type)
-            try:
-                user_id = user.id
-            except:
-                # json with request
-                user_id = user['id']
-            # Unsubscribe to context
-            try:
-                adapter.remove_max_subscription_atomic(user_id)
-            except:
-                return dict(error='Something bad happened while sending the related MAX request.',
-                            status_code='502')
+    def unsubscribe_user(self, user_id):
+        """
+            Removes a user both from max and plone, updating related permissions
+        """
+        self.remove_max_subscription_atomic()
 
-            # Remove from acl
-            adapter.remove_acl_atomic(user_id)
+        # Remove from acl
+        self.remove_acl_atomic(user_id)
 
-            acl = adapter.get_acl()
-            # Finally, we update the plone permissions
-            adapter.set_plone_permissions(acl)
+        acl = self.get_acl()
+        # Finally, we update the plone permissions
+        self.set_plone_permissions(acl)
 
-            # Unfavorite
-            IFavorite(self.context).remove(user)
-
-            return dict(message='Unsubscription to the requested community done.')
-
-        elif community.community_type == u'Organizative':
-            # Bad, bad guy... You shouldn't been trying this...
-            return dict(error='Unsubscription from organizative community forbidden.',
-                        status_code='403')
+        # Unfavorite
+        IFavorite(self.context).remove(user_id)
 
 
 @grok.implementer(ICommunityTyped)
-@grok.adapter(ICommunity, name='Organizative')
+@grok.adapter(ICommunity, Interface, name='Organizative')
 class OrganizativeCommunity(CommunityAdapterMixin):
     """ Named adapter for the organizative communities """
-    def __init__(self, context):
+    def __init__(self, context, request):
         super(OrganizativeCommunity, self).__init__(context)
         self.max_permissions = ORGANIZATIVE_PERMISSIONS
         self.hub_permission_mapping = dict(reader=['read'],
                                            writer=['read', 'write'],
-                                           owner=['read', 'write', 'unsubscribe', 'flag', 'invite', 'kick'])
+                                           owner=['read', 'write', 'unsubscribe', 'flag', 'invite', 'kick', 'delete'])
+
+    def unsubscribe_user(self, user_id):
+        raise CommunityForbiddenAction('Unsubscription from organizative community forbidden.')
 
 
 @grok.implementer(ICommunityTyped)
-@grok.adapter(ICommunity, name='Open')
+@grok.adapter(ICommunity, Interface, name='Open')
 class OpenCommunity(CommunityAdapterMixin):
     """ Named adapter for the open communities """
-    def __init__(self, context):
+    def __init__(self, context, request):
         super(OpenCommunity, self).__init__(context)
         self.max_permissions = OPEN_PERMISSIONS
         self.hub_permission_mapping = dict(reader=['read', 'unsubscribe'],
                                            writer=['read', 'write', 'unsubscribe'],
-                                           owner=['read', 'write', 'unsubscribe', 'flag', 'invite', 'kick'])
+                                           owner=['read', 'write', 'unsubscribe', 'flag', 'invite', 'kick', 'delete'])
 
     def set_plone_permissions(self, acl, changed=False):
 
@@ -560,15 +557,15 @@ class OpenCommunity(CommunityAdapterMixin):
 
 
 @grok.implementer(ICommunityTyped)
-@grok.adapter(ICommunity, name='Closed')
+@grok.adapter(ICommunity, Interface, name='Closed')
 class ClosedCommunity(CommunityAdapterMixin):
     """ Named adapter for the closed communities """
-    def __init__(self, context):
+    def __init__(self, context, request):
         super(ClosedCommunity, self).__init__(context)
         self.max_permissions = CLOSED_PERMISSIONS
         self.hub_permission_mapping = dict(reader=['read', 'unsubscribe'],
                                            writer=['read', 'write', 'unsubscribe'],
-                                           owner=['read', 'write', 'unsubscribe', 'flag', 'invite', 'kick'])
+                                           owner=['read', 'write', 'unsubscribe', 'flag', 'invite', 'kick', 'delete'])
 
     def set_plone_permissions(self, acl, changed=False):
 
@@ -581,6 +578,11 @@ class ClosedCommunity(CommunityAdapterMixin):
 
 class Community(Container):
     implements(ICommunity)
+
+    def adapted(self, request=None):
+        request = request if request is not None else getRequest()
+        adapter = getMultiAdapter((self, request), ICommunityTyped, name=self.community_type)
+        return adapter
 
 
 @indexer(ICommunity)
@@ -706,6 +708,10 @@ class EditACL(grok.View):
     def get_acl(self):
         return json.dumps(ICommunityACL(self.context)().attrs.get('acl', ''))
 
+    def get_acl_roles(self):
+        roles = self.context.adapted().available_roles
+        return [{'id': role, 'header': role.upper()} for role in roles]
+
 
 class NotifyAtomicChange(grok.View):
     """ This is a context endpoint for notify the context with external changes
@@ -746,7 +752,7 @@ class NotifyAtomicChange(grok.View):
     def render(self):
         if self.request.method == 'POST':
             data = json.loads(self.request['BODY'])
-            adapter = getAdapter(self.context, ICommunityTyped, name=self.context.community_type)
+            adapter = self.context.adapted()
 
             if 'read' in data['subscription']['permissions']:
                 permission = u'reader'
@@ -889,7 +895,7 @@ class Subscribe(grok.View):
         if self.request.method == 'POST' and \
            community.community_type == u'Open' and \
            'Reader' in api.user.get_roles(obj=self.context):
-            adapter = getAdapter(self.context, ICommunityTyped, name=self.context.community_type)
+            adapter = self.context.adapted()
 
             # Subscribe to context
             try:
@@ -924,7 +930,7 @@ class UnSubscribe(grok.View):
         current_user = api.user.get_current()
 
         if self.request.method == 'POST':
-            adapter = getAdapter(self.context, ICommunityTyped, name=self.context.community_type)
+            adapter = self.context.adapted()
             return adapter.unsubscribe_user(current_user)
 
         if self.request.method != 'POST':
@@ -1163,7 +1169,7 @@ class CommunityInitializeAdapter(object):
             subscriber (and owner).
         """
         initial_acl = dict(users=[dict(id=unicode(community.Creator().encode('utf-8')), role='owner')])
-        adapter = getAdapter(community, ICommunityTyped, name=community.community_type)
+        adapter = community.adapted()
 
         adapter.create_max_context()
         adapter.set_initial_max_metadata()
@@ -1269,14 +1275,14 @@ def edit_community(community, event):
     if not IInitializedCommunity.providedBy(community):
         return
 
-    adapter = getAdapter(community, ICommunityTyped, name=community.community_type)
+    adapter = community.adapted()
     adapter.update_max_context()
 
 
 @grok.subscribe(ICommunity, IObjectRemovedEvent)
 def delete_community(community, event):
     try:
-        adapter = getAdapter(community, ICommunityTyped, name=community.community_type)
+        adapter = community.adapted()
         adapter.delete_max_context()
         adapter.delete_acl()
     except:

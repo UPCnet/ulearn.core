@@ -4,7 +4,7 @@ from infrae.rest.interfaces import RESTMethodPublishedEvent
 from infrae.rest.components import IRESTComponent
 from infrae.rest.interfaces import MethodNotAllowed
 from zeam.component import getComponent
-
+from ulearn.core.content.community import CommunityForbiddenAction
 from zExceptions import NotFound
 from zope.event import notify
 from zope.component import queryUtility
@@ -118,6 +118,14 @@ class api_resource(object):
                 }
 
             except Forbidden as exc:
+                response_code = 403
+                response_content = {
+                    'status_code': response_code,
+                    'error_type': 'Forbidden',
+                    'error': exc.args[0]
+                }
+
+            except CommunityForbiddenAction as exc:
                 response_code = 403
                 response_content = {
                     'status_code': response_code,

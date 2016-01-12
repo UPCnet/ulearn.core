@@ -194,7 +194,7 @@ class Community(REST, CommunityMixin):
             # We are changing the type of the community
             # Check if it's a legit change
             if self.params['community_type'] in [a[0] for a in getAdapters((self.target,), ICommunityTyped)]:
-                adapter = getAdapter(self.target, ICommunityTyped, name=self.params['community_type'])
+                adapter = self.target.adapted(request=self.request)
             else:
                 raise BadParameters('Bad request, wrong community type')
 
@@ -317,16 +317,22 @@ class Subscriptions(REST, CommunityMixin):
         # if check_permission is not True:
         #     return check_permission
 
-        adapter = getAdapter(self.target, ICommunityTyped, name=self.target.community_type)
+        adapter = self.target.adapted(request=self.request)
         users = self.params.pop('users')
 
         for user in users:
-            message = adapter.unsubscribe_user(user)
+            try:
+                user_id = user.id
+            except:
+                # json with request
+                user_id = user['id']
 
-        return ApiResponse(message, code=204)
+            adapter.unsubscribe_user(user_id)
+
+        return ApiResponse.from_string('Unsubscription to the requested community done.', code=204)
 
     def set_subscriptions(self):
-        adapter = getAdapter(self.target, ICommunityTyped, name=self.target.community_type)
+        adapter = self.target.adapted(request=self.request)
 
         # Change the uLearn part of the community
         adapter.update_acl(self.payload)
@@ -337,7 +343,7 @@ class Subscriptions(REST, CommunityMixin):
         adapter.update_hub_subscriptions()
 
     def update_subscriptions(self):
-        adapter = getAdapter(self.target, ICommunityTyped, name=self.target.community_type)
+        adapter = self.target.adapted(request=self.request)
 
         # Change the uLearn part of the community
 
