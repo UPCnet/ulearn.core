@@ -31,6 +31,7 @@ class setupHomePage(grok.View):
         from ulearn.theme.portlets.calendar import Assignment as calendarAssignment
         from ulearn.theme.portlets.stats import Assignment as statsAssignment
         from ulearn.theme.portlets.econnect import Assignment as econnectAssignment
+        from ulearn.theme.portlets.angularrouteview import Assignment as angularrouteviewAssignment
 
         target_manager_assignments['profile'] = profileAssignment()
         target_manager_assignments['communities'] = communitiesAssignment()
@@ -38,6 +39,7 @@ class setupHomePage(grok.View):
 
         target_manager = queryUtility(IPortletManager, name='genweb.portlets.HomePortletManager3', context=frontpage)
         target_manager_assignments = getMultiAdapter((frontpage, target_manager), IPortletAssignmentMapping)
+        target_manager_assignments['angularroute'] = angularrouteviewAssignment()
         target_manager_assignments['buttons'] = homebuttonbarAssignment()
         target_manager_assignments['max'] = maxAssignment()
 
