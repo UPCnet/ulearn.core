@@ -342,17 +342,20 @@ class PloneStats(object):
     def stat_documents(self, filters, start, end=None):
         """
         """
+        filters['portal_type'] = ['Document', 'File', 'AppFile']
         return self.stat_by_folder('documents', filters, start, end)
 
     def stat_links(self, filters, start, end=None):
         """
         """
-        return self.stat_by_folder('links', filters, start, end)
+        filters['portal_type'] = ['Link', ]
+        return self.stat_by_folder('documents', filters, start, end)
 
     def stat_media(self, filters, start, end=None):
         """
         """
-        return self.stat_by_folder('media', filters, start, end)
+        filters['portal_type'] = ['Image', 'AppImage', 'ulearn.video', 'ulearn.video_embed']
+        return self.stat_by_folder('documents', filters, start, end)
 
 
 class MaxStats(object):
