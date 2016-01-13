@@ -328,6 +328,9 @@ class PloneStats(object):
         if filters['keywords']:
             catalog_filters['SearchableText'] = {'query': filters['keywords'], 'operator': 'or'}
 
+        if filters['portal_type']:
+            catalog_filters['portal_type'] = filters['portal_type']
+
         if filters['is_drilldown']:
             catalog_filters['created'] = {
                 'query': (first_moment_of_month(start), last_moment_of_month(start)),
