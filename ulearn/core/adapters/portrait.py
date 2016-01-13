@@ -9,7 +9,10 @@ from mrs.max.utilities import IMAXClient
 from ulearn.theme.browser.interfaces import IUlearnTheme
 from zope.component import getUtility
 
+import logging
 import PIL
+
+logger = logging.getLogger(__name__)
 
 
 @grok.implementer(IPortraitUploadAdapter)
@@ -37,7 +40,10 @@ class PortraitUploadAdapter(object):
             maxclient, settings = getUtility(IMAXClient)()
             maxclient.setActor(settings.max_restricted_username)
             maxclient.setToken(settings.max_restricted_token)
-            maxclient.people[safe_id].avatar.post(upload_file=scaled)
+            try:
+                maxclient.people[safe_id].avatar.post(upload_file=scaled)
+            except Exception as exc:
+                logger.error(exc.message)
 
 
 def convertSquareImage(image_file):
