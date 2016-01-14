@@ -1,11 +1,37 @@
 Changelog
 =========
 
-2.23 (unreleased)
+2.23 (2016-01-14)
 -----------------
 
-- Nothing changed yet.
-
+* Updateuseraccessdatetime [Pilar Marinas]
+* Add filter portal_type in stat_by_folder [Pilar Marinas]
+* Add the angular view to the setuphomepage view [Victor Fernandez de Alba]
+* Add guard in case portrait upload fails [Victor Fernandez de Alba]
+* Fix location of files in stats [Victor Fernandez de Alba]
+* Remove chameleon syntactig sugar [Carles Bruguera]
+* Refactor adapters to be layer-aware [Carles Bruguera]
+* define available roles on adapters [Carles Bruguera]
+* Remove chameleon syntactig sugar [Carles Bruguera]
+* Transfer Stats to core [Victor Fernandez de Alba]
+* Add attribute for directive for determine if additional information on stats view is required [Victor Fernandez de Alba]
+* New viewlet to hold directives related with Angular state variables used by services [Victor Fernandez de Alba]
+* add community subscribe put test [Paco Gregori]
+* modify subscription delete endpoint [Paco Gregori]
+* translate month and button stats [Alberto Duran]
+* add subscriptions put endpoint [Paco Gregori]
+* Fix tabs [Victor Fernandez de Alba]
+* Migrate search view to angular [Pilar Marinas]
+* Update, completion and refinement of the current API [Victor Fernandez de Alba]
+* api unsubscribe user [root muntanyeta]
+* api delete subscribers [Paco Gregori]
+* apply pep8 [Paco Gregori]
+* add crsf patch to api, update communities [root muntanyeta]
+* api community csrf patch [root muntanyeta]
+* Avoid modified hooks on sharing event [Carles Bruguera]
+* changes on api people update [Paco Gregori]
+* add endpoint in ws to add community [Paco Gregori]
+* add community adapter to can rewrite in others package [Paco Gregori]
 
 2.22 (2015-11-10)
 -----------------
