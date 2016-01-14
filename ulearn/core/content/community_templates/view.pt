@@ -16,7 +16,7 @@
     </script>
     <script>
       $(document).ready(function(){
-        $.get(window.location.href + "/updateuseraccessdatetime", function(data){
+        $.get(window.location.origin + window.location.pathname + "/updateuseraccessdatetime", function(data){
         });
       });
     </script>
