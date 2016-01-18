@@ -710,7 +710,7 @@ class EditACL(grok.View):
 
     def get_acl_roles(self):
         roles = self.context.adapted().available_roles
-        return [{'id': role, 'header': role.upper()} for role in roles]
+        return json.dumps([{'id': role, 'header': role.upper()} for role in roles])
 
 
 class NotifyAtomicChange(grok.View):
