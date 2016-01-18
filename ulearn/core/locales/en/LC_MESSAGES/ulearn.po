@@ -794,7 +794,7 @@ msgstr "Change management"
 msgid "Gestio de riscos"
 msgstr "Risk management"
 
-#Stats Generali
+# Stats Generali
 msgid "btnInfo"
 msgstr "Daily Information"
 
@@ -833,3 +833,40 @@ msgstr "November"
 
 msgid "December"
 msgstr "December"
+
+# Properties extended Switchmed
+msgid "organisation"
+msgstr "Organisation/Company"
+
+msgid "department"
+msgstr "Department"
+
+msgid "position_organisation"
+msgstr "Position in the organisation/job title"
+
+msgid "website_organisation"
+msgstr "Website"
+
+msgid "country"
+msgstr "Country"
+
+msgid "office_phone_number"
+msgstr "Office phone number"
+
+msgid "email"
+msgstr "eMail"
+
+msgid "second_mail"
+msgstr "Second eMail"
+
+msgid "another_organisation"
+msgstr "Another organisation"
+
+msgid "scope_work"
+msgstr "Scope work"
+
+msgid "contribute_scaling"
+msgstr "Contribute scaling"
+
+msgid "sign_up_newsletter"
+msgstr "Sign-up for the newsletter"
