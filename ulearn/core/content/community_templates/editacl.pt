@@ -26,7 +26,7 @@
              tal:attributes="acl view/get_acl" />
 
       <input type="hidden"
-             tal:attributes="roles roles" />
+             tal:attributes="roles view/get_acl_roles_json" />
 
       <div class="user_group btn-group" ng-cloak>
         <button class="btn active"
