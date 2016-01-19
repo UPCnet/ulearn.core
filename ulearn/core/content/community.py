@@ -309,7 +309,7 @@ class CommunityAdapterMixin(object):
         self.maxclient.people[self.context.Creator()].subscriptions.post(object_url=self.context.absolute_url())
         self.update_acl(acl)
 
-        for permission in self.hub_permission_mapping['owner']:
+        for permission in self.community_role_mappings['owner']['max']:
             self.maxclient.contexts[self.context.absolute_url()].permissions[self.context.Creator()][permission].put()
 
         self.update_hub_subscriptions()
@@ -402,10 +402,11 @@ class CommunityAdapterMixin(object):
         self.update_acl(acl)
 
     def update_hub_subscriptions(self):
+        max_permission_mappings = {role: mappings['max'] for role, mappings in self.community_role_mappings}
         portal = api.portal.get()
         subscribe_request = {}
         subscribe_request['component'] = dict(type='communities', id=portal.absolute_url())
-        subscribe_request['permission_mapping'] = self.hub_permission_mapping
+        subscribe_request['permission_mapping'] = max_permission_mappings
         subscribe_request['ignore_grants_and_vetos'] = True
         subscribe_request['context'] = self.context.absolute_url()
         subscribe_request['acl'] = self.get_acl()
@@ -463,14 +464,11 @@ class CommunityAdapterMixin(object):
             user_id = principal['id']
             existing_roles = frozenset(self.context.get_local_roles_for_userid(userid=user_id))
 
-            if principal['role'] == u'reader':
-                selected_roles = frozenset(['Reader', ])
-
-            if principal['role'] == u'writer':
-                selected_roles = frozenset(['Reader', 'Contributor', 'Editor'])
-
-            if principal['role'] == u'owner':
-                selected_roles = frozenset(['Reader', 'Contributor', 'Editor', 'Owner'])
+            # Determine which Plone Roles we have to use base on the principal's copmmunity role
+            # The mapping of community role --> plone roles is defined per-community in the adapter
+            fallback_default = dict(max=['read'], plone=['Reader'])
+            role_mappings = self.community_role_mappings
+            selected_roles = frozenset(role_mappings.get(principal['role'], fallback_default).get('plone'))
 
             managed_roles = frozenset(['Reader', 'Contributor', 'Editor', 'Owner'])
             relevant_existing_roles = managed_roles & existing_roles
@@ -528,9 +526,20 @@ class OrganizativeCommunity(CommunityAdapterMixin):
     def __init__(self, context, request):
         super(OrganizativeCommunity, self).__init__(context)
         self.max_permissions = ORGANIZATIVE_PERMISSIONS
-        self.hub_permission_mapping = dict(reader=['read'],
-                                           writer=['read', 'write'],
-                                           owner=['read', 'write', 'unsubscribe', 'flag', 'invite', 'kick', 'delete'])
+        self.community_role_mappings = dict(
+            reader={
+                'plone': ['Reader'],
+                'max': ['read']
+            },
+            writer={
+                'plone': ['Reader', 'Contributor', 'Editor'],
+                'max': ['read', 'write']
+            },
+            owner={
+                'plone': ['Reader', 'Contributor', 'Editor', 'Owner'],
+                'max': ['read', 'write', 'unsubscribe', 'flag', 'invite', 'kick', 'delete']
+            }
+        )
 
     def unsubscribe_user(self, user_id):
         raise CommunityForbiddenAction('Unsubscription from organizative community forbidden.')
@@ -543,9 +552,20 @@ class OpenCommunity(CommunityAdapterMixin):
     def __init__(self, context, request):
         super(OpenCommunity, self).__init__(context)
         self.max_permissions = OPEN_PERMISSIONS
-        self.hub_permission_mapping = dict(reader=['read', 'unsubscribe'],
-                                           writer=['read', 'write', 'unsubscribe'],
-                                           owner=['read', 'write', 'unsubscribe', 'flag', 'invite', 'kick', 'delete'])
+        self.community_role_mappings = dict(
+            reader={
+                'plone': ['Reader'],
+                'max': ['read', 'unsubscribe']
+            },
+            writer={
+                'plone': ['Reader', 'Contributor', 'Editor'],
+                'max': ['read', 'write', 'unsubscribe']
+            },
+            owner={
+                'plone': ['Reader', 'Contributor', 'Editor', 'Owner'],
+                'max': ['read', 'write', 'unsubscribe', 'flag', 'invite', 'kick', 'delete']
+            }
+        )
 
     def set_plone_permissions(self, acl, changed=False):
 
@@ -563,9 +583,20 @@ class ClosedCommunity(CommunityAdapterMixin):
     def __init__(self, context, request):
         super(ClosedCommunity, self).__init__(context)
         self.max_permissions = CLOSED_PERMISSIONS
-        self.hub_permission_mapping = dict(reader=['read', 'unsubscribe'],
-                                           writer=['read', 'write', 'unsubscribe'],
-                                           owner=['read', 'write', 'unsubscribe', 'flag', 'invite', 'kick', 'delete'])
+        self.community_role_mappings = dict(
+            reader={
+                'plone': ['Reader'],
+                'max': ['read', 'unsubscribe']
+            },
+            writer={
+                'plone': ['Reader', 'Contributor', 'Editor'],
+                'max': ['read', 'write', 'unsubscribe']
+            },
+            owner={
+                'plone': ['Reader', 'Contributor', 'Editor', 'Owner'],
+                'max': ['read', 'write', 'unsubscribe', 'flag', 'invite', 'kick', 'delete']
+            }
+        )
 
     def set_plone_permissions(self, acl, changed=False):
 
