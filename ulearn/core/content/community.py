@@ -259,6 +259,13 @@ class ICommunityTyped(Interface):
 class CommunityAdapterMixin(object):
     """ Common methods for community adapters """
 
+    # Role that will be given to a user when auto-subscribing in allowed communities
+    # As by default a community adapter allows auto-ubscription, if you want to disable it
+    # for a community adapter, you have to provide an subscribe_user method that disallows it.
+    subscription_community_role = None
+
+    # Roles that will be available as valid community roles,
+    # and so displayed in the edtiacl view
     available_roles = ['reader', 'writer', 'owner']
 
     def __init__(self, context):
@@ -518,6 +525,24 @@ class CommunityAdapterMixin(object):
         # Unfavorite
         IFavorite(self.context).remove(user_id)
 
+    def subscribe_user(self, user_id):
+        """
+            Adds a user both to max and plone, updating related permissions
+        """
+        #     community.community_type == u'Open' and \
+        # 'Reader' in api.user.get_roles(obj=self.context):
+
+        # Subscribe to context
+        self.add_max_subscription_atomic(user_id)
+
+        # For this use case, the user is able to auto-subscribe to the
+        # community with write permissions
+        self.update_acl_atomic(user_id, self.subscription_community_role)
+
+        acl = self.get_acl()
+        # Finally, we update the plone permissions
+        self.set_plone_permissions(acl)
+
 
 @grok.implementer(ICommunityTyped)
 @grok.adapter(ICommunity, Interface, name='Organizative')
@@ -525,6 +550,7 @@ class OrganizativeCommunity(CommunityAdapterMixin):
     """ Named adapter for the organizative communities """
     def __init__(self, context, request):
         super(OrganizativeCommunity, self).__init__(context)
+        self.community_role
         self.max_permissions = ORGANIZATIVE_PERMISSIONS
         self.community_role_mappings = dict(
             reader={
@@ -544,6 +570,9 @@ class OrganizativeCommunity(CommunityAdapterMixin):
     def unsubscribe_user(self, user_id):
         raise CommunityForbiddenAction('Unsubscription from organizative community forbidden.')
 
+    def subscribe_user(self, user_id):
+        raise CommunityForbiddenAction('Subscription to organizative community forbidden.')
+
 
 @grok.implementer(ICommunityTyped)
 @grok.adapter(ICommunity, Interface, name='Open')
@@ -552,6 +581,7 @@ class OpenCommunity(CommunityAdapterMixin):
     def __init__(self, context, request):
         super(OpenCommunity, self).__init__(context)
         self.max_permissions = OPEN_PERMISSIONS
+        self.subscription_community_role = 'writer'
         self.community_role_mappings = dict(
             reader={
                 'plone': ['Reader'],
@@ -605,6 +635,9 @@ class ClosedCommunity(CommunityAdapterMixin):
             changed = True
 
         super(ClosedCommunity, self).set_plone_permissions(acl, changed)
+
+    def subscribe_user(self, user_id):
+        raise CommunityForbiddenAction('Subscription to closed community forbidden.')
 
 
 class Community(Container):
@@ -926,27 +959,9 @@ class Subscribe(grok.View):
         community = self.context
         current_user = api.user.get_current()
 
-        if self.request.method == 'POST' and \
-           community.community_type == u'Open' and \
-           'Reader' in api.user.get_roles(obj=self.context):
-            adapter = self.context.adapted()
-
-            # Subscribe to context
-            try:
-                adapter.add_max_subscription_atomic(current_user.id)
-            except:
-                return dict(error='Something bad happened while sending the related MAX request.',
-                            status_code='502')
-
-            # For this use case, the user is able to auto-subscribe to the
-            # community with write permissions
-            adapter.update_acl_atomic(current_user.id, u'writer')
-
-            acl = adapter.get_acl()
-            # Finally, we update the plone permissions
-            adapter.set_plone_permissions(acl)
-
-            return dict(message='Subscription to the requested open community done.')
+        if self.request.method == 'POST':
+            adapter = community.adapted()
+            return adapter.subscribe_user(current_user.id)
 
         if self.request.method != 'POST':
             return dict(error='Bad request. POST request expected.',
