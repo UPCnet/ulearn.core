@@ -1,11 +1,17 @@
 Changelog
 =========
 
-2.24 (unreleased)
+2.24 (2016-01-19)
 -----------------
 
-- Nothing changed yet.
-
+* DisplayName in editacl [Pilar Marinas]
+* Error mappings [Pilar Marinas]
+* Fix subscribe & unsubscribe success responses [Carles Bruguera]
+* Parametrize in adapter which communities allow auto-subsribing and with which community role [Carles Bruguera]
+* Parametrize plone roles <-> community roles map [Carles Bruguera]
+* editacl fails [Alberto Duran]
+* Properties extended Switchmed [Pilar Marinas]
+* Fix output not being JSON [Carles Bruguera]
 
 2.23 (2016-01-14)
 -----------------
