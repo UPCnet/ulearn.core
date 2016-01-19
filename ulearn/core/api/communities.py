@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from five import grok
 from hashlib import sha1
+from zope.interface import Interface
 from zope.component import getAdapter
 from zope.component import getAdapters
 
@@ -193,8 +194,8 @@ class Community(REST, CommunityMixin):
         if 'community_type' in self.payload:
             # We are changing the type of the community
             # Check if it's a legit change
-            if self.params['community_type'] in [a[0] for a in getAdapters((self.target,), ICommunityTyped)]:
-                adapter = self.target.adapted(request=self.request)
+            if self.params['community_type'] in [a[0] for a in getAdapters((self.target, Interface), ICommunityTyped)]:
+                adapter = self.target.adapted(request=self.request, name=self.params['community_type'])
             else:
                 raise BadParameters('Bad request, wrong community type')
 

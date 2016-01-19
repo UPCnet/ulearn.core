@@ -642,9 +642,10 @@ class ClosedCommunity(CommunityAdapterMixin):
 class Community(Container):
     implements(ICommunity)
 
-    def adapted(self, request=None):
+    def adapted(self, request=None, name=None):
+        effective_name = self.community_type if name is None else name
         request = request if request is not None else getRequest()
-        adapter = getMultiAdapter((self, request), ICommunityTyped, name=self.community_type)
+        adapter = getMultiAdapter((self, request), ICommunityTyped, name=effective_name)
         return adapter
 
 
