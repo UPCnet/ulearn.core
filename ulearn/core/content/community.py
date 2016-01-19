@@ -50,7 +50,7 @@ from repoze.catalog.indexes.keyword import CatalogKeywordIndex
 from repoze.catalog.indexes.text import CatalogTextIndex
 from souper.interfaces import ICatalogFactory
 from souper.soup import NodeAttributeIndexer
-from repoze.catalog.query import Eq
+from repoze.catalog.query import Eq, Or
 from souper.soup import get_soup
 from souper.soup import Record
 
@@ -513,7 +513,7 @@ class CommunityAdapterMixin(object):
         """
             Removes a user both from max and plone, updating related permissions
         """
-        self.remove_max_subscription_atomic()
+        self.remove_max_subscription_atomic(user_id)
 
         # Remove from acl
         self.remove_acl_atomic(user_id)
@@ -770,7 +770,29 @@ class EditACL(grok.View):
         return IGWUUID(self.context).get()
 
     def get_acl(self):
-        return json.dumps(ICommunityACL(self.context)().attrs.get('acl', ''))
+        acl = ICommunityACL(self.context)().attrs.get('acl', '')
+        # Search for users with missing or empty displayname
+        query_missing_displaynames = [Eq('username', user.get('id')) for user in acl['users'] if not user.get('displayName', '')]
+        if query_missing_displaynames:
+            # Generate a query to find properties from all users
+            # that lacks the displayname
+            portal = api.portal.get()
+            soup = get_soup('user_properties', portal)
+            query_missing_displaynames = Or(*query_missing_displaynames)
+            results = soup.query(query_missing_displaynames)
+
+            # Store all the found displaynames indexed by user
+            displaynames = {}
+            for result in results:
+                displaynames[result.attrs['username']] = result.attrs['fullname']
+
+            # Update the acl list with recovered displaynames from soup
+            for user in acl['users']:
+                userid = user.get('id')
+                if userid in displaynames:
+                    user['displayName'] = displaynames[userid]
+
+        return json.dumps(acl)
 
     def get_acl_roles(self):
         roles = self.context.adapted().available_roles
@@ -779,6 +801,7 @@ class EditACL(grok.View):
     def get_acl_roles_json(self):
         roles = self.context.adapted().available_roles
         return json.dumps([{'id': role, 'header': role.upper()} for role in roles])
+
 
 class NotifyAtomicChange(grok.View):
     """ This is a context endpoint for notify the context with external changes
@@ -980,7 +1003,7 @@ class UnSubscribe(grok.View):
 
         if self.request.method == 'POST':
             adapter = self.context.adapted()
-            adapter.unsubscribe_user(current_user)
+            adapter.unsubscribe_user(current_user.id)
             return dict(message='Successfully unsubscribed')
         else:
             return dict(error='Bad request. POST request expected.',
