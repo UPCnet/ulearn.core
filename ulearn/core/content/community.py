@@ -409,7 +409,7 @@ class CommunityAdapterMixin(object):
         self.update_acl(acl)
 
     def update_hub_subscriptions(self):
-        max_permission_mappings = {role: mappings['max'] for role, mappings in self.community_role_mappings}
+        max_permission_mappings = {role: mappings['max'] for role, mappings in self.community_role_mappings.items()}
         portal = api.portal.get()
         subscribe_request = {}
         subscribe_request['component'] = dict(type='communities', id=portal.absolute_url())
