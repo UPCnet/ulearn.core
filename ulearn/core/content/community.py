@@ -961,10 +961,10 @@ class Subscribe(grok.View):
 
         if self.request.method == 'POST':
             adapter = community.adapted()
-            return adapter.subscribe_user(current_user.id)
-
-        if self.request.method != 'POST':
-            return dict(error='Bad request. POST request expected.',
+            adapter.subscribe_user(current_user.id)
+            return dict(message='Successfully unsubscribed')
+        else:
+            return dict(message='Bad request. POST request expected.',
                         status_code=400)
 
 
@@ -980,9 +980,9 @@ class UnSubscribe(grok.View):
 
         if self.request.method == 'POST':
             adapter = self.context.adapted()
-            return adapter.unsubscribe_user(current_user)
-
-        if self.request.method != 'POST':
+            adapter.unsubscribe_user(current_user)
+            return dict(message='Successfully unsubscribed')
+        else:
             return dict(error='Bad request. POST request expected.',
                         status_code=400)
 
