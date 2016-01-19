@@ -550,7 +550,6 @@ class OrganizativeCommunity(CommunityAdapterMixin):
     """ Named adapter for the organizative communities """
     def __init__(self, context, request):
         super(OrganizativeCommunity, self).__init__(context)
-        self.community_role
         self.max_permissions = ORGANIZATIVE_PERMISSIONS
         self.community_role_mappings = dict(
             reader={
