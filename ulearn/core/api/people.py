@@ -22,6 +22,8 @@ from genweb.core.utils import get_all_user_properties
 from genweb.core.utils import remove_user_from_catalog
 from repoze.catalog.query import Eq
 from souper.soup import get_soup
+from genweb.core.gwuuid import IGWUUID
+from ulearn.core.content.community import ICommunityACL
 
 import logging
 import requests
@@ -138,10 +140,33 @@ class Person(REST):
     @api_resource()
     def DELETE(self):
         """
-            Deletes a user from the plone & max
+            Deletes a user from the plone & max & communities subscribe
         """
         self.deleteMembers([self.params['username']])
         remove_user_from_catalog(self.params['username'].lower())
+        pc = api.portal.get_tool(name='portal_catalog')
+        comunnities = pc.searchResults(portal_type="ulearn.community")
+        username = self.params['username']
+        for num, community in enumerate(comunnities):
+            self.context.plone_log('Processant {} de {}'.format(num, len(comunnities)))
+            obj = community.getObject()
+            gwuuid = IGWUUID(obj).get()
+            portal = api.portal.get()
+            soup = get_soup('communities_acl', portal)
+
+            records = [r for r in soup.query(Eq('gwuuid', gwuuid))]
+
+            # Save ACL into the communities_acl soup
+            if records:
+                exist = [a for a in records[0].attrs['acl']['users'] if a['id'] == unicode(username)]
+                if exist:
+                    records[0].attrs['acl']['users'].remove(exist[0])
+                    soup.reindex(records=[records[0]])
+
+        maxclient, settings = getUtility(IMAXClient)()
+        maxclient.setActor(settings.max_restricted_username)
+        maxclient.setToken(settings.max_restricted_token)
+        maxclient.people[username].delete()
         return ApiResponse({}, code=204)
 
     def create_user(self, username, email, password, **properties):
