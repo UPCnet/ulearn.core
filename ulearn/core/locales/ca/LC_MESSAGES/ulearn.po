@@ -615,47 +615,77 @@ msgstr "Obrir finestra nova?"
 
 ###### Idea content type
 
+msgid "idea_type"
+msgstr "Modalitat"
+
+msgid "idea_type_description"
+msgstr "Oberta / d'Unitats"
+
+msgid "idea_team"
+msgstr "Qui impulseu la idea?"
+
+msgid "idea_team_description"
+msgstr "Llisteu nom i correu electrònic de les tres persones del PAS."
+
 msgid "idea_title"
-msgstr "Que m'arribi! Crida l'atenció!"
+msgstr "Títol del projecte"
 
 msgid "idea_title_description"
-msgstr "Quin és el títol? En forma de titular, descriu el repte que resol la teva idea. (10 paraules)"
+msgstr "En forma de titular, poseu un títol a la vostra idea (10 paraules)"
 
 msgid "idea_body"
-msgstr "Ven la teva idea!"
+msgstr "Quina és la vostra idea?"
 
 msgid "idea_body_description"
-msgstr "Quina és la teva idea? (Imagina que…, què passaria si…, etc.) Explica-la breument i de forma clara."
+msgstr "Expliqueu el projecte breument i de forma clara, i justifiqueu perquè és important. (100 paraules)"
 
 msgid "idea_engagement"
-msgstr "Emociona'ns!"
+msgstr "Què voleu aconseguir?"
 
 msgid "idea_engagement_description"
-msgstr "Què vols aconseguir? Descriu els objectius a nivell de millora de la universitat. (100 paraules)"
+msgstr "Descriviu els objectius concrets del projecte (100 paraules)"
+
+msgid "idea_themed"
+msgstr "Temàtica"
+
+msgid "idea_themed_description"
+msgstr "Especifiqueu breument a quina/es temàtica/es de les proposades a la convocatòria s’associa el projecte. (100 paraules)"
+
+msgid "idea_impact"
+msgstr "Impacte sobre la gestió"
+
+msgid "idea_impact_description"
+msgstr "Expliqueu els efectes desitjats a llarg termini en quant al seu abast i utilitat per a la UPC (100 paraules)"
+
+msgid "idea_collaborative_impact"
+msgstr "Impacte sobre la cultura col·laborativa?"
+
+msgid "idea_collaborative_impact_description"
+msgstr "Expliqueu els efectes desitjats a llarg termini en quant a la transformació de la cultura de treball a la UPC (100 paraules)"
 
 msgid "idea_viability"
-msgstr "Fes-ho viable!"
+msgstr "Com proposeu fer-ho?"
 
 msgid "idea_viability_description"
-msgstr "Com proposes fer-ho? Explica en què podria consistir un primer projecte per desenvolupar la teva idea. Pot ser un prototip, una prova, un document de proposta, etc."
+msgstr "Demostreu la viabilitat del projecte explicant què proposeu per desenvolupar la vostra idea. Pot ser l'elaboració d’un prototip, una prova, un document de proposta, etc. (100 paraules)"
+
+msgid "idea_dream_team"
+msgstr "Competència de l’equip impulsor"
+
+msgid "idea_dream_team_description"
+msgstr "Expliqueu per què sou l’equip ideal per impulsar aquest projecte. (100 paraules)"
 
 msgid "idea_people"
-msgstr "Troba els teus companys de viatge!"
+msgstr "Amb qui us agradaria treballar?"
 
 msgid "idea_people_description"
-msgstr "Amb qui t'agradaria treballar? Explica els tipus de persones, experiències, coneixements i/o perfils professionals de la UPC que creus que cal per a la teva idea."
-
-msgid "idea_why"
-msgstr "M'has de convèncer!"
-
-msgid "idea_why_description"
-msgstr "Perquè és bona la teva idea? Justifica la necessitat de tirar-la endavant, els impactes que pot generar, els problemes recurrents que resol, etc."
+msgstr "Expliqueu els tipus de persones, experiències, coneixements i/o perfils professionals de la UPC que creus que calen per a la vostra idea. (100 paraules)"
 
 msgid "idea_references"
-msgstr "No inventis la roda!"
+msgstr "Teniu alguna referència interessant?"
 
 msgid "idea_references_description"
-msgstr "Tens alguna referència interessant? Explica'ns antencents, experiències prèvies i/o posa referències d'idees semblants que hagin funcionat (a la UPC o fora)."
+msgstr "Expliqueu-nos els antecedents, experiències prèvies i/o posa referències d’idees semblants que hagin funcionat (a la UPC o a fora). (100 paraules)"
 
 msgid "proposal_seconder1"
 msgstr "Nom de la primera persona que secunda la proposta"
