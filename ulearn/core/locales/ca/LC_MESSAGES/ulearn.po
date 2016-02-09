@@ -688,13 +688,13 @@ msgid "idea_references_description"
 msgstr "Expliqueu-nos els antecedents, experiències prèvies i/o posa referències d’idees semblants que hagin funcionat (a la UPC o a fora). (100 paraules)"
 
 msgid "proposal_seconder1"
-msgstr "Nom de la primera persona que secunda la proposta"
+msgstr "Nom de la primera persona que secunda la proposta (a part de tu)"
 
 msgid "proposal_seconder1_description"
 msgstr "Per tal de formalitzar la proposta necessiteu que dues persones secundin la vostra proposta"
 
 msgid "proposal_seconder2"
-msgstr "Nom de la segona persona que secunda la proposta"
+msgstr "Nom de la segona persona que secunda la proposta (a part de tu)"
 
 msgid "proposal_seconder2_description"
 msgstr "Per tal de formalitzar la proposta necessiteu que dues persones secundin la vostra proposta"
