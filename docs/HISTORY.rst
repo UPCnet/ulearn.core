@@ -1,11 +1,12 @@
 Changelog
 =========
 
-2.26 (unreleased)
+2.26 (2016-02-10)
 -----------------
 
-- Nothing changed yet.
-
+* translate nexus24 [Paco Gregori]
+* Deletes a user from the plone & max & communities subscribe [Pilar Marinas]
+* add translate nexus24 [Paco Gregori]
 
 2.25 (2016-01-19)
 -----------------
