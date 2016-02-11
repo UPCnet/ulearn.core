@@ -71,7 +71,18 @@ class Sync(REST):
         for userid in users:
             username = userid.lower()
             user_memberdata = api.user.get(username=username)
+            plone_user = user_memberdata.getUser()
+
+            ldap = plone_user.getOrderedPropertySheets()[0]
+
+            # Delete user cache
+
+            ldap._invalidateCache(plone_user)
+            plone_user._getPAS().ZCacheable_invalidate(view_name='_findUser-' + username)
+            ldap._getLDAPUserFolder(plone_user)._expireUser(plone_user)
+
             try:
+                user_memberdata = api.user.get(username=username)
                 plone_user = user_memberdata.getUser()
             except:
                 notfound_errors.append(username)
@@ -267,6 +278,26 @@ class Person(REST):
         # Delete members' local roles.
         # mtool.deleteLocalRoles(getUtility(ISiteRoot), member_ids,
         #                       reindex=1, recursive=1)
+
+    # @api_resource(required=['username', 'email'])
+    # def PUT(self):
+    #     """
+    #         Modify email user
+    #     """
+    #     existing_user = api.user.get(username=self.params['username'].lower())
+    #     if existing_user:
+    #         # Update portal membership user properties
+    #         existing_user.setMemberProperties({'email': self.params['email']})
+    #         properties = get_all_user_properties(existing_user)
+    #         add_user_to_catalog(existing_user, properties, overwrite=True)
+    #         status = 200
+    #     else:
+    #         status = 404
+
+    #     if status == 404:
+    #         return ApiResponse.from_string('User {} not found'.format(self.params['username'].lower()), code=status)
+    #     elif status == 200:
+    #         return ApiResponse.from_string('User {} updated'.format(self.params['username'].lower()), code=status)
 
 
 class Subscriptions(REST):
