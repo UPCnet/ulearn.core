@@ -2,14 +2,14 @@
 <object name="Folder" meta_type="Dexterity FTI" i18n:domain="plone"
    xmlns:i18n="http://xml.zope.org/namespaces/i18n">
  <property name="description" i18n:translate="">Add a new folder</property>
- <property name="default_view">folder_summary_view</property>
+ <property name="default_view">summary_view</property>
  <property name="view_methods">
-  <element value="folder_listing"/>
+  <element value="listing_view"/>
   <element value="folder_extended"/>
-  <element value="atct_album_view"/>
-  <element value="folder_summary_view"/>
-  <element value="folder_tabular_view"/>
-  <element value="folder_full_view"/>
+  <element value="album_view"/>
+  <element value="summary_view"/>
+  <element value="tabular_view"/>
+  <element value="full_view"/>
   <element value="filtered_contents_search_view"/>
  </property>
 </object>
