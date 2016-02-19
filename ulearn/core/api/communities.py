@@ -112,10 +112,8 @@ class Communities(REST):
                                               id=id_normalized)
 
         if result:
-            # If user hasn't been created right now, update
             community = result[0].getObject()
-            self.update_community(community, **params)
-            success_response = 'community "{}" with hash "{}" updated.'.format(nom, sha1(community.absolute_url()).hexdigest())
+            success_response = 'community already exists.'
             status = 200
         else:
             new_community_id = self.context.invokeFactory('ulearn.community', id_normalized,
@@ -133,19 +131,6 @@ class Communities(REST):
             status = 201
         logger.info(success_response)
         return ApiResponse.from_string(success_response, code=status)
-
-    def update_community(self, community,  **properties):
-        community.title = properties['nom'] if properties['nom'] is not None else None
-        community.description = properties['description'] if properties['description'] is not None else None
-        community.image = properties['image'] if properties['image'] is not None else None
-        community.community_type = properties['community_type'] if properties['community_type'] is not None else None
-        community.activity_view = properties['activity_view'] if properties['activity_view'] is not None else None
-        community.twitter_hashtag = properties['twitter_hashtag'] if properties['twitter_hashtag'] is not None else None
-        if properties['notify_activity_via_push'] is not None:
-            community.notify_activity_via_push = True if properties['notify_activity_via_push'] == 'True' else None
-        if properties['notify_activity_via_push_comments_too'] is not None:
-            community.notify_activity_via_push_comments_too = True if properties['notify_activity_via_push_comments_too'] == 'True' else None
-        community.reindexObject()
 
     def get_favorites(self):
         pc = api.portal.get_tool('portal_catalog')
@@ -178,32 +163,11 @@ class Community(REST, CommunityMixin):
     def __init__(self, context, request):
         super(Community, self).__init__(context, request)
 
-    @api_resource(required=['community_type'], get_target=True, required_roles=['Owner', 'Manager'])
+    @api_resource(get_target=True, required_roles=['Owner', 'Manager'])
     def PUT(self):
         """ Modifies the community itself. """
-        # Check if there's a valid community with the requested hash
-        # lookedup_obj = self.lookup_community()
-        # if lookedup_obj is not True:
-        #     return lookedup_obj
 
-        # Hard security validation as the view is soft checked
-        # check_permission = self.check_roles(self.community, ['Owner', 'Manager'])
-        # if check_permission is not True:
-        #     return check_permission
-
-        if 'community_type' in self.payload:
-            # We are changing the type of the community
-            # Check if it's a legit change
-            if self.params['community_type'] in [a[0] for a in getAdapters((self.target, Interface), ICommunityTyped)]:
-                adapter = self.target.adapted(request=self.request, name=self.params['community_type'])
-            else:
-                raise BadParameters('Bad request, wrong community type')
-
-            if self.params['community_type'] == self.target.community_type:
-                raise BadParameters('Bad request, already that community type')
-
-            # Everything is ok, proceed
-            adapter.update_community_type()
+        self.update_community()
 
         success_response = 'Updated community "{}"'.format(self.target.absolute_url())
         logger.info(success_response)
@@ -224,6 +188,19 @@ class Community(REST, CommunityMixin):
         api.content.delete(obj=self.target)
 
         return ApiResponse({}, code=204)
+
+    def update_community(self, community,  **properties):
+        community.title = properties['nom'] if properties['nom'] is not None else None
+        community.description = properties['description'] if properties['description'] is not None else None
+        community.image = properties['image'] if properties['image'] is not None else None
+        community.community_type = properties['community_type'] if properties['community_type'] is not None else None
+        community.activity_view = properties['activity_view'] if properties['activity_view'] is not None else None
+        community.twitter_hashtag = properties['twitter_hashtag'] if properties['twitter_hashtag'] is not None else None
+        if properties['notify_activity_via_push'] is not None:
+            community.notify_activity_via_push = True if properties['notify_activity_via_push'] == 'True' else None
+        if properties['notify_activity_via_push_comments_too'] is not None:
+            community.notify_activity_via_push_comments_too = True if properties['notify_activity_via_push_comments_too'] == 'True' else None
+        community.reindexObject()
 
 
 class Subscriptions(REST, CommunityMixin):
