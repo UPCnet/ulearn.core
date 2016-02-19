@@ -22,6 +22,9 @@ from ulearn.core.content.community import ICommunityTyped
 
 from repoze.catalog.query import Eq
 from souper.soup import get_soup
+import requests
+from plone.namedfile.file import NamedBlobImage
+from mimetypes import MimeTypes
 
 
 class CommunityMixin(object):
@@ -100,7 +103,7 @@ class Communities(REST):
         params['community_type'] = self.params.pop('community_type')
         params['description'] = self.params.pop('description', None)
         params['image'] = self.params.pop('image', None)
-        params['activity_view'] = self.params.pop('activity_viw', None)
+        params['activity_view'] = self.params.pop('activity_view', None)
         params['twitter_hashtag'] = self.params.pop('twitter_hashtag', None)
         params['notify_activity_via_push'] = self.params.pop('notify_activity_via_push', None)
         params['notify_activity_via_push_comments_too'] = self.params.pop('notify_activity_via_push_comments_too', None)
@@ -111,6 +114,16 @@ class Communities(REST):
         result = pc.unrestrictedSearchResults(portal_type='ulearn.community',
                                               id=id_normalized)
 
+        imageObj = ''
+        if params['image']:
+            mime = MimeTypes()
+            mime_type = mime.guess_type(params['image'])
+            imgName = (params['image'].split('/')[-1]).decode('utf-8')
+            imgData = requests.get(params['image']).content
+            imageObj = NamedBlobImage(data=imgData,
+                                      filename=imgName,
+                                      contentType=mime_type[0])
+
         if result:
             community = result[0].getObject()
             success_response = 'community already exists.'
@@ -119,7 +132,7 @@ class Communities(REST):
             new_community_id = self.context.invokeFactory('ulearn.community', id_normalized,
                                                           title=params['nom'],
                                                           description=params['description'],
-                                                          image=params['image'],
+                                                          image=imageObj,
                                                           community_type=params['community_type'],
                                                           activity_view=params['activity_view'],
                                                           twitter_hashtag=params['twitter_hashtag'],
