@@ -1,11 +1,15 @@
 Changelog
 =========
 
-2.27 (unreleased)
+2.27 (2016-02-22)
 -----------------
 
-- Nothing changed yet.
-
+* community delete ws remove object [Paco Gregori]
+* communities webservice PUT and DELETE modified [Paco Gregori]
+* change add community api to add image [Paco Gregori]
+* change api communities post [Paco Gregori]
+* Nuevas vistas contentypes [Pilar Marinas]
+* Delete user cache before synchronizing the user [Pilar Marinas]
 
 2.26 (2016-02-10)
 -----------------
