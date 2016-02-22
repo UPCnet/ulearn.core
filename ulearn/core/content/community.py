@@ -340,6 +340,10 @@ class CommunityAdapterMixin(object):
 
         self.context.reindexObject()
 
+    def delete_community_all(self):
+        self.delete_max_context()
+        self.delete_acl()
+
     def get_acl(self):
         return ICommunityACL(self.context)().attrs.get('acl', '')
 
@@ -1355,8 +1359,7 @@ def edit_community(community, event):
 def delete_community(community, event):
     try:
         adapter = community.adapted()
-        adapter.delete_max_context()
-        adapter.delete_acl()
+        adapter.delete_community_all()
     except:
         logger.error('There was an error deleting the community {}'.format(community.absolute_url()))
 

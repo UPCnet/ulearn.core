@@ -180,7 +180,11 @@ class Community(REST, CommunityMixin):
     def PUT(self):
         """ Modifies the community itself. """
 
-        self.update_community()
+        modified = self.update_community(self.params)
+        if modified:
+            success_response = 'Updated community "{}"'.format(self.target.absolute_url())
+        else:
+            success_response = 'Not find the specified community'
 
         success_response = 'Updated community "{}"'.format(self.target.absolute_url())
         logger.info(success_response)
@@ -198,22 +202,45 @@ class Community(REST, CommunityMixin):
         # if check_permission is not True:
         #     return check_permission
 
-        api.content.delete(obj=self.target)
+        pc = api.portal.get_tool('portal_catalog')
+        brain = pc.unrestrictedSearchResults(portal_type='ulearn.community',
+                                             community_hash=self.params['community'])
+
+        community = brain[0].getObject()
+        adapter = community.adapted()
+        adapter.delete_community_all()
 
         return ApiResponse({}, code=204)
 
-    def update_community(self, community,  **properties):
-        community.title = properties['nom'] if properties['nom'] is not None else None
-        community.description = properties['description'] if properties['description'] is not None else None
-        community.image = properties['image'] if properties['image'] is not None else None
-        community.community_type = properties['community_type'] if properties['community_type'] is not None else None
-        community.activity_view = properties['activity_view'] if properties['activity_view'] is not None else None
-        community.twitter_hashtag = properties['twitter_hashtag'] if properties['twitter_hashtag'] is not None else None
-        if properties['notify_activity_via_push'] is not None:
-            community.notify_activity_via_push = True if properties['notify_activity_via_push'] == 'True' else None
-        if properties['notify_activity_via_push_comments_too'] is not None:
-            community.notify_activity_via_push_comments_too = True if properties['notify_activity_via_push_comments_too'] == 'True' else None
-        community.reindexObject()
+    def update_community(self, properties):
+        pc = api.portal.get_tool('portal_catalog')
+        brain = pc.unrestrictedSearchResults(portal_type='ulearn.community',
+                                             community_hash=properties['community'])
+        if brain:
+            community = brain[0].getObject()
+            community.title = properties['title'] if properties['title'] is not None else None
+            community.description = properties['description'] if properties['description'] is not None else None
+            imageObj = ''
+            if properties['image']:
+                mime = MimeTypes()
+                mime_type = mime.guess_type(properties['image'])
+                imgName = (properties['image'].split('/')[-1]).decode('utf-8')
+                imgData = requests.get(properties['image']).content
+                imageObj = NamedBlobImage(data=imgData,
+                                          filename=imgName,
+                                          contentType=mime_type[0])
+            community.image = imageObj
+            community.community_type = properties['community_type'] if properties['community_type'] is not None else None
+            community.activity_view = properties['activity_view'] if properties['activity_view'] is not None else None
+            community.twitter_hashtag = properties['twitter_hashtag'] if properties['twitter_hashtag'] is not None else None
+            if properties['notify_activity_via_push'] is not None:
+                community.notify_activity_via_push = True if properties['notify_activity_via_push'] == 'True' else None
+            if properties['notify_activity_via_push_comments_too'] is not None:
+                community.notify_activity_via_push_comments_too = True if properties['notify_activity_via_push_comments_too'] == 'True' else None
+            community.reindexObject()
+            return True
+        else:
+            return False
 
 
 class Subscriptions(REST, CommunityMixin):
