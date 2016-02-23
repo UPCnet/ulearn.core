@@ -179,8 +179,18 @@ class Community(REST, CommunityMixin):
     @api_resource(get_target=True, required_roles=['Owner', 'Manager'])
     def PUT(self):
         """ Modifies the community itself. """
+        params = {}
+        params['title'] = self.params.pop('title', None)
+        params['community_type'] = self.params.pop('community_type', None)
+        params['description'] = self.params.pop('description', None)
+        params['image'] = self.params.pop('image', None)
+        params['activity_view'] = self.params.pop('activity_view', None)
+        params['twitter_hashtag'] = self.params.pop('twitter_hashtag', None)
+        params['notify_activity_via_push'] = self.params.pop('notify_activity_via_push', None)
+        params['notify_activity_via_push_comments_too'] = self.params.pop('notify_activity_via_push_comments_too', None)
 
-        modified = self.update_community(self.params)
+
+        modified = self.update_community(params)
         if modified:
             success_response = 'Updated community "{}"'.format(self.target.absolute_url())
         else:
@@ -216,13 +226,15 @@ class Community(REST, CommunityMixin):
     def update_community(self, properties):
         pc = api.portal.get_tool('portal_catalog')
         brain = pc.unrestrictedSearchResults(portal_type='ulearn.community',
-                                             community_hash=properties['community'])
+                                             community_hash=self.params['community'])
         if brain:
             community = brain[0].getObject()
-            community.title = properties['title'] if properties['title'] is not None else None
-            community.description = properties['description'] if properties['description'] is not None else None
-            imageObj = ''
-            if properties['image']:
+            if properties['title'] is not None:
+                community.title = properties['title']
+            if properties['description'] is not None:
+                community.description = properties['description']
+            if properties['image'] is not None:
+                imageObj = ''
                 mime = MimeTypes()
                 mime_type = mime.guess_type(properties['image'])
                 imgName = (properties['image'].split('/')[-1]).decode('utf-8')
@@ -230,10 +242,13 @@ class Community(REST, CommunityMixin):
                 imageObj = NamedBlobImage(data=imgData,
                                           filename=imgName,
                                           contentType=mime_type[0])
-            community.image = imageObj
-            community.community_type = properties['community_type'] if properties['community_type'] is not None else None
-            community.activity_view = properties['activity_view'] if properties['activity_view'] is not None else None
-            community.twitter_hashtag = properties['twitter_hashtag'] if properties['twitter_hashtag'] is not None else None
+                community.image = imageObj
+            if properties['community_type'] is not None:
+                community.community_type = properties['community_type']
+            if properties['activity_view'] is not None:
+                community.activity_view = properties['activity_view']
+            if properties['twitter_hashtag'] is not None:
+                community.twitter_hashtag = properties['twitter_hashtag']
             if properties['notify_activity_via_push'] is not None:
                 community.notify_activity_via_push = True if properties['notify_activity_via_push'] == 'True' else None
             if properties['notify_activity_via_push_comments_too'] is not None:
