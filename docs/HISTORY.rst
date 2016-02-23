@@ -1,11 +1,11 @@
 Changelog
 =========
 
-2.28 (unreleased)
+2.28 (2016-02-23)
 -----------------
 
-- Nothing changed yet.
-
+* display username without error [Alberto Duran]
+* ws put community [Paco Gregori]
 
 2.27 (2016-02-22)
 -----------------
