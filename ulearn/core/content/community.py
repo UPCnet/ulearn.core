@@ -788,7 +788,10 @@ class EditACL(grok.View):
             # Store all the found displaynames indexed by user
             displaynames = {}
             for result in results:
-                displaynames[result.attrs['username']] = result.attrs['fullname']
+                try:
+                    displaynames[result.attrs['username']] = result.attrs['fullname']
+                except:
+                    pass
 
             # Update the acl list with recovered displaynames from soup
             for user in acl['users']:
