@@ -202,7 +202,7 @@ def getUserOauthToken(pm):
     else:
         member = pm.getAuthenticatedMember()
 
-    username = member.getUserName()
+    username = member.getUserName().lower()
     memberdata = pm.getMemberById(username)
     oauth_token = memberdata.getProperty('oauth_token', None)
 
