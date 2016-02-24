@@ -381,6 +381,11 @@ msgstr "Search"
 msgid "seemore"
 msgstr "See more communities"
 
+#. Default: "See more communities"
+#: ../../../../../../ulearn.theme/ulearn/theme/portlets/templates/communities.pt:35
+msgid "seemycommunities"
+msgstr "See my communities"
+
 #. Default: "Stats"
 #: ../../../../../../ulearn.theme/ulearn/theme/portlets/stats.py:33
 #: ../../../../../../ulearn.theme/ulearn/theme/portlets/templates/stats.pt:4

@@ -386,6 +386,12 @@ msgstr "Cerca comunitats"
 msgid "seemore"
 msgstr "Veure més comunitats"
 
+#. Default: "See more communities"
+#: ../../../../../../ulearn.theme/ulearn/theme/portlets/templates/communities.pt:35
+msgid "seemycommunities"
+msgstr "Veure les meves comunitats"
+
+
 #. Default: "Stats"
 #: ../../../../../../ulearn.theme/ulearn/theme/portlets/stats.py:33
 #: ../../../../../../ulearn.theme/ulearn/theme/portlets/templates/stats.pt:4
