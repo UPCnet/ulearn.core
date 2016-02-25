@@ -383,6 +383,7 @@ class Subscriptions(REST, CommunityMixin):
 
         users = self.params.pop('users')
         for user in users:
-            adapter.add_max_subscription_atomic(user['id'])
             adapter.update_acl_atomic(user['id'], user['role'])
+
+        adapter.update_hub_subscriptions()
         adapter.set_plone_permissions(self.payload)
