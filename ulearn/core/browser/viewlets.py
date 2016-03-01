@@ -18,6 +18,10 @@ class CommunityNGDirective(grok.Viewlet):
     grok.viewletmanager(IPortalHeader)
 
     def update(self):
+        self.community_hash = ''
+        self.community_gwuuid = ''
+        self.community_url = ''
+        self.community_type = ''
         for obj in aq_chain(self.context):
             if ICommunity.providedBy(obj):
                 self.community_hash = sha1(obj.absolute_url()).hexdigest()

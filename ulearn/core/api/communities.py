@@ -351,17 +351,7 @@ class Subscriptions(REST, CommunityMixin):
         # if check_permission is not True:
         #     return check_permission
 
-        adapter = self.target.adapted(request=self.request)
-        users = self.params.pop('users')
-
-        for user in users:
-            try:
-                user_id = user.id
-            except:
-                # json with request
-                user_id = user['id']
-
-            adapter.unsubscribe_user(user_id)
+        self.remove_subscriptions()
 
         return ApiResponse.from_string('Unsubscription to the requested community done.', code=204)
 
@@ -384,6 +374,16 @@ class Subscriptions(REST, CommunityMixin):
         users = self.params.pop('users')
         for user in users:
             adapter.update_acl_atomic(user['id'], user['role'])
+
+        adapter.update_hub_subscriptions()
+        adapter.set_plone_permissions(self.payload)
+
+    def remove_subscriptions(self):
+        adapter = self.target.adapted(request=self.request)
+
+        users = self.params.pop('users')
+        for user in users:
+            adapter.remove_acl_atomic(user['id'])
 
         adapter.update_hub_subscriptions()
         adapter.set_plone_permissions(self.payload)
