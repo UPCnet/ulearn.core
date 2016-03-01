@@ -221,7 +221,7 @@ class Community(REST, CommunityMixin):
         adapter.delete_community_all()
         community.aq_parent.manage_delObjects([community.getId()])
 
-        return ApiResponse({'Community removed'}, code=204)
+        return ApiResponse.from_string('Community removed', code=204)
 
     def update_community(self, properties):
         pc = api.portal.get_tool('portal_catalog')
