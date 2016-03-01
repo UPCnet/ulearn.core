@@ -221,7 +221,10 @@ class Community(REST, CommunityMixin):
         adapter.delete_community_all()
         community.aq_parent.manage_delObjects([community.getId()])
 
-        return ApiResponse.from_string('Community removed', code=204)
+
+        success_response = 'Community "{}" removed'.format(self.target.absolute_url())
+        logger.info(success_response)
+        return ApiResponse.from_string(success_response, code=200)
 
     def update_community(self, properties):
         pc = api.portal.get_tool('portal_catalog')
@@ -353,7 +356,10 @@ class Subscriptions(REST, CommunityMixin):
 
         self.remove_subscriptions()
 
-        return ApiResponse.from_string('Unsubscription to the requested community done.', code=204)
+        # Response successful
+        success_response = 'Unsubscription to the requested community done.'
+        logger.info(success_response)
+        return ApiResponse.from_string(success_response, code=200)
 
     def set_subscriptions(self):
         adapter = self.target.adapted(request=self.request)
