@@ -7,20 +7,23 @@ from plone.app.layout.viewlets.interfaces import IPortalHeader
 from genweb.core.gwuuid import IGWUUID
 from ulearn.core.content.community import ICommunity
 from ulearn.core import _
+from Acquisition import aq_chain
 
 import json
 
 
 class CommunityNGDirective(grok.Viewlet):
-    grok.context(ICommunity)
+    grok.context(Interface)
     grok.name('ulearn.communityngdirective')
     grok.viewletmanager(IPortalHeader)
 
     def update(self):
-        self.community_hash = sha1(self.context.absolute_url()).hexdigest()
-        self.community_gwuuid = IGWUUID(self.context).get()
-        self.community_url = self.context.absolute_url()
-        self.community_type = self.context.community_type
+        for obj in aq_chain(self.context):
+            if ICommunity.providedBy(obj):
+                self.community_hash = sha1(obj.absolute_url()).hexdigest()
+                self.community_gwuuid = IGWUUID(obj).get()
+                self.community_url = obj.absolute_url()
+                self.community_type = obj.community_type
 
 
 class ULearnNGDirectives(grok.Viewlet):
