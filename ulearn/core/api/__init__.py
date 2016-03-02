@@ -255,6 +255,11 @@ class REST(REST_BASE):
 
         return maxclient
 
+    def lowerUsername(self):
+        if self.params.get('users', None):
+            for user in self.params['users']:
+                user['id'] = user['id'].lower()
+
     def extract_params(self, required=[]):
         """
             Extract parameters from request and stores them ass class attributes
@@ -272,6 +277,7 @@ class REST(REST_BASE):
         else:
             self.params.update(self.payload)
 
+	self.lowerUsername()
         # Return False if param not found or empty
         for param_name in required_params:
             parameter_missing = param_name not in self.params
