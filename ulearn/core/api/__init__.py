@@ -255,7 +255,7 @@ class REST(REST_BASE):
 
         return maxclient
 
-    def lowerUsername(self):
+    def lowerUsersId(self):
         if self.params.get('users', None):
             for user in self.params['users']:
                 user['id'] = user['id'].lower()
@@ -277,7 +277,8 @@ class REST(REST_BASE):
         else:
             self.params.update(self.payload)
 
-	self.lowerUsername()
+        self.lowerUsersId()
+
         # Return False if param not found or empty
         for param_name in required_params:
             parameter_missing = param_name not in self.params
