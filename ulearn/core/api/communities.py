@@ -211,20 +211,9 @@ class Community(REST, CommunityMixin):
         # check_permission = self.check_roles(self.community, ['Owner', 'Manager'])
         # if check_permission is not True:
         #     return check_permission
+        api.content.delete(obj=self.target)
 
-        pc = api.portal.get_tool('portal_catalog')
-        brain = pc.unrestrictedSearchResults(portal_type='ulearn.community',
-                                             community_hash=self.params['community'])
-
-        community = brain[0].getObject()
-        adapter = community.adapted()
-        adapter.delete_community_all()
-        community.aq_parent.manage_delObjects([community.getId()])
-
-
-        success_response = 'Community "{}" removed'.format(self.target.absolute_url())
-        logger.info(success_response)
-        return ApiResponse.from_string(success_response, code=200)
+        return ApiResponse({}, code=204)
 
     def update_community(self, properties):
         pc = api.portal.get_tool('portal_catalog')
