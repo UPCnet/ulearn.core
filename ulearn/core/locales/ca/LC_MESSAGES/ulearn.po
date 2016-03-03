@@ -287,7 +287,7 @@ msgstr "eConnect"
 
 #. Default: "Editar la comunidad"
 msgid "editcommunity"
-msgstr "Editar la comunidad"
+msgstr "Editar la comunitat"
 
 #. Default: "Go to the campus"
 #: ../../../../../../ulearn.theme/ulearn/theme/portlets/templates/communities.pt:40
@@ -787,7 +787,7 @@ msgid "seemore_stats"
 msgstr "Veure més estadístiques"
 
 msgid "label_check_favorite"
-msgstr "Desmarcar com a favorit"
+msgstr "Favorit"
 
 msgid "label_check_unfavorite"
 msgstr "Marcar com a favorit"

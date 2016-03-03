@@ -718,7 +718,7 @@ msgid "seemore_stats"
 msgstr "Ver más estadísticas"
 
 msgid "label_check_unfavorite"
-msgstr "Marcar como favorito"
+msgstr "Favorito"
 
 msgid "label_check_favorite"
 msgstr "Desmarcar como favorito"

@@ -665,7 +665,7 @@ msgid "label_check_favorite"
 msgstr "Remove to favorites"
 
 msgid "label_check_unfavorite"
-msgstr "Add to favorites"
+msgstr "Favorite"
 
 msgid "label_subscribe_to_community"
 msgstr "Subscribe community"
