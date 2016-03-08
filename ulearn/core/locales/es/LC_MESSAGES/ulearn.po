@@ -519,6 +519,9 @@ msgstr "Biografía / Curriculum Vitae"
 msgid "help_biography"
 msgstr "Una pequeña reseña de quién eres y qué haces."
 
+msgid "bio"
+msgstr "Biografía / Curriculum Vitae"
+
 msgid "help_homepage"
 msgstr "La URL para su página personal externa, si tiene una."
 
@@ -527,6 +530,9 @@ msgstr "Ubicación"
 
 msgid "help_ubicacio"
 msgstr "Tu ubicación dentro de la compañía y/o ubicación geográfica."
+
+msgid "ubication"
+msgstr "Ubicación"
 
 msgid "first_name"
 msgstr "Nombre"
