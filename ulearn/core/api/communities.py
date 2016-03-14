@@ -368,7 +368,10 @@ class Subscriptions(REST, CommunityMixin):
 
         users = self.params.pop('users')
         for user in users:
-            adapter.update_acl_atomic(user['id'], user['role'])
+            try:
+                adapter.update_acl_atomic(user['id'], user['role'])
+            except:
+                raise BadParameters(user)
 
         adapter.update_hub_subscriptions()
         adapter.set_plone_permissions(self.payload)
@@ -378,7 +381,10 @@ class Subscriptions(REST, CommunityMixin):
 
         users = self.params.pop('users')
         for user in users:
-            adapter.remove_acl_atomic(user['id'])
+            try:
+                adapter.remove_acl_atomic(user['id'])
+            except:
+                raise BadParameters(user)
 
         adapter.update_hub_subscriptions()
         adapter.set_plone_permissions(self.payload)
