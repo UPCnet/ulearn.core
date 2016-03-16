@@ -78,14 +78,12 @@ def searchUsersFunction(context, request, search_string):  # noqa
             normalized_query = unicodedata.normalize('NFKD', search_string).encode('ascii', errors='ignore')
             normalized_query = normalized_query.replace('.', ' ') + '*'
             plone_results = [r for r in soup.query(Eq('searchable_text', normalized_query))]
-
             if max_users:
                 merged_results = list(set([plone_user.attrs['username'] for plone_user in plone_results]) &
                                       set([max_user['username'] for max_user in max_users]))
                 users = []
                 for user in merged_results:
-                    users.append([r for r in soup.query(Or(Eq('username', user + '*')))][0])
-
+                    users.append([r for r in soup.query(Eq('id', user))][0])
             else:
                 merged_results = []
                 users = []
@@ -98,7 +96,7 @@ def searchUsersFunction(context, request, search_string):  # noqa
 
                 if merged_results:
                     for user in merged_results:
-                        record = [r for r in soup.query(Eq('username', user))]
+                        record = [r for r in soup.query(Eq('id', user))]
                         if record:
                             users.append(record[0])
                         else:
@@ -114,7 +112,7 @@ def searchUsersFunction(context, request, search_string):  # noqa
 
             users = []
             for user in max_users:
-                record = [r for r in soup.query(Eq('username', user))]
+                record = [r for r in soup.query(Eq('id', user))]
                 if record:
                     users.append(record[0])
                 else:
