@@ -1,11 +1,23 @@
 Changelog
 =========
 
-2.29 (unreleased)
+2.29 (2016-03-17)
 -----------------
 
-- Nothing changed yet.
-
+* modify search users. Now search with id instead of username [Paco Gregori]
+* add exceptions on ws [Paco Gregori]
+* Traduccions profile generali [root@shayla]
+* modify delete community server [Paco Gregori]
+* add translations [Paco Gregori]
+* lower users id lower 2 [Paco Gregori]
+* lower users id on webservice [root muntanyeta]
+* modify ws responses [Paco Gregori]
+* modify unsubscribe WS and viewlet CommunityNGDirective [Paco Gregori]
+* modify communityngdirective to take info when stay into community url [Paco Gregori]
+* modify remove community ws [Paco Gregori]
+* modify ws subscribe community [Paco Gregori]
+* lower username on getUserOauthToken [Paco Gregori]
+* add translations [Paco Gregori]
 
 2.28 (2016-02-23)
 -----------------
