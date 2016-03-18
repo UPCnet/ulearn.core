@@ -875,3 +875,6 @@ msgstr "Contribute scaling"
 
 msgid "sign_up_newsletter"
 msgstr "Sign-up for the newsletter"
+
+msgid "seethinkers"
+msgstr "See all participants"

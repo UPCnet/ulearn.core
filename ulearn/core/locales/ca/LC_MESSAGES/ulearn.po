@@ -969,3 +969,6 @@ msgstr "Novembre"
 
 msgid "December"
 msgstr "Desembre"
+
+msgid "seethinkers"
+msgstr "Veure tots els participants"
