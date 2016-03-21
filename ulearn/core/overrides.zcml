@@ -1,5 +1,6 @@
 <configure
     xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
     i18n_domain="mrs.max">
 
   <!-- Enhanced user properties adapter -->
@@ -8,5 +9,13 @@
       for="Products.CMFCore.interfaces.ISiteRoot"
       factory=".userschema.ULearnUserDataPanelAdapter"
       />
+
+  <browser:page
+    for="Products.CMFCore.interfaces._content.IFolderish"
+    class=".overrides.UlearnNewFolderContentsView"
+    name="folder_contents"
+    template="folder_contents.pt"
+    permission="cmf.ListFolderContents"
+    layer="wildcard.foldercontents.interfaces.ILayer" />
 
 </configure>
