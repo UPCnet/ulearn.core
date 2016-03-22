@@ -353,6 +353,8 @@ class MigrateOldStyleFolders(grok.View):
     grok.name('migrate_folders')
 
     def render(self):
+        from plone.protect.interfaces import IDisableCSRFProtection
+        alsoProvides(self.request, IDisableCSRFProtection)
         pc = api.portal.get_tool('portal_catalog')
         communities = pc.searchResults(portal_type='ulearn.community')
 
