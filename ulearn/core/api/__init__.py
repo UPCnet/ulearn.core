@@ -76,8 +76,8 @@ class api_resource(object):
         self.required = settings.pop('required', [])
         self.required_roles = settings.pop('required_roles', [])
         self.get_target = settings.pop('get_target', False)
-
-        def wrapped(resource, *args):
+        
+	def wrapped(resource, *args):
             response_content = {}
             response_code = 200
             if not DISABLE_CSRF:
@@ -134,14 +134,14 @@ class api_resource(object):
                 }
 
             except Redirect as exc:
-                response_code = 301
+                response_code = 302
                 response_content = {
                     'status_code': response_code,
                     'error_type': 'Redirect',
                     'error': 'Redirecting, no such error',
                     'redirecting_to': exc.location
                 }
-                resource.response.redirect(exc.location, trusted=True)
+                resource.response.redirect(exc.location)
 
             except Exception as exc:
                 traceback = sys.exc_info()[2]
@@ -293,11 +293,12 @@ class REST(REST_BASE):
 
     def check_roles(self, obj=None, roles=[]):
         allowed = False
+        memberdata = api.user.get_current()
+        user_roles = memberdata.getRoles()
         if obj:
-            user_roles = api.user.get_roles(obj=obj)
-        else:
-            user_roles = api.user.get_roles()
-
+           local_roles = obj.__ac_local_roles__.get(memberdata.id, [])
+           user_roles = list(set(user_roles + local_roles))
+           
         for role in roles:
             if role in user_roles:
                 allowed = True
