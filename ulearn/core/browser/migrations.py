@@ -40,6 +40,8 @@ from maxclient.rest import RequestError
 
 from itertools import chain
 import logging
+from genweb.core.gwuuid import IGWUUID
+from repoze.catalog.query import Eq, Or
 
 logger = logging.getLogger(__name__)
 
@@ -320,7 +322,6 @@ class MigrateOldStyleACLs(grok.View):
     def render(self):
         pc = api.portal.get_tool('portal_catalog')
         communities = pc.searchResults(portal_type='ulearn.community')
-
         permission_map = {
             'readers': 'reader',
             'subscribed': 'writer',
@@ -330,9 +331,9 @@ class MigrateOldStyleACLs(grok.View):
         for brain in communities:
             acl = dict(users=[], groups=[])
             community = brain.getObject()
-            adapter = getAdapter(community, ICommunityTyped, name=community.community_type)
-
-            logger.warn('{} -- {}'.format(community.id, community.absolute_url()))
+            adapter = community.adapted()
+            
+	    logger.warn('{} -- {}'.format(community.id, community.absolute_url()))
 
             for old_role in permission_map:
                 users = getattr(community, old_role)
@@ -340,7 +341,6 @@ class MigrateOldStyleACLs(grok.View):
                     acl['users'].append(dict(id=username,
                                              displayName=get_safe_member_by_id(username).get('fullname', u''),
                                              role=permission_map[old_role]))
-
             adapter.update_acl(acl)
             adapter.update_hub_subscriptions()
             logger.warn('migrated community {} with acl: {}'.format(community.absolute_url(), acl))
