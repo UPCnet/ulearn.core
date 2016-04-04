@@ -293,7 +293,7 @@ class TestExample(uLearnTestBase):
         httpretty.enable()
         http_mock_hub_syncacl(acl, self.settings.hub_server)
 
-        adapter = getAdapter(community, ICommunityTyped, name=community.community_type)
+        adapter = community.adapted()
         adapter.update_acl(acl)
 
         httpretty.disable()
@@ -491,7 +491,7 @@ class TestExample(uLearnTestBase):
     def test_community_type_adapters(self):
         login(self.portal, 'ulearn.testuser1')
         community = self.create_test_community(id='community-test-notify', community_type='Closed')
-        getAdapter(community, ICommunityTyped, name='Closed')
+        community.adapted()
 
     def test_delete_community(self):
         login(self.portal, 'ulearn.testuser1')
@@ -517,7 +517,7 @@ class TestExample(uLearnTestBase):
         result = json.loads(result)
         self.assertTrue('message' in result)
 
-        adapter = getAdapter(community, ICommunityTyped, name=community.community_type)
+        adapter = community.adapted()
         acl = adapter.get_acl()
         self.assertTrue(len(acl['users']), 2)
         users_subscribed = [a['id'] for a in acl['users']]
@@ -537,7 +537,7 @@ class TestExample(uLearnTestBase):
         view = getMultiAdapter((self.portal, self.request), name='migrate_acls')
         view.render()
 
-        adapter = getAdapter(community, ICommunityTyped, name=community.community_type)
+        adapter = community.adapted()
         acl = adapter.get_acl()
 
         readers = [a['id'] for a in acl['users'] if a['role'] == u'reader']
@@ -574,7 +574,7 @@ class TestExample(uLearnTestBase):
         view = getMultiAdapter((community, self.request), name='notify')
         view.render()
 
-        adapter = getAdapter(community, ICommunityTyped, name=community.community_type)
+        adapter = community.adapted()
         acl = adapter.get_acl()
 
         users_subscribed = [a['id'] for a in acl['users']]

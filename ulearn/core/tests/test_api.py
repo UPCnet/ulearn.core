@@ -361,7 +361,7 @@ class TestAPI(uLearnTestBase):
                            dict(id=u'UPCnet', displayName=u'UPCnet', role=u'reader')]
                    )
 
-        adapter = getAdapter(community, ICommunityTyped, name=community.community_type)
+        adapter = community.adapted()
         adapter.update_acl(acl)
 
         group = u'UPCnet'
