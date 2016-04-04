@@ -1,11 +1,16 @@
 Changelog
 =========
 
-2.30 (unreleased)
+2.30 (2016-04-04)
 -----------------
 
-- Nothing changed yet.
-
+* Fix trusted=True [Victor Fernandez de Alba]
+* Test adapter communities [Pilar Marinas]
+* Get roles [root@shayla]
+* Adapted community [root@shayla]
+* Migrate folders communities V2 [Pilar Marinas]
+* esconder el boton subir al nivel superior, en la carpeta documents de una comunidad [Paco Gregori]
+* add translations [Paco Gregori]
 
 2.29 (2016-03-17)
 -----------------
