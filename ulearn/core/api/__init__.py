@@ -141,7 +141,10 @@ class api_resource(object):
                     'error': 'Redirecting, no such error',
                     'redirecting_to': exc.location
                 }
-                resource.response.redirect(exc.location, trusted=True)
+		try:
+                  resource.response.redirect(exc.location, trusted=True)
+		except:
+		  resource.response.redirect(exc.location)
 
             except Exception as exc:
                 traceback = sys.exc_info()[2]
