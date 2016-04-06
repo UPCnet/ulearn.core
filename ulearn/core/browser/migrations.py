@@ -342,7 +342,11 @@ class MigrateOldStyleACLs(grok.View):
                                              displayName=get_safe_member_by_id(username).get('fullname', u''),
                                              role=permission_map[old_role]))
             adapter.update_acl(acl)
-            adapter.update_hub_subscriptions()
+            try:
+	    	adapter.update_hub_subscriptions()
+            except:
+		pass
+
             logger.warn('migrated community {} with acl: {}'.format(community.absolute_url(), acl))
 
         return 'Done'
