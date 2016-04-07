@@ -355,7 +355,8 @@ class Subscriptions(REST, CommunityMixin):
 
         # Change the uLearn part of the community
         adapter.update_acl(self.payload)
-        adapter.set_plone_permissions(self.payload)
+        acl = adapter.get_acl()
+        adapter.set_plone_permissions(acl)
 
         # Communicate the change in the community subscription to the uLearnHub
         # XXX: Until we do not have a proper Hub online
@@ -373,8 +374,9 @@ class Subscriptions(REST, CommunityMixin):
             except:
                 raise BadParameters(user)
 
+        acl = adapter.get_acl()
+        adapter.set_plone_permissions(acl)
         adapter.update_hub_subscriptions()
-        adapter.set_plone_permissions(self.payload)
 
     def remove_subscriptions(self):
         adapter = self.target.adapted(request=self.request)
@@ -386,5 +388,6 @@ class Subscriptions(REST, CommunityMixin):
             except:
                 raise BadParameters(user)
 
+        acl = adapter.get_acl()
+        adapter.set_plone_permissions(acl)
         adapter.update_hub_subscriptions()
-        adapter.set_plone_permissions(self.payload)
