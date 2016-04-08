@@ -417,3 +417,9 @@ msgstr "Teléfono"
 
 msgid "ubicacio"
 msgstr "Ubicación"
+
+msgid "Add a new document"
+msgstr "Añadir un documento"
+
+msgid "Add a new link"
+msgstr "Añadir un enlace"

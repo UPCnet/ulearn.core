@@ -332,8 +332,8 @@ class MigrateOldStyleACLs(grok.View):
             acl = dict(users=[], groups=[])
             community = brain.getObject()
             adapter = community.adapted()
-            
-	    logger.warn('{} -- {}'.format(community.id, community.absolute_url()))
+
+            logger.warn('{} -- {}'.format(community.id, community.absolute_url()))
 
             for old_role in permission_map:
                 users = getattr(community, old_role)

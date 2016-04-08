@@ -164,7 +164,6 @@ class Communities(REST):
         if records:
             return self.username in [a['id'] for a in records[0].attrs['acl']['users'] if a['role'] == u'owner']
 
-
 class Community(REST, CommunityMixin):
     """
         /api/communities/{community}
@@ -189,14 +188,12 @@ class Community(REST, CommunityMixin):
         params['notify_activity_via_push'] = self.params.pop('notify_activity_via_push', None)
         params['notify_activity_via_push_comments_too'] = self.params.pop('notify_activity_via_push_comments_too', None)
 
-
         modified = self.update_community(params)
         if modified:
             success_response = 'Updated community "{}"'.format(self.target.absolute_url())
         else:
             success_response = 'Not find the specified community'
 
-        success_response = 'Updated community "{}"'.format(self.target.absolute_url())
         logger.info(success_response)
         return ApiResponse.from_string(success_response)
 
