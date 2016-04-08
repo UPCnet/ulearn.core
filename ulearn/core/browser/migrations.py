@@ -213,6 +213,11 @@ class MigrateCommunities(grok.View):
     grok.require('zope2.ViewManagementScreens')
 
     def render(self):
+        try:
+            from plone.protect.interfaces import IDisableCSRFProtection
+            alsoProvides(self.request, IDisableCSRFProtection)
+        except:
+            pass
         portal = api.portal.get()
         pc = api.portal.get_tool(name='portal_catalog')
         communities = pc.searchResults(portal_type='ulearn.community')
@@ -228,6 +233,42 @@ class MigrateCommunities(grok.View):
                 portal._setOb(community.id, community)
 
                 text.append('Migrated community {}\n'.format(community.absolute_url()))
+        return ''.join(text) + '\nDone!'
+
+
+class MigrateTypesDocumentsCommunities(grok.View):
+    """ It should be executed on an running instance with no MAX hooks enabled
+        to avoid them to be executed when persisting the new communities objects
+    """
+    grok.context(IPloneSiteRoot)
+    grok.name('migrate_types_documents_communities')
+    grok.require('zope2.ViewManagementScreens')
+
+    def render(self):
+        try:
+            from plone.protect.interfaces import IDisableCSRFProtection
+            alsoProvides(self.request, IDisableCSRFProtection)
+        except:
+            pass
+        portal = api.portal.get()
+        pc = api.portal.get_tool(name='portal_catalog')
+        communities = pc.searchResults(portal_type='ulearn.community')
+
+        text = []
+        for community_brain in communities:
+            # We assume that there will be only communities in Portal Site Root
+            community = portal[community_brain.id]
+
+            # Set on them the allowable content types
+            behavior = ISelectableConstrainTypes(community['documents'])
+            behavior.setConstrainTypesMode(1)
+            behavior.setLocallyAllowedTypes(('Document', 'File', 'Folder', 'Link', 'Image', 'privateFolder', 'ulearn.video', 'ulearn.video_embed'))
+            behavior.setImmediatelyAddableTypes(('Document', 'File', 'Folder', 'Link', 'Image', 'privateFolder', 'ulearn.video', 'ulearn.video_embed'))
+
+            community.reindexObject()
+
+            text.append('Migrated types community {}\n'.format(community.absolute_url()))
+
         return ''.join(text) + '\nDone!'
 
 
@@ -293,6 +334,11 @@ class GiveAllCommunitiesGWUUID(grok.View):
     grok.name('GiveAllCommunitiesGWUUID')
 
     def render(self):
+        try:
+            from plone.protect.interfaces import IDisableCSRFProtection
+            alsoProvides(self.request, IDisableCSRFProtection)
+        except:
+            pass
         pc = api.portal.get_tool('portal_catalog')
         communities = pc.searchResults(portal_type='ulearn.community')
 
@@ -320,6 +366,11 @@ class MigrateOldStyleACLs(grok.View):
     grok.name('migrate_acls')
 
     def render(self):
+        try:
+            from plone.protect.interfaces import IDisableCSRFProtection
+            alsoProvides(self.request, IDisableCSRFProtection)
+        except:
+            pass
         pc = api.portal.get_tool('portal_catalog')
         communities = pc.searchResults(portal_type='ulearn.community')
         permission_map = {
@@ -343,9 +394,9 @@ class MigrateOldStyleACLs(grok.View):
                                              role=permission_map[old_role]))
             adapter.update_acl(acl)
             try:
-	    	adapter.update_hub_subscriptions()
+                adapter.update_hub_subscriptions()
             except:
-		pass
+                pass
 
             logger.warn('migrated community {} with acl: {}'.format(community.absolute_url(), acl))
 
@@ -358,10 +409,10 @@ class MigrateOldStyleFolders(grok.View):
 
     def render(self):
         try:
-          from plone.protect.interfaces import IDisableCSRFProtection
-          alsoProvides(self.request, IDisableCSRFProtection)
-	except:	
-	  pass
+            from plone.protect.interfaces import IDisableCSRFProtection
+            alsoProvides(self.request, IDisableCSRFProtection)
+        except:
+            pass
         pc = api.portal.get_tool('portal_catalog')
         communities = pc.searchResults(portal_type='ulearn.community')
 
