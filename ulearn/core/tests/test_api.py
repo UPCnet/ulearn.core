@@ -234,7 +234,6 @@ class TestAPI(uLearnTestBase):
 
         self.assertEqual(community_view.request.response.getStatus(), 200)
         self.assertEqual(community.community_type, 'Closed')
-
         self.assertTrue('Reader' not in community.get_local_roles_for_userid(userid='AuthenticatedUsers'))
 
         max_community_info = self.get_max_context_info(community)

@@ -188,11 +188,25 @@ class Community(REST, CommunityMixin):
         params['notify_activity_via_push'] = self.params.pop('notify_activity_via_push', None)
         params['notify_activity_via_push_comments_too'] = self.params.pop('notify_activity_via_push_comments_too', None)
 
+        if params['community_type']:
+            # We are changing the type of the community
+            # Check if it's a legit change
+            if params['community_type'] in ['Open', 'Closed', 'Organizative']:
+                adapter = self.target.adapted(name=params['community_type'])
+            else:
+                return ApiResponse.from_string({"error": "Bad request, wrong community type"}, code=400)
+
+            if params['community_type'] == self.target.community_type:
+                return ApiResponse.from_string({"error": "Bad request, already that community type"}, code=400)
+
+            # Everything is ok, proceed
+            adapter.update_community_type()
+
         modified = self.update_community(params)
         if modified:
             success_response = 'Updated community "{}"'.format(self.target.absolute_url())
         else:
-            success_response = 'Not find the specified community'
+            success_response = 'Error with change values "{}".'.format(self.target.absolute_url())
 
         logger.info(success_response)
         return ApiResponse.from_string(success_response)
@@ -216,6 +230,9 @@ class Community(REST, CommunityMixin):
         pc = api.portal.get_tool('portal_catalog')
         brain = pc.unrestrictedSearchResults(portal_type='ulearn.community',
                                              community_hash=self.params['community'])
+        if not brain:
+            brain = pc.unrestrictedSearchResults(portal_type='ulearn.community',
+                                                 gwuuid=self.params['community'])
         if brain:
             community = brain[0].getObject()
             if properties['title'] is not None:
@@ -232,8 +249,6 @@ class Community(REST, CommunityMixin):
                                           filename=imgName,
                                           contentType=mime_type[0])
                 community.image = imageObj
-            if properties['community_type'] is not None:
-                community.community_type = properties['community_type']
             if properties['activity_view'] is not None:
                 community.activity_view = properties['activity_view']
             if properties['twitter_hashtag'] is not None:
