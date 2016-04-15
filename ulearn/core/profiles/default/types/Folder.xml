@@ -12,6 +12,9 @@
     <element value="privateFolder"/>
     <element value="ulearn.video"/>
     <element value="ulearn.video_embed"/>
+    <element value="Event"/>
+    <element value="ulearn.discussion"/>
+    <element value="Collection"/>
  </property>
  <property name="default_view">summary_view</property>
  <property name="view_methods">
