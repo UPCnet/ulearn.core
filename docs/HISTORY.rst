@@ -1,11 +1,20 @@
 Changelog
 =========
 
-2.31 (unreleased)
+2.31 (2016-04-18)
 -----------------
 
-- Nothing changed yet.
-
+* add patch when remove user on userpref, remove on max too [Paco Gregori]
+* Solucionar test_people [Pilar Marinas]
+* Afegir mes contiguts a Folder [Pilar Marinas]
+* change test test_auto_subscribe_to_open [Paco Gregori]
+* ws change community type [Paco Gregori]
+* Migrate Types Documents Communities [Pilar Marinas]
+* Afegir nous tipus contingut folder [Pilar Marinas]
+* Afegir nous tipus contingut folder [Pilar Marinas]
+* solved bug when suscribe user with ws [Paco Gregori]
+* Migrate acl try update_hub_subscriptions [root@shayla]
+* Try trusted [root@shayla]
 
 2.30 (2016-04-04)
 -----------------
