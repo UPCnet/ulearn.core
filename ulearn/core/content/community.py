@@ -1288,8 +1288,8 @@ class CommunityInitializeAdapter(object):
         # Set on them the allowable content types
         behavior = ISelectableConstrainTypes(documents)
         behavior.setConstrainTypesMode(1)
-        behavior.setLocallyAllowedTypes(('Document', 'File', 'Folder', 'Link', 'Image', 'privateFolder', 'ulearn.video', 'ulearn.video_embed'))
-        behavior.setImmediatelyAddableTypes(('Document', 'File', 'Folder', 'Link', 'Image', 'privateFolder', 'ulearn.video', 'ulearn.video_embed'))
+        behavior.setLocallyAllowedTypes(('Document', 'File', 'Folder', 'Link', 'Image', 'privateFolder'))
+        behavior.setImmediatelyAddableTypes(('Document', 'File', 'Folder', 'Link', 'Image', 'privateFolder'))
         behavior = ISelectableConstrainTypes(media)
         behavior.setConstrainTypesMode(1)
         behavior.setLocallyAllowedTypes(('Image', 'Folder'))

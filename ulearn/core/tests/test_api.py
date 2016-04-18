@@ -72,37 +72,39 @@ class TestAPI(uLearnTestBase):
     def test_people_post(self):
         username_plone = 'ulearn.testuser1'
         login(self.portal, username_plone)
-        username = 'usertest'
+        username = 'ulearn.testuser2'
         perfil = dict(fullname=u'Test User',
                       password=u'test123',
-                      alias=u'testUser',
-                      email_bqn=u'test@blanquerna.es',
-                      email=u'test@email.es',
-                      phone=u'96 234 02 23',
-                      collectiveFaculty='PAS&&BQN||EST&&BQN',
-                      degree=u'Informática',
-                      description=u'Información personal y biografía',
-                      office_location=u'Nexus',
-                      office_phone=u'54560',
-                      department=u'Sistemas y seguridad',
-                      personalized_attention=u'Lunes a viernes de 8:00 a 15:00',
-                      social_networks=u'www.link.com/twitter')
+                      email=u'test@email.es')
 
         people_view = self.request_API_endpoint(username_plone, ['api', 'people', username], body=perfil)
         response = people_view.POST()
         response = json.loads(response)
-        self.assertEqual(response['message'], 'User {} created'.format(username))
+        status = people_view.request.response.getStatus()
+        if status == 201:
+            self.assertEqual(response['message'], 'User {} created'.format(username))
+        else:
+            self.assertEqual(response['message'], 'User {} updated'.format(username))
 
     def test_people_delete(self):
         """ Delete the given user. """
         username_plone = 'ulearn.testuser1'
         login(self.portal, username_plone)
-        username = 'ulearn.testuser2'
+        username = 'janet.dura'
 
         user_view = self.request_API_endpoint(username, ['api', 'people', username])
         user_view.DELETE()
 
-        self.assertIsNone(api.user.get('ulearn.testuser2'))
+        self.assertIsNone(api.user.get('janet.dura'))
+
+        perfil = dict(fullname=u'Test User',
+                      password=u'test123',
+                      email=u'test@email.es')
+
+        people_view = self.request_API_endpoint(username_plone, ['api', 'people', username], body=perfil)
+        response = people_view.POST()
+        response = json.loads(response)
+        self.assertEqual(response['message'], 'User {} created'.format(username))
 
     def test_news_post(self):
         username_plone = 'ulearn.testuser1'

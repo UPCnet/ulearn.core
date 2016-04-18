@@ -245,7 +245,7 @@ class Person(REST):
         if status == 201:
             return ApiResponse.from_string('User {} created'.format(username), code=status)
         else:
-            return ApiResponse.from_string('User {} updated'.format(username), code=status)
+            return ApiResponse.from_string('User {} updated'.format(username), code=200)
 
     def deleteMembers(self, member_ids):
         # this method exists to bypass the 'Manage Users' permission check

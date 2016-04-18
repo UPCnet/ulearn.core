@@ -508,7 +508,7 @@ class TestExample(uLearnTestBase):
         login(self.portal, 'ulearn.testuser1')
         community = self.create_test_community(community_type='Open')
         logout()
-        login(self.portal, 'janet.dura')
+        login(self.portal, 'ulearn.testuser2')
 
         self.request.method = 'POST'
         view = getMultiAdapter((community, self.request), name='subscribe')
@@ -521,9 +521,9 @@ class TestExample(uLearnTestBase):
         acl = adapter.get_acl()
         self.assertTrue(len(acl['users']), 2)
         users_subscribed = [a['id'] for a in acl['users']]
-        self.assertTrue(u'janet.dura' in users_subscribed)
+        self.assertTrue(u'ulearn.testuser2' in users_subscribed)
 
-        self.assertTrue(u'janet.dura' in self.get_max_subscribed_users(community))
+        self.assertTrue(u'ulearn.testuser2' in self.get_max_subscribed_users(community))
 
     def test_acl_migration(self):
         login(self.portal, 'ulearn.testuser1')
