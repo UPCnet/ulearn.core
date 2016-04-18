@@ -12,4 +12,11 @@
         replacement=".patches.enumerateUsers"
         />
 
+    <monkey:patch
+        description="Remove user usergroup-userprefs"
+        class="plone.app.controlpanel.usergroups.UsersOverviewControlPanel"
+        original="deleteMembers"
+        replacement=".patches.deleteMembers"
+        />
+
 </configure>
