@@ -47,7 +47,4 @@ class ULearnNGDirectives(grok.Viewlet):
         """ This attribute from the directive is used to show special buttons or
             links in the stats tabs. This is common in client packages.
         """
-        pqi = api.portal.get_tool('portal_quickinstaller')
-        pid = 'ulearn.generali'
-        installed = [p['id'] for p in pqi.listInstalledProducts()]
-        return pid in installed
+        return api.portal.get_registry_record(name='ulearn.core.controlpanel.IUlearnControlPanelSettings.stats_button')

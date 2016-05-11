@@ -77,7 +77,7 @@ class IUlearnControlPanelSettings(model.Schema):
     model.fieldset('General',
                   _(u'General'),
                   fields=['campus_url', 'library_url', 'people_literal', 'threshold_winwin1', 'threshold_winwin2',
-                          'threshold_winwin3'])
+                          'threshold_winwin3', 'stats_button'])
 
     model.fieldset('Specific',
                   _(u'Specific'),
@@ -143,6 +143,15 @@ class IUlearnControlPanelSettings(model.Schema):
                 default=u'Aquest és el llindar del winwin #3.'),
         required=False,
         default=u'500',
+    )
+
+    stats_button = schema.Bool(
+        title=_(u'stats_button',
+                default=u"Mostrar botó d'accés a estadístiques diàries"),
+        description=_(u'help_stats_button',
+                default=u"Mostra o no el botó d'accés a estadístiques diàries a stats/activity i stats/chats"),
+        required=False,
+        default=False,
     )
 
     main_color = schema.TextLine(
