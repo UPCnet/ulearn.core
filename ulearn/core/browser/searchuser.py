@@ -173,7 +173,13 @@ def searchUsersFunction(context, request, search_string):  # noqa
                         user_dict.update({user_property: user.attrs.get(user_property, '')})
 
                 user_dict.update(dict(id=user.attrs['username']))
-                user_dict.update(dict(foto=str(pm.getPersonalPortrait(user.attrs['username']))))
+                userImage = pm.getPersonalPortrait(user.attrs['username'])
+                userImage.alt = user.attrs['username']
+                userImage.title = user.attrs['username']
+                userImage.height = 205
+                userImage.width = 205
+
+                user_dict.update(dict(foto=str(userImage)))
                 user_dict.update(dict(url=portal.absolute_url() + '/profile/' + user.attrs['username']))
                 users_profile.append(user_dict)
 
@@ -188,8 +194,13 @@ def searchUsersFunction(context, request, search_string):  # noqa
                         user_dict.update({user_property: user.get(user_property, '')})
 
                 user_dict.update(dict(id=user.get('id', '')))
-#                user_dict.update(dict(fullname=user.get('title', '')))
-                user_dict.update(dict(foto=str(pm.getPersonalPortrait(user.get('id', '')))))
+                userImage = pm.getPersonalPortrait(user.attrs['username'])
+                userImage.alt = user.attrs['username']
+                userImage.title = user.attrs['username']
+                userImage.height = 205
+                userImage.width = 205
+
+                user_dict.update(dict(foto=str(userImage)))
                 user_dict.update(dict(url=portal.absolute_url() + '/profile/' + user.get('id', '')))
                 users_profile.append(user_dict)
 
