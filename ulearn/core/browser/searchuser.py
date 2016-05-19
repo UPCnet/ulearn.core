@@ -176,8 +176,8 @@ def searchUsersFunction(context, request, search_string):  # noqa
                 userImage = pm.getPersonalPortrait(user.attrs['username'])
                 userImage.alt = user.attrs['username']
                 userImage.title = user.attrs['username']
-                userImage.height = 205
-                userImage.width = 205
+                userImage.height = 105
+                userImage.width = 105
 
                 user_dict.update(dict(foto=str(userImage)))
                 user_dict.update(dict(url=portal.absolute_url() + '/profile/' + user.attrs['username']))
@@ -197,8 +197,8 @@ def searchUsersFunction(context, request, search_string):  # noqa
                 userImage = pm.getPersonalPortrait(user.attrs['username'])
                 userImage.alt = user.attrs['username']
                 userImage.title = user.attrs['username']
-                userImage.height = 205
-                userImage.width = 205
+                userImage.height = 105
+                userImage.width = 105
 
                 user_dict.update(dict(foto=str(userImage)))
                 user_dict.update(dict(url=portal.absolute_url() + '/profile/' + user.get('id', '')))
