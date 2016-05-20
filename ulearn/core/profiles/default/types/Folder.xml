@@ -15,6 +15,7 @@
     <element value="Event"/>
     <element value="ulearn.discussion"/>
     <element value="Collection"/>
+    <element value="News Item"/>
  </property>
  <property name="default_view">summary_view</property>
  <property name="view_methods">

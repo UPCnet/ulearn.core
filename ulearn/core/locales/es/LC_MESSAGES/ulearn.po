@@ -909,3 +909,9 @@ msgstr "Diciembre"
 
 msgid "seethinkers"
 msgstr "Ver todos los participantes"
+
+msgid "flash_info"
+msgstr "¿ Mostrar como flash informativo ?"
+
+msgid "help_flash_info"
+msgstr "Si se marca, la noticia aparecerá en el portlet de flashes informativos."
