@@ -10,6 +10,5 @@
   <element value="plone.app.relationfield.behavior.IRelatedItems"/>
   <element value="plone.app.contenttypes.behaviors.leadimage.ILeadImage"/>
   <element value="plone.app.versioningbehavior.behaviors.IVersionable"/>
-  <element value="ulearn.core.behaviors.flashnews.IFlashNews"/>
  </property>
 </object>

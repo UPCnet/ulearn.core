@@ -17,6 +17,8 @@ from plone.app.layout.viewlets.interfaces import IAboveContentTitle
 from plone.memoize.view import memoize_contextless
 from Products.CMFCore.utils import getToolByName
 from genweb.core.adapters import IImportant
+from genweb.core.adapters import IFlash
+from genweb.core.adapters import IOutOfList
 from genweb.core.utils import genweb_config
 from ulearn.theme.browser.interfaces import IUlearnTheme
 import json
@@ -101,3 +103,47 @@ class importantNews(viewletBase):
         context = aq_inner(self.context)
         is_important = IImportant(context).is_important
         return is_important
+
+
+class FlashNews(viewletBase):
+    grok.name('genweb.flash')
+    grok.context(INewsItem)
+    grok.template('flash')
+    grok.viewletmanager(IAboveContentTitle)
+    grok.require('cmf.ModifyPortalContent')
+    grok.layer(IUlearnTheme)
+
+    def permisos_flash(self):
+        # TODO: Comprovar que l'usuari tingui permisos per a marcar com a important
+        return not IFlash(self.context).is_flash and checkPermission("plone.app.controlpanel.Overview", self.portal())
+
+    def permisos_notflash(self):
+        # TODO: Comprovar que l'usuari tingui permisos per a marcar com a notimportant
+        return IFlash(self.context).is_flash and checkPermission("plone.app.controlpanel.Overview", self.portal())
+
+    def isNewFlash(self):
+        context = aq_inner(self.context)
+        is_flash = IFlash(context).is_flash
+        return is_flash
+
+
+class OutOfListNews(viewletBase):
+    grok.name('genweb.outoflist')
+    grok.context(INewsItem)
+    grok.template('outoflist')
+    grok.viewletmanager(IAboveContentTitle)
+    grok.require('cmf.ModifyPortalContent')
+    grok.layer(IUlearnTheme)
+
+    def permisos_outoflist(self):
+        # TODO: Comprovar que l'usuari tingui permisos per a marcar com a important
+        return not IOutOfList(self.context).is_outoflist and checkPermission("plone.app.controlpanel.Overview", self.portal())
+
+    def permisos_notoutoflist(self):
+        # TODO: Comprovar que l'usuari tingui permisos per a marcar com a notimportant
+        return IOutOfList(self.context).is_outoflist and checkPermission("plone.app.controlpanel.Overview", self.portal())
+
+    def isNewOutOfList(self):
+        context = aq_inner(self.context)
+        is_outoflist = IOutOfList(context).is_outoflist
+        return is_outoflist

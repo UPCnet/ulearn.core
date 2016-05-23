@@ -97,7 +97,8 @@ class IUlearnControlPanelSettings(model.Schema):
                            'ulearn_portlets_angularrouteview', 'ulearn_portlets_buttonbar', 'ulearn_portlets_communities',
                            'ulearn_portlets_profile', 'ulearn_portlets_thinnkers', 'ulearn_portlets_calendar',
                            'ulearn_portlets_discussion', 'ulearn_portlets_econnect', 'ulearn_portlets_mostvalued',
-                           'ulearn_portlets_stats', 'ulearn_portlets_importantnews', 'portlets_Calendar', 'plone_portlet_collection_Collection',
+                           'ulearn_portlets_stats', 'ulearn_portlets_importantnews', 'ulearn_portlets_flashesinformativos',
+                           'portlets_Calendar', 'plone_portlet_collection_Collection',
                            'portlets_Navigation', 'portlets_rss', 'plone_portlet_static_Static', 'collective_polls_VotePortlet',
                            'portlets_Search', 'portlets_Review', 'portlets_Recent', 'portlets_News', 'mrs_max_widget',
                            'portlets_Events', 'portlets_Login'])
@@ -454,6 +455,15 @@ class IUlearnControlPanelSettings(model.Schema):
                 default=u"Habilitar portlet angularRouteView"),
         description=_(u'help_ulearn_angularRouteView',
                       default=u"Habilita el portlet angular per a poder fer ús de les rutes angularjs."),
+        required=False,
+        default=True,
+    )
+
+    ulearn_portlets_flashesinformativos = schema.Bool(
+        title=_(u'ulearn_portlets_flashesinformativos',
+                default=u"Habilitar portlet flashesinformativos"),
+        description=_(u'help_ulearn_portlets_flashesinformativos',
+                      default=u"Habilita el portlet para mostrar las notícias en el flash informativo."),
         required=False,
         default=True,
     )
