@@ -8,7 +8,6 @@
     i18n_domain="ulearn">
 
     <includeDependencies package="." />
-    <include file="behaviors.zcml" />
 
     <permission
       id="ulearn.addCommunity"
