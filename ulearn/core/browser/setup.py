@@ -12,6 +12,10 @@ from Products.CMFPlone.interfaces import IPloneSiteRoot
 
 from genweb.portlets.browser.manager import ISpanStorage
 
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+from plone import api
+from zope.interface import alsoProvides
+
 
 class setupHomePage(grok.View):
     grok.context(IPloneSiteRoot)
@@ -78,3 +82,37 @@ class memberFolderSetup(grok.View):
             users_folder = createContentInContainer(portal, 'Folder', title='users', checkConstraints=False)
             users_folder.setDefaultPage('member_search_form')
             portal.manage_delObjects('Members')
+
+
+class changeURLCommunities(grok.View):
+    """ Aquesta vista canvia la url de les comunitats """
+    grok.name('changeurlcommunities')
+    grok.context(IPloneSiteRoot)
+
+    render = ViewPageTemplateFile('views_templates/changeurlcommunities.pt')
+
+    def update(self):
+        try:
+            from plone.protect.interfaces import IDisableCSRFProtection
+            alsoProvides(self.request, IDisableCSRFProtection)
+        except:
+            pass
+        if self.request.environ['REQUEST_METHOD'] == 'POST':
+            pc = api.portal.get_tool('portal_catalog')
+            communities = pc.searchResults(portal_type='ulearn.community')
+            # portal_url = api.portal.get().absolute_url()
+
+            if self.request.form['url'] != '':
+                url_nova = self.request.form['url']
+                url_antiga = self.request.form['url_antiga']
+                self.context.plone_log('Buscant comunitats per modificar la url')
+
+                for brain in communities:
+                    obj = brain.getObject()
+                    community = obj.adapted()
+                    community_url = url_antiga + '/' + obj.id
+                    community_url_nova = url_nova + '/' + obj.id
+                    properties_to_update = dict(url=community_url_nova)
+
+                    community.maxclient.contexts[community_url].put(**properties_to_update)
+                    self.context.plone_log('Comunitat amb url {} actualitzada per {}'.format(community_url, community_url_nova))
