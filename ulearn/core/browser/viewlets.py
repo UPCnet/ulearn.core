@@ -46,6 +46,7 @@ class ULearnNGDirectives(grok.Viewlet):
     grok.context(Interface)
     grok.name('ulearn.ulearnngdirectives')
     grok.viewletmanager(IPortalHeader)
+    grok.layer(IUlearnTheme)
 
     def get_communities(self):
         """ Gets the communities to show in the stats selectize dropdown
