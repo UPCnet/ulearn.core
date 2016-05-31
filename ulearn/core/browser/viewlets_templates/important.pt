@@ -1,16 +1,16 @@
 <div i18n:domain="ulearn">
     <div tal:condition="not:viewlet/isNewImportant">
-        <a class="btn btn-success"
+        <a class="btn btn-default"
            tal:attributes="href string:${context/absolute_url}/toggle_important"
            i18n:translate="marca_important">
-           Marca com a important
+           Important
         </a>
     </div>
     <div tal:condition="viewlet/isNewImportant">
-        <a class="btn btn-warning"
+        <a class="btn btn-success"
            tal:attributes="href string:${context/absolute_url}/toggle_important"
            i18n:translate="desmarca_important">
-           Desmarca com a important
+           Important
         </a>
     </div>
  </div>

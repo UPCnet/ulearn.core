@@ -978,3 +978,30 @@ msgstr "¿ Mostrar com a flash informatiu ?"
 
 msgid "help_flash_info"
 msgstr "Si està marcat, la notícia es mostrarà al portlet de flash informatius."
+
+# --- mysubjects portlet ---
+msgid "subjects"
+msgstr "Els meus Cursos"
+
+msgid "student"
+msgstr "Estudiant"
+
+msgid "teacher"
+msgstr "Professor"
+
+# --- importantnews, subscribednews portlet ---
+msgid "actualidad"
+msgstr "Notícies Destacades"
+
+msgid "readmore"
+msgstr "Llegeix més"
+
+msgid "seemore"
+msgstr "Més Notícies"
+
+# --- mysubscribednews portlet ---
+msgid "mynews"
+msgstr "Les meves Notícies"
+
+msgid "my_communities"
+msgstr "Les meves Comunitats"

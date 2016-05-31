@@ -884,3 +884,30 @@ msgstr "Do you show in news flashes?"
 
 msgid "help_flash_info"
 msgstr "When check, new show in news flash portlet."
+
+# --- mysubjects portlet ---
+msgid "subjects"
+msgstr "My subjects"
+
+msgid "student"
+msgstr "Estudent"
+
+msgid "teacher"
+msgstr "Teacher"
+
+# --- importantnews, subscribednews portlet ---
+msgid "actualidad"
+msgstr "Important news"
+
+msgid "readmore"
+msgstr "Read more"
+
+msgid "seemore"
+msgstr "More news"
+
+# --- mysubscribednews portlet ---
+msgid "mynews"
+msgstr "My News"
+
+msgid "my_communities"
+msgstr "My Communities"

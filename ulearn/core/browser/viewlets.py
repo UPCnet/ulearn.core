@@ -21,6 +21,8 @@ from genweb.core.adapters import IFlash
 from genweb.core.adapters import IOutOfList
 from genweb.core.utils import genweb_config
 from ulearn.theme.browser.interfaces import IUlearnTheme
+from souper.soup import get_soup
+from repoze.catalog.query import Eq
 import json
 
 
@@ -148,3 +150,25 @@ class OutOfListNews(viewletBase):
         context = aq_inner(self.context)
         is_outoflist = IOutOfList(context).is_outoflist
         return is_outoflist
+
+
+class ListTagsNews(viewletBase):
+    grok.name('genweb.listtags')
+    grok.context(INewsItem)
+    grok.template('listtags')
+    grok.viewletmanager(IAboveContentTitle)
+    grok.require('genweb.authenticated')
+    grok.layer(IUlearnTheme)
+
+    def isTagFollowed(self, category):
+        portal = getSite()
+        current_user = api.user.get_current()
+        userid = current_user.id
+
+        soup_tags = get_soup('user_subscribed_tags', portal)
+        tags_soup = [r for r in soup_tags.query(Eq('id', userid))]
+        if tags_soup:
+            tags = tags_soup[0].attrs['tags']
+            return True if category in tags else False
+        else:
+            return False

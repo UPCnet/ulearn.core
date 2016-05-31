@@ -1,17 +1,17 @@
 
 <div i18n:domain="ulearn">
     <div tal:condition="not:viewlet/isNewFlash">
-        <a class="btn btn-success"
+        <a class="btn btn-default"
            tal:attributes="href string:${context/absolute_url}/toggle_flash"
            i18n:translate="marca_flash">
-           Marca com a flash
+           Flash
         </a>
     </div>
     <div tal:condition="viewlet/isNewFlash">
-        <a class="btn btn-warning"
+        <a class="btn btn-success"
            tal:attributes="href string:${context/absolute_url}/toggle_flash"
            i18n:translate="desmarca_flash">
-           Desmarca com a flash
+           Flash
         </a>
     </div>
  </div>

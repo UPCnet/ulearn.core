@@ -1,16 +1,16 @@
 <div i18n:domain="ulearn">
     <div tal:condition="not:viewlet/isNewOutOfList">
-        <a class="btn btn-success"
+        <a class="btn btn-default"
            tal:attributes="href string:${context/absolute_url}/toggle_outoflist"
            i18n:translate="marca_outoflist">
-           Marca com a no llistable
+           Amaga Notícia
         </a>
     </div>
     <div tal:condition="viewlet/isNewOutOfList">
-        <a class="btn btn-warning"
+        <a class="btn btn-success"
            tal:attributes="href string:${context/absolute_url}/toggle_outoflist"
            i18n:translate="desmarca_outoflist">
-           Desmarca com a no llistable
+           Amaga Notícia
         </a>
     </div>
  </div>

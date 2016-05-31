@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from five import grok
 from zope import schema
-from zope.component import getUtility
+from zope.component import getUtility, getMultiAdapter
 from zope.component.hooks import getSite
 from z3c.form import button
 from zope.schema.vocabulary import SimpleVocabulary
@@ -20,6 +20,10 @@ from ulearn.core import _
 from mrs.max.utilities import IMAXClient
 from collective.z3cform.datagridfield import DataGridFieldFactory
 from collective.z3cform.datagridfield.registry import DictRow
+
+from plone.portlets.interfaces import IPortletManager
+from plone.portlets.interfaces import IPortletAssignment
+from plone.portlets.interfaces import IPortletAssignmentMapping
 
 
 class availableLanguages(object):
@@ -98,10 +102,11 @@ class IUlearnControlPanelSettings(model.Schema):
                            'ulearn_portlets_profile', 'ulearn_portlets_thinnkers', 'ulearn_portlets_calendar',
                            'ulearn_portlets_discussion', 'ulearn_portlets_econnect', 'ulearn_portlets_mostvalued',
                            'ulearn_portlets_stats', 'ulearn_portlets_importantnews', 'ulearn_portlets_flashesinformativos',
-                           'portlets_Calendar', 'plone_portlet_collection_Collection',
+                           'ulearn_portlets_mycommunities', 'ulearn_portlets_custombuttonbar', 'ulearn_portlets_mysubjects',
+                           'ulearn_portlets_subscribednews', 'ulearn_portlets_mytags', 'portlets_Calendar',
+                           'plone_portlet_collection_Collection', 'portlets_Events', 'portlets_Login',
                            'portlets_Navigation', 'portlets_rss', 'plone_portlet_static_Static', 'collective_polls_VotePortlet',
-                           'portlets_Search', 'portlets_Review', 'portlets_Recent', 'portlets_News', 'mrs_max_widget',
-                           'portlets_Events', 'portlets_Login'])
+                           'portlets_Search', 'portlets_Review', 'portlets_Recent', 'portlets_News', 'mrs_max_widget'])
 
     model.fieldset('Visibility',
                    _(u'Visibility'),
@@ -450,6 +455,51 @@ class IUlearnControlPanelSettings(model.Schema):
         default=False,
     )
 
+    ulearn_portlets_mytags = schema.Bool(
+        title=_(u'ulearn_portlets_mytags',
+                default=u"Habilitar portlet ulearn_portlets_mytags"),
+        description=_(u'help_ulearn_portlets_mytags',
+                      default=u"Habilita portlet amb el núvol de tags."),
+        required=False,
+        default=False,
+    )
+
+    ulearn_portlets_mycommunities = schema.Bool(
+        title=_(u'ulearn_portlets_mycommunities',
+                default=u"Habilitar portlet ulearn_portlets_mycommunities"),
+        description=_(u'help_ulearn_portlets_mycommunities',
+                      default=u"Habilita el portlet que mostra les comunitats on estic suscrit o puc suscriurem."),
+        required=False,
+        default=False,
+    )
+
+    ulearn_portlets_custombuttonbar = schema.Bool(
+        title=_(u'ulearn_portlets_custombuttonbar',
+                default=u"Habilitar portlet ulearn_portlets_custombuttonbar"),
+        description=_(u'help_ulearn_portlets_custombuttonbar',
+                      default=u"Habilita el portlet per a poder customitzar la botonera."),
+        required=False,
+        default=False,
+    )
+
+    ulearn_portlets_subscribednews = schema.Bool(
+        title=_(u'ulearn_portlets_subscribednews',
+                default=u"Habilitar portlet ulearn_portlets_subscribednews"),
+        description=_(u'help_ulearn_portlets_subscribednews',
+                      default=u"Habilita el portlet per a veure les notícies les quals contenen un tag que segueixo."),
+        required=False,
+        default=False,
+    )
+
+    ulearn_portlets_mysubjects = schema.Bool(
+        title=_(u'ulearn_portlets_mysubjects',
+                default=u"Habilitar portlet ulearn_portlets_mysubjects"),
+        description=_(u'help_ulearn_portlets_mysubjects',
+                      default=u"Habilita el portlet per a poder veure els meus cursos del EVA."),
+        required=False,
+        default=False,
+    )
+
     ulearn_portlets_angularrouteview = schema.Bool(
         title=_(u'ulearn_angularRouteView',
                 default=u"Habilitar portlet angularRouteView"),
@@ -465,7 +515,7 @@ class IUlearnControlPanelSettings(model.Schema):
         description=_(u'help_ulearn_portlets_flashesinformativos',
                       default=u"Habilita el portlet para mostrar las notícias en el flash informativo."),
         required=False,
-        default=True,
+        default=False,
     )
 
     ulearn_portlets_importantnews = schema.Bool(
@@ -474,7 +524,7 @@ class IUlearnControlPanelSettings(model.Schema):
         description=_(u'help_ulearn_portlets_importantnews',
                       default=u"Habilita el portlet para mostrar las notícias marcadas como destacadas."),
         required=False,
-        default=True,
+        default=False,
     )
 
     ulearn_portlets_buttonbar = schema.Bool(
@@ -483,7 +533,7 @@ class IUlearnControlPanelSettings(model.Schema):
         description=_(u'help_ulearn_button_bar',
                       default=u"Habilita el portlet botonera central."),
         required=False,
-        default=False,
+        default=True,
     )
 
     ulearn_portlets_communities = schema.Bool(
@@ -492,7 +542,7 @@ class IUlearnControlPanelSettings(model.Schema):
         description=_(u'help_ulearn_communities',
                       default=u"Habilita el portlet lateral on mostra les comunitats favorites."),
         required=False,
-        default=False,
+        default=True,
     )
 
     ulearn_portlets_profile = schema.Bool(
@@ -501,7 +551,7 @@ class IUlearnControlPanelSettings(model.Schema):
         description=_(u'help_ulearn_profile',
                       default=u"Habilita el portlet on mostra el perfil usuari, o la comunitat on estem."),
         required=False,
-        default=False,
+        default=True,
     )
 
     ulearn_portlets_thinnkers = schema.Bool(
@@ -510,7 +560,7 @@ class IUlearnControlPanelSettings(model.Schema):
         description=_(u'help_ulearn_thinkers',
                       default=u"Habilita el portlet on es mostren els usuaris, amb la cerca ."),
         required=False,
-        default=False,
+        default=True,
     )
 
     ulearn_portlets_calendar = schema.Bool(
@@ -519,7 +569,7 @@ class IUlearnControlPanelSettings(model.Schema):
         description=_(u'help_ulearn_calendar',
                       default=u"Habilita el portlet per a mostrar el calendari amb els events."),
         required=False,
-        default=False,
+        default=True,
     )
 
     ulearn_portlets_discussion = schema.Bool(
@@ -555,7 +605,7 @@ class IUlearnControlPanelSettings(model.Schema):
         description=_(u'help_ulearn_stats',
                       default=u"Habilita el portlet per a veure les estadístiques."),
         required=False,
-        default=False,
+        default=True,
     )
 
     # ==== FIN Portlets ====
@@ -648,9 +698,25 @@ class UlearnControlPanelSettingsForm(controlpanel.RegistryEditForm):
             return
         self.applyChanges(data)
 
+        site = getSite()
+        activate_portlets = []
+        portlets_slots = ["plone.leftcolumn", "plone.rightcolumn",
+                          "genweb.portlets.HomePortletManager1",
+                          "genweb.portlets.HomePortletManager2",
+                          "genweb.portlets.HomePortletManager3"]
+
+        for manager_name in portlets_slots:
+            if 'genweb' in manager_name:
+                manager = getUtility(IPortletManager, name=manager_name, context=site['front-page'])
+                mapping = getMultiAdapter((site['front-page'], manager), IPortletAssignmentMapping)
+                [activate_portlets.append(item[0]) for item in mapping.items()]
+            else:
+                manager = getUtility(IPortletManager, name=manager_name, context=site)
+                mapping = getMultiAdapter((site, manager), IPortletAssignmentMapping)
+                [activate_portlets.append(item[0]) for item in mapping.items()]
+
         portlets = {k: v for k, v in data.iteritems() if 'portlet' in k}
         if portlets:
-            site = getSite()
             for portlet, value in portlets.iteritems():
                 idPortlet = portlet.replace('_', '.')
                 namePortlet = portlet.replace('_', ' ')
@@ -658,13 +724,24 @@ class UlearnControlPanelSettingsForm(controlpanel.RegistryEditForm):
                 if portlet == 'genweb_portlets_news_events_listing':
                     idPortlet = 'genweb.portlets.news_events_listing'
                     namePortlet = 'genweb portlets news_events_listing'
+
                 if value is True:
+                    registerPortletType(site,
+                                        title=namePortlet,
+                                        description=namePortlet,
+                                        addview=idPortlet)
+
+                if idPortlet.split('.')[-1] in activate_portlets:
+                    value = True
+                    data[portlet] = True
                     registerPortletType(site,
                                         title=namePortlet,
                                         description=namePortlet,
                                         addview=idPortlet)
                 if value is False:
                     unregisterPortletType(site, idPortlet)
+
+            self.applyChanges(data)
 
         if data.get('nonvisibles', False):
             maxclient, settings = getUtility(IMAXClient)()
