@@ -1,15 +1,12 @@
 # -*- coding: utf-8 -*-
 from five import grok
 from hashlib import sha1
-from zope.interface import Interface
-from zope.component import getAdapter
-from zope.component import getAdapters
 
-from zope.container.interfaces import INameChooser
 from Products.CMFPlone.utils import safe_unicode
 from Products.CMFPlone.interfaces import IPloneSiteRoot
 from plone import api
-from Products.CMFPlone.utils import normalizeString
+from zope.component import queryUtility
+from plone.i18n.normalizer.interfaces import IIDNormalizer
 
 from ulearn.core.api import ApiResponse
 from ulearn.core.api import BadParameters
@@ -18,7 +15,6 @@ from ulearn.core.api import api_resource
 from ulearn.core.api import logger
 from ulearn.core.api.root import APIRoot
 from ulearn.core.content.community import ICommunityACL
-from ulearn.core.content.community import ICommunityTyped
 
 from repoze.catalog.query import Eq
 from souper.soup import get_soup
@@ -110,7 +106,8 @@ class Communities(REST):
 
         pc = api.portal.get_tool('portal_catalog')
         nom = safe_unicode(params['nom'])
-        id_normalized = normalizeString(nom)
+        util = queryUtility(IIDNormalizer)
+        id_normalized = util.normalize(nom, max_length=500)
         result = pc.unrestrictedSearchResults(portal_type='ulearn.community',
                                               id=id_normalized)
 
