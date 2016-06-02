@@ -301,7 +301,7 @@ class REST(REST_BASE):
         user_roles = memberdata.getRoles()
         if obj:
             local_roles = obj.__ac_local_roles__.get(memberdata.id, [])
-            user_roles = list(set(user_roles + local_roles))
+            user_roles = list(set(user_roles).union(set(local_roles)))
 
         for role in roles:
             if role in user_roles:
