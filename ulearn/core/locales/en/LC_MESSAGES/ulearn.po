@@ -378,7 +378,7 @@ msgstr "Search"
 
 #. Default: "See more communities"
 #: ../../../../../../ulearn.theme/ulearn/theme/portlets/templates/communities.pt:35
-msgid "seemore"
+msgid "seemore_communities"
 msgstr "See more communities"
 
 #. Default: "See more communities"

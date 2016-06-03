@@ -383,7 +383,7 @@ msgstr "Cerca comunitats"
 
 #. Default: "See more communities"
 #: ../../../../../../ulearn.theme/ulearn/theme/portlets/templates/communities.pt:35
-msgid "seemore"
+msgid "seemore_communities"
 msgstr "Veure més comunitats"
 
 #. Default: "See more communities"
