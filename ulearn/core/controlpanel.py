@@ -744,12 +744,13 @@ class UlearnControlPanelSettingsForm(controlpanel.RegistryEditForm):
             self.applyChanges(data)
 
         if data.get('nonvisibles', False):
+            """ Make users invisible in searches """
             maxclient, settings = getUtility(IMAXClient)()
             maxclient.setActor(settings.max_restricted_username)
             maxclient.setToken(settings.max_restricted_token)
 
             current_vips = maxclient.admin.security.get()
-            current_vips = current_vips[0].get('roles').get('NonVisible', [])
+            current_vips = current_vips.get('roles').get('NonVisible', [])
 
             un_vip = [a for a in current_vips if a not in data.get('nonvisibles')]
             for user in un_vip:
