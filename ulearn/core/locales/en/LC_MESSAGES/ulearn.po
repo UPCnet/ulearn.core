@@ -49,7 +49,7 @@ msgstr "Community"
 #. Default: "Invitados moderadores"
 #: ../../../../ulearn.core/ulearn/core/browser/views.py:53
 msgid "Convidats moderadors"
-msgstr "Invited moderator"
+msgstr "Invited moderators"
 
 #: ../../../../../../ulearn.core/ulearn/core/content/community.py:174
 msgid "Crea la comunitat"
@@ -125,7 +125,7 @@ msgstr "Indicate duration of the meeting."
 #. Default: "Indica el número total de asistentes previstos"
 #: ../../../../ulearn.core/ulearn/core/browser/views.py:66
 msgid "Indiqueu el nombre total d'assistents previstos."
-msgstr "Indicate the number of attendees expected."
+msgstr "Indicate the number of expected attendees."
 
 #. Default: "Indica la fecha de inicio de la reserva"
 #: ../../../../ulearn.core/ulearn/core/browser/views.py:41
@@ -166,17 +166,17 @@ msgstr "Media"
 
 #: ../../../../../../ulearn.core/ulearn/core/content/community.py:92
 msgid "Llista amb les persones subscrites"
-msgstr "List of subscribers"
+msgstr "Subscribers list"
 
 #. Default: "Lista de correos de los invitados ESPECTADORES, separados por comas."
 #: ../../../../ulearn.core/ulearn/core/browser/views.py:60
 msgid "Llista d'emails dels convidats ESPECTADORS, separats per comes."
-msgstr "List emails guest VIEWERS, separated by commas."
+msgstr "Guest VIEWERS emails list, separated by commas."
 
 #. Default: "Lista de correos de los invitados MODERADORES, separados por comas."
 #: ../../../../ulearn.core/ulearn/core/browser/views.py:54
 msgid "Llista d'emails dels convidats MODERADORS, separats per comes."
-msgstr "List emails guest MODERATORS, separated by commas."
+msgstr "Guest MODERATORS emails list, separated by commas."
 
 #: ../../../../../../ulearn.core/ulearn/core/content/community.py:70
 msgid "Nom"
@@ -184,12 +184,12 @@ msgstr "Name"
 
 #: ../../../../../../ulearn.core/ulearn/core/content/community.py:71
 msgid "Nom de la comunitat"
-msgstr "Name of community"
+msgstr "Community's name"
 
 #. Default: "Nombre de la reunión"
 #: ../../../../ulearn.core/ulearn/core/browser/views.py:34
 msgid "Nom de la reunió"
-msgstr "Name of meeting"
+msgstr "Meeting's name"
 
 #. Default: "Número total de invitados"
 #: ../../../../ulearn.core/ulearn/core/browser/views.py:65
@@ -288,7 +288,7 @@ msgstr "Edit Community"
 #. Default: "Go to the campus"
 #: ../../../../../../ulearn.theme/ulearn/theme/portlets/templates/communities.pt:40
 msgid "gotocampus"
-msgstr "See my courses Campus"
+msgstr "See my Campus courses"
 
 msgid "gotolibrary"
 msgstr "See the library"
@@ -319,7 +319,7 @@ msgstr "This is the threshold of Winwin #3."
 #. Default: "Configuració de Ulearn"
 #: ../../../../../../ulearn.core/ulearn/core/controlpanel.py:61
 msgid "help_ulearn_settings_editform"
-msgstr "Settings Ulearn"
+msgstr "Ulearn settings"
 
 #. Default: "Llindar del winwin 1"
 #: ../../../../../../ulearn.core/ulearn/core/controlpanel.py:28
@@ -537,13 +537,13 @@ msgid "seemoreevents"
 msgstr "See more events"
 
 msgid "Visibility"
-msgstr "Visibiliyt"
+msgstr "Visibility"
 
 msgid "Specific"
 msgstr "Specific"
 
 #msgid "help_ulearn_settings_editform"
-#msgstr "Registre de configuració d'uLearn."
+#msgstr "Configuration registry of uLearn."
 
 msgid "Notify activity via push"
 msgstr "Activate Push notification"
@@ -677,7 +677,7 @@ msgid "label_delete_community"
 msgstr "Delete community"
 
 msgid "video_url"
-msgstr "URL of the video"
+msgstr "Video URL"
 
 msgid "video_url_description"
 msgstr "Add your website youtube video"
@@ -843,23 +843,14 @@ msgstr "December"
 msgid "organisation"
 msgstr "Organisation/Company"
 
-msgid "department"
-msgstr "Department"
-
 msgid "position_organisation"
 msgstr "Position in the organisation/job title"
 
 msgid "website_organisation"
 msgstr "Website"
 
-msgid "country"
-msgstr "Country"
-
 msgid "office_phone_number"
 msgstr "Office phone number"
-
-msgid "email"
-msgstr "eMail"
 
 msgid "second_mail"
 msgstr "Second eMail"
@@ -908,6 +899,3 @@ msgstr "More news"
 # --- mysubscribednews portlet ---
 msgid "mynews"
 msgstr "My News"
-
-msgid "my_communities"
-msgstr "My Communities"

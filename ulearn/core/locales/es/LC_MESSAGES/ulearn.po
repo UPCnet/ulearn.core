@@ -939,6 +939,3 @@ msgstr "Más notícias"
 # --- mysubscribednews portlet ---
 msgid "mynews"
 msgstr "Mis Noticias"
-
-msgid "my_communities"
-msgstr "Mis Comunidades"

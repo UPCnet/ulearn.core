@@ -1002,6 +1002,3 @@ msgstr "Més Notícies"
 # --- mysubscribednews portlet ---
 msgid "mynews"
 msgstr "Les meves Notícies"
-
-msgid "my_communities"
-msgstr "Les meves Comunitats"
