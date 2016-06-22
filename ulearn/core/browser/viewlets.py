@@ -102,6 +102,9 @@ class importantNews(viewletBase):
         # TODO: Comprovar que l'usuari tingui permisos per a marcar com a notimportant
         return IImportant(self.context).is_important and checkPermission("plone.app.controlpanel.Overview", self.portal())
 
+    def canManageSite(self):
+        return checkPermission("plone.app.controlpanel.Overview", self.portal())
+
     def isNewImportant(self):
         context = aq_inner(self.context)
         is_important = IImportant(context).is_important
@@ -124,6 +127,9 @@ class FlashNews(viewletBase):
         # TODO: Comprovar que l'usuari tingui permisos per a marcar com a notimportant
         return IFlash(self.context).is_flash and checkPermission("plone.app.controlpanel.Overview", self.portal())
 
+    def canManageSite(self):
+        return checkPermission("plone.app.controlpanel.Overview", self.portal())
+
     def isNewFlash(self):
         context = aq_inner(self.context)
         is_flash = IFlash(context).is_flash
@@ -145,6 +151,9 @@ class OutOfListNews(viewletBase):
     def permisos_notoutoflist(self):
         # TODO: Comprovar que l'usuari tingui permisos per a marcar com a notimportant
         return IOutOfList(self.context).is_outoflist and checkPermission("plone.app.controlpanel.Overview", self.portal())
+
+    def canManageSite(self):
+        return checkPermission("plone.app.controlpanel.Overview", self.portal())
 
     def isNewOutOfList(self):
         context = aq_inner(self.context)

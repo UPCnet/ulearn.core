@@ -1,17 +1,18 @@
-
-<div i18n:domain="ulearn">
-    <div tal:condition="not:viewlet/isNewFlash">
-        <a class="btn btn-default"
-           tal:attributes="href string:${context/absolute_url}/toggle_flash"
-           i18n:translate="marca_flash">
-           Flash
-        </a>
-    </div>
-    <div tal:condition="viewlet/isNewFlash">
-        <a class="btn btn-success"
-           tal:attributes="href string:${context/absolute_url}/toggle_flash"
-           i18n:translate="desmarca_flash">
-           Flash
-        </a>
-    </div>
- </div>
+<tal:block condition="viewlet/canManageSite">
+  <div i18n:domain="ulearn">
+      <div tal:condition="not:viewlet/isNewFlash">
+          <a class="btn btn-default"
+             tal:attributes="href string:${context/absolute_url}/toggle_flash"
+             i18n:translate="marca_flash">
+             Flash
+          </a>
+      </div>
+      <div tal:condition="viewlet/isNewFlash">
+          <a class="btn btn-success"
+             tal:attributes="href string:${context/absolute_url}/toggle_flash"
+             i18n:translate="desmarca_flash">
+             Flash
+          </a>
+      </div>
+   </div>
+</tal:block>
