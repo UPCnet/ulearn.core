@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2016-06-29 09:34+0000\n"
+"POT-Creation-Date: 2016-06-29 09:55+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -528,12 +528,6 @@ msgstr ""
 #. Default: "Cancela"
 #: ./ulearn/core/browser/stats_templates/statsview.pt:279
 msgid "btnCancel"
-msgstr ""
-
-#. Default: "{{ 'STATS.INFO' | translate }}"
-#: ../ulearn.js/ulearn/js/app/ulearn.stats/templates/activity.html:108
-#: ../ulearn.js/ulearn/js/app/ulearn.stats/templates/chats.html:80
-msgid "btnInfo"
 msgstr ""
 
 #. Default: "Button bar"
