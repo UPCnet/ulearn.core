@@ -1249,7 +1249,7 @@ msgstr ""
 #. Default: "There are not events today"
 #: ../ulearn.theme/ulearn/theme/portlets/templates/calendar.pt:23
 msgid "not_events_for_today"
-msgstr ""
+msgstr "There are not events today"
 
 #: ./ulearn/core/content/community.py:219
 msgid "notify_activity_via_push_help"
