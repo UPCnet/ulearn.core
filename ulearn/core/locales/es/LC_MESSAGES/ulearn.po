@@ -30,19 +30,19 @@ msgstr "Actividades más valoradas"
 
 #: ../ulearn.theme/ulearn/theme/portlets/flashesinformativos/flashesinformativos.py:188
 msgid "Add Flashes Informativos Portlet"
-msgstr ""
+msgstr "Añadir portlet Flashes Informativos"
 
 #: ../ulearn.theme/ulearn/theme/portlets/mysubjects/mysubjects.py:83
 msgid "Add My Subjects Portlet"
-msgstr ""
+msgstr "Añadir Portlet Mis Asignaturas"
 
 #: ../ulearn.theme/ulearn/theme/portlets/importantnews/importantnews.py:164
 msgid "Add News Portlet"
-msgstr ""
+msgstr "Añadir Portlet Notícias"
 
 #: ../ulearn.theme/ulearn/theme/portlets/subscribednews/subscribednews.py:187
 msgid "Add Subscribed News Portlet"
-msgstr ""
+msgstr "Añadir Portlet Mis notícias"
 
 #: ./ulearn/core/profiles/default/types/privateFolder.xml
 msgid "Add a new private folder"
@@ -50,16 +50,16 @@ msgstr "Añadir una carpeta privada"
 
 #: ./ulearn/core/controlpanel.py:647
 msgid "Add the quick links by language"
-msgstr ""
+msgstr "Texto que mostrará como título de los enlaces directos"
 
 #. Default: "Habilitar portlet esdeveniments"
 #: ./ulearn/core/controlpanel.py:429
 msgid "AgendaGW"
-msgstr ""
+msgstr "Habilitar portlet Eventos"
 
 #: ../ulearn.theme/ulearn/theme/portlets/legacycalendar.py:34
 msgid "Calendar"
-msgstr ""
+msgstr "Calendario"
 
 #: ./ulearn/core/browser/views.py:166
 #: ./ulearn/core/controlpanel.py:772
@@ -68,7 +68,7 @@ msgstr "Cancelar"
 
 #: ./ulearn/core/controlpanel.py:34
 msgid "Català"
-msgstr ""
+msgstr "Catalán"
 
 #: ./ulearn/core/controlpanel.py:768
 msgid "Changes saved"
@@ -81,7 +81,7 @@ msgstr "Cerrada"
 #. Default: "Communities portlet"
 #: ../ulearn.theme/ulearn/theme/portlets/communities.py:33
 msgid "Comunidades"
-msgstr ""
+msgstr "Comunidades"
 
 #: ./ulearn/core/profiles/default/types/ulearn.community.xml
 msgid "Comunitat"
@@ -90,7 +90,7 @@ msgstr "Comunidad"
 #. Default: "Comunidad <span class=\"formHelp\"></span>"
 #: ./ulearn/core/browser/stats_templates/statsview.pt:208
 msgid "Comunitat_stats"
-msgstr ""
+msgstr "Estadísticas"
 
 #: ./ulearn/core/browser/views.py:64
 msgid "Convidats moderadors"
@@ -125,7 +125,7 @@ msgstr "Debates"
 
 #: ./ulearn/core/content/community.py:1268
 msgid "Documents"
-msgstr ""
+msgstr "Documentos"
 
 #: ./ulearn/core/browser/views.py:57
 msgid "Durada de la reunió"
@@ -133,19 +133,19 @@ msgstr "Duración de la sesión"
 
 #: ../ulearn.theme/ulearn/theme/portlets/flashesinformativos/flashesinformativos.py:202
 msgid "Edit Flashes Informativos portlet"
-msgstr ""
+msgstr "Edit portlet Flashes Informativos"
 
 #: ../ulearn.theme/ulearn/theme/portlets/mysubjects/mysubjects.py:94
 msgid "Edit My Subjects Portlet"
-msgstr ""
+msgstr "Editar portlet mis asignaturas"
 
 #: ../ulearn.theme/ulearn/theme/portlets/importantnews/importantnews.py:174
 msgid "Edit News Portlet"
-msgstr ""
+msgstr "Editar portlet notícias destacadas"
 
 #: ../ulearn.theme/ulearn/theme/portlets/subscribednews/subscribednews.py:196
 msgid "Edit Subscribed News Portlet"
-msgstr ""
+msgstr "Editar portlet Notícias suscritas"
 
 #: ./ulearn/core/controlpanel.py:774
 msgid "Edit cancelled"
@@ -153,7 +153,7 @@ msgstr "Edición cancelada"
 
 #: ./ulearn/core/browser/views.py:168
 msgid "Edit cancelled."
-msgstr ""
+msgstr "Edición cancelada."
 
 #: ./ulearn/core/content/community.py:1164
 msgid "Edita la comunitat"
@@ -165,12 +165,12 @@ msgstr "Editores"
 
 #: ./ulearn/core/controlpanel.py:36
 msgid "English"
-msgstr ""
+msgstr "Inglés"
 
 #. Default: "Stream"
 #: ../ulearn.theme/ulearn/theme/portlets/templates/buttonbar.pt:13
 msgid "Entrada"
-msgstr ""
+msgstr "Entrada"
 
 #: ./ulearn/core/content/community.py:1270
 msgid "Esdeveniments"
@@ -178,22 +178,22 @@ msgstr "Eventos"
 
 #: ./ulearn/core/controlpanel.py:35
 msgid "Español"
-msgstr ""
+msgstr "Español"
 
 #. Default: "Esdeveniments"
 #: ../ulearn.theme/ulearn/theme/browser/viewlets_templates/folderbar.pt:38
 msgid "Events"
-msgstr ""
+msgstr "Eventos"
 
 #. Default: "Filtro por palabra clave <span class=\"formHelp\"></span>"
 #: ./ulearn/core/browser/stats_templates/statsview.pt:243
 msgid "Filtro por palabra clave"
-msgstr ""
+msgstr "Filtro por palabra clave"
 
 #. Default: "Fin <span class=\"formHelp\">x</span>"
 #: ./ulearn/core/browser/stats_templates/statsview.pt:180
 msgid "Fin_stats"
-msgstr ""
+msgstr "Fin estadísticas"
 
 #: ./ulearn/core/controlpanel.py:74
 msgid "Font Awesome Icon"
@@ -202,11 +202,11 @@ msgstr "Icono Font Awesome"
 #. Default: "Habilitar portlet Full News"
 #: ./ulearn/core/controlpanel.py:447
 msgid "FullNews"
-msgstr ""
+msgstr "Habilitar Portlet Full news"
 
 #: ./ulearn/core/controlpanel.py:85
 msgid "General"
-msgstr ""
+msgstr "General"
 
 #: ./ulearn/core/browser/views.py:155
 msgid "Hi ha hagut algun problema i la reunió virtual no ha estat creada."
@@ -216,7 +216,7 @@ msgstr "Ha habido algún problema y la sesión virtual no se ha creado"
 #: ../ulearn.theme/ulearn/theme/portlets/importantnews/importantnews.py:24
 #: ../ulearn.theme/ulearn/theme/portlets/subscribednews/subscribednews.py:27
 msgid "How many items to list."
-msgstr ""
+msgstr "Elementos a mostrar"
 
 #: ./ulearn/core/content/community.py:206
 msgid "Imatge"
@@ -241,11 +241,11 @@ msgstr "Indica la descripción de la sesión virtual"
 #. Default: "Inicio <span class=\"formHelp\">x</span>"
 #: ./ulearn/core/browser/stats_templates/statsview.pt:156
 msgid "Inicio_stats"
-msgstr ""
+msgstr "Inicio estadísticas"
 
 #: ./ulearn/core/configure.zcml:70
 msgid "Installs the ulearn.core package"
-msgstr ""
+msgstr "Instalar paquete ulearn.core"
 
 #: ./ulearn/core/browser/views.py:70
 msgid "Invitats espectadors"
@@ -254,7 +254,7 @@ msgstr "Invitados espectadores"
 #: ../ulearn.theme/ulearn/theme/portlets/importantnews/importantnews.py:29
 #: ../ulearn.theme/ulearn/theme/portlets/subscribednews/subscribednews.py:32
 msgid "Items in which workflow state to show."
-msgstr ""
+msgstr "Estado para mostrar los elementos."
 
 #: ./ulearn/core/content/community.py:156
 msgid "La descripció de la comunitat"
@@ -297,26 +297,26 @@ msgstr "Lista de direcciones de correo electrónico de los invitados MODERADORES
 #: ./ulearn/core/browser/migrations.py:201
 #: ./ulearn/core/content/community.py:1269
 msgid "Media"
-msgstr ""
+msgstr "Media"
 
 #. Default: "Online Meetings"
 #: ../ulearn.theme/ulearn/theme/portlets/templates/econnect.pt:7
 msgid "Meetings space"
-msgstr ""
+msgstr "Reuniones online"
 
 #. Default: "Mes final"
 #: ./ulearn/core/browser/stats_templates/statsview.pt:180
 msgid "Mes_final"
-msgstr ""
+msgstr "Mes final"
 
 #. Default: "Mes inicialsds"
 #: ./ulearn/core/browser/stats_templates/statsview.pt:156
 msgid "Mes_inicial"
-msgstr ""
+msgstr "Mes inicial"
 
 #: ../ulearn.theme/ulearn/theme/portlets/subscribednews/subscribednews.py:49
 msgid "My Subscribed News"
-msgstr ""
+msgstr "Mis notícias suscritas"
 
 #: ./ulearn/core/controlpanel.py:75
 msgid "New window"
@@ -337,7 +337,7 @@ msgstr "Nombre de la sesión"
 #. Default: "Habilitar portlet News"
 #: ./ulearn/core/controlpanel.py:438
 msgid "NoticiesPropi"
-msgstr ""
+msgstr "Habilitar Portlet Notícias"
 
 #: ./ulearn/core/content/community.py:224
 msgid "Notify activity and comments via push"
@@ -351,12 +351,12 @@ msgstr "Notificar actividad via 'push'"
 #: ../ulearn.theme/ulearn/theme/portlets/importantnews/importantnews.py:23
 #: ../ulearn.theme/ulearn/theme/portlets/subscribednews/subscribednews.py:26
 msgid "Number of items to display"
-msgstr ""
+msgstr "Número de elementos a mostrar"
 
 #. Default: "Meetings space"
 #: ../ulearn.theme/ulearn/theme/portlets/econnect.py:21
 msgid "Online Meetings"
-msgstr ""
+msgstr "Reuniones online"
 
 #: ./ulearn/core/content/community.py:113
 msgid "Open"
@@ -372,7 +372,7 @@ msgstr "Propietarios"
 
 #: ./ulearn/core/controlpanel.py:103
 msgid "Portlets"
-msgstr ""
+msgstr "Portlets"
 
 #: ./ulearn/core/controlpanel.py:122
 msgid "QuickLinks"
@@ -384,7 +384,7 @@ msgstr "Lectores"
 
 #: ./ulearn/core/browser/stats_templates/statsview.pt:287
 msgid "Resultados"
-msgstr ""
+msgstr "Resultados"
 
 #: ./ulearn/core/browser/views.py:100
 #: ./ulearn/core/content/community_templates/editacl.pt:123
@@ -418,19 +418,19 @@ msgstr "Título enlaces directos"
 
 #: ../ulearn.theme/ulearn/theme/portlets/flashesinformativos/flashesinformativos.py:189
 msgid "This portlet displays Flashes Informativos."
-msgstr ""
+msgstr "Este portlet muestra Flashes Informativos"
 
 #: ../ulearn.theme/ulearn/theme/portlets/mysubjects/mysubjects.py:84
 msgid "This portlet displays my subjects on moodle."
-msgstr ""
+msgstr "Este portlet muestra mis asignaturas en moodle"
 
 #: ../ulearn.theme/ulearn/theme/portlets/importantnews/importantnews.py:165
 msgid "This portlet displays recent News Items."
-msgstr ""
+msgstr "Este portlet muestra las notícias destacadas."
 
 #: ../ulearn.theme/ulearn/theme/portlets/subscribednews/subscribednews.py:188
 msgid "This portlet displays subscribed News Items."
-msgstr ""
+msgstr "Este portlet muestra las notícias suscritas"
 
 #: ./ulearn/core/content/community.py:161
 msgid "Tipus de comunitat"
@@ -448,11 +448,11 @@ msgstr "Twitter hashtag"
 #. Default: "Habilitar portlet Upc News"
 #: ./ulearn/core/controlpanel.py:456
 msgid "UPCNews"
-msgstr ""
+msgstr "UPCNews"
 
 #: ./ulearn/core/controlpanel.py:126
 msgid "UPCnet only"
-msgstr ""
+msgstr "Solo UPCnet"
 
 #: ./ulearn/core/controlpanel.py:687
 msgid "Ulearn settings"
@@ -464,16 +464,16 @@ msgstr "Una comunidad administrable"
 
 #: ./ulearn/core/configure.zcml:78
 msgid "Uninstall base setup for ulearn."
-msgstr ""
+msgstr "Desinstalar configuración base de ulearn"
 
 #: ./ulearn/core/configure.zcml:78
 msgid "Uninstall ulearn.core"
-msgstr ""
+msgstr "Desinstalar ulearn.core"
 
 #. Default: "Usuario <span class=\"formHelp\"></span>"
 #: ./ulearn/core/browser/stats_templates/statsview.pt:224
 msgid "Usuario_stats"
-msgstr ""
+msgstr "Usuario"
 
 #: ./ulearn/core/controlpanel.py:118
 msgid "Visibility"
@@ -482,7 +482,7 @@ msgstr "Visibilidad"
 #: ../ulearn.theme/ulearn/theme/portlets/importantnews/importantnews.py:28
 #: ../ulearn.theme/ulearn/theme/portlets/subscribednews/subscribednews.py:31
 msgid "Workflow state"
-msgstr ""
+msgstr "Estado workflow"
 
 #: ./ulearn/core/content/community.py:169
 #: ./ulearn/core/controlpanel.py:667
@@ -492,57 +492,57 @@ msgstr "Visualización Actividades Comunidad"
 #. Default: "Oportunitats d'Innovació"
 #: ../ulearn.theme/ulearn/theme/browser/views_templates/show_oportunitats.pt:19
 msgid "allOportunities"
-msgstr ""
+msgstr "Oportunidades de innovación"
 
 #. Default: "Communities"
 #: ../ulearn.theme/ulearn/theme/browser/views_templates/allcommunities.pt:22
 msgid "allcommunities"
-msgstr ""
+msgstr "Comunidades"
 
 #. Default: "Color final dels gradients"
 #: ./ulearn/core/controlpanel.py:220
 msgid "alt_gradient_end_color"
-msgstr ""
+msgstr "Color final de los degradados"
 
 #. Default: "Color inicial dels gradients."
 #: ./ulearn/core/controlpanel.py:211
 msgid "alt_gradient_start_color"
-msgstr ""
+msgstr "Color inicial de los degradados"
 
 #. Default: "AngularRouteView"
 #: ../ulearn.theme/ulearn/theme/portlets/angularrouteview.py:19
 msgid "angularrouteview"
-msgstr ""
+msgstr "AngularRouteView"
 
 #. Default: "Color de fons global"
 #: ./ulearn/core/controlpanel.py:238
 msgid "background_color"
-msgstr ""
+msgstr "Color global de fondo"
 
 #. Default: "Propietat de fons global"
 #: ./ulearn/core/controlpanel.py:229
 msgid "background_property"
-msgstr ""
+msgstr "Propiedades globales de fondo"
 
 #. Default: "Cancela"
 #: ./ulearn/core/browser/stats_templates/statsview.pt:279
 msgid "btnCancel"
-msgstr ""
+msgstr "Cancela"
 
 #. Default: "Button bar"
 #: ../ulearn.theme/ulearn/theme/portlets/homebuttonbar.py:19
 msgid "buttonbar"
-msgstr ""
+msgstr "Button Bar"
 
 #. Default: "Color primari dels botons"
 #: ./ulearn/core/controlpanel.py:247
 msgid "buttons_color_primary"
-msgstr ""
+msgstr "Color primario de los botones"
 
 #. Default: "Color secundari dels botons"
 #: ./ulearn/core/controlpanel.py:256
 msgid "buttons_color_secondary"
-msgstr ""
+msgstr "Color secundario de los botones"
 
 #. Default: "URL del campus"
 #: ./ulearn/core/controlpanel.py:130
@@ -552,32 +552,32 @@ msgstr "Dirección web del Campus"
 #. Default: "Change type"
 #: ../ulearn.theme/ulearn/theme/portlets/templates/profile.pt:79
 msgid "change_community_type"
-msgstr ""
+msgstr "Cambiar tipo"
 
 #. Default: "Habilitar portlet collective_polls_VotePortlet"
 #: ./ulearn/core/controlpanel.py:411
 msgid "collective_polls_VotePortlet"
-msgstr ""
+msgstr "Habilitar Portlet collective_polls_VotePortlet"
 
 #. Default: "Color comunitat tancada"
 #: ./ulearn/core/controlpanel.py:265
 msgid "color_community_closed"
-msgstr ""
+msgstr "Color comunidad tancada"
 
 #. Default: "Color comunitat oberta"
 #: ./ulearn/core/controlpanel.py:283
 msgid "color_community_open"
-msgstr ""
+msgstr "Color comunidad oberta"
 
 #. Default: "Color comunitat organitzativa"
 #: ./ulearn/core/controlpanel.py:274
 msgid "color_community_organizative"
-msgstr ""
+msgstr "Color comunidad organizativa"
 
 #. Default: "Comunidades"
 #: ../ulearn.theme/ulearn/theme/portlets/templates/communities.pt:6
 msgid "communities"
-msgstr ""
+msgstr "Comunidades"
 
 #. Default: "This is an open community, but you are not currently subscribed."
 #: ./ulearn/core/content/community_templates/view.pt:43
@@ -606,52 +606,52 @@ msgstr "La comunidad ${comunitat} ha sido modificada."
 #. Default: "Create a new community"
 #: ../ulearn.theme/ulearn/theme/portlets/templates/communities.pt:54
 msgid "createcommunity"
-msgstr ""
+msgstr "Crear nueva comunidad"
 
 #. Default: "Custom button bar"
 #: ../ulearn.theme/ulearn/theme/portlets/custombuttonbar/custombuttonbar.py:27
 msgid "custombuttonbar"
-msgstr ""
+msgstr "Custom button bar"
 
 #. Default: "Flash"
 #: ./ulearn/core/browser/viewlets_templates/flash.pt:11
 msgid "desmarca_flash"
-msgstr ""
+msgstr "Esconder Flash"
 
 #. Default: "Amaga Notícia"
 #: ./ulearn/core/browser/viewlets_templates/outoflist.pt:11
 msgid "desmarca_outoflist"
-msgstr ""
+msgstr "Esconder Notícia"
 
 #. Default: "Discussion portlet"
 #: ../ulearn.theme/ulearn/theme/portlets/discussion.py:35
 msgid "discussion"
-msgstr ""
+msgstr "Discussion Portlet"
 
 #. Default: "Edit this community"
 #: ../ulearn.theme/ulearn/theme/portlets/templates/profile.pt:51
 msgid "editcommunity"
-msgstr ""
+msgstr "Edit comunidad"
 
 #. Default: "Exporta"
 #: ./ulearn/core/browser/stats_templates/statsview.pt:278
 msgid "exporta"
-msgstr ""
+msgstr "Exporta"
 
 #. Default: "Habilitar portlet genweb_portlets_news_events_listing"
 #: ./ulearn/core/controlpanel.py:294
 msgid "genweb_portlets_news_events_listing"
-msgstr ""
+msgstr "Habilitar portlet genweb_portlets_news_events_listing"
 
 #. Default: "Go to the campus"
 #: ../ulearn.theme/ulearn/theme/portlets/templates/communities.pt:74
 msgid "gotocampus"
-msgstr ""
+msgstr "Ir a campus"
 
 #. Default: "Go to the library"
 #: ../ulearn.theme/ulearn/theme/portlets/templates/communities.pt:80
 msgid "gotolibrary"
-msgstr ""
+msgstr "Ir a biblioteca"
 
 #: ./ulearn/core/content/community.py:213
 msgid "hashtag_help"
@@ -665,22 +665,22 @@ msgstr "Elige la visualización de las actividades de la comunidad"
 #. Default: "Aquest és el color final dels gradients."
 #: ./ulearn/core/controlpanel.py:222
 msgid "help_alt_gradient_end_color"
-msgstr ""
+msgstr "Color final de los degradados"
 
 #. Default: "Aquest és el color inicial dels gradients."
 #: ./ulearn/core/controlpanel.py:213
 msgid "help_alt_gradient_start_color"
-msgstr ""
+msgstr "Color inicial de los degradados"
 
 #. Default: "Aquest és el color de fons global o la propietat corresponent."
 #: ./ulearn/core/controlpanel.py:240
 msgid "help_background_color"
-msgstr ""
+msgstr "Color global de fondo o la propiedad correspondiente"
 
 #. Default: "Aquest és la propietat de CSS de background."
 #: ./ulearn/core/controlpanel.py:231
 msgid "help_background_property"
-msgstr ""
+msgstr "Propiedad CSS de fondo"
 
 #. Default: "A short overview of who you are and what you do. Will be displayed on your author page, linked from the items you create."
 #: ./ulearn/core/userschema.py:41
@@ -690,12 +690,12 @@ msgstr "Una pequeña reseña de quién eres y qué haces."
 #. Default: "Aquest és el color primari dels botons."
 #: ./ulearn/core/controlpanel.py:249
 msgid "help_buttons_color_primary"
-msgstr ""
+msgstr "Color primario de los botones."
 
 #. Default: "Aquest és el color secundari dels botons."
 #: ./ulearn/core/controlpanel.py:258
 msgid "help_buttons_color_secondary"
-msgstr ""
+msgstr "Color secundario de los botones."
 
 #. Default: "Afegiu la URL del campus associat a aquestes comunitats."
 #: ./ulearn/core/controlpanel.py:132
@@ -705,57 +705,57 @@ msgstr "Añadir la URL del Campus asociado a esta comunidad."
 #. Default: "Habilita el portlet collective_polls_VotePortlet."
 #: ./ulearn/core/controlpanel.py:413
 msgid "help_collective_polls_VotePortlet"
-msgstr ""
+msgstr "Habilita el portlet collective_polls_VotePortlet."
 
 #. Default: "Aquest és el color per les comunitats tancades."
 #: ./ulearn/core/controlpanel.py:267
 msgid "help_color_community_closed"
-msgstr ""
+msgstr "Color para las comunidades cerradas."
 
 #. Default: "Aquest és el color per les comunitats obertes."
 #: ./ulearn/core/controlpanel.py:285
 msgid "help_color_community_open"
-msgstr ""
+msgstr "Color para las comunidades abiertas."
 
 #. Default: "Aquest és el color per les comunitats organitzatives."
 #: ./ulearn/core/controlpanel.py:276
 msgid "help_color_community_organizative"
-msgstr ""
+msgstr "Color para las comunidades organizativas."
 
 #. Default: "Enter full name, e.g. John Smith."
 #: ./ulearn/core/userschema.py:22
 msgid "help_full_name_creation"
-msgstr ""
+msgstr "Indicar nombre completo, por ejemplo, Jonh Smith."
 
 #. Default: "Habilita el portlet esdeveniments."
 #: ./ulearn/core/controlpanel.py:431
 msgid "help_genweb_portlets_esdeveniments"
-msgstr ""
+msgstr "Habilitar el portlet eventos"
 
 #. Default: "Habilita el portlet Full News."
 #: ./ulearn/core/controlpanel.py:449
 msgid "help_genweb_portlets_fullnews"
-msgstr ""
+msgstr "Habilitar el portlet listado completo noticias"
 
 #. Default: "Habilita el portlet homepage."
 #: ./ulearn/core/controlpanel.py:422
 msgid "help_genweb_portlets_homepage"
-msgstr ""
+msgstr "Habilitar el portlet homepage"
 
 #. Default: "Habilita el portlet News."
 #: ./ulearn/core/controlpanel.py:440
 msgid "help_genweb_portlets_news"
-msgstr ""
+msgstr "Habilitar el portlet noticias"
 
 #. Default: "Habilita el portlet genweb_portlets_news_events_listing."
 #: ./ulearn/core/controlpanel.py:296
 msgid "help_genweb_portlets_news_events_listing"
-msgstr ""
+msgstr "Habilitar el portlet genweb_portlets_news_events_listing"
 
 #. Default: "Habilita el portlet Upc News."
 #: ./ulearn/core/controlpanel.py:458
 msgid "help_genweb_portlets_upcnews"
-msgstr ""
+msgstr "genweb_portlets_news_events_listing UPC news"
 
 #. Default: "The URL for your external home page, if you have one."
 #: ./ulearn/core/userschema.py:34
@@ -765,7 +765,7 @@ msgstr "La URL para su página personal externa, si tiene una."
 #. Default: "Aquest és l'idioma de l'espai, que es configura quan el paquet es reinstala."
 #: ./ulearn/core/controlpanel.py:623
 msgid "help_language"
-msgstr ""
+msgstr "Este es el idioma del espacio, que se configura cuando el paquete se reinstala."
 
 #. Default: "Afegiu la URL de la biblioteca associada a aquestes comunitats."
 #: ./ulearn/core/controlpanel.py:141
@@ -790,27 +790,27 @@ msgstr "Este es el umbral del Winwinn #3"
 #. Default: "Your location - either city and country - or in a company setting, where your office is located."
 #: ./ulearn/core/userschema.py:49
 msgid "help_location"
-msgstr ""
+msgstr "Su ubicación - ya sea ciudad y país - o entorno de una empresa, donde se encuentra su oficina."
 
 #. Default: "Aquest és el color principal de l'espai."
 #: ./ulearn/core/controlpanel.py:186
 msgid "help_main_color"
-msgstr ""
+msgstr "Color primario del espacio."
 
 #. Default: "Aquest és el color del fons del widget de MAX."
 #: ./ulearn/core/controlpanel.py:204
 msgid "help_maxui_form_bg"
-msgstr ""
+msgstr "Color de fondo del widget de MAX."
 
 #. Default: "Habilita el portlet mrs_max_widget."
 #: ./ulearn/core/controlpanel.py:341
 msgid "help_mrs_max_widget"
-msgstr ""
+msgstr "Habilitar el portlet mrs_max_widget"
 
 #. Default: "The title of the navigation tree."
 #: ../ulearn.theme/ulearn/theme/portlets/flashesinformativos/flashesinformativos.py:27
 msgid "help_navigation_title"
-msgstr ""
+msgstr "Título del árbol de navegación."
 
 #: ./ulearn/core/content/community.py:225
 msgid "help_notify_activity_via_push_comments_too"
@@ -819,57 +819,57 @@ msgstr "Si se activa esta casilla, se notificará la actividad y los comentarios
 #. Default: "Habilita el portlet plone_portlet_collection_Collection."
 #: ./ulearn/core/controlpanel.py:368
 msgid "help_plone_portlet_collection_Collection"
-msgstr ""
+msgstr "Habilitar el portlet plone_portlet_collection_Collection."
 
 #. Default: "Habilita el portlet plone_portlet_static_Static."
 #: ./ulearn/core/controlpanel.py:404
 msgid "help_plone_portlet_static_Static"
-msgstr ""
+msgstr "Habilitar el portlet plone_portlet_static_Static"
 
 #. Default: "Habilita el portlet portlets_Calendar."
 #: ./ulearn/core/controlpanel.py:359
 msgid "help_portlets_Calendar"
-msgstr ""
+msgstr "Habilitar el portlet portlets_Calendar"
 
 #. Default: "Habilita el portlet portlets_Events."
 #: ./ulearn/core/controlpanel.py:350
 msgid "help_portlets_Events"
-msgstr ""
+msgstr "Habilitar el portlet portlets_Events."
 
 #. Default: "Habilita el portlet portlets_Login."
 #: ./ulearn/core/controlpanel.py:377
 msgid "help_portlets_Login"
-msgstr ""
+msgstr "Habilitar el portlet portlets_Login."
 
 #. Default: "Habilita el portlet portlets_Navigation."
 #: ./ulearn/core/controlpanel.py:386
 msgid "help_portlets_Navigation"
-msgstr ""
+msgstr "Habilitar el portlet portlets_Navigation."
 
 #. Default: "Habilita el portlet portlets_News."
 #: ./ulearn/core/controlpanel.py:332
 msgid "help_portlets_News"
-msgstr ""
+msgstr "Habilitar el portlet portlets_News."
 
 #. Default: "Habilita el portlet portlets_Recent."
 #: ./ulearn/core/controlpanel.py:323
 msgid "help_portlets_Recent"
-msgstr ""
+msgstr "Habilitar el portlet portlets_Recent."
 
 #. Default: "Habilita el portlet portlets_Review."
 #: ./ulearn/core/controlpanel.py:314
 msgid "help_portlets_Review"
-msgstr ""
+msgstr "Habilitar el portlet portlets_Review."
 
 #. Default: "Habilita el portlet portlets_Search."
 #: ./ulearn/core/controlpanel.py:305
 msgid "help_portlets_Search"
-msgstr ""
+msgstr "Habilitar el portlet portlets_Search."
 
 #. Default: "Habilita el portlet portlets_rss."
 #: ./ulearn/core/controlpanel.py:395
 msgid "help_portlets_rss"
-msgstr ""
+msgstr "Habilitar el portlet portlets_rss."
 
 ## Generali profile
 #. Default: "To add or change the portrait: click the \"Browse\" button; select a picture of yourself. Recommended image size is 75 pixels wide by 100 pixels tall."
@@ -893,12 +893,12 @@ msgstr "En esta tabla se han de añadir todos los enlaces directos que queramos 
 #. Default: "Aquest és el color secundari de l'espai."
 #: ./ulearn/core/controlpanel.py:195
 msgid "help_secondary_color"
-msgstr ""
+msgstr "Color secundario del espacio"
 
 #. Default: "Mostra o no el botó d'accés a estadístiques diàries a stats/activity i stats/chats"
 #: ./ulearn/core/controlpanel.py:177
 msgid "help_stats_button"
-msgstr ""
+msgstr "Mostar o no el botón de acceso a estadísticas diarias a stats/activity y stats/chats"
 
 #. Default: "Contacte telefònic"
 #: ./ulearn/core/userschema.py:84
@@ -908,7 +908,7 @@ msgstr "Contacto telefónico"
 #. Default: "Fill in your Twitter username."
 #: ./ulearn/core/userschema.py:70
 msgid "help_twitter"
-msgstr ""
+msgstr "Introduce tu nombre de usuario de Twitter."
 
 #. Default: "Equip, Àrea / Companyia / Departament"
 #: ./ulearn/core/userschema.py:77
@@ -918,77 +918,77 @@ msgstr "Tu ubicación dentro de la compañía y/o ubicación geográfica."
 #. Default: "Habilita el portlet angular per a poder fer ús de les rutes angularjs."
 #: ./ulearn/core/controlpanel.py:512
 msgid "help_ulearn_angularRouteView"
-msgstr ""
+msgstr "Habilitar el portlet de angular para poder hacer uso de las rutas de angularjs."
 
 #. Default: "Habilita el portlet botonera central."
 #: ./ulearn/core/controlpanel.py:539
 msgid "help_ulearn_button_bar"
-msgstr ""
+msgstr "Habilitar el portlet botonera central."
 
 #. Default: "Habilita el portlet per a mostrar el calendari amb els events."
 #: ./ulearn/core/controlpanel.py:575
 msgid "help_ulearn_calendar"
-msgstr ""
+msgstr "Habilitar el portlet para mostrar el calendario de eventos."
 
 #. Default: "Habilita el portlet lateral on mostra les comunitats favorites."
 #: ./ulearn/core/controlpanel.py:548
 msgid "help_ulearn_communities"
-msgstr ""
+msgstr "Habilitar el portlet lateral donde mostrar las comunidades favoritas."
 
 #. Default: "Habilita el portlet."
 #: ./ulearn/core/controlpanel.py:584
 msgid "help_ulearn_discussion"
-msgstr ""
+msgstr "Habilitar el portlet."
 
 #. Default: "Habilita el portlet eConnect."
 #: ./ulearn/core/controlpanel.py:593
 msgid "help_ulearn_econnect"
-msgstr ""
+msgstr "Habilitar el portlet eConnect"
 
 #. Default: "Habilita el portlet ulearn most valued."
 #: ./ulearn/core/controlpanel.py:602
 msgid "help_ulearn_most_valued"
-msgstr ""
+msgstr "Habilitar el portlet ulearn most valued"
 
 #. Default: "Habilita el portlet per a poder customitzar la botonera."
 #: ./ulearn/core/controlpanel.py:485
 msgid "help_ulearn_portlets_custombuttonbar"
-msgstr ""
+msgstr "Habilitar el portlet para poder customizar la botonera"
 
 #. Default: "Habilita el portlet para mostrar las notícias en el flash informativo."
 #: ./ulearn/core/controlpanel.py:521
 msgid "help_ulearn_portlets_flashesinformativos"
-msgstr ""
+msgstr "Habilitar el portlet para mostrar las noticias en el flash informativo"
 
 #. Default: "Habilita el portlet para mostrar las notícias marcadas como destacadas."
 #: ./ulearn/core/controlpanel.py:530
 msgid "help_ulearn_portlets_importantnews"
-msgstr ""
+msgstr "Habilitar el portlet para mostrar las noticias marcadas como destacadas"
 
 #. Default: "Habilita el portlet que mostra les comunitats on estic suscrit o puc suscriurem."
 #: ./ulearn/core/controlpanel.py:476
 msgid "help_ulearn_portlets_mycommunities"
-msgstr ""
+msgstr "Habilitar el portlet que muestra las comunidades suscritas o que me puedo suscribir."
 
 #. Default: "Habilita el portlet per a poder veure els meus cursos del EVA."
 #: ./ulearn/core/controlpanel.py:503
 msgid "help_ulearn_portlets_mysubjects"
-msgstr ""
+msgstr "Habilitar el portlet para poder ver mis cursos EVA"
 
 #. Default: "Habilita portlet amb el núvol de tags."
 #: ./ulearn/core/controlpanel.py:467
 msgid "help_ulearn_portlets_mytags"
-msgstr ""
+msgstr "Habilitar el portlet con la nube de tags."
 
 #. Default: "Habilita el portlet per a veure les notícies les quals contenen un tag que segueixo."
 #: ./ulearn/core/controlpanel.py:494
 msgid "help_ulearn_portlets_subscribednews"
-msgstr ""
+msgstr "Habilitar el portlet para ver las noticias que contienen un tag que sigo."
 
 #. Default: "Habilita el portlet on mostra el perfil usuari, o la comunitat on estem."
 #: ./ulearn/core/controlpanel.py:557
 msgid "help_ulearn_profile"
-msgstr ""
+msgstr "Habilitar el portlet donde muestra el perfil de usuario, o la comunidad donde estamos."
 
 #. Default: "uLearn configuration registry."
 #: ./ulearn/core/controlpanel.py:688
@@ -999,41 +999,41 @@ msgstr "Configuración de uLearn"
 #. Default: "Habilita el portlet per a veure les estadístiques."
 #: ./ulearn/core/controlpanel.py:611
 msgid "help_ulearn_stats"
-msgstr ""
+msgstr "Habilitar el portlet para ver las estadísticas."
 
 #. Default: "Habilita el portlet on es mostren els usuaris, amb la cerca ."
 #: ./ulearn/core/controlpanel.py:566
 msgid "help_ulearn_thinkers"
-msgstr ""
+msgstr "Habilitar el portlet donde mostrar los usuarios, con la búsqueda."
 
 #. Default: "Url per defecte: \"/mail_password_form?userid=\". Per a dominis externs indiqueu la url completa, \"http://www.domini.cat\""
 #: ./ulearn/core/controlpanel.py:676
 msgid "help_url_forget_password"
-msgstr ""
+msgstr "Url por defecto: \"/mail_password_form?userid=\". Para dominios externos indicar la url completa, \"http://www.domini.cat\""
 
 #. Default: "Function on moodle."
 #: ../ulearn.theme/ulearn/theme/portlets/mysubjects/mysubjects.py:27
 msgid "help_wsfunction"
-msgstr ""
+msgstr "Function on moodle."
 
 #. Default: "Token to connect to moodle."
 #: ../ulearn.theme/ulearn/theme/portlets/mysubjects/mysubjects.py:33
 msgid "help_wstoken"
-msgstr ""
+msgstr "Token para conectar a moodle"
 
 #. Default: "Url on moodle."
 #: ../ulearn.theme/ulearn/theme/portlets/mysubjects/mysubjects.py:21
 msgid "help_wsurl"
-msgstr ""
+msgstr "Url para moodle"
 
 #: ../ulearn.theme/ulearn/theme/portlets/importantnews/importantnews.py:46
 msgid "importantnews"
-msgstr ""
+msgstr "Notícias importantes"
 
 #. Default: "Info"
 #: ./ulearn/core/content/community_templates/view.pt:40
 msgid "info"
-msgstr ""
+msgstr "Info"
 
 #. Default: "Biography"
 #: ./ulearn/core/userschema.py:40
@@ -1042,60 +1042,60 @@ msgstr "Biografía / Curriculum Vitae"
 
 #: ../ulearn.theme/ulearn/theme/browser/viewlets_templates/favorite.pt:2
 msgid "label_check_favorite"
-msgstr ""
+msgstr "Marcar favorito"
 
 #. Default: "Delete Portrait"
 #: ./ulearn/core/userschema.py:64
 msgid "label_delete_portrait"
-msgstr ""
+msgstr "Borrar portrait"
 
 #. Default: "E-mail"
 #: ./ulearn/core/userschema.py:27
 msgid "label_email"
-msgstr ""
+msgstr "Email"
 
 #. Default: "Full Name"
 #: ./ulearn/core/userschema.py:21
 msgid "label_full_name"
-msgstr ""
+msgstr "Nombre"
 
 #: ../ulearn.theme/ulearn/theme/portlets/mysubjects/mysubjects.pt:53
 msgid "label_go_subject"
-msgstr ""
+msgstr "Ir a asignatura"
 
 #. Default: "Home page"
 #: ./ulearn/core/userschema.py:33
 msgid "label_homepage"
-msgstr ""
+msgstr "Home page"
 
 #: ../ulearn.theme/ulearn/theme/portlets/mysubjects/mysubjects.pt:32
 msgid "label_info_tasks"
-msgstr ""
+msgstr "Info tareas"
 
 #. Default: "Location"
 #: ./ulearn/core/userschema.py:48
 msgid "label_location"
-msgstr ""
+msgstr "Localización"
 
 #. Default: "Title"
 #: ../ulearn.theme/ulearn/theme/portlets/flashesinformativos/flashesinformativos.py:26
 msgid "label_navigation_title"
-msgstr ""
+msgstr "Título"
 
 #. Default: "No hay asignaturas disponibles"
 #: ../ulearn.theme/ulearn/theme/portlets/mysubjects/mysubjects.pt:19
 msgid "label_not_subjects"
-msgstr ""
+msgstr "No hay asignaturas disponibles"
 
 #. Default: "Portrait"
 #: ./ulearn/core/userschema.py:55
 msgid "label_portrait"
-msgstr ""
+msgstr "Portrait"
 
 #. Default: "Show all items"
 #: ../ulearn.theme/ulearn/theme/browser/views.py:411
 msgid "label_show_all"
-msgstr ""
+msgstr "Mostrar todos los elementos"
 
 #. Default: "Telèfon"
 #: ./ulearn/core/userschema.py:83
@@ -1105,7 +1105,7 @@ msgstr "Teléfono"
 #. Default: "Twitter username"
 #: ./ulearn/core/userschema.py:69
 msgid "label_twitter"
-msgstr ""
+msgstr "Usuario Twitter"
 
 #. Default: "Ubicació"
 #: ./ulearn/core/userschema.py:76
@@ -1115,17 +1115,17 @@ msgstr "Ubicación"
 #. Default: "Webservice Function"
 #: ../ulearn.theme/ulearn/theme/portlets/mysubjects/mysubjects.py:26
 msgid "label_wsfunction"
-msgstr ""
+msgstr "Función Webservice"
 
 #. Default: "Webservice Token"
 #: ../ulearn.theme/ulearn/theme/portlets/mysubjects/mysubjects.py:32
 msgid "label_wstoken"
-msgstr ""
+msgstr "Token Webservice"
 
 #. Default: "Webservice Url"
 #: ../ulearn.theme/ulearn/theme/portlets/mysubjects/mysubjects.py:20
 msgid "label_wsurl"
-msgstr ""
+msgstr "Url Webservice"
 
 #. Default: "Idioma de l'espai"
 #: ./ulearn/core/controlpanel.py:621
@@ -1135,7 +1135,7 @@ msgstr "Idioma"
 #. Default: "URL de la biblioteca"
 #: ./ulearn/core/controlpanel.py:139
 msgid "library_url"
-msgstr ""
+msgstr "URL de la biblioteca"
 
 #. Default: "Llindar del winwin 1"
 #: ./ulearn/core/controlpanel.py:148
@@ -1155,7 +1155,7 @@ msgstr "Umbral del Winwinn #3"
 #. Default: "Color principal"
 #: ./ulearn/core/controlpanel.py:184
 msgid "main_color"
-msgstr ""
+msgstr "Color principal"
 
 #. Default: "Manage members"
 #: ../ulearn.theme/ulearn/theme/portlets/templates/profile.pt:71
@@ -1165,58 +1165,58 @@ msgstr ""
 #. Default: "Flash"
 #: ./ulearn/core/browser/viewlets_templates/flash.pt:4
 msgid "marca_flash"
-msgstr ""
+msgstr "Flash"
 
 #. Default: "Amaga Notícia"
 #: ./ulearn/core/browser/viewlets_templates/outoflist.pt:4
 msgid "marca_outoflist"
-msgstr ""
+msgstr "Esconder noticia"
 
 #. Default: "Color del fons del widget de MAX."
 #: ./ulearn/core/controlpanel.py:202
 msgid "maxui_form_bg"
-msgstr ""
+msgstr "Color de fondo del widget de MAX."
 
 #. Default: "Most valued portlet"
 #: ../ulearn.theme/ulearn/theme/portlets/mostvalued.py:28
 msgid "mostvalued"
-msgstr ""
+msgstr "Most valued portlet"
 
 #. Default: "Habilitar portlet mrs_max_widget"
 #: ./ulearn/core/controlpanel.py:339
 msgid "mrs_max_widget"
-msgstr ""
+msgstr "Habilitar portlet mrs_max_widget"
 
 #. Default: "My communities"
 #: ../ulearn.theme/ulearn/theme/portlets/templates/buttonbar.pt:23
 msgid "my_communities"
-msgstr ""
+msgstr "Mis comunidades"
 
 #. Default: "My Communities"
 #: ../ulearn.theme/ulearn/theme/portlets/mycommunities/mycommunities.py:19
 msgid "mycommunities"
-msgstr ""
+msgstr "Mis comunidades"
 
 #. Default: "mysubjects"
 #: ../ulearn.theme/ulearn/theme/portlets/mysubjects/mysubjects.py:42
 msgid "mysubjects"
-msgstr ""
+msgstr "Mis asignaturas"
 
 #. Default: "My Tags"
 #: ../ulearn.theme/ulearn/theme/portlets/mytags/mytags.pt:7
 #: ../ulearn.theme/ulearn/theme/portlets/mytags/mytags.py:26
 msgid "mytags"
-msgstr ""
+msgstr "Mis Tags"
 
 #. Default: "Create a discussion"
 #: ../ulearn.theme/ulearn/theme/portlets/templates/discussion.pt:52
 msgid "newdiscussion"
-msgstr ""
+msgstr "Nou debat"
 
 #. Default: "Create a new event"
 #: ../ulearn.theme/ulearn/theme/portlets/templates/calendar.pt:131
 msgid "newevent"
-msgstr ""
+msgstr "Crear nuevo evento"
 
 #: ./ulearn/core/controlpanel.py:632
 msgid "no_visibles"
@@ -1225,12 +1225,12 @@ msgstr "Personas no visibles"
 #. Default: "nom.usuari"
 #: ../ulearn.theme/ulearn/theme/skins/ulearntheme_custom/login_form.cpt:186
 msgid "nom_usuari"
-msgstr ""
+msgstr "Nombre Usuario"
 
 #. Default: "There are not events today"
 #: ../ulearn.theme/ulearn/theme/portlets/templates/calendar.pt:23
 msgid "not_events_for_today"
-msgstr ""
+msgstr "No hay eventos hoy"
 
 #: ./ulearn/core/content/community.py:219
 msgid "notify_activity_via_push_help"
@@ -1239,7 +1239,7 @@ msgstr "Si se activa esta casilla, se notificará la actividad de esta comunidad
 #. Default: "contrasenya"
 #: ../ulearn.theme/ulearn/theme/skins/ulearntheme_custom/login_form.cpt:201
 msgid "password"
-msgstr ""
+msgstr "contraseña"
 
 #: ./ulearn/core/controlpanel.py:639
 msgid "people_literal"
@@ -1248,62 +1248,62 @@ msgstr "Literales de identificación de personas"
 #. Default: "Habilitar portlet plone_portlet_collection_Collection"
 #: ./ulearn/core/controlpanel.py:366
 msgid "plone_portlet_collection_Collection"
-msgstr ""
+msgstr "Habilitar portlet plone_portlet_collection_Collection"
 
 #. Default: "Habilitar portlet plone_portlet_static_Static"
 #: ./ulearn/core/controlpanel.py:402
 msgid "plone_portlet_static_Static"
-msgstr ""
+msgstr "Habilitar portlet plone_portlet_static_Static"
 
 #. Default: "Habilitar portlet homepage"
 #: ./ulearn/core/controlpanel.py:420
 msgid "portlet_homepage_title"
-msgstr ""
+msgstr "Habilitar portlet homepage"
 
 #. Default: "Habilitar portlet portlets_Calendar"
 #: ./ulearn/core/controlpanel.py:357
 msgid "portlets_Calendar"
-msgstr ""
+msgstr "Habilitar portlet portlets_Calendar"
 
 #. Default: "Habilitar portlet portlets_Events"
 #: ./ulearn/core/controlpanel.py:348
 msgid "portlets_Events"
-msgstr ""
+msgstr "Habilitar portlet portlets_Events"
 
 #. Default: "Habilitar portlet portlets_Login"
 #: ./ulearn/core/controlpanel.py:375
 msgid "portlets_Login"
-msgstr ""
+msgstr "Habilitar portlet portlets_Login"
 
 #. Default: "Habilitar portlet portlets_Navigation"
 #: ./ulearn/core/controlpanel.py:384
 msgid "portlets_Navigation"
-msgstr ""
+msgstr "Habilitar portlet portlets_Navigation"
 
 #. Default: "Habilitar portlet portlets_News"
 #: ./ulearn/core/controlpanel.py:330
 msgid "portlets_News"
-msgstr ""
+msgstr "Habilitar portlet portlets_News"
 
 #. Default: "Habilitar portlet portlets_Recent"
 #: ./ulearn/core/controlpanel.py:321
 msgid "portlets_Recent"
-msgstr ""
+msgstr "Habilitar portlet portlets_Recent"
 
 #. Default: "Habilitar portlet portlets_Review"
 #: ./ulearn/core/controlpanel.py:312
 msgid "portlets_Review"
-msgstr ""
+msgstr "Habilitar portlet portlets_Review"
 
 #. Default: "Habilitar portlet portlets_Search"
 #: ./ulearn/core/controlpanel.py:303
 msgid "portlets_Search"
-msgstr ""
+msgstr "Habilitar portlet portlets_Search"
 
 #. Default: "Habilitar portlet portlets_rss"
 #: ./ulearn/core/controlpanel.py:393
 msgid "portlets_rss"
-msgstr ""
+msgstr "Habilitar portlet portlets_rss"
 
 #: ./ulearn/core/profiles/default/types/privateFolder.xml
 msgid "privateFolder"
@@ -1312,7 +1312,7 @@ msgstr "Carpeta privada"
 #. Default: "User profile"
 #: ../ulearn.theme/ulearn/theme/portlets/profile.py:34
 msgid "profile"
-msgstr ""
+msgstr "Perfil usuario"
 
 #. Default: "icon-link"
 #: ./ulearn/core/controlpanel.py:652
@@ -1329,57 +1329,57 @@ msgstr "Busca"
 #. Default: "Cerca"
 #: ../ulearn.theme/ulearn/theme/browser/views_templates/allcommunities.pt:25
 msgid "search_communities"
-msgstr ""
+msgstr "Buscar"
 
 #. Default: "Search"
 #: ../ulearn.theme/ulearn/theme/templates/genweb.theme.browser.viewlets_templates.searchbox.pt:2
 msgid "search_content"
-msgstr ""
+msgstr "Buscar"
 
 #. Default: "Search tags"
 #: ../ulearn.theme/ulearn/theme/browser/views_templates/filtered_contents_search.pt:42
 msgid "search_tags"
-msgstr ""
+msgstr "Buscar tags"
 
 #. Default: "Cerca"
 #: ../ulearn.theme/ulearn/theme/portlets/templates/thinnkers.pt:28
 msgid "search_users"
-msgstr ""
+msgstr "Buscar"
 
 #. Default: "Color secundari"
 #: ./ulearn/core/controlpanel.py:193
 msgid "secondary_color"
-msgstr ""
+msgstr "Color secundario"
 
 #. Default: "See more communities"
 #: ../ulearn.theme/ulearn/theme/portlets/templates/communities.pt:68
 msgid "seemore_communities"
-msgstr ""
+msgstr "Ver más comunidades"
 
 #. Default: "See more"
 #: ../ulearn.theme/ulearn/theme/portlets/templates/stats.pt:140
 msgid "seemore_stats"
-msgstr ""
+msgstr "Ver más"
 
 #. Default: "See all tags"
 #: ../ulearn.theme/ulearn/theme/portlets/mytags/mytags.pt:22
 msgid "seemore_tags"
-msgstr ""
+msgstr "Ver todos los tags"
 
 #. Default: "See more events"
 #: ../ulearn.theme/ulearn/theme/portlets/templates/discussion.pt:43
 msgid "seemorediscussions"
-msgstr ""
+msgstr "Ver más eventos"
 
 #. Default: "See more events"
 #: ../ulearn.theme/ulearn/theme/portlets/templates/calendar.pt:112
 msgid "seemoreevents"
-msgstr ""
+msgstr "Ver más eventos"
 
 #. Default: "Veure tots els participants"
 #: ../ulearn.theme/ulearn/theme/portlets/templates/thinnkers.pt:38
 msgid "seethinkers"
-msgstr ""
+msgstr "Ver todas"
 
 #. Default: "Stats"
 #: ../ulearn.theme/ulearn/theme/portlets/stats.py:24
@@ -1392,22 +1392,22 @@ msgstr "Estadísticas"
 #. Default: "Mostrar botó d'accés a estadístiques diàries"
 #: ./ulearn/core/controlpanel.py:175
 msgid "stats_button"
-msgstr ""
+msgstr "Mostrar botón acceso a estadísticas diarias"
 
 #. Default: "Comments"
 #: ../ulearn.theme/ulearn/theme/portlets/templates/stats.pt:29
 msgid "stats_comments"
-msgstr ""
+msgstr "Comentarios"
 
 #. Default: "Student"
 #: ../ulearn.theme/ulearn/theme/portlets/mysubjects/mysubjects.pt:22
 msgid "student"
-msgstr ""
+msgstr "Estudiante"
 
 #. Default: "Subjects"
 #: ../ulearn.theme/ulearn/theme/portlets/mysubjects/mysubjects.pt:13
 msgid "subjects"
-msgstr ""
+msgstr "Asignaturas"
 
 #. Default: "Subscribe"
 #: ./ulearn/core/content/community_templates/view.pt:48
@@ -1417,132 +1417,132 @@ msgstr "Suscribir"
 #. Default: "Teacher"
 #: ../ulearn.theme/ulearn/theme/portlets/mysubjects/mysubjects.pt:78
 msgid "teacher"
-msgstr ""
+msgstr "Profesor"
 
 #. Default: "Thinnkers portlet"
 #: ../ulearn.theme/ulearn/theme/portlets/thinnkers.py:27
 msgid "thinnkers"
-msgstr ""
+msgstr "Thinnkers portlet"
 
 #: ./ulearn/core/configure.zcml:70
 msgid "ulearn.core"
-msgstr ""
+msgstr "ulearn.core"
 
 #. Default: "Activity"
 #: ../ulearn.theme/ulearn/theme/browser/viewlets_templates/folderbar.pt:15
 msgid "ulearn_activity"
-msgstr ""
+msgstr "Activitat"
 
 #. Default: "Habilitar portlet angularRouteView"
 #: ./ulearn/core/controlpanel.py:510
 msgid "ulearn_angularRouteView"
-msgstr ""
+msgstr "Habilitar portlet angularRouteView"
 
 #. Default: "Habilitar portlet Ulearn Button Bar"
 #: ./ulearn/core/controlpanel.py:537
 msgid "ulearn_button_bar"
-msgstr ""
+msgstr "Habilitar portlet Ulearn Button Bar"
 
 #. Default: "Habilitar portlet ulearn Calendar"
 #: ./ulearn/core/controlpanel.py:573
 msgid "ulearn_calendar"
-msgstr ""
+msgstr "Habilitar portlet ulearn Calendar"
 
 #. Default: "Habilitar portlet Ulearn Comunnities"
 #: ./ulearn/core/controlpanel.py:546
 msgid "ulearn_communities"
-msgstr ""
+msgstr "Habilitar portlet Ulearn Comunnities"
 
 #. Default: "Habilitar portlet Ulearn Discussion"
 #: ./ulearn/core/controlpanel.py:582
 msgid "ulearn_discussion"
-msgstr ""
+msgstr "Habilitar portlet Ulearn Discussion"
 
 #. Default: "Documents"
 #: ../ulearn.theme/ulearn/theme/browser/viewlets_templates/folderbar.pt:26
 #: ../ulearn.theme/ulearn/theme/portlets/templates/stats.pt:42
 msgid "ulearn_documents"
-msgstr ""
+msgstr "Documentos"
 
 #. Default: "Habilitar portlet Ulearn eConnect"
 #: ./ulearn/core/controlpanel.py:591
 msgid "ulearn_econnect"
-msgstr ""
+msgstr "Habilitar portlet Ulearn eConnect"
 
 #. Default: "Links"
 #: ../ulearn.theme/ulearn/theme/portlets/templates/stats.pt:55
 msgid "ulearn_links"
-msgstr ""
+msgstr "Links"
 
 #. Default: "Media"
 #: ../ulearn.theme/ulearn/theme/portlets/templates/stats.pt:68
 msgid "ulearn_media"
-msgstr ""
+msgstr "Media"
 
 #. Default: "Habilitar portlet Ulearn Most Valued"
 #: ./ulearn/core/controlpanel.py:600
 msgid "ulearn_most_valued"
-msgstr ""
+msgstr "Habilitar portlet Ulearn Most Valued"
 
 #. Default: "Habilitar portlet ulearn_portlets_custombuttonbar"
 #: ./ulearn/core/controlpanel.py:483
 msgid "ulearn_portlets_custombuttonbar"
-msgstr ""
+msgstr "Habilitar portlet ulearn_portlets_custombuttonbar"
 
 #. Default: "Habilitar portlet flashesinformativos"
 #: ./ulearn/core/controlpanel.py:519
 msgid "ulearn_portlets_flashesinformativos"
-msgstr ""
+msgstr "Habilitar portlet flashesinformativos"
 
 #. Default: "Habilitar portlet importantnews"
 #: ./ulearn/core/controlpanel.py:528
 msgid "ulearn_portlets_importantnews"
-msgstr ""
+msgstr "Habilitar portlet importantnews"
 
 #. Default: "Habilitar portlet ulearn_portlets_mycommunities"
 #: ./ulearn/core/controlpanel.py:474
 msgid "ulearn_portlets_mycommunities"
-msgstr ""
+msgstr "Habilitar portlet ulearn_portlets_mycommunities"
 
 #. Default: "Habilitar portlet ulearn_portlets_mysubjects"
 #: ./ulearn/core/controlpanel.py:501
 msgid "ulearn_portlets_mysubjects"
-msgstr ""
+msgstr "Habilitar portlet ulearn_portlets_mysubjects"
 
 #. Default: "Habilitar portlet ulearn_portlets_mytags"
 #: ./ulearn/core/controlpanel.py:465
 msgid "ulearn_portlets_mytags"
-msgstr ""
+msgstr "Habilitar portlet ulearn_portlets_mytags"
 
 #. Default: "Habilitar portlet ulearn_portlets_subscribednews"
 #: ./ulearn/core/controlpanel.py:492
 msgid "ulearn_portlets_subscribednews"
-msgstr ""
+msgstr "Habilitar portlet ulearn_portlets_subscribednews"
 
 #. Default: "Habilitar portlet Ulearn Profile"
 #: ./ulearn/core/controlpanel.py:555
 msgid "ulearn_profile"
-msgstr ""
+msgstr "Habilitar portlet Ulearn Profile"
 
 #. Default: "Habilitar portlet Ulearn Stats"
 #: ./ulearn/core/controlpanel.py:609
 msgid "ulearn_stats"
-msgstr ""
+msgstr "Habilitar portlet Ulearn Stats"
 
 #. Default: "Habilitar portlet Ulearn Thinkers"
 #: ./ulearn/core/controlpanel.py:564
 msgid "ulearn_thinkers"
-msgstr ""
+msgstr "Habilitar portlet Ulearn Thinkers"
 
 #. Default: "Calendar portlet"
 #: ../ulearn.theme/ulearn/theme/portlets/calendar.py:43
 msgid "ulearncalendar"
-msgstr ""
+msgstr "Calendario portlet"
 
 #. Default: "URL contrasenya oblidada"
 #: ./ulearn/core/controlpanel.py:674
 msgid "url_forget_password"
-msgstr ""
+msgstr "URL contraseña olvidada"
 
 #. Default: "video_embed"
 #: ./ulearn/core/profiles/default/types/ulearn.video_embed.xml
@@ -1565,4 +1565,4 @@ msgstr "Agregar la dirección web del video de youtube"
 #. Default: "<i class=\"fa fa-arrow-circle-right\"></i> Create a new session"
 #: ../ulearn.theme/ulearn/theme/portlets/templates/econnect.pt:8
 msgid "web_collaboration"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-circle-right\"></i> Crear nueva sesión."

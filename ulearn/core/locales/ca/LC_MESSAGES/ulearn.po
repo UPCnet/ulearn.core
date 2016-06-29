@@ -42,7 +42,7 @@ msgstr "Afegir portlet Notícies"
 
 #: ../ulearn.theme/ulearn/theme/portlets/subscribednews/subscribednews.py:187
 msgid "Add Subscribed News Portlet"
-msgstr "Afegir portlet Notícies subscrites"
+msgstr "Afegir portlet Les meves noticies"
 
 #: ./ulearn/core/profiles/default/types/privateFolder.xml
 msgid "Add a new private folder"
@@ -144,11 +144,11 @@ msgstr "Editar portlet Etiquetes"
 
 #: ../ulearn.theme/ulearn/theme/portlets/importantnews/importantnews.py:174
 msgid "Edit News Portlet"
-msgstr "Editar portlet Notícies"
+msgstr "Editar portlet Notícies importants"
 
 #: ../ulearn.theme/ulearn/theme/portlets/subscribednews/subscribednews.py:196
 msgid "Edit Subscribed News Portlet"
-msgstr "Editar portlet Notícies subscrites"
+msgstr "Editar portlet Notícies destacades"
 
 #: ./ulearn/core/controlpanel.py:774
 msgid "Edit cancelled"
@@ -263,7 +263,7 @@ msgstr "Invitats espectadors"
 #: ../ulearn.theme/ulearn/theme/portlets/importantnews/importantnews.py:29
 #: ../ulearn.theme/ulearn/theme/portlets/subscribednews/subscribednews.py:32
 msgid "Items in which workflow state to show."
-msgstr "Estats a mostrar al portlet"
+msgstr "Estat per a mostrar els elements."
 
 #: ./ulearn/core/content/community.py:156
 msgid "La descripció de la comunitat"
