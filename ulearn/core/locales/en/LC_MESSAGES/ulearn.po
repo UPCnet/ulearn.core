@@ -250,7 +250,7 @@ msgstr "Indicate the description of the virtual session."
 #. Default: "Inicio <span class=\"formHelp\">x</span>"
 #: ./ulearn/core/browser/stats_templates/statsview.pt:156
 msgid "Inicio_stats"
-msgstr "Start <span class=\"formHelp\">x</span>""
+msgstr "Start <span class=\"formHelp\">x</span>"
 
 #: ./ulearn/core/configure.zcml:70
 msgid "Installs the ulearn.core package"
