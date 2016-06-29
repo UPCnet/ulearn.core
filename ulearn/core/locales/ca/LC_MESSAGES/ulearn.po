@@ -564,7 +564,7 @@ msgstr "Adreça web del Campus"
 #. Default: "Change type"
 #: ../ulearn.theme/ulearn/theme/portlets/templates/profile.pt:79
 msgid "change_community_type"
-msgstr "Canvia el tipus de comunitat"
+msgstr "Canvia el tipus"
 
 #. Default: "Habilitar portlet collective_polls_VotePortlet"
 #: ./ulearn/core/controlpanel.py:411
@@ -621,7 +621,7 @@ msgstr "La comunitat ${comunitat} ha estat modificada."
 #. Default: "Create a new community"
 #: ../ulearn.theme/ulearn/theme/portlets/templates/communities.pt:54
 msgid "createcommunity"
-msgstr "Crear comunitat"
+msgstr "Crear una comunitat"
 
 #. Default: "Custom button bar"
 #: ../ulearn.theme/ulearn/theme/portlets/custombuttonbar/custombuttonbar.py:27
@@ -1173,7 +1173,7 @@ msgstr "Color principal"
 #. Default: "Manage members"
 #: ../ulearn.theme/ulearn/theme/portlets/templates/profile.pt:71
 msgid "manage_membership"
-msgstr "Administrar membres"
+msgstr "Gestiona els membres"
 
 #. Default: "Flash"
 #: ./ulearn/core/browser/viewlets_templates/flash.pt:4
@@ -1579,3 +1579,6 @@ msgstr "Afegeix l'adreça web del video de youtube"
 #: ../ulearn.theme/ulearn/theme/portlets/templates/econnect.pt:8
 msgid "web_collaboration"
 msgstr "Crear una sessió"
+
+msgid "persones"
+msgstr "Persones"

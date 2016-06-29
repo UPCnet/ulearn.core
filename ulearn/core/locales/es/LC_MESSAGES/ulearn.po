@@ -552,7 +552,7 @@ msgstr "Dirección web del Campus"
 #. Default: "Change type"
 #: ../ulearn.theme/ulearn/theme/portlets/templates/profile.pt:79
 msgid "change_community_type"
-msgstr "Cambiar tipo"
+msgstr "Cambia el tipo"
 
 #. Default: "Habilitar portlet collective_polls_VotePortlet"
 #: ./ulearn/core/controlpanel.py:411
@@ -631,7 +631,7 @@ msgstr "Discussion Portlet"
 #. Default: "Edit this community"
 #: ../ulearn.theme/ulearn/theme/portlets/templates/profile.pt:51
 msgid "editcommunity"
-msgstr "Edit comunidad"
+msgstr "Editar la comunidad"
 
 #. Default: "Exporta"
 #: ./ulearn/core/browser/stats_templates/statsview.pt:278
@@ -992,7 +992,6 @@ msgstr "Habilitar el portlet donde muestra el perfil de usuario, o la comunidad 
 
 #. Default: "uLearn configuration registry."
 #: ./ulearn/core/controlpanel.py:688
-#, fuzzy
 msgid "help_ulearn_settings_editform"
 msgstr "Configuración de uLearn"
 
@@ -1160,7 +1159,7 @@ msgstr "Color principal"
 #. Default: "Manage members"
 #: ../ulearn.theme/ulearn/theme/portlets/templates/profile.pt:71
 msgid "manage_membership"
-msgstr ""
+msgstr "Gestiona los miembros"
 
 #. Default: "Flash"
 #: ./ulearn/core/browser/viewlets_templates/flash.pt:4
@@ -1322,7 +1321,6 @@ msgstr "Icono Font Awesome"
 #. Default: "Cerca"
 #: ../ulearn.theme/ulearn/theme/browser/views_templates/filtered_contents_search.pt:35
 #: ./ulearn/core/browser/stats_templates/statsview.pt:277
-#, fuzzy
 msgid "search"
 msgstr "Busca"
 
@@ -1339,12 +1337,12 @@ msgstr "Buscar"
 #. Default: "Search tags"
 #: ../ulearn.theme/ulearn/theme/browser/views_templates/filtered_contents_search.pt:42
 msgid "search_tags"
-msgstr "Buscar tags"
+msgstr "Filtra por etiquetas"
 
 #. Default: "Cerca"
 #: ../ulearn.theme/ulearn/theme/portlets/templates/thinnkers.pt:28
 msgid "search_users"
-msgstr "Buscar"
+msgstr "Buscar personas"
 
 #. Default: "Color secundari"
 #: ./ulearn/core/controlpanel.py:193
@@ -1385,7 +1383,6 @@ msgstr "Ver todas"
 #: ../ulearn.theme/ulearn/theme/portlets/stats.py:24
 #: ../ulearn.theme/ulearn/theme/portlets/templates/stats.pt:7
 #: ./ulearn/core/browser/stats_templates/statsview.pt:143
-#, fuzzy
 msgid "stats"
 msgstr "Estadísticas"
 
@@ -1566,3 +1563,6 @@ msgstr "Agregar la dirección web del video de youtube"
 #: ../ulearn.theme/ulearn/theme/portlets/templates/econnect.pt:8
 msgid "web_collaboration"
 msgstr "<i class=\"fa fa-arrow-circle-right\"></i> Crear nueva sesión."
+
+msgid "persones"
+msgstr "Personas"
