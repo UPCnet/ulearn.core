@@ -1,11 +1,12 @@
 Changelog
 =========
 
-2.33 (unreleased)
+2.33 (2016-06-29)
 -----------------
 
-- Nothing changed yet.
-
+* translates ulearn.core [Paco Gregori]
+* removed i18n js [roberto.diaz]
+* updated translations [roberto.diaz]
 
 2.32 (2016-06-29)
 -----------------
