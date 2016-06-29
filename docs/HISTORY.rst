@@ -1,11 +1,29 @@
 Changelog
 =========
 
-2.32 (unreleased)
+2.32 (2016-06-29)
 -----------------
 
-- Nothing changed yet.
-
+* esconder viewlets noticias [Paco Gregori]
+* esconder los nuevos viewlets de noticias, añadir que al reinstalar paquete registre los portlets de ulearn settings [Paco Gregori]
+* updated i18n [roberto.diaz]
+* generali bug solved: make users nonvisible in searches [roberto.diaz]
+* updated translations [roberto.diaz]
+* Translate seemore_communities [Pilar Marinas]
+* Solucionar error al guardar los permisos de la comunidad [Pilar Marinas]
+* add listtag template [Paco Gregori]
+* replace id_normalize to increase max length [Paco Gregori]
+* add tags portlets [Paco Gregori]
+* adding layer to view [Roberto Diaz]
+* remove flash_news adapter [Paco Gregori]
+* remove flash behavior [Paco Gregori]
+* add flash and outoflist widgets to news type [Paco Gregori]
+* Change url communities [Pilar Marinas]
+* add xml flashinformatius and newsimportant [Paco Gregori]
+* add portlets controlpanel, migrate portlets flashinformatius and newsimportant [Paco Gregori]
+* change image from 205px to 105px [roberto.diaz]
+* aded title & alt to images [roberto.diaz]
+* estadistiques afegides a la base [Alberto Duran]
 
 2.31 (2016-04-18)
 -----------------
