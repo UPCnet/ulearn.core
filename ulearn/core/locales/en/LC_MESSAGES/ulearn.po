@@ -557,8 +557,7 @@ msgstr "Primary Color buttons"
 #. Default: "Color secundari dels botons"
 #: ./ulearn/core/controlpanel.py:256
 msgid "buttons_color_secondary"
-msgstr "
-Secondary Color buttons"
+msgstr "Secondary Color buttons"
 
 #. Default: "URL del campus"
 #: ./ulearn/core/controlpanel.py:130
@@ -701,7 +700,7 @@ msgstr "This is the background color corresponding global property."
 #. Default: "Aquest és la propietat de CSS de background."
 #: ./ulearn/core/controlpanel.py:231
 msgid "help_background_property"
-msgstr This is the CSS property background.""
+msgstr "This is the CSS property background."
 
 #. Default: "A short overview of who you are and what you do. Will be displayed on your author page, linked from the items you create."
 #: ./ulearn/core/userschema.py:41
@@ -761,7 +760,7 @@ msgstr "Enable portlet Full News."
 #. Default: "Habilita el portlet homepage."
 #: ./ulearn/core/controlpanel.py:422
 msgid "help_genweb_portlets_homepage"
-msgstr "Enable portlet homepage.
+msgstr "Enable portlet homepage."
 
 #. Default: "Habilita el portlet News."
 #: ./ulearn/core/controlpanel.py:440
@@ -1034,7 +1033,7 @@ msgstr "Url: \"/mail_password_form?userid=\". For external domains specify the f
 #. Default: "Function on moodle."
 #: ../ulearn.theme/ulearn/theme/portlets/mysubjects/mysubjects.py:27
 msgid "help_wsfunction"
-msgstr Function on moodle.""
+msgstr "Function on moodle."
 
 #. Default: "Token to connect to moodle."
 #: ../ulearn.theme/ulearn/theme/portlets/mysubjects/mysubjects.py:33
