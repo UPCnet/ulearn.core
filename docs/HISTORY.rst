@@ -1,11 +1,10 @@
 Changelog
 =========
 
-2.35 (unreleased)
+2.35 (2016-06-29)
 -----------------
 
-- Nothing changed yet.
-
+* Modify translate [Pilar Marinas]
 
 2.34 (2016-06-29)
 -----------------
