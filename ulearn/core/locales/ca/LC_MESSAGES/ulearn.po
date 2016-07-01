@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GenWebUPC\n"
-"POT-Creation-Date: 2016-06-29 09:55+0000\n"
+"POT-Creation-Date: 2016-06-30 12:02+0000\n"
 "PO-Revision-Date: 2014-04-14 11:20+0100\n"
 "Last-Translator: Corina Riba <corina.riba@upcnet.es>\n"
 "Language-Team: Plone Team@UPCnet <plone.team@upcnet.es>\n"
@@ -40,7 +40,7 @@ msgstr "Afegir portlet Etiquetes"
 msgid "Add News Portlet"
 msgstr "Afegir portlet Notícies"
 
-#: ../ulearn.theme/ulearn/theme/portlets/subscribednews/subscribednews.py:187
+#: ../ulearn.theme/ulearn/theme/portlets/subscribednews/subscribednews.py:189
 msgid "Add Subscribed News Portlet"
 msgstr "Afegir portlet Les meves noticies"
 
@@ -77,11 +77,6 @@ msgstr "Canvis desats"
 #: ./ulearn/core/content/community.py:118
 msgid "Closed"
 msgstr "Tancada"
-
-#. Default: "Communities portlet"
-#: ../ulearn.theme/ulearn/theme/portlets/communities.py:33
-msgid "Comunidades"
-msgstr "Comunitats"
 
 #: ./ulearn/core/profiles/default/types/ulearn.community.xml
 msgid "Comunitat"
@@ -146,7 +141,7 @@ msgstr "Editar portlet Etiquetes"
 msgid "Edit News Portlet"
 msgstr "Editar portlet Notícies importants"
 
-#: ../ulearn.theme/ulearn/theme/portlets/subscribednews/subscribednews.py:196
+#: ../ulearn.theme/ulearn/theme/portlets/subscribednews/subscribednews.py:198
 msgid "Edit Subscribed News Portlet"
 msgstr "Editar portlet Notícies destacades"
 
@@ -311,6 +306,7 @@ msgid "Media"
 msgstr "Media"
 
 #. Default: "Online Meetings"
+#: ../ulearn.theme/ulearn/theme/portlets/econnect.py:21
 #: ../ulearn.theme/ulearn/theme/portlets/templates/econnect.pt:7
 msgid "Meetings space"
 msgstr "Reunions online"
@@ -364,11 +360,6 @@ msgstr "Notificar activitat via 'push'"
 #: ../ulearn.theme/ulearn/theme/portlets/subscribednews/subscribednews.py:26
 msgid "Number of items to display"
 msgstr "Elements a mostrar"
-
-#. Default: "Meetings space"
-#: ../ulearn.theme/ulearn/theme/portlets/econnect.py:21
-msgid "Online Meetings"
-msgstr "Reunions online"
 
 #: ./ulearn/core/content/community.py:113
 msgid "Open"
@@ -440,7 +431,7 @@ msgstr ""
 msgid "This portlet displays recent News Items."
 msgstr ""
 
-#: ../ulearn.theme/ulearn/theme/portlets/subscribednews/subscribednews.py:188
+#: ../ulearn.theme/ulearn/theme/portlets/subscribednews/subscribednews.py:190
 msgid "This portlet displays subscribed News Items."
 msgstr ""
 
@@ -526,6 +517,11 @@ msgstr "Color inicial dels gradients."
 msgid "angularrouteview"
 msgstr "AngularRouteView"
 
+#. Default: "ATENCIÓ:"
+#: ./ulearn/core/browser/viewlets_templates/important.pt:33
+msgid "atencio"
+msgstr "ATENCIÓ:"
+
 #. Default: "Color de fons global"
 #: ./ulearn/core/controlpanel.py:238
 msgid "background_color"
@@ -587,6 +583,7 @@ msgid "color_community_organizative"
 msgstr "Color comunitat organitzativa"
 
 #. Default: "Comunidades"
+#: ../ulearn.theme/ulearn/theme/portlets/communities.py:33
 #: ../ulearn.theme/ulearn/theme/portlets/templates/communities.pt:6
 msgid "communities"
 msgstr "Comunitats"
@@ -632,6 +629,11 @@ msgstr "Custom button bar"
 #: ./ulearn/core/browser/viewlets_templates/flash.pt:11
 msgid "desmarca_flash"
 msgstr "Flash"
+
+#. Default: "Desmarca com a important"
+#: ./ulearn/core/browser/viewlets_templates/important.pt:35
+msgid "desmarca_important"
+msgstr "Desmarca com a important"
 
 #. Default: "Amaga Notícia"
 #: ./ulearn/core/browser/viewlets_templates/outoflist.pt:11
@@ -1048,6 +1050,21 @@ msgstr "Notícies importants"
 msgid "info"
 msgstr "Informació"
 
+#. Default: "Aquesta notícia està marcada com a important. Per desmarcar la notícia com a important premeu el botó:"
+#: ./ulearn/core/browser/viewlets_templates/important.pt:34
+msgid "info_desmarca_important"
+msgstr "Aquesta notícia està marcada com a important. Per desmarcar la notícia com a important premeu el botó:"
+
+#. Default: "Per marcar la notícia com a important premeu el botó:"
+#: ./ulearn/core/browser/viewlets_templates/important.pt:24
+msgid "info_important"
+msgstr "Per marcar la notícia com a important premeu el botó:"
+
+#. Default: "Informació"
+#: ./ulearn/core/browser/viewlets_templates/important.pt:23
+msgid "informacio"
+msgstr "Informació"
+
 #. Default: "Biography"
 #: ./ulearn/core/userschema.py:40
 msgid "label_biography"
@@ -1179,6 +1196,11 @@ msgstr "Gestiona els membres"
 #: ./ulearn/core/browser/viewlets_templates/flash.pt:4
 msgid "marca_flash"
 msgstr "Flash"
+
+#. Default: "Marca com a important"
+#: ./ulearn/core/browser/viewlets_templates/important.pt:25
+msgid "marca_important"
+msgstr "Marca com a important"
 
 #. Default: "Amaga Notícia"
 #: ./ulearn/core/browser/viewlets_templates/outoflist.pt:4
@@ -1579,6 +1601,3 @@ msgstr "Afegeix l'adreça web del video de youtube"
 #: ../ulearn.theme/ulearn/theme/portlets/templates/econnect.pt:8
 msgid "web_collaboration"
 msgstr "Crear una sessió"
-
-msgid "persones"
-msgstr "Persones"

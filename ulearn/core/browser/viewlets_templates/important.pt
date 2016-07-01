@@ -17,7 +17,7 @@
 
 
  <tal:block condition="viewlet/canManageSite">
-     <div i18n:domain="ca">
+     <div i18n:domain="ulearn">
          <div tal:condition="not:viewlet/isNewImportant" class="alert alert-info" role="alert">
              <button data-dismiss="alert" class="close" type="button">×</button>
              <strong i18n:translate="informacio">Informació</strong>
