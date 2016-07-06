@@ -169,7 +169,7 @@ msgstr "Anglés"
 #. Default: "Stream"
 #: ../ulearn.theme/ulearn/theme/portlets/templates/buttonbar.pt:13
 msgid "Entrada"
-msgstr "Entrada"
+msgstr "Activitat"
 
 #: ./ulearn/core/content/community.py:1270
 msgid "Esdeveniments"

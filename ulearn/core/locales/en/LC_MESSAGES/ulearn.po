@@ -605,7 +605,6 @@ msgstr ""
 
 #. Default: "La comunitat ${comunitat} ha estat creada."
 #: ./ulearn/core/content/community.py:1111
-#, fuzzy
 msgid "comunitat_creada"
 msgstr "Community ${comunitat} has been created."
 
@@ -616,7 +615,6 @@ msgstr "Community ${comunitat} already exists, please choose a different name."
 
 #. Default: "La comunitat ${comunitat} ha estat modificada."
 #: ./ulearn/core/content/community.py:1217
-#, fuzzy
 msgid "comunitat_modificada"
 msgstr "Community ${comunitat} has been modified."
 
@@ -1013,7 +1011,6 @@ msgstr "Enable portlet which displays the user's profile or community where we a
 
 #. Default: "uLearn configuration registry."
 #: ./ulearn/core/controlpanel.py:688
-#, fuzzy
 msgid "help_ulearn_settings_editform"
 msgstr "Ulearn settings"
 
@@ -1363,7 +1360,6 @@ msgstr "Icon Font Awesome"
 #. Default: "Cerca"
 #: ../ulearn.theme/ulearn/theme/browser/views_templates/filtered_contents_search.pt:35
 #: ./ulearn/core/browser/stats_templates/statsview.pt:277
-#, fuzzy
 msgid "search"
 msgstr "Search"
 
@@ -1400,7 +1396,7 @@ msgstr "See more communities"
 #. Default: "See more"
 #: ../ulearn.theme/ulearn/theme/portlets/templates/stats.pt:140
 msgid "seemore_stats"
-msgstr "See more"
+msgstr "See more stats"
 
 #. Default: "See all tags"
 #: ../ulearn.theme/ulearn/theme/portlets/mytags/mytags.pt:22
@@ -1426,7 +1422,6 @@ msgstr "See all people"
 #: ../ulearn.theme/ulearn/theme/portlets/stats.py:24
 #: ../ulearn.theme/ulearn/theme/portlets/templates/stats.pt:7
 #: ./ulearn/core/browser/stats_templates/statsview.pt:143
-#, fuzzy
 msgid "stats"
 msgstr "Stats"
 

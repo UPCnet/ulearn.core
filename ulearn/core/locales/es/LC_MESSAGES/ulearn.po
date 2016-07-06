@@ -165,7 +165,7 @@ msgstr "Inglés"
 #. Default: "Stream"
 #: ../ulearn.theme/ulearn/theme/portlets/templates/buttonbar.pt:13
 msgid "Entrada"
-msgstr "Entrada"
+msgstr "Actividad"
 
 #: ./ulearn/core/content/community.py:1270
 msgid "Esdeveniments"
@@ -1251,7 +1251,7 @@ msgstr "Nombre Usuario"
 #. Default: "There are not events today"
 #: ../ulearn.theme/ulearn/theme/portlets/templates/calendar.pt:23
 msgid "not_events_for_today"
-msgstr "No hay eventos hoy"
+msgstr "Hoy no hay eventos"
 
 #: ./ulearn/core/content/community.py:219
 msgid "notify_activity_via_push_help"
@@ -1379,7 +1379,7 @@ msgstr "Ver más comunidades"
 #. Default: "See more"
 #: ../ulearn.theme/ulearn/theme/portlets/templates/stats.pt:140
 msgid "seemore_stats"
-msgstr "Ver más"
+msgstr "Ver más estadísticas"
 
 #. Default: "See all tags"
 #: ../ulearn.theme/ulearn/theme/portlets/mytags/mytags.pt:22
@@ -1491,7 +1491,7 @@ msgstr "Habilitar portlet Ulearn eConnect"
 #. Default: "Links"
 #: ../ulearn.theme/ulearn/theme/portlets/templates/stats.pt:55
 msgid "ulearn_links"
-msgstr "Links"
+msgstr "Enlaces"
 
 #. Default: "Media"
 #: ../ulearn.theme/ulearn/theme/portlets/templates/stats.pt:68
