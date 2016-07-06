@@ -276,6 +276,8 @@ class CommunityAdapterMixin(object):
         # Determine the value for notifications
         if self.context.notify_activity_via_push and self.context.notify_activity_via_push_comments_too:
             self.max_notifications = 'comments'
+        elif not self.context.notify_activity_via_push and self.context.notify_activity_via_push_comments_too:
+            self.max_notifications = 'comments'
         elif self.context.notify_activity_via_push and not self.context.notify_activity_via_push_comments_too:
             self.max_notifications = 'posts'
         elif not self.context.notify_activity_via_push and not self.context.notify_activity_via_push_comments_too:
