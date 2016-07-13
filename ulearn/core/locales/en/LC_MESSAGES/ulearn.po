@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GenWebUPC\n"
-"POT-Creation-Date: 2016-07-07 06:36+0000\n"
+"POT-Creation-Date: 2016-07-08 07:34+0000\n"
 "PO-Revision-Date: 2014-04-14 11:35+0100\n"
 "Last-Translator: Roberto Diaz <roberto.diaz@upcnet.es>\n"
 "Language-Team: Plone Team@UPCnet <>\n"
@@ -660,6 +660,10 @@ msgstr "Edit Community"
 #: ../ulearn.theme/ulearn/theme/browser/user_profile.py:106
 msgid "email"
 msgstr "eMail"
+
+#: ../ulearn.theme/ulearn/theme/portlets/stats.py:74
+msgid "entrades"
+msgstr "posts"
 
 #. Default: "Exporta"
 #: ./ulearn/core/browser/stats_templates/statsview.pt:278
@@ -1419,7 +1423,7 @@ msgid "seemore_stats"
 msgstr "See more stats"
 
 #. Default: "See all tags"
-#: ../ulearn.theme/ulearn/theme/portlets/mytags/mytags.pt:22
+#: ../ulearn.theme/ulearn/theme/portlets/mytags/mytags.pt:20
 msgid "seemore_tags"
 msgstr "See all tags"
 
@@ -1439,7 +1443,7 @@ msgid "seethinkers"
 msgstr "See all people"
 
 #. Default: "Stats"
-#: ../ulearn.theme/ulearn/theme/portlets/stats.py:24
+#: ../ulearn.theme/ulearn/theme/portlets/stats.py:25
 #: ../ulearn.theme/ulearn/theme/portlets/templates/stats.pt:7
 #: ./ulearn/core/browser/stats_templates/statsview.pt:143
 msgid "stats"
