@@ -15,6 +15,7 @@ from Products.CMFCore.utils import getToolByName
 
 from genweb.core.interfaces import IHomePage
 from ulearn.core.controlpanel import IUlearnControlPanelSettings
+from ulearn.theme.controlportlets import IPortletsSettings
 
 import logging
 import transaction
@@ -121,8 +122,27 @@ def setup_ulearn_icon_set():
 
 def setup_ulearn_portlets_settings():
     registry = queryUtility(IRegistry)
-    ulearn_settings = registry.forInterface(IUlearnControlPanelSettings)
+    ulearn_settings = registry.forInterface(IPortletsSettings)
     site = getSite()
+
+    activate_portlets = []
+    portlets_slots = ["plone.leftcolumn", "plone.rightcolumn",
+                      "genweb.portlets.HomePortletManager1", "genweb.portlets.HomePortletManager2",
+                      "genweb.portlets.HomePortletManager3", "genweb.portlets.HomePortletManager4",
+                      "genweb.portlets.HomePortletManager5", "genweb.portlets.HomePortletManager6",
+                      "genweb.portlets.HomePortletManager7", "genweb.portlets.HomePortletManager8",
+                      "genweb.portlets.HomePortletManager9", "genweb.portlets.HomePortletManager10"]
+
+    for manager_name in portlets_slots:
+        if 'genweb' in manager_name:
+            manager = getUtility(IPortletManager, name=manager_name, context=site['front-page'])
+            mapping = getMultiAdapter((site['front-page'], manager), IPortletAssignmentMapping)
+            [activate_portlets.append(item[0]) for item in mapping.items()]
+        else:
+            manager = getUtility(IPortletManager, name=manager_name, context=site)
+            mapping = getMultiAdapter((site, manager), IPortletAssignmentMapping)
+
+            [activate_portlets.append(item[0]) for item in mapping.items()]
 
     portlets = [port for port in ulearn_settings.__registry__.records.items() if 'portlet' in port[0]]
     if portlets:
@@ -136,6 +156,13 @@ def setup_ulearn_portlets_settings():
                 namePortlet = 'genweb portlets news_events_listing'
 
             if reg.value is True:
+                registerPortletType(site,
+                                    title=namePortlet,
+                                    description=namePortlet,
+                                    addview=idPortlet)
+
+            if idPortlet.split('.')[-1] in activate_portlets:
+                reg.value = True
                 registerPortletType(site,
                                     title=namePortlet,
                                     description=namePortlet,
