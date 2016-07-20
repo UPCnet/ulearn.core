@@ -263,7 +263,10 @@ class REST(REST_BASE):
         if self.params.get('users', None):
             for user in self.params['users']:
                 try:
-                    user['id'] = user['id'].lower()
+                    if user.get('id', None):
+                        user['id'] = user['id'].lower()
+                    else:
+                        user = user.lower()
                 except:
                     raise BadParameters(user)
 
