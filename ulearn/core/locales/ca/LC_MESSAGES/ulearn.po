@@ -1399,7 +1399,7 @@ msgstr "Cerca en el contingut"
 #. Default: "Search tags"
 #: ../ulearn.theme/ulearn/theme/browser/views_templates/filtered_contents_search.pt:42
 msgid "search_tags"
-msgstr "Cerca per categories"
+msgstr "Filtra per etiquetes"
 
 #. Default: "Cerca"
 #: ../ulearn.theme/ulearn/theme/portlets/templates/thinnkers.pt:28

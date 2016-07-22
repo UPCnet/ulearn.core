@@ -1373,12 +1373,12 @@ msgstr "Busca"
 #. Default: "Cerca"
 #: ../ulearn.theme/ulearn/theme/browser/views_templates/allcommunities.pt:25
 msgid "search_communities"
-msgstr "Buscar"
+msgstr "Buscar comunidades"
 
 #. Default: "Search"
 #: ../ulearn.theme/ulearn/theme/templates/genweb.theme.browser.viewlets_templates.searchbox.pt:2
 msgid "search_content"
-msgstr "Buscar"
+msgstr "Busca en el contenido"
 
 #. Default: "Search tags"
 #: ../ulearn.theme/ulearn/theme/browser/views_templates/filtered_contents_search.pt:42

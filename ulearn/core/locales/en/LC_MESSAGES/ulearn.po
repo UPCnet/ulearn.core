@@ -1390,22 +1390,22 @@ msgstr "Search"
 #. Default: "Cerca"
 #: ../ulearn.theme/ulearn/theme/browser/views_templates/allcommunities.pt:25
 msgid "search_communities"
-msgstr "Search"
+msgstr "Search communities"
 
 #. Default: "Search"
 #: ../ulearn.theme/ulearn/theme/templates/genweb.theme.browser.viewlets_templates.searchbox.pt:2
 msgid "search_content"
-msgstr "Search"
+msgstr "Search for content"
 
 #. Default: "Search tags"
 #: ../ulearn.theme/ulearn/theme/browser/views_templates/filtered_contents_search.pt:42
 msgid "search_tags"
-msgstr "Search tags"
+msgstr "Search by tags"
 
 #. Default: "Cerca"
 #: ../ulearn.theme/ulearn/theme/portlets/templates/thinnkers.pt:28
 msgid "search_users"
-msgstr "Search"
+msgstr "Search users"
 
 #. Default: "Color secundari"
 #: ./ulearn/core/controlpanel.py:193
