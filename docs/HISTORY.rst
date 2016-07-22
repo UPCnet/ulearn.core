@@ -1,11 +1,17 @@
 Changelog
 =========
 
-2.36 (unreleased)
+2.36 (2016-07-22)
 -----------------
 
-- Nothing changed yet.
-
+* Solucionar error WS sync [Pilar Marinas]
+* solved error on webservice sync [Paco Gregori]
+* separargestion portlets de ulearn settings [Paco Gregori]
+* Translate stats [Pilar Marinas]
+* Translate user properties default [Pilar Marinas]
+* anadir comprobación al crear comunidad y marcar solo el check de notificar actividad y comentarios [Paco Gregori]
+* Corregir traducciones [Pilar Marinas]
+* tranlates [Paco Gregori]
 
 2.35 (2016-06-29)
 -----------------
