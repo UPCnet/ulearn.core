@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.38 (unreleased)
+2.38 (2016-07-26)
 -----------------
 
 * Solucionar error guardar editacl [Pilar Marinas]
