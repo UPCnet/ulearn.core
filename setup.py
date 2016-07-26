@@ -31,7 +31,6 @@ setup(name='ulearn.core',
       install_requires=[
           'setuptools',
           'genweb.core',
-          'ulearn.patches',
           'ulearn.theme',
           'mrs.max',
           'pas.plugins.osiris',

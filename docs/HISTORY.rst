@@ -4,8 +4,10 @@ Changelog
 2.38 (unreleased)
 -----------------
 
-- Nothing changed yet.
-
+* Solucionar error guardar editacl [Pilar Marinas]
+* Update setup.py [Roberto Diaz]
+*  [Roberto Diaz]
+* Adding ulearn.patches package [Roberto Diaz]
 
 2.37 (2016-07-22)
 -----------------
