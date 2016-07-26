@@ -261,11 +261,17 @@ class REST(REST_BASE):
 
     def lowerUsersId(self):
         if self.params.get('users', None):
-            for cont, user in enumerate(self.params['users']):
-                try:
-                    self.params['users'][cont] = user['id'].lower()
-                except:
+            cont = 0
+            for user in self.params['users']:
+                 try:
+                    if user.get('id', None):
+                        user['id'] = user['id'].lower()
+                    else:
+                        user['id'] = user.lower()
+                 except:
                     self.params['users'][cont] = user.lower()
+
+                 cont = cont + 1
 
     def extract_params(self, required=[]):
         """
