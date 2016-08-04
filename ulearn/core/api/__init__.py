@@ -262,16 +262,21 @@ class REST(REST_BASE):
     def lowerUsersId(self):
         if self.params.get('users', None):
             cont = 0
-            for user in self.params['users']:
-                 try:
-                    if user.get('id', None):
-                        user['id'] = user['id'].lower()
-                    else:
-                        user['id'] = user.lower()
-                 except:
-                    self.params['users'][cont] = user.lower()
-
-                 cont = cont + 1
+            # request post transforms arrays of 1 element into strings (not arrays)
+            # so we check if we have an array or a string
+            if type(self.params['users']) is list:
+                for user in self.params['users']:
+                     try:
+                        if user.get('id', None):
+                            user['id'] = user['id'].lower()
+                        else:
+                            user['id'] = user.lower()
+                     except :
+                        self.params['users'][cont] = user.lower()
+                     cont = cont + 1
+            # transform the string in users into an array containing one string in lowercase
+            elif type(self.params['users']) is str:
+                 self.params['users'] = [self.params['users'].lower()]
 
     def extract_params(self, required=[]):
         """
