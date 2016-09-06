@@ -1,11 +1,14 @@
 Changelog
 =========
 
-2.39 (unreleased)
+2.39 (2016-09-06)
 -----------------
 
-- Nothing changed yet.
-
+* api/__init__.py solved error /api/people/sync [Vicente Iranzo Maestre]
+*  [Vicente Iranzo Maestre]
+* /api/people/sync failed when request send only one user in users array. [Vicente Iranzo Maestre]
+* Now we check if object in params is a list or a string [Vicente Iranzo Maestre]
+* removed comments [roberto.diaz]
 
 2.38 (2016-07-26)
 -----------------
