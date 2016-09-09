@@ -90,7 +90,7 @@ class Sync(REST):
             else:
                 try:
                     properties = get_all_user_properties(plone_user)
-                    add_user_to_catalog(plone_user, properties)
+                    add_user_to_catalog(plone_user, properties, overwrite=True)
                 except:
                     logger.error('Cannot update properties catalog for user {}'.format(username))
                     properties_errors.append(username)
