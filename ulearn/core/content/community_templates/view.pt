@@ -14,8 +14,11 @@
     <script type="text/javascript"
       tal:attributes="src string:${view/portal_url}/++maxui++static/maxui.loader.js">
     </script>
-    <script>
+    <script type="text/javascript">
       $(document).ready(function(){
+        if (!window.location.origin) {
+            window.location.origin = window.location.protocol + '//' + window.location.hostname + (window.location.port ? (':' + window.location.port) : '');
+        }
         $.get(window.location.origin + window.location.pathname + "/updateuseraccessdatetime", function(data){
         });
       });
