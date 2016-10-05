@@ -7,6 +7,9 @@ from Products.CMFPlone.interfaces.siteroot import IPloneSiteRoot
 
 from ulearn.core.controlpanel import IUlearnControlPanelSettings
 
+from zope.component import getUtility
+from mrs.max.utilities import IMAXClient
+
 
 class ulearnUtils(BrowserView):
     """ Convenience methods placeholder ulearn.utils view. """
@@ -36,3 +39,7 @@ class ulearnUtils(BrowserView):
             return True
         else:
             return False
+
+    def url_max_server(self):
+        self.maxclient, self.settings = getUtility(IMAXClient)()
+        return self.settings.max_server

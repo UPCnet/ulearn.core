@@ -11,6 +11,13 @@ from plone.app.users.browser.formlib import FileUpload
 from plone.app.users.userdataschema import IUserDataSchemaProvider
 from plone.app.users.userdataschema import checkEmailAddress
 
+from zope.component import getUtility
+from mrs.max.utilities import IMAXClient
+from Products.CMFCore.utils import getToolByName
+from ulearn.core.adapters.portrait import convertSquareImage
+import urllib
+from OFS.Image import Image
+
 from ulearn.core import _
 
 
@@ -97,6 +104,33 @@ class UlearnUserSchema(object):
 
 
 class ULearnUserDataPanelAdapter(EnhancedUserDataPanelAdapter):
+
+    def __init__(self, context):
+        """ Load MAX avatar in portrait.
+
+        """
+        super(EnhancedUserDataPanelAdapter, self).__init__(context)
+
+        try:
+            from plone.protect.interfaces import IDisableCSRFProtection
+            alsoProvides(self.request, IDisableCSRFProtection)
+        except:
+            pass
+
+        maxclient, settings = getUtility(IMAXClient)()
+        foto = maxclient.people[self.context.id].avatar
+        imageUrl = foto.uri
+
+        portrait = urllib.urlretrieve(imageUrl)
+
+        scaled, mimetype = convertSquareImage(portrait[0])
+        portrait = Image(id=self.context.id, file=scaled, title='')
+
+        membertool = getToolByName(self.context, 'portal_memberdata')
+        membertool._setPortrait(portrait, self.context.id)
+        import transaction
+        transaction.commit()
+
     def get_ubicacio(self):
         return self._getProperty('ubicacio')
 

@@ -173,11 +173,12 @@ def searchUsersFunction(context, request, search_string):  # noqa
                         user_dict.update({user_property: user.attrs.get(user_property, '')})
 
                 user_dict.update(dict(id=user.attrs['username']))
-                userImage = pm.getPersonalPortrait(user.attrs['username'])
-                userImage.alt = user.attrs['username']
-                userImage.title = user.attrs['username']
-                userImage.height = 105
-                userImage.width = 105
+                userImage = '<img src="' + settings.max_server + '/people/' + user.attrs['username'] + '/avatar/large" alt="' +  user.attrs['username'] + '" title="' +  user.attrs['username'] + '" height="105" width="105" >'
+                # userImage = pm.getPersonalPortrait(user.attrs['username'])
+                # userImage.alt = user.attrs['username']
+                # userImage.title = user.attrs['username']
+                # userImage.height = 105
+                # userImage.width = 105
 
                 user_dict.update(dict(foto=str(userImage)))
                 user_dict.update(dict(url=portal.absolute_url() + '/profile/' + user.attrs['username']))
@@ -194,11 +195,12 @@ def searchUsersFunction(context, request, search_string):  # noqa
                         user_dict.update({user_property: user.get(user_property, '')})
 
                 user_dict.update(dict(id=user.get('id', '')))
-                userImage = pm.getPersonalPortrait(user.attrs['username'])
-                userImage.alt = user.attrs['username']
-                userImage.title = user.attrs['username']
-                userImage.height = 105
-                userImage.width = 105
+                userImage = '<img src="' + settings.max_server + '/people/' + user.attrs['username'] + '/avatar/large" alt="' +  user.attrs['username'] + '" title="' +  user.attrs['username'] + '" height="105" width="105" >'
+                # userImage = pm.getPersonalPortrait(user.attrs['username'])
+                # userImage.alt = user.attrs['username']
+                # userImage.title = user.attrs['username']
+                # userImage.height = 105
+                # userImage.width = 105
 
                 user_dict.update(dict(foto=str(userImage)))
                 user_dict.update(dict(url=portal.absolute_url() + '/profile/' + user.get('id', '')))
