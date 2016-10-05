@@ -1,11 +1,12 @@
 Changelog
 =========
 
-2.40 (unreleased)
+2.40 (2016-10-05)
 -----------------
 
-- Nothing changed yet.
-
+* View avatar MAX [Pilar Marinas]
+* no actualización documentos pendientes en comunidad IE. Solucionado [Paco Gregori]
+* Sincronitzacio dades usuari al soup del directori [Pilar Marinas]
 
 2.39 (2016-09-06)
 -----------------
