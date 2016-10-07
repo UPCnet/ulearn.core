@@ -18,6 +18,8 @@ from ulearn.core.content.community import ICommunity
 
 import random
 import unicodedata
+import requests
+import json
 
 
 def searchUsersFunction(context, request, search_string):  # noqa
@@ -173,12 +175,21 @@ def searchUsersFunction(context, request, search_string):  # noqa
                         user_dict.update({user_property: user.attrs.get(user_property, '')})
 
                 user_dict.update(dict(id=user.attrs['username']))
-                userImage = '<img src="' + settings.max_server + '/people/' + user.attrs['username'] + '/avatar/large" alt="' +  user.attrs['username'] + '" title="' +  user.attrs['username'] + '" height="105" width="105" >'
+                req = requests.get(settings.max_server + '/people/' + user.attrs['username'] + '/avatar/large')
+
+                try:
+                    if req.status_code == 200:
+                        userImage = '<img src="' + settings.max_server + '/people/' + user.attrs['username'] + '/avatar/large" alt="' +  user.attrs['username'] + '" title="' +  user.attrs['username'] + '" height="105" width="105" >'
+                    else:
+                        userImage = '<img src="' + portal.absolute_url() + '/@@avatar/' + user.attrs['username'] + '" alt="' +  user.attrs['username'] + '" title="' +  user.attrs['username'] + '" height="105" width="105" >'
+                except:
+                    userImage = '<img src="' + portal.absolute_url() + '/defaultUser.png" alt="' +  user.attrs['username'] + '" title="' +  user.attrs['username'] + '" height="105" width="105" >'
+                #userImage = '<img src="' + settings.max_server + '/people/' + user.attrs['username'] + '/avatar/large" alt="' +  user.attrs['username'] + '" title="' +  user.attrs['username'] + '" height="105" width="105" >'
                 # userImage = pm.getPersonalPortrait(user.attrs['username'])
                 # userImage.alt = user.attrs['username']
                 # userImage.title = user.attrs['username']
                 # userImage.height = 105
-                # userImage.width = 105
+                # userImage.width = 105/defaultUser.png
 
                 user_dict.update(dict(foto=str(userImage)))
                 user_dict.update(dict(url=portal.absolute_url() + '/profile/' + user.attrs['username']))
@@ -195,7 +206,16 @@ def searchUsersFunction(context, request, search_string):  # noqa
                         user_dict.update({user_property: user.get(user_property, '')})
 
                 user_dict.update(dict(id=user.get('id', '')))
-                userImage = '<img src="' + settings.max_server + '/people/' + user.attrs['username'] + '/avatar/large" alt="' +  user.attrs['username'] + '" title="' +  user.attrs['username'] + '" height="105" width="105" >'
+                req = requests.get(settings.max_server + '/people/' + user.attrs['username'] + '/avatar/large')
+
+                try:
+                    if req.status_code == 200:
+                        userImage = '<img src="' + settings.max_server + '/people/' + user.attrs['username'] + '/avatar/large" alt="' +  user.attrs['username'] + '" title="' +  user.attrs['username'] + '" height="105" width="105" >'
+                    else:
+                        userImage = '<img src="' + portal.absolute_url() + '/@@avatar/' + user.attrs['username'] + '" alt="' +  user.attrs['username'] + '" title="' +  user.attrs['username'] + '" height="105" width="105" >'
+                except:
+                    userImage = '<img src="' + portal.absolute_url() + '/defaultUser.png" alt="' +  user.attrs['username'] + '" title="' +  user.attrs['username'] + '" height="105" width="105" >'
+                #userImage = '<img src="' + settings.max_server + '/people/' + user.attrs['username'] + '/avatar/large" alt="' +  user.attrs['username'] + '" title="' +  user.attrs['username'] + '" height="105" width="105" >'
                 # userImage = pm.getPersonalPortrait(user.attrs['username'])
                 # userImage.alt = user.attrs['username']
                 # userImage.title = user.attrs['username']
