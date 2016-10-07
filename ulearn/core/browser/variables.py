@@ -64,7 +64,7 @@ class communityVariables(grok.View):
             oauth_token=oauth_token,
             max_server=settings.max_server,
             max_server_alias=settings.max_server_alias,
-            avatar_url='%s/people/{0}/avatar/large' % (settings.max_server),
+            avatar_url='%s/people/{0}/avatar/mini' % (settings.max_server),
             profile_url='%s/profile/{0}' % (portal_url),
             contexts=self.context.absolute_url(),
             activitySource='activities',
