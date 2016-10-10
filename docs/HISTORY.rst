@@ -1,11 +1,11 @@
 Changelog
 =========
 
-2.41 (unreleased)
+2.41 (2016-10-10)
 -----------------
 
-- Nothing changed yet.
-
+* A la cerca personas si peta imatge max mostra imatge per defecte [Pilar Marinas]
+* Avatar mini in widget community [Pilar Marinas]
 
 2.40 (2016-10-05)
 -----------------
