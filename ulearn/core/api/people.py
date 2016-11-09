@@ -156,11 +156,11 @@ class Person(REST):
         self.deleteMembers([self.params['username']])
         remove_user_from_catalog(self.params['username'].lower())
         pc = api.portal.get_tool(name='portal_catalog')
-        comunnities = pc.searchResults(portal_type="ulearn.community")
         username = self.params['username']
+        comunnities = pc.unrestrictedSearchResults(portal_type="ulearn.community")
         for num, community in enumerate(comunnities):
-            self.context.plone_log('Processant {} de {}'.format(num, len(comunnities)))
-            obj = community.getObject()
+            obj = community._unrestrictedGetObject()
+            self.context.plone_log('Processant {} de {}. Comunitat {}'.format(num, len(comunnities), obj))
             gwuuid = IGWUUID(obj).get()
             portal = api.portal.get()
             soup = get_soup('communities_acl', portal)
@@ -173,6 +173,8 @@ class Person(REST):
                 if exist:
                     records[0].attrs['acl']['users'].remove(exist[0])
                     soup.reindex(records=[records[0]])
+                    adapter = obj.adapted()
+                    adapter.set_plone_permissions(adapter.get_acl())
 
         maxclient, settings = getUtility(IMAXClient)()
         maxclient.setActor(settings.max_restricted_username)
