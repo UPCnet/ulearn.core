@@ -28,6 +28,7 @@ from ulearn.core.content.community import ICommunityACL
 import logging
 import requests
 
+from Products.CMFCore.interfaces import ISiteRoot
 
 logger = logging.getLogger(__name__)
 
@@ -264,12 +265,17 @@ class Person(REST):
             member = mtool.getMemberById(member_id)
             if member is None:
                 member_ids.remove(member_id)
+            else:
+                if not member.canDelete():
+                    raise Forbidden
+                if 'Manager' in member.getRoles() and not self.is_zope_manager:
+                    raise Forbidden
         try:
             acl_users.userFolderDelUsers(member_ids)
         except (AttributeError, NotImplementedError):
-            raise NotImplementedError(
-                'The underlying User Folder '
-                'doesn\'t support deleting members.')
+            raise NotImplementedError('The underlying User Folder '
+                                      'doesn\'t support deleting members.')
+
 
         # Delete member data in portal_memberdata.
         mdtool = api.portal.get_tool(name='portal_memberdata')
@@ -277,9 +283,18 @@ class Person(REST):
             for member_id in member_ids:
                 mdtool.deleteMemberData(member_id)
 
+        portal = getUtility(ISiteRoot)
+        reindex = 1
+        recursive = 1
         # Delete members' local roles.
-        # mtool.deleteLocalRoles(getUtility(ISiteRoot), member_ids,
-        #                       reindex=1, recursive=1)
+        execute_under_special_role(portal,
+                                   "Manager",
+                                   mtool.deleteLocalRoles,
+                                   portal,
+                                   member_ids,
+                                   reindex,
+                                   recursive)
+
 
     # @api_resource(required=['username', 'email'])
     # def PUT(self):
