@@ -158,29 +158,40 @@ class Person(REST):
         remove_user_from_catalog(self.params['username'].lower())
         pc = api.portal.get_tool(name='portal_catalog')
         username = self.params['username']
-        comunnities = pc.unrestrictedSearchResults(portal_type="ulearn.community")
-        for num, community in enumerate(comunnities):
-            obj = community._unrestrictedGetObject()
-            self.context.plone_log('Processant {} de {}. Comunitat {}'.format(num, len(comunnities), obj))
-            gwuuid = IGWUUID(obj).get()
-            portal = api.portal.get()
-            soup = get_soup('communities_acl', portal)
-
-            records = [r for r in soup.query(Eq('gwuuid', gwuuid))]
-
-            # Save ACL into the communities_acl soup
-            if records:
-                exist = [a for a in records[0].attrs['acl']['users'] if a['id'] == unicode(username)]
-                if exist:
-                    records[0].attrs['acl']['users'].remove(exist[0])
-                    soup.reindex(records=[records[0]])
-                    adapter = obj.adapted()
-                    adapter.set_plone_permissions(adapter.get_acl())
 
         maxclient, settings = getUtility(IMAXClient)()
         maxclient.setActor(settings.max_restricted_username)
         maxclient.setToken(settings.max_restricted_token)
+
+        portal_url = api.portal.get().absolute_url()
+        communities_subscription = maxclient.people[username].subscriptions.get()
+
+        if communities_subscription != []:
+
+            for num, community_subscription in enumerate(communities_subscription):
+                community = pc.unrestrictedSearchResults(portal_type="ulearn.community", community_hash=community_subscription['hash'])
+                try:
+                    obj = community[0]._unrestrictedGetObject()
+                    self.context.plone_log('Processant {} de {}. Comunitat {}'.format(num, len(communities_subscription), obj))
+                    gwuuid = IGWUUID(obj).get()
+                    portal = api.portal.get()
+                    soup = get_soup('communities_acl', portal)
+
+                    records = [r for r in soup.query(Eq('gwuuid', gwuuid))]
+
+                    # Save ACL into the communities_acl soup
+                    if records:
+                        exist = [a for a in records[0].attrs['acl']['users'] if a['id'] == unicode(username)]
+                        if exist:
+                            records[0].attrs['acl']['users'].remove(exist[0])
+                            soup.reindex(records=[records[0]])
+                            adapter = obj.adapted()
+                            adapter.set_plone_permissions(adapter.get_acl())
+                except:
+                    continue
+
         maxclient.people[username].delete()
+        logger.info('Delete user: {}'.format(username))
         return ApiResponse({}, code=204)
 
     def create_user(self, username, email, password, **properties):
