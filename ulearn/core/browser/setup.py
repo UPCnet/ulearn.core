@@ -129,7 +129,7 @@ class changeURLCommunities(grok.View):
                     self.context.plone_log('Comunitat amb url {} actualitzada per {}'.format(community_url, community_url_nova))
 
 class deleteUsers(grok.View):
-    """ Aquesta vista canvia la url de les comunitats """
+    """ Delete users from the plone & max & communities """
     grok.name('deleteusers')
     grok.context(IPloneSiteRoot)
 
