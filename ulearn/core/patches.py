@@ -11,6 +11,10 @@ from zExceptions import Forbidden
 from Products.CMFCore.interfaces import ISiteRoot
 from Products.CMFCore.utils import getToolByName
 from mrs.max.utilities import IMAXClient
+from genweb.core.utils import remove_user_from_catalog
+from repoze.catalog.query import Eq
+from souper.soup import get_soup
+from genweb.core.gwuuid import IGWUUID
 
 
 # We are patching the enumerateUsers method of the mutable_properties plugin to
@@ -90,6 +94,37 @@ def deleteMembers(self, member_ids):
     self.maxclient, self.settings = getUtility(IMAXClient)()
     self.maxclient.setActor(self.settings.max_restricted_username)
     self.maxclient.setToken(self.settings.max_restricted_token)
+
+    for member_id in member_ids:
+        remove_user_from_catalog(member_id.lower())
+        pc = api.portal.get_tool(name='portal_catalog')
+
+        communities_subscription = self.maxclient.people[member_id].subscriptions.get()
+
+        if communities_subscription != []:
+
+            for num, community_subscription in enumerate(communities_subscription):
+                community = pc.unrestrictedSearchResults(portal_type="ulearn.community", community_hash=community_subscription['hash'])
+                try:
+                    obj = community[0]._unrestrictedGetObject()
+                    self.context.plone_log('Processant {} de {}. Comunitat {}'.format(num, len(communities_subscription), obj))
+                    gwuuid = IGWUUID(obj).get()
+                    portal = api.portal.get()
+                    soup = get_soup('communities_acl', portal)
+
+                    records = [r for r in soup.query(Eq('gwuuid', gwuuid))]
+
+                    # Save ACL into the communities_acl soup
+                    if records:
+                        exist = [a for a in records[0].attrs['acl']['users'] if a['id'] == unicode(member_id)]
+                        if exist:
+                            records[0].attrs['acl']['users'].remove(exist[0])
+                            soup.reindex(records=[records[0]])
+                            adapter = obj.adapted()
+                            adapter.set_plone_permissions(adapter.get_acl())
+                except:
+                    continue
+
     # Delete member data in portal_memberdata.
     mdtool = getToolByName(context, 'portal_memberdata', None)
     if mdtool is not None:
