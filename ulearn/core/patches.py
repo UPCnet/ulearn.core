@@ -16,6 +16,9 @@ from repoze.catalog.query import Eq
 from souper.soup import get_soup
 from genweb.core.gwuuid import IGWUUID
 
+import logging
+logger = logging.getLogger('event.LDAPMultiPlugin')
+
 
 # We are patching the enumerateUsers method of the mutable_properties plugin to
 # make it return all the available user properties extension
@@ -139,3 +142,21 @@ def deleteMembers(self, member_ids):
     # Delete members' local roles.
     mtool.deleteLocalRoles(getUtility(ISiteRoot), member_ids,
                            reindex=1, recursive=1)
+
+
+def authenticateCredentials(self, credentials):
+    """ Fulfill AuthenticationPlugin requirements """
+    acl = self._getLDAPUserFolder()
+    login = credentials.get('login')
+    password = credentials.get('password')
+
+    if not acl or not login or not password:
+        return None, None
+
+    user = acl.getUser(login, pwd=password)
+
+    if user is None:
+        return None
+
+    logger.error('XXX Successful login of {}'.format(login))
+    return (user.getId(), user.getUserName())
