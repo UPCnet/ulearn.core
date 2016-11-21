@@ -26,5 +26,6 @@
   <element value="tabular_view"/>
   <element value="full_view"/>
   <element value="filtered_contents_search_view"/>
+  <element value="contents_pretty_view"/>
  </property>
 </object>

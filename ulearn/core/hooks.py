@@ -21,6 +21,10 @@ from DateTime.DateTime import DateTime
 from zope.component import providedBy
 from plone.app.workflow.interfaces import ILocalrolesModifiedEvent
 
+from plone.app.controlpanel.interfaces import IConfigurationChangedEvent
+from Products.PluggableAuthService.interfaces.events import IUserLoggedInEvent
+from zope.globalrequest import getRequest
+
 import logging
 
 logger = logging.getLogger(__name__)
@@ -235,3 +239,30 @@ def UpdateUserCommunityAccess(content, event):
     else:
         exist[0].attrs['data_access'] = DateTime()
     soup_access.reindex()
+
+
+@grok.subscribe(IConfigurationChangedEvent)
+def updateCustomLangCookie(event):
+    """ This subscriber will trigger when a user change his/her profile data. It
+        sets a cookie for the 'language' user profile setting. After this, due
+        to the custom Language Negotiator set for the Blanquerna layer, the site
+        language is forced to the one in the cookie.
+    """
+
+    if 'language' in event.data:
+        if event.data['language']:
+            event.context.request.response.setCookie('uLearn_I18N_Custom', event.data['language'], path='/')
+            event.context.request.response.redirect(event.context.context.absolute_url()+'/@@personal-information')
+
+
+@grok.subscribe(IUserLoggedInEvent)
+def updateCustomLangCookieLogginIn(event):
+    """ This subscriber will trigger when a user change his/her profile data. It
+       sets a cookie for the 'language' user profile setting. After this, due
+        to the custom Language Negotiator set for the Blanquerna layer, the site
+        language is forced to the one in the cookie.
+    """
+    request = getRequest()
+    lang = event.object.getProperty('language', None)
+    if lang and request is not None:
+        request.response.setCookie('uLearn_I18N_Custom', lang, path='/')

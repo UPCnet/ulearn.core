@@ -8,6 +8,7 @@ from zope.component.hooks import getSite
 from zope.component import getMultiAdapter
 from zope.component import queryUtility
 
+from plone import api
 from plone.directives import form
 from plone.registry.interfaces import IRegistry
 
@@ -19,6 +20,10 @@ from ulearn.core import _
 from ulearn.core.controlpanel import IUlearnControlPanelSettings
 from ulearn.theme.browser.interfaces import IUlearnTheme
 from datetime import datetime
+
+from souper.soup import get_soup
+from souper.soup import Record
+from repoze.catalog.query import Eq
 
 import json
 import requests
@@ -198,3 +203,62 @@ class AjaxUserSearch(grok.View):
             return json.dumps(results)
         else:
             return json.dumps({'error': 'No query found'})
+
+
+class addUserSearch(grok.View):
+    grok.context(Interface)
+    grok.name('add_user_search')
+    grok.require('genweb.authenticated')
+    grok.layer(IUlearnTheme)
+
+    def render(self):
+        portal = getSite()
+        current_user = api.user.get_current()
+        userid = current_user.id
+        search_items_string = self.request.form['items']
+        search_items = search_items_string.split(',')
+        soup_searches = get_soup('user_news_searches', portal)
+        exist = [r for r in soup_searches.query(Eq('id', userid))]
+        if not exist:
+            record = Record()
+            record.attrs['id'] = userid
+            record.attrs['searches'] = [search_items]
+            soup_searches.add(record)
+            soup_searches.reindex()
+        else:
+            in_list = False
+            for search in exist[0].attrs['searches']:
+                for i, item in enumerate(search_items):
+                    if item not in search:
+                        break
+                    if i == len(search_items) - 1:
+                        if len(search_items) < len(exist[0].attrs['searches']):
+                            break
+                        else:
+                            in_list = True
+
+            if not in_list:
+                exist[0].attrs['searches'].append(search_items)
+                soup_searches.reindex(records=exist[0])
+
+
+class removeUserSearch(grok.View):
+    grok.context(Interface)
+    grok.name('remove_user_search')
+    grok.require('genweb.authenticated')
+    grok.layer(IUlearnTheme)
+
+    def render(self):
+        portal = getSite()
+        current_user = api.user.get_current()
+        userid = current_user.id
+        search_items = self.request.form['items']
+        search_items = search_items.split(',')
+        soup_searches = get_soup('user_news_searches', portal)
+        exist = [r for r in soup_searches.query(Eq('id', userid))]
+        if exist:
+            # for item in search_items:
+            # subscribed = [True for utag in exist[0].attrs['tags'] if utag == tag]
+            # if subscribed:
+            #     exist[0].attrs['searches'].remove(tag)
+            del soup_searches[exist[0]]

@@ -86,10 +86,10 @@ class viewletBase(grok.Viewlet):
         return lt.getPreferredLanguage()
 
 
-class importantNews(viewletBase):
-    grok.name('genweb.important')
+class newsToolBar(viewletBase):
+    grok.name('ulearn.newstoolbar')
     grok.context(INewsItem)
-    grok.template('important')
+    grok.template('newstoolbar')
     grok.viewletmanager(IAboveContentTitle)
     grok.require('cmf.ModifyPortalContent')
     grok.layer(IUlearnTheme)
@@ -110,15 +110,6 @@ class importantNews(viewletBase):
         is_important = IImportant(context).is_important
         return is_important
 
-
-class FlashNews(viewletBase):
-    grok.name('genweb.flash')
-    grok.context(INewsItem)
-    grok.template('flash')
-    grok.viewletmanager(IAboveContentTitle)
-    grok.require('cmf.ModifyPortalContent')
-    grok.layer(IUlearnTheme)
-
     def permisos_flash(self):
         # TODO: Comprovar que l'usuari tingui permisos per a marcar com a important
         return not IFlash(self.context).is_flash and checkPermission("plone.app.controlpanel.Overview", self.portal())
@@ -127,22 +118,10 @@ class FlashNews(viewletBase):
         # TODO: Comprovar que l'usuari tingui permisos per a marcar com a notimportant
         return IFlash(self.context).is_flash and checkPermission("plone.app.controlpanel.Overview", self.portal())
 
-    def canManageSite(self):
-        return checkPermission("plone.app.controlpanel.Overview", self.portal())
-
     def isNewFlash(self):
         context = aq_inner(self.context)
         is_flash = IFlash(context).is_flash
         return is_flash
-
-
-class OutOfListNews(viewletBase):
-    grok.name('genweb.outoflist')
-    grok.context(INewsItem)
-    grok.template('outoflist')
-    grok.viewletmanager(IAboveContentTitle)
-    grok.require('cmf.ModifyPortalContent')
-    grok.layer(IUlearnTheme)
 
     def permisos_outoflist(self):
         # TODO: Comprovar que l'usuari tingui permisos per a marcar com a important
@@ -151,9 +130,6 @@ class OutOfListNews(viewletBase):
     def permisos_notoutoflist(self):
         # TODO: Comprovar que l'usuari tingui permisos per a marcar com a notimportant
         return IOutOfList(self.context).is_outoflist and checkPermission("plone.app.controlpanel.Overview", self.portal())
-
-    def canManageSite(self):
-        return checkPermission("plone.app.controlpanel.Overview", self.portal())
 
     def isNewOutOfList(self):
         context = aq_inner(self.context)

@@ -4,6 +4,7 @@ import copy
 from plone import api
 from zope.component import getUtility
 from zope.component import getUtilitiesFor
+from zope.interface import implements
 from souper.interfaces import ICatalogFactory
 
 from Acquisition import aq_inner
@@ -11,6 +12,7 @@ from zExceptions import Forbidden
 from Products.CMFCore.interfaces import ISiteRoot
 from Products.CMFCore.utils import getToolByName
 from mrs.max.utilities import IMAXClient
+from Products.PloneLanguageTool.interfaces import INegotiateLanguage
 
 
 # We are patching the enumerateUsers method of the mutable_properties plugin to
@@ -29,8 +31,8 @@ def enumerateUsers(self, id=None, login=None, exact_match=False, **kw):
         criteria = copy.copy(kw)
 
         users = [(user, data) for (user, data) in self._storage.items()
-                if self.testMemberData(data, criteria, exact_match)
-                and not data.get('isGroup', False)]
+                 if self.testMemberData(data, criteria, exact_match)
+                 and not data.get('isGroup', False)]
 
         has_extended_properties = False
         extender_name = api.portal.get_registry_record('genweb.controlpanel.core.IGenwebCoreControlPanelSettings.user_properties_extender')
@@ -104,3 +106,70 @@ def deleteMembers(self, member_ids):
     # Delete members' local roles.
     mtool.deleteLocalRoles(getUtility(ISiteRoot), member_ids,
                            reindex=1, recursive=1)
+
+
+class NegotiateLanguage(object):
+    """Perform default language negotiation"""
+    implements(INegotiateLanguage)
+
+    def __init__(self, site, request):
+        """Setup the current language stuff."""
+        tool = getToolByName(site, 'portal_languages')
+        langs = []
+        useContent = tool.use_content_negotiation
+        useCcTLD = tool.use_cctld_negotiation
+        useSubdomain = tool.use_subdomain_negotiation
+        usePath = tool.use_path_negotiation
+        useCookie = tool.use_cookie_negotiation
+        setCookieEverywhere = tool.set_cookie_everywhere
+        authOnly = tool.authenticated_users_only
+        useRequest = tool.use_request_negotiation
+        useDefault = 1  # This should never be disabled
+        langsCookie = None
+
+        if usePath:
+            # This one is set if there is an allowed language in the current path
+            langs.append(tool.getPathLanguage())
+
+        if useContent:
+            langs.append(tool.getContentLanguage())
+
+        if useCookie and not (authOnly and tool.isAnonymousUser()):
+            # If we are using the cookie stuff we provide the setter here
+            set_language = tool.REQUEST.get('set_language', None)
+            if set_language:
+                langsCookie = tool.setLanguageCookie(set_language)
+            else:
+                # Get from cookie
+                langsCookie = tool.getLanguageCookie()
+            langs.append(langsCookie)
+
+        if useSubdomain:
+            langs.extend(tool.getSubdomainLanguages())
+
+        if useCcTLD:
+            langs.extend(tool.getCcTLDLanguages())
+
+        # Get langs from request
+        if useRequest:
+            langs.extend(tool.getRequestLanguages())
+
+        # Get default
+        if useDefault:
+            langs.append(tool.getDefaultLanguage())
+
+        # Filter None languages
+        langs = [lang for lang in langs if lang is not None]
+
+        # Set cookie language to language
+        if setCookieEverywhere and useCookie and langs[0] != langsCookie:
+            tool.setLanguageCookie(langs[0], noredir=True)
+
+        self.default_language = langs[-1]
+        self.language = langs[0]
+        self.language_list = langs[1:-1]
+
+        # Patched to meet the feature requirements for the client
+        custom_lang_cookie = request.cookies.get('uLearn_I18N_Custom')
+        if custom_lang_cookie:
+            self.language = custom_lang_cookie

@@ -1,18 +1,23 @@
 <tal:block condition="viewlet/canManageSite">
-  <div i18n:domain="ulearn">
-      <div tal:condition="not:viewlet/isNewFlash">
-          <a class="btn btn-default"
-             tal:attributes="href string:${context/absolute_url}/toggle_flash"
-             i18n:translate="marca_flash">
-             Flash
-          </a>
-      </div>
-      <div tal:condition="viewlet/isNewFlash">
-          <a class="btn btn-success"
-             tal:attributes="href string:${context/absolute_url}/toggle_flash"
-             i18n:translate="desmarca_flash">
-             Flash
-          </a>
-      </div>
+  <div>Flash</div>
+  <div i18n:domain="ulearn" id="toggle-flash">
+    <div tal:condition="not:viewlet/isNewFlash">
+        <label class="switch">
+          <input type="checkbox">
+          <div class="sliderbutton round"
+               tal:attributes="data-dextobject context/absolute_url"
+               >
+          </div>
+        </label>
+    </div>
+    <div tal:condition="viewlet/isNewFlash">
+        <label class="switch">
+          <input type="checkbox" checked>
+          <div class="sliderbutton round"
+               tal:attributes="data-dextobject context/absolute_url"
+               >
+          </div>
+        </label>
+    </div>
    </div>
 </tal:block>

@@ -1,8 +1,6 @@
 <?xml version="1.0"?>
 <object>
   <hidden manager= "plone.abovecontenttitle" skinname="UlearnTheme">
-    <viewlet name="genweb.listtags"/>
-    <viewlet name="genweb.outoflist"/>
-    <viewlet name="genweb.flash"/>
+    <viewlet name="ulearn.newstoolbar"/>
   </hidden>
 </object>

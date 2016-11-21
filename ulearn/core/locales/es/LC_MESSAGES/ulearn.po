@@ -1621,3 +1621,21 @@ msgstr "Agregar la dirección web del video de youtube"
 #: ../ulearn.theme/ulearn/theme/portlets/templates/econnect.pt:8
 msgid "web_collaboration"
 msgstr "<i class=\"fa fa-arrow-circle-right\"></i> Crear nueva sesión."
+
+msgid "mynews"
+msgstr "Noticias"
+
+msgid "label-newstoolbar"
+msgstr "Gestión noticias:"
+
+msgid "label-toogle-list"
+msgstr "Lista"
+
+msgid "label-toogle-flash"
+msgstr "Flash"
+
+msgid "label-toogle-important"
+msgstr "Destacada"
+
+msgid "label_language"
+msgstr "Idioma"

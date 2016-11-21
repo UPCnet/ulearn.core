@@ -1637,3 +1637,21 @@ msgstr "Afegeix l'adreça web del video de youtube"
 #: ../ulearn.theme/ulearn/theme/portlets/templates/econnect.pt:8
 msgid "web_collaboration"
 msgstr "Crear una sessió"
+
+msgid "mynews"
+msgstr "Notícies"
+
+msgid "label-newstoolbar"
+msgstr "Gestió notícies:"
+
+msgid "label-toogle-list"
+msgstr "Llista"
+
+msgid "label-toogle-flash"
+msgstr "Flash"
+
+msgid "label-toogle-important"
+msgstr "Destacada"
+
+msgid "label_language"
+msgstr "Idioma"
