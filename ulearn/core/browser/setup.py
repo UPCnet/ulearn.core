@@ -15,6 +15,17 @@ from genweb.portlets.browser.manager import ISpanStorage
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from plone import api
 from zope.interface import alsoProvides
+from mrs.max.utilities import IMAXClient
+from ulearn.core.api.people import Person
+from genweb.core.utils import remove_user_from_catalog
+from repoze.catalog.query import Eq
+from souper.soup import get_soup
+from genweb.core.gwuuid import IGWUUID
+from ulearn.core.browser.security import execute_under_special_role
+
+import logging
+logger = logging.getLogger(__name__)
+
 
 
 class setupHomePage(grok.View):
@@ -116,3 +127,59 @@ class changeURLCommunities(grok.View):
 
                     community.maxclient.contexts[community_url].put(**properties_to_update)
                     self.context.plone_log('Comunitat amb url {} actualitzada per {}'.format(community_url, community_url_nova))
+
+class deleteUsers(grok.View):
+    """ Delete users from the plone & max & communities """
+    grok.name('deleteusers')
+    grok.context(IPloneSiteRoot)
+
+    render = ViewPageTemplateFile('views_templates/deleteusers.pt')
+
+    def update(self):
+        try:
+            from plone.protect.interfaces import IDisableCSRFProtection
+            alsoProvides(self.request, IDisableCSRFProtection)
+        except:
+            pass
+        if self.request.environ['REQUEST_METHOD'] == 'POST':
+
+            if self.request.form['users'] != '':
+                users = self.request.form['users'].split(',')
+
+                for user in users:
+                    user = user.strip()
+                    try:
+                        person = Person(self.context, [user])
+                        person.deleteMembers([user])
+                        remove_user_from_catalog(user.lower())
+                        pc = api.portal.get_tool(name='portal_catalog')
+                        username = user
+                        comunnities = pc.unrestrictedSearchResults(portal_type="ulearn.community")
+                        for num, community in enumerate(comunnities):
+                            obj = community._unrestrictedGetObject()
+                            self.context.plone_log('Processant {} de {}. Comunitat {}'.format(num, len(comunnities), obj))
+                            gwuuid = IGWUUID(obj).get()
+                            portal = api.portal.get()
+                            soup = get_soup('communities_acl', portal)
+
+                            records = [r for r in soup.query(Eq('gwuuid', gwuuid))]
+
+                            # Save ACL into the communities_acl soup
+                            if records:
+                                exist = [a for a in records[0].attrs['acl']['users'] if a['id'] == unicode(username)]
+                                if exist:
+                                    records[0].attrs['acl']['users'].remove(exist[0])
+                                    soup.reindex(records=[records[0]])
+                                    adapter = obj.adapted()
+                                    adapter.set_plone_permissions(adapter.get_acl())
+
+                        maxclient, settings = getUtility(IMAXClient)()
+                        maxclient.setActor(settings.max_restricted_username)
+                        maxclient.setToken(settings.max_restricted_token)
+                        maxclient.people[username].delete()
+                        logger.info('Delete user: {}'.format(user))
+                    except:
+                        logger.error('User not deleted: {}'.format(user))
+                        pass
+
+                logger.info('Finished deleted users: {}'.format(users))

@@ -28,6 +28,7 @@ from ulearn.core.content.community import ICommunityACL
 import logging
 import requests
 
+from Products.CMFCore.interfaces import ISiteRoot
 
 logger = logging.getLogger(__name__)
 
@@ -156,28 +157,41 @@ class Person(REST):
         self.deleteMembers([self.params['username']])
         remove_user_from_catalog(self.params['username'].lower())
         pc = api.portal.get_tool(name='portal_catalog')
-        comunnities = pc.searchResults(portal_type="ulearn.community")
         username = self.params['username']
-        for num, community in enumerate(comunnities):
-            self.context.plone_log('Processant {} de {}'.format(num, len(comunnities)))
-            obj = community.getObject()
-            gwuuid = IGWUUID(obj).get()
-            portal = api.portal.get()
-            soup = get_soup('communities_acl', portal)
-
-            records = [r for r in soup.query(Eq('gwuuid', gwuuid))]
-
-            # Save ACL into the communities_acl soup
-            if records:
-                exist = [a for a in records[0].attrs['acl']['users'] if a['id'] == unicode(username)]
-                if exist:
-                    records[0].attrs['acl']['users'].remove(exist[0])
-                    soup.reindex(records=[records[0]])
 
         maxclient, settings = getUtility(IMAXClient)()
         maxclient.setActor(settings.max_restricted_username)
         maxclient.setToken(settings.max_restricted_token)
+
+        portal_url = api.portal.get().absolute_url()
+        communities_subscription = maxclient.people[username].subscriptions.get()
+
+        if communities_subscription != []:
+
+            for num, community_subscription in enumerate(communities_subscription):
+                community = pc.unrestrictedSearchResults(portal_type="ulearn.community", community_hash=community_subscription['hash'])
+                try:
+                    obj = community[0]._unrestrictedGetObject()
+                    self.context.plone_log('Processant {} de {}. Comunitat {}'.format(num, len(communities_subscription), obj))
+                    gwuuid = IGWUUID(obj).get()
+                    portal = api.portal.get()
+                    soup = get_soup('communities_acl', portal)
+
+                    records = [r for r in soup.query(Eq('gwuuid', gwuuid))]
+
+                    # Save ACL into the communities_acl soup
+                    if records:
+                        exist = [a for a in records[0].attrs['acl']['users'] if a['id'] == unicode(username)]
+                        if exist:
+                            records[0].attrs['acl']['users'].remove(exist[0])
+                            soup.reindex(records=[records[0]])
+                            adapter = obj.adapted()
+                            adapter.set_plone_permissions(adapter.get_acl())
+                except:
+                    continue
+
         maxclient.people[username].delete()
+        logger.info('Delete user: {}'.format(username))
         return ApiResponse({}, code=204)
 
     def create_user(self, username, email, password, **properties):
@@ -262,12 +276,17 @@ class Person(REST):
             member = mtool.getMemberById(member_id)
             if member is None:
                 member_ids.remove(member_id)
+            else:
+                if not member.canDelete():
+                    raise Forbidden
+                if 'Manager' in member.getRoles() and not self.is_zope_manager:
+                    raise Forbidden
         try:
             acl_users.userFolderDelUsers(member_ids)
         except (AttributeError, NotImplementedError):
-            raise NotImplementedError(
-                'The underlying User Folder '
-                'doesn\'t support deleting members.')
+            raise NotImplementedError('The underlying User Folder '
+                                      'doesn\'t support deleting members.')
+
 
         # Delete member data in portal_memberdata.
         mdtool = api.portal.get_tool(name='portal_memberdata')
@@ -275,9 +294,18 @@ class Person(REST):
             for member_id in member_ids:
                 mdtool.deleteMemberData(member_id)
 
+        portal = getUtility(ISiteRoot)
+        reindex = 1
+        recursive = 1
         # Delete members' local roles.
-        # mtool.deleteLocalRoles(getUtility(ISiteRoot), member_ids,
-        #                       reindex=1, recursive=1)
+        execute_under_special_role(portal,
+                                   "Manager",
+                                   mtool.deleteLocalRoles,
+                                   portal,
+                                   member_ids,
+                                   reindex,
+                                   recursive)
+
 
     # @api_resource(required=['username', 'email'])
     # def PUT(self):
