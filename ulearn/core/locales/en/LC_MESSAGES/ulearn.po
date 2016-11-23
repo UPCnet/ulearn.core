@@ -1652,7 +1652,7 @@ msgid "label-toogle-flash"
 msgstr "Flash"
 
 msgid "label-toogle-important"
-msgstr "Important""
+msgstr "Important"
 
 msgid "label_language"
 msgstr "Language"
