@@ -1,11 +1,20 @@
 Changelog
 =========
 
-2.42 (unreleased)
+2.42 (2016-11-23)
 -----------------
 
-- Nothing changed yet.
-
+* add views to search news [Paco Gregori]
+* merge [Paco Gregori]
+* añadir gestion noticias + vista cotenidos + selector idioma [Paco Gregori]
+* Afegir log login usuaris [Pilar Marinas]
+* Al borrar usuario que lo borre de las comunidades [Pilar Marinas]
+* Literal delete users [Pilar Marinas]
+* Add clouseau delete users [Pilar Marinas]
+* Esborrar permisos sharing delete user [Pilar Marinas]
+* Delete user communities subscribe [Pilar Marinas]
+* resize profile image [Paco Gregori]
+* Quitar comprobacion avatar [Pilar Marinas]
 
 2.41 (2016-10-10)
 -----------------
