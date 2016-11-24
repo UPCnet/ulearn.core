@@ -1643,7 +1643,7 @@ msgid "mynews"
 msgstr "News"
 
 msgid "label-newstoolbar"
-msgstr "New management:"
+msgstr "News management:"
 
 msgid "label-toogle-list"
 msgstr "List"
@@ -1656,3 +1656,18 @@ msgstr "Important"
 
 msgid "label_language"
 msgstr "Language"
+
+msgid "Directory"
+msgstr "Directory"
+
+msgid "actualidad"
+msgstr "Important news"
+
+msgid "readmore"
+msgstr "Read more"
+
+msgid "seemore"
+msgstr "More news"
+
+msgid "find_label"
+msgstr "Search..."

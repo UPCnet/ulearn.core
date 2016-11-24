@@ -1639,3 +1639,18 @@ msgstr "Destacada"
 
 msgid "label_language"
 msgstr "Idioma"
+
+msgid "Directory"
+msgstr "Directorio"
+
+msgid "actualidad"
+msgstr "Noticias Destacadas"
+
+msgid "readmore"
+msgstr "Leer más"
+
+msgid "seemore"
+msgstr "Más noticias"
+
+msgid "find_label"
+msgstr "Búsqueda..."
