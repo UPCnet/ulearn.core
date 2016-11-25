@@ -223,23 +223,29 @@ class addUserSearch(grok.View):
             record = Record()
             record.attrs['id'] = userid
             record.attrs['searches'] = [search_items]
-            soup_searches.add(record)
-            soup_searches.reindex()
+            record_id = soup_searches.add(record)
+            acl_record = soup_searches.get(record_id)
         else:
+            acl_record = exist[0]
             in_list = False
-            for search in exist[0].attrs['searches']:
-                for i, item in enumerate(search_items):
-                    if item not in search:
-                        break
-                    if i == len(search_items) - 1:
-                        if len(search_items) < len(search):
+            total_searches = acl_record.attrs['searches']
+            if acl_record.attrs['searches']:
+                for search in acl_record.attrs['searches']:
+                    for i, item in enumerate(search_items):
+                        if item not in search:
                             break
-                        else:
-                            in_list = True
-
+                        if i == len(search_items) - 1:
+                            if len(search_items) < len(search):
+                                break
+                            else:
+                                in_list = True
             if not in_list:
-                exist[0].attrs['searches'].append(search_items)
-                soup_searches.reindex(records=exist[0])
+                total_searches.append(search_items)
+                acl_record.attrs['searches'] = total_searches
+            else:
+                acl_record.attrs['searches'] = total_searches
+
+        soup_searches.reindex(records=[acl_record])
 
 
 class removeUserSearch(grok.View):
@@ -258,6 +264,8 @@ class removeUserSearch(grok.View):
         soup_searches = get_soup('user_news_searches', portal)
         exist = [r for r in soup_searches.query(Eq('id', userid))]
         if exist:
+            acl_record = exist[0]
+            total_searches = acl_record.attrs['searches']
             for search in exist[0].attrs['searches']:
                 for i, item in enumerate(search_items):
                     if item not in search:
@@ -268,8 +276,9 @@ class removeUserSearch(grok.View):
                         else:
                             in_list = True
                     if in_list:
-                        exist[0].attrs['searches'].remove(search_items)
-                        soup_searches.reindex(records=exist[0])
+                        total_searches.remove(search_items)
+                        acl_record.attrs['searches'] = total_searches
+                        soup_searches.reindex(records=[acl_record])
 
 
 class isSearchInSearchers(grok.View):
@@ -287,16 +296,17 @@ class isSearchInSearchers(grok.View):
         soup_searches = get_soup('user_news_searches', portal)
         exist = [r for r in soup_searches.query(Eq('id', userid))]
         if exist:
-            for search in exist[0].attrs['searches']:
-                for i, item in enumerate(search_items):
-                    if item not in search:
-                        break
-                    if i == len(search_items) - 1:
-                        if len(search_items) < len(search):
+            if exist[0].attrs['searches']:
+                for search in exist[0].attrs['searches']:
+                    for i, item in enumerate(search_items):
+                        if item not in search:
                             break
-                        else:
-                            return True
-            return False
+                        if i == len(search_items) - 1:
+                            if len(search_items) < len(search):
+                                break
+                            else:
+                                return True
+                return False
         return False
 
 
@@ -316,6 +326,7 @@ class getUserSearchers(grok.View):
         res = []
         if exist:
             values = exist[0].attrs['searches']
-            for val in values:
-                res.append(' '.join(val))
+            if values:
+                for val in values:
+                    res.append(' '.join(val))
         return res
