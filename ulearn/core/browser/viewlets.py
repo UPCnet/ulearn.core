@@ -25,6 +25,10 @@ from souper.soup import get_soup
 from repoze.catalog.query import Eq
 import json
 
+from plone.portlets.interfaces import IPortletManager
+from plone.portlets.interfaces import IPortletAssignmentMapping
+from zope.component import getUtility, getMultiAdapter
+
 
 class CommunityNGDirective(grok.Viewlet):
     grok.context(Interface)
@@ -135,6 +139,46 @@ class newsToolBar(viewletBase):
         context = aq_inner(self.context)
         is_outoflist = IOutOfList(context).is_outoflist
         return is_outoflist
+
+    def getListOfPortlets(self):
+        site = getSite()
+        activate_portlets = []
+        portlets_slots = ["plone.leftcolumn", "plone.rightcolumn",
+                          "genweb.portlets.HomePortletManager1", "genweb.portlets.HomePortletManager2",
+                          "genweb.portlets.HomePortletManager3", "genweb.portlets.HomePortletManager4",
+                          "genweb.portlets.HomePortletManager5", "genweb.portlets.HomePortletManager6",
+                          "genweb.portlets.HomePortletManager7", "genweb.portlets.HomePortletManager8",
+                          "genweb.portlets.HomePortletManager9", "genweb.portlets.HomePortletManager10"]
+
+        for manager_name in portlets_slots:
+            if 'genweb' in manager_name:
+                manager = getUtility(IPortletManager, name=manager_name, context=site['front-page'])
+                mapping = getMultiAdapter((site['front-page'], manager), IPortletAssignmentMapping)
+                [activate_portlets.append(item[0]) for item in mapping.items()]
+            else:
+                manager = getUtility(IPortletManager, name=manager_name, context=site)
+                mapping = getMultiAdapter((site, manager), IPortletAssignmentMapping)
+                [activate_portlets.append(item[0]) for item in mapping.items()]
+        return activate_portlets
+
+    def isPortletListActivate(self):
+        activate_portlets = self.getListOfPortlets()
+        return True if 'my-subscribed-news' in activate_portlets else False
+
+    def isPortletFlashActivate(self):
+        activate_portlets = self.getListOfPortlets()
+        return True if 'flashesinformativos' in activate_portlets else False
+
+    def isPortletImportantActivate(self):
+        activate_portlets = self.getListOfPortlets()
+        return True if 'news-important' in activate_portlets else False
+
+    def isManagementNewsActivate(self):
+        activate_portlets = self.getListOfPortlets()
+        if 'my-subscribed-news' in activate_portlets or 'flashesinformativos' in activate_portlets or 'news-important' in activate_portlets:
+            return True
+        else:
+            return False
 
 
 class ListTagsNews(viewletBase):

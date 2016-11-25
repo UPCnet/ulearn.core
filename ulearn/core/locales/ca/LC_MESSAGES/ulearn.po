@@ -1670,3 +1670,6 @@ msgstr "Més Notícies"
 
 msgid "find_label"
 msgstr "Cerca..."
+
+msgid "flashesinformativos"
+msgstr "Última hora"

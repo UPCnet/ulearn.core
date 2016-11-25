@@ -1671,3 +1671,6 @@ msgstr "More news"
 
 msgid "find_label"
 msgstr "Search..."
+
+msgid "flashesinformativos"
+msgstr "Last hour"
