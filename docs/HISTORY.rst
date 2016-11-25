@@ -1,11 +1,13 @@
 Changelog
 =========
 
-2.43 (unreleased)
+2.43 (2016-11-25)
 -----------------
 
-- Nothing changed yet.
-
+* newstoolbar changes [Paco Gregori]
+* solucionar problema soup busquedas noticias [Paco Gregori]
+* Merge branch 'develop' of github.com:UPCnet/ulearn.core into develop [Paco Gregori]
+* translates [Paco Gregori]
 
 2.42 (2016-11-23)
 -----------------
