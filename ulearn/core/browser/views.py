@@ -7,6 +7,7 @@ from zope.interface import Interface
 from zope.component.hooks import getSite
 from zope.component import getMultiAdapter
 from zope.component import queryUtility
+from zope.component import getUtility
 
 from plone import api
 from plone.directives import form
@@ -24,6 +25,15 @@ from datetime import datetime
 from souper.soup import get_soup
 from souper.soup import Record
 from repoze.catalog.query import Eq
+from cStringIO import StringIO
+from PIL import ImageOps
+from mrs.max.utilities import IMAXClient
+import os
+import PIL
+
+import logging
+
+logger = logging.getLogger(__name__)
 
 import json
 import requests
@@ -330,3 +340,53 @@ class getUserSearchers(grok.View):
                 for val in values:
                     res.append(' '.join(val))
         return res
+
+
+class MigrateAvatars(grok.View):
+    """ Migrate avatar images from disk to web (migration on sunday 27/11/2017) """
+    grok.name('migrate_avatars')
+    grok.context(Interface)
+    grok.require('genweb.member')
+    grok.layer(IUlearnTheme)
+
+    def render(self):
+        path = '/var/plone/import-images/'
+        for filename in os.listdir(path):
+            portrait = open(path + filename, 'rb')
+            scaled, mimetype = self.convertSquareImage(portrait)
+            scaled.seek(0)
+            safe_id = filename
+
+            # Upload to MAX server using restricted user credentials
+            maxclient, settings = getUtility(IMAXClient)()
+            maxclient.setActor(settings.max_restricted_username)
+            maxclient.setToken(settings.max_restricted_token)
+            migratedMessage = ''
+            try:
+                maxclient.people[safe_id].avatar.post(upload_file=scaled)
+                logger.info('OK! Avatar image changed for user: ' + filename)
+            except Exception as exc:
+                logger.error(exc.message)
+                logger.info('ERROR! Error processing Avatar image for user: ' + filename)
+
+        migrating = maxclient.url
+        migratedMessage = str(migrating) + 'END!'
+        return migratedMessage
+
+    def convertSquareImage(self, image_file):
+        CONVERT_SIZE = (250, 250)
+        image = PIL.Image.open(image_file)
+        format = image.format
+        mimetype = 'image/%s' % format.lower()
+
+        # Old way
+        # if image.size[0] > 250 or image.size[1] > 250:
+        #     image.thumbnail((250, 9800), PIL.Image.ANTIALIAS)
+        #     image = image.transform((250, 250), PILImage.EXTENT, (0, 0, 250, 250), PILImage.BICUBIC)
+
+        result = ImageOps.fit(image, CONVERT_SIZE, method=PIL.Image.ANTIALIAS, centering=(0.5, 0.5))
+        new_file = StringIO()
+        result.save(new_file, format, quality=88)
+        new_file.seek(0)
+
+        return new_file, mimetype

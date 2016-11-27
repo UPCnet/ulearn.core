@@ -4,9 +4,7 @@ from zope.component import queryUtility
 from plone.registry.interfaces import IRegistry
 from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.interfaces.siteroot import IPloneSiteRoot
-
 from ulearn.core.controlpanel import IUlearnControlPanelSettings
-
 from zope.component import getUtility
 from mrs.max.utilities import IMAXClient
 
