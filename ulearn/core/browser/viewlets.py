@@ -171,11 +171,11 @@ class newsToolBar(viewletBase):
 
     def isPortletImportantActivate(self):
         activate_portlets = self.getListOfPortlets()
-        return True if 'news-important' in activate_portlets else False
+        return True if 'importantnews' in activate_portlets else False
 
     def isManagementNewsActivate(self):
         activate_portlets = self.getListOfPortlets()
-        if 'my-subscribed-news' in activate_portlets or 'flashesinformativos' in activate_portlets or 'news-important' in activate_portlets:
+        if 'my-subscribed-news' in activate_portlets or 'flashesinformativos' in activate_portlets or 'importantnews' in activate_portlets:
             return True
         else:
             return False
