@@ -1,11 +1,11 @@
 Changelog
 =========
 
-2.44 (unreleased)
+2.44 (2016-11-30)
 -----------------
 
-- Nothing changed yet.
-
+* solved bug show important news check [Paco Gregori]
+* added migrating avatar images [roberto.diaz]
 
 2.43 (2016-11-25)
 -----------------
