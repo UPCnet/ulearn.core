@@ -79,12 +79,11 @@ class Sync(REST):
                 try:
                     ldap = prop
                     ldap._invalidateCache(plone_user)
+                    plone_user._getPAS().ZCacheable_invalidate(view_name='_findUser-' + username)
+                    ldap._getLDAPUserFolder(plone_user)._expireUser(plone_user)
                     break
                 except:
                     continue
-
-            plone_user._getPAS().ZCacheable_invalidate(view_name='_findUser-' + username)
-            ldap._getLDAPUserFolder(plone_user)._expireUser(plone_user)
 
             try:
                 user_memberdata = api.user.get(username=username)
