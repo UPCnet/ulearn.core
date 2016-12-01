@@ -74,11 +74,15 @@ class Sync(REST):
             user_memberdata = api.user.get(username=username)
             plone_user = user_memberdata.getUser()
 
-            ldap = plone_user.getOrderedPropertySheets()[0]
-
             # Delete user cache
+            for prop in plone_user.getOrderedPropertySheets():
+                try:
+                    ldap = prop
+                    ldap._invalidateCache(plone_user)
+                    break
+                except:
+                    continue
 
-            ldap._invalidateCache(plone_user)
             plone_user._getPAS().ZCacheable_invalidate(view_name='_findUser-' + username)
             ldap._getLDAPUserFolder(plone_user)._expireUser(plone_user)
 
