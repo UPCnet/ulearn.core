@@ -28,8 +28,17 @@
 
       <div class="row-fluid">
         <iframe id="player" type="text/html" widht="100%" height="100%"
-         tal:attributes="src string:https://www.youtube.com/embed/${view/getVideo}" frameborder="0"></iframe>
+                tal:attributes="src string:https://www.youtube.com/embed/${view/getVideo}"
+                frameborder="0"
+                allowfullscreen="allowfullscreen"
+                mozallowfullscreen="mozallowfullscreen"
+                msallowfullscreen="msallowfullscreen"
+                oallowfullscreen="oallowfullscreen"
+                webkitallowfullscreen="webkitallowfullscreen">
+        </iframe>
       </div>
+
+
 
   </metal:block>
 </metal:content-core>
