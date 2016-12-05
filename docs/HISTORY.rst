@@ -1,11 +1,12 @@
 Changelog
 =========
 
-2.45 (unreleased)
+2.45 (2016-12-05)
 -----------------
 
-- Nothing changed yet.
-
+* add directives to allow youtube fullscreen [Paco Gregori]
+* api people ldap property fix bug [Paco Gregori]
+* api people, resolver error invalidateCache [Paco Gregori]
 
 2.44 (2016-11-30)
 -----------------
