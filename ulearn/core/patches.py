@@ -122,12 +122,16 @@ def deleteMembers(self, member_ids):
 
                     # Save ACL into the communities_acl soup
                     if records:
-                        exist = [a for a in records[0].attrs['acl']['users'] if a['id'] == unicode(member_id)]
+                        acl_record = records[0]
+                        acl = acl_record.attrs['acl']
+                        exist = [a for a in acl['users'] if a['id'] == unicode(member_id)]
                         if exist:
-                            records[0].attrs['acl']['users'].remove(exist[0])
-                            soup.reindex(records=[records[0]])
+                            acl['users'].remove(exist[0])
+                            acl_record.attrs['acl'] = acl
+                            soup.reindex(records=[acl_record])
                             adapter = obj.adapted()
                             adapter.set_plone_permissions(adapter.get_acl())
+
                 except:
                     continue
 
