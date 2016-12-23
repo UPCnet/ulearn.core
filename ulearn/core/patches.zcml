@@ -12,4 +12,18 @@
         replacement=".patches.enumerateUsers"
         />
 
+    <monkey:patch
+        description="Remove user usergroup-userprefs"
+        class="plone.app.controlpanel.usergroups.UsersOverviewControlPanel"
+        original="deleteMembers"
+        replacement=".patches.deleteMembers"
+        />
+
+    <monkey:patch
+        description="Extended authenticateCredentials for save Successfull login users"
+        class="Products.LDAPMultiPlugins.LDAPPluginBase.LDAPPluginBase"
+        original="authenticateCredentials"
+        replacement=".patches.authenticateCredentials"
+        />
+
 </configure>

@@ -4,10 +4,11 @@ from infrae.rest.interfaces import RESTMethodPublishedEvent
 from infrae.rest.components import IRESTComponent
 from infrae.rest.interfaces import MethodNotAllowed
 from zeam.component import getComponent
-
+from ulearn.core.content.community import CommunityForbiddenAction
 from zExceptions import NotFound
 from zope.event import notify
 from zope.component import queryUtility
+from zope.interface import alsoProvides
 
 from plone.registry.interfaces import IRegistry
 
@@ -23,6 +24,13 @@ ALLOWED_REST_METHODS = ('GET', 'POST', 'HEAD', 'PUT', 'DELETE')
 import logging
 logger = logging.getLogger(__name__)
 
+try:
+    from plone.protect.interfaces import IDisableCSRFProtection
+except:
+    DISABLE_CSRF = True
+else:
+    DISABLE_CSRF = False
+
 
 class BadParameters(Exception):
     pass
@@ -34,6 +42,15 @@ class MissingParameters(Exception):
 
 class ObjectNotFound(Exception):
     pass
+
+
+class Forbidden(Exception):
+    pass
+
+
+class Redirect(Exception):
+    def __init__(self, location):
+        self.location = location
 
 
 class ApiResponse(object):
@@ -49,7 +66,7 @@ class ApiResponse(object):
 
 class api_resource(object):
     """
-        Decorator to validate ws paramenters and format output
+        Decorator to validate ws parameters and format output
     """
 
     def __init__(self, **settings):
@@ -58,13 +75,21 @@ class api_resource(object):
     def __call__(self, fun):
         settings = self.__dict__.copy()
         self.required = settings.pop('required', [])
+        self.required_roles = settings.pop('required_roles', [])
+        self.get_target = settings.pop('get_target', False)
 
         def wrapped(resource, *args):
             response_content = {}
             response_code = 200
-
+            if not DISABLE_CSRF:
+                alsoProvides(resource.request, IDisableCSRFProtection)
             try:
                 resource.extract_params(required=self.required)
+                if self.get_target:
+                    resource.lookup_community()
+                if self.required_roles:
+                    resource.check_roles(obj=resource.target, roles=self.required_roles)
+
                 response = fun(resource, *args)
                 response_content = response.data
                 response_code = response.code
@@ -92,6 +117,35 @@ class api_resource(object):
                     'error_type': 'Missing parameters',
                     'error': 'Those parameters are missing: {}'.format(', '.join([a for a in exc.args[0]]))
                 }
+
+            except Forbidden as exc:
+                response_code = 403
+                response_content = {
+                    'status_code': response_code,
+                    'error_type': 'Forbidden',
+                    'error': exc.args[0]
+                }
+
+            except CommunityForbiddenAction as exc:
+                response_code = 403
+                response_content = {
+                    'status_code': response_code,
+                    'error_type': 'Forbidden',
+                    'error': exc.args[0]
+                }
+
+            except Redirect as exc:
+                response_code = 302
+                response_content = {
+                    'status_code': response_code,
+                    'error_type': 'Redirect',
+                    'error': 'Redirecting, no such error',
+                    'redirecting_to': exc.location
+                }
+                try:
+                    resource.response.redirect(exc.location, trusted=True)
+                except:
+                    resource.response.redirect(exc.location)
 
             except Exception as exc:
                 traceback = sys.exc_info()[2]
@@ -182,6 +236,8 @@ class REST(REST_BASE):
         will be treated as the nestes class.
     """
 
+    target = None
+
     def browserDefault(self, request):
         """Render the component using a method called the same way
         that the HTTP method name.
@@ -203,6 +259,25 @@ class REST(REST_BASE):
 
         return maxclient
 
+    def lowerUsersId(self):
+        if self.params.get('users', None):
+            cont = 0
+            # request post transforms arrays of 1 element into strings (not arrays)
+            # so we check if we have an array or a string
+            if type(self.params['users']) is list:
+                for user in self.params['users']:
+                     try:
+                        if user.get('id', None):
+                            user['id'] = user['id'].lower()
+                        else:
+                            user['id'] = user.lower()
+                     except :
+                        self.params['users'][cont] = user.lower()
+                     cont = cont + 1
+            # transform the string in users into an array containing one string in lowercase
+            elif type(self.params['users']) is str:
+                 self.params['users'] = [self.params['users'].lower()]
+
     def extract_params(self, required=[]):
         """
             Extract parameters from request and stores them ass class attributes
@@ -220,6 +295,8 @@ class REST(REST_BASE):
         else:
             self.params.update(self.payload)
 
+        self.lowerUsersId()
+
         # Return False if param not found or empty
         for param_name in required_params:
             parameter_missing = param_name not in self.params
@@ -231,21 +308,36 @@ class REST(REST_BASE):
 
     def check_roles(self, obj=None, roles=[]):
         allowed = False
+        memberdata = api.user.get_current()
+        user_roles = memberdata.getRoles()
         if obj:
-            user_roles = api.user.get_roles(obj=obj)
-        else:
-            user_roles = api.user.get_roles()
+            local_roles = obj.__ac_local_roles__.get(memberdata.id, [])
+            user_roles = list(set(user_roles).union(set(local_roles)))
 
         for role in roles:
             if role in user_roles:
                 allowed = True
 
         if not allowed:
-            self.response.setStatus(401)
-            return self.json_response(dict(error='You are not allowed to modify this object',
-                                           status_code=401))
+            raise Forbidden('You are not allowed to modify this object')
 
         return allowed
+
+    def lookup_community(self):
+        pc = api.portal.get_tool(name='portal_catalog')
+        result = pc.searchResults(community_hash=self.params['community'])
+
+        if not result:
+            # Fallback search by gwuuid
+            result = pc.searchResults(gwuuid=self.params['community'])
+
+            if not result:
+                # Not found either by hash nor by gwuuid
+                error_message = 'Community with has {} not found.'.format(self.params['community'])
+                logger.error(error_message)
+                raise ObjectNotFound(error_message)
+
+        self.target = result[0].getObject()
 
     def check_permission(self, obj, permission):
         if not api.user.has_permission(permission, obj):

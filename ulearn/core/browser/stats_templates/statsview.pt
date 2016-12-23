@@ -140,7 +140,7 @@
   <metal:content-core define-macro="main">
 
    <div id="viewlet-above-content-title"></div>
-   <h1 class="documentFirstHeading" i18n:translate="stats">Estadísticas</h1>
+   <h1 class="documentFirstHeading" i18n:translate="stats">Stats</h1>
 
 
 <!-- _________________________________ FIRST MONTH ______________________________________________ -->
@@ -274,7 +274,7 @@
 
 
 <div class="formControls">
-    <button id="form-buttons-load" class="button-field context" i18n:translate="search">Busca</button>
+    <button id="form-buttons-load" class="button-field context" i18n:translate="search">Cerca</button>
     <button id="form-buttons-export" class="button-field context" i18n:translate="exporta">Exporta</button>
     <button class="btn" data-dismiss="modal" aria-hidden="true" i18n:translate="btnCancel">Cancela</button>
 </div>

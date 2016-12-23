@@ -11,7 +11,24 @@ from plone.app.users.browser.formlib import FileUpload
 from plone.app.users.userdataschema import IUserDataSchemaProvider
 from plone.app.users.userdataschema import checkEmailAddress
 
+from zope.interface import alsoProvides
+from zope.component import getUtility
+from mrs.max.utilities import IMAXClient
+from Products.CMFCore.utils import getToolByName
+from ulearn.core.adapters.portrait import convertSquareImage
+import urllib
+from OFS.Image import Image
+
 from ulearn.core import _
+
+from five import grok
+
+from repoze.catalog.catalog import Catalog
+from repoze.catalog.indexes.field import CatalogFieldIndex
+from repoze.catalog.indexes.keyword import CatalogKeywordIndex
+from souper.interfaces import ICatalogFactory
+from souper.soup import NodeAttributeIndexer
+from zope.interface import implementer
 
 
 class IUlearnUserSchema(Interface):
@@ -52,7 +69,8 @@ class IUlearnUserSchema(Interface):
                       'your office is located.'),
         required=False)
 
-    portrait = FileUpload(title=_(u'label_portrait', default=u'Portrait'),
+    portrait = FileUpload(
+        title=_(u'label_portrait', default=u'Portrait'),
         description=_(u'help_portrait',
                       default=u'To add or change the portrait: click the '
                       '"Browse" button; select a picture of yourself. '
@@ -86,6 +104,14 @@ class IUlearnUserSchema(Interface):
         required=False,
     )
 
+    language = schema.Choice(
+        title=_(u'label_language', default=u'Language'),
+        description=_(u'help_language',
+                      default=u"Enter your language"),
+        required=False,
+        vocabulary=u"plone.app.vocabularies.SupportedContentLanguages",
+    )
+
 
 class UlearnUserSchema(object):
     implements(IUserDataSchemaProvider)
@@ -97,6 +123,33 @@ class UlearnUserSchema(object):
 
 
 class ULearnUserDataPanelAdapter(EnhancedUserDataPanelAdapter):
+
+    def __init__(self, context):
+        """ Load MAX avatar in portrait.
+
+        """
+        super(EnhancedUserDataPanelAdapter, self).__init__(context)
+
+        try:
+            from plone.protect.interfaces import IDisableCSRFProtection
+            alsoProvides(self.request, IDisableCSRFProtection)
+        except:
+            pass
+
+        maxclient, settings = getUtility(IMAXClient)()
+        foto = maxclient.people[self.context.id].avatar
+        imageUrl = foto.uri
+
+        portrait = urllib.urlretrieve(imageUrl)
+
+        scaled, mimetype = convertSquareImage(portrait[0])
+        portrait = Image(id=self.context.id, file=scaled, title='')
+
+        membertool = getToolByName(self.context, 'portal_memberdata')
+        membertool._setPortrait(portrait, self.context.id)
+        import transaction
+        transaction.commit()
+
     def get_ubicacio(self):
         return self._getProperty('ubicacio')
 
@@ -110,3 +163,24 @@ class ULearnUserDataPanelAdapter(EnhancedUserDataPanelAdapter):
     def set_telefon(self, value):
         return self.context.setMemberProperties({'telefon': value})
     telefon = property(get_telefon, set_telefon)
+
+    def get_language(self):
+        return self._getProperty('language')
+
+    def set_language(self, value):
+        return self.context.setMemberProperties({'language': value})
+
+    language = property(get_language, set_language)
+
+
+@implementer(ICatalogFactory)
+class UserNewsSearchSoupCatalog(object):
+    def __call__(self, context):
+        catalog = Catalog()
+        idindexer = NodeAttributeIndexer('id')
+        catalog['id'] = CatalogFieldIndex(idindexer)
+        hashindex = NodeAttributeIndexer('searches')
+        catalog['searches'] = CatalogKeywordIndex(hashindex)
+
+        return catalog
+grok.global_utility(UserNewsSearchSoupCatalog, name='user_news_searches')

@@ -78,14 +78,12 @@ def searchUsersFunction(context, request, search_string):  # noqa
             normalized_query = unicodedata.normalize('NFKD', search_string).encode('ascii', errors='ignore')
             normalized_query = normalized_query.replace('.', ' ') + '*'
             plone_results = [r for r in soup.query(Eq('searchable_text', normalized_query))]
-
             if max_users:
                 merged_results = list(set([plone_user.attrs['username'] for plone_user in plone_results]) &
                                       set([max_user['username'] for max_user in max_users]))
                 users = []
                 for user in merged_results:
-                    users.append([r for r in soup.query(And(Eq('username', user), Eq('notlegit', False))) if r.attrs['username'] == user][0])
-
+                    users.append([r for r in soup.query(Eq('id', user))][0])
             else:
                 merged_results = []
                 users = []
@@ -98,7 +96,7 @@ def searchUsersFunction(context, request, search_string):  # noqa
 
                 if merged_results:
                     for user in merged_results:
-                        record = [r for r in soup.query(Eq('username', user))]
+                        record = [r for r in soup.query(Eq('id', user))]
                         if record:
                             users.append(record[0])
                         else:
@@ -114,7 +112,7 @@ def searchUsersFunction(context, request, search_string):  # noqa
 
             users = []
             for user in max_users:
-                record = [r for r in soup.query(Eq('username', user))]
+                record = [r for r in soup.query(Eq('id', user))]
                 if record:
                     users.append(record[0])
                 else:
@@ -175,7 +173,14 @@ def searchUsersFunction(context, request, search_string):  # noqa
                         user_dict.update({user_property: user.attrs.get(user_property, '')})
 
                 user_dict.update(dict(id=user.attrs['username']))
-                user_dict.update(dict(foto=str(pm.getPersonalPortrait(user.attrs['username']))))
+                userImage = '<img src="' + settings.max_server + '/people/' + user.attrs['username'] + '/avatar/large" alt="' +  user.attrs['username'] + '" title="' +  user.attrs['username'] + '" height="105" width="105" >'
+                # userImage = pm.getPersonalPortrait(user.attrs['username'])
+                # userImage.alt = user.attrs['username']
+                # userImage.title = user.attrs['username']
+                # userImage.height = 105
+                # userImage.width = 105
+
+                user_dict.update(dict(foto=str(userImage)))
                 user_dict.update(dict(url=portal.absolute_url() + '/profile/' + user.attrs['username']))
                 users_profile.append(user_dict)
 
@@ -190,8 +195,14 @@ def searchUsersFunction(context, request, search_string):  # noqa
                         user_dict.update({user_property: user.get(user_property, '')})
 
                 user_dict.update(dict(id=user.get('id', '')))
-#                user_dict.update(dict(fullname=user.get('title', '')))
-                user_dict.update(dict(foto=str(pm.getPersonalPortrait(user.get('id', '')))))
+                userImage = '<img src="' + settings.max_server + '/people/' + user.attrs['username'] + '/avatar/large" alt="' +  user.attrs['username'] + '" title="' +  user.attrs['username'] + '" height="105" width="105" >'
+                # userImage = pm.getPersonalPortrait(user.attrs['username'])
+                # userImage.alt = user.attrs['username']
+                # userImage.title = user.attrs['username']
+                # userImage.height = 105
+                # userImage.width = 105
+
+                user_dict.update(dict(foto=str(userImage)))
                 user_dict.update(dict(url=portal.absolute_url() + '/profile/' + user.get('id', '')))
                 users_profile.append(user_dict)
 

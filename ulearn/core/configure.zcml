@@ -86,6 +86,10 @@
       allowed_interface=".interfaces.IUlearnUtils"
       />
 
+    <adapter
+        factory=".patches.NegotiateLanguage"
+        for="* ulearn.theme.browser.interfaces.IUlearnTheme"
+        />
 
     <include file="patches.zcml" />
 

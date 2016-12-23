@@ -435,3 +435,9 @@ msgstr "Telèfon"
 
 msgid "ubicacio"
 msgstr "Ubicació"
+
+msgid "Add a new document"
+msgstr "Afegir un document"
+
+msgid "Add a new link"
+msgstr "Afegir un enllaç"

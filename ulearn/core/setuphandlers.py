@@ -3,16 +3,19 @@ from plone import api
 from zope.interface import alsoProvides
 from zope.component import queryUtility
 from zope.component import getMultiAdapter
+from zope.component import getUtility
 from zope.component.hooks import getSite
 from plone.registry.interfaces import IRegistry
 from plone.dexterity.utils import createContentInContainer
 from plone.portlets.interfaces import IPortletManager
 from plone.portlets.interfaces import IPortletAssignmentMapping
+from plone.portlets.utils import registerPortletType, unregisterPortletType
 
 from Products.CMFCore.utils import getToolByName
 
 from genweb.core.interfaces import IHomePage
 from ulearn.core.controlpanel import IUlearnControlPanelSettings
+from ulearn.theme.controlportlets import IPortletsSettings
 
 import logging
 import transaction
@@ -118,13 +121,64 @@ def setup_ulearn_icon_set():
     api.portal.set_registry_record('genweb.controlpanel.core.IGenwebCoreControlPanelSettings.custom_editor_icons', ulearn_custom_icons)
 
 
+def setup_ulearn_portlets_settings():
+    registry = queryUtility(IRegistry)
+    ulearn_settings = registry.forInterface(IPortletsSettings)
+    site = getSite()
+
+    activate_portlets = []
+    portlets_slots = ["plone.leftcolumn", "plone.rightcolumn",
+                      "genweb.portlets.HomePortletManager1", "genweb.portlets.HomePortletManager2",
+                      "genweb.portlets.HomePortletManager3", "genweb.portlets.HomePortletManager4",
+                      "genweb.portlets.HomePortletManager5", "genweb.portlets.HomePortletManager6",
+                      "genweb.portlets.HomePortletManager7", "genweb.portlets.HomePortletManager8",
+                      "genweb.portlets.HomePortletManager9", "genweb.portlets.HomePortletManager10"]
+
+    for manager_name in portlets_slots:
+        if 'genweb' in manager_name:
+            manager = getUtility(IPortletManager, name=manager_name, context=site['front-page'])
+            mapping = getMultiAdapter((site['front-page'], manager), IPortletAssignmentMapping)
+            [activate_portlets.append(item[0]) for item in mapping.items()]
+        else:
+            manager = getUtility(IPortletManager, name=manager_name, context=site)
+            mapping = getMultiAdapter((site, manager), IPortletAssignmentMapping)
+
+            [activate_portlets.append(item[0]) for item in mapping.items()]
+
+    portlets = [port for port in ulearn_settings.__registry__.records.items() if 'portlet' in port[0]]
+    if portlets:
+        for portlet, reg in portlets:
+            portlet = portlet.split('.')[-1]
+            idPortlet = portlet.replace('_', '.')
+            namePortlet = portlet.replace('_', ' ')
+
+            if portlet == 'genweb_portlets_news_events_listing':
+                idPortlet = 'genweb.portlets.news_events_listing'
+                namePortlet = 'genweb portlets news_events_listing'
+
+            if reg.value is True:
+                registerPortletType(site,
+                                    title=namePortlet,
+                                    description=namePortlet,
+                                    addview=idPortlet)
+
+            if idPortlet.split('.')[-1] in activate_portlets:
+                reg.value = True
+                registerPortletType(site,
+                                    title=namePortlet,
+                                    description=namePortlet,
+                                    addview=idPortlet)
+
+            if reg.value is False:
+                unregisterPortletType(site, idPortlet)
+
+
 def setupVarious(context):
 
     # Ordinarily, GenericSetup handlers check for the existence of XML files.
     # Here, we are not parsing an XML file, but we use this text file as a
     # flag to check that we actually meant for this import step to be run.
     # The file is found in profiles/default.
-
     if context.readDataFile('ulearn.core_various.txt') is None:
         return
 
@@ -134,6 +188,7 @@ def setupVarious(context):
     add_catalog_indexes(portal, logger)
     setup_safe_html_transform()
     setup_ulearn_icon_set()
+    setup_ulearn_portlets_settings()
 
     # Fix the DXCT site and add permission to the default page which the
     # portlets are defined to, failing to do so turns in the users can't see the

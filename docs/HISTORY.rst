@@ -1,11 +1,252 @@
 Changelog
 =========
 
-2.23 (unreleased)
+2.46 (unreleased)
 -----------------
 
 - Nothing changed yet.
 
+
+2.45 (2016-12-05)
+-----------------
+
+* add directives to allow youtube fullscreen [Paco Gregori]
+* api people ldap property fix bug [Paco Gregori]
+* api people, resolver error invalidateCache [Paco Gregori]
+
+2.44 (2016-11-30)
+-----------------
+
+* solved bug show important news check [Paco Gregori]
+* added migrating avatar images [roberto.diaz]
+
+2.43 (2016-11-25)
+-----------------
+
+* newstoolbar changes [Paco Gregori]
+* solucionar problema soup busquedas noticias [Paco Gregori]
+* Merge branch 'develop' of github.com:UPCnet/ulearn.core into develop [Paco Gregori]
+* translates [Paco Gregori]
+
+2.42 (2016-11-23)
+-----------------
+
+* add views to search news [Paco Gregori]
+* merge [Paco Gregori]
+* añadir gestion noticias + vista cotenidos + selector idioma [Paco Gregori]
+* Afegir log login usuaris [Pilar Marinas]
+* Al borrar usuario que lo borre de las comunidades [Pilar Marinas]
+* Literal delete users [Pilar Marinas]
+* Add clouseau delete users [Pilar Marinas]
+* Esborrar permisos sharing delete user [Pilar Marinas]
+* Delete user communities subscribe [Pilar Marinas]
+* resize profile image [Paco Gregori]
+* Quitar comprobacion avatar [Pilar Marinas]
+
+2.41 (2016-10-10)
+-----------------
+
+* A la cerca personas si peta imatge max mostra imatge per defecte [Pilar Marinas]
+* Avatar mini in widget community [Pilar Marinas]
+
+2.40 (2016-10-05)
+-----------------
+
+* View avatar MAX [Pilar Marinas]
+* no actualización documentos pendientes en comunidad IE. Solucionado [Paco Gregori]
+* Sincronitzacio dades usuari al soup del directori [Pilar Marinas]
+
+2.39 (2016-09-06)
+-----------------
+
+* api/__init__.py solved error /api/people/sync [Vicente Iranzo Maestre]
+*  [Vicente Iranzo Maestre]
+* /api/people/sync failed when request send only one user in users array. [Vicente Iranzo Maestre]
+* Now we check if object in params is a list or a string [Vicente Iranzo Maestre]
+* removed comments [roberto.diaz]
+
+2.38 (2016-07-26)
+-----------------
+
+* Solucionar error guardar editacl [Pilar Marinas]
+* Update setup.py [Roberto Diaz]
+*  [Roberto Diaz]
+* Adding ulearn.patches package [Roberto Diaz]
+
+2.37 (2016-07-22)
+-----------------
+
+* Traduccions [Pilar Marinas]
+
+2.36 (2016-07-22)
+-----------------
+
+* Solucionar error WS sync [Pilar Marinas]
+* solved error on webservice sync [Paco Gregori]
+* separargestion portlets de ulearn settings [Paco Gregori]
+* Translate stats [Pilar Marinas]
+* Translate user properties default [Pilar Marinas]
+* anadir comprobación al crear comunidad y marcar solo el check de notificar actividad y comentarios [Paco Gregori]
+* Corregir traducciones [Pilar Marinas]
+* tranlates [Paco Gregori]
+
+2.35 (2016-06-29)
+-----------------
+
+* Modify translate [Pilar Marinas]
+
+2.34 (2016-06-29)
+-----------------
+
+* Translate [Pilar Marinas]
+
+2.33 (2016-06-29)
+-----------------
+
+* translates ulearn.core [Paco Gregori]
+* removed i18n js [roberto.diaz]
+* updated translations [roberto.diaz]
+
+2.32 (2016-06-29)
+-----------------
+
+* esconder viewlets noticias [Paco Gregori]
+* esconder los nuevos viewlets de noticias, añadir que al reinstalar paquete registre los portlets de ulearn settings [Paco Gregori]
+* updated i18n [roberto.diaz]
+* generali bug solved: make users nonvisible in searches [roberto.diaz]
+* updated translations [roberto.diaz]
+* Translate seemore_communities [Pilar Marinas]
+* Solucionar error al guardar los permisos de la comunidad [Pilar Marinas]
+* add listtag template [Paco Gregori]
+* replace id_normalize to increase max length [Paco Gregori]
+* add tags portlets [Paco Gregori]
+* adding layer to view [Roberto Diaz]
+* remove flash_news adapter [Paco Gregori]
+* remove flash behavior [Paco Gregori]
+* add flash and outoflist widgets to news type [Paco Gregori]
+* Change url communities [Pilar Marinas]
+* add xml flashinformatius and newsimportant [Paco Gregori]
+* add portlets controlpanel, migrate portlets flashinformatius and newsimportant [Paco Gregori]
+* change image from 205px to 105px [roberto.diaz]
+* aded title & alt to images [roberto.diaz]
+* estadistiques afegides a la base [Alberto Duran]
+
+2.31 (2016-04-18)
+-----------------
+
+* add patch when remove user on userpref, remove on max too [Paco Gregori]
+* Solucionar test_people [Pilar Marinas]
+* Afegir mes contiguts a Folder [Pilar Marinas]
+* change test test_auto_subscribe_to_open [Paco Gregori]
+* ws change community type [Paco Gregori]
+* Migrate Types Documents Communities [Pilar Marinas]
+* Afegir nous tipus contingut folder [Pilar Marinas]
+* Afegir nous tipus contingut folder [Pilar Marinas]
+* solved bug when suscribe user with ws [Paco Gregori]
+* Migrate acl try update_hub_subscriptions [root@shayla]
+* Try trusted [root@shayla]
+
+2.30 (2016-04-04)
+-----------------
+
+* Fix trusted=True [Victor Fernandez de Alba]
+* Test adapter communities [Pilar Marinas]
+* Get roles [root@shayla]
+* Adapted community [root@shayla]
+* Migrate folders communities V2 [Pilar Marinas]
+* esconder el boton subir al nivel superior, en la carpeta documents de una comunidad [Paco Gregori]
+* add translations [Paco Gregori]
+
+2.29 (2016-03-17)
+-----------------
+
+* modify search users. Now search with id instead of username [Paco Gregori]
+* add exceptions on ws [Paco Gregori]
+* Traduccions profile generali [root@shayla]
+* modify delete community server [Paco Gregori]
+* add translations [Paco Gregori]
+* lower users id lower 2 [Paco Gregori]
+* lower users id on webservice [root muntanyeta]
+* modify ws responses [Paco Gregori]
+* modify unsubscribe WS and viewlet CommunityNGDirective [Paco Gregori]
+* modify communityngdirective to take info when stay into community url [Paco Gregori]
+* modify remove community ws [Paco Gregori]
+* modify ws subscribe community [Paco Gregori]
+* lower username on getUserOauthToken [Paco Gregori]
+* add translations [Paco Gregori]
+
+2.28 (2016-02-23)
+-----------------
+
+* display username without error [Alberto Duran]
+* ws put community [Paco Gregori]
+
+2.27 (2016-02-22)
+-----------------
+
+* community delete ws remove object [Paco Gregori]
+* communities webservice PUT and DELETE modified [Paco Gregori]
+* change add community api to add image [Paco Gregori]
+* change api communities post [Paco Gregori]
+* Nuevas vistas contentypes [Pilar Marinas]
+* Delete user cache before synchronizing the user [Pilar Marinas]
+
+2.26 (2016-02-10)
+-----------------
+
+* translate nexus24 [Paco Gregori]
+* Deletes a user from the plone & max & communities subscribe [Pilar Marinas]
+* add translate nexus24 [Paco Gregori]
+
+2.25 (2016-01-19)
+-----------------
+
+* Canvis communities [Pilar Marinas]
+* OrganizativeCommunity [Pilar Marinas]
+
+2.24 (2016-01-19)
+-----------------
+
+* DisplayName in editacl [Pilar Marinas]
+* Error mappings [Pilar Marinas]
+* Fix subscribe & unsubscribe success responses [Carles Bruguera]
+* Parametrize in adapter which communities allow auto-subsribing and with which community role [Carles Bruguera]
+* Parametrize plone roles <-> community roles map [Carles Bruguera]
+* editacl fails [Alberto Duran]
+* Properties extended Switchmed [Pilar Marinas]
+* Fix output not being JSON [Carles Bruguera]
+
+2.23 (2016-01-14)
+-----------------
+
+* Updateuseraccessdatetime [Pilar Marinas]
+* Add filter portal_type in stat_by_folder [Pilar Marinas]
+* Add the angular view to the setuphomepage view [Victor Fernandez de Alba]
+* Add guard in case portrait upload fails [Victor Fernandez de Alba]
+* Fix location of files in stats [Victor Fernandez de Alba]
+* Remove chameleon syntactig sugar [Carles Bruguera]
+* Refactor adapters to be layer-aware [Carles Bruguera]
+* define available roles on adapters [Carles Bruguera]
+* Remove chameleon syntactig sugar [Carles Bruguera]
+* Transfer Stats to core [Victor Fernandez de Alba]
+* Add attribute for directive for determine if additional information on stats view is required [Victor Fernandez de Alba]
+* New viewlet to hold directives related with Angular state variables used by services [Victor Fernandez de Alba]
+* add community subscribe put test [Paco Gregori]
+* modify subscription delete endpoint [Paco Gregori]
+* translate month and button stats [Alberto Duran]
+* add subscriptions put endpoint [Paco Gregori]
+* Fix tabs [Victor Fernandez de Alba]
+* Migrate search view to angular [Pilar Marinas]
+* Update, completion and refinement of the current API [Victor Fernandez de Alba]
+* api unsubscribe user [root muntanyeta]
+* api delete subscribers [Paco Gregori]
+* apply pep8 [Paco Gregori]
+* add crsf patch to api, update communities [root muntanyeta]
+* api community csrf patch [root muntanyeta]
+* Avoid modified hooks on sharing event [Carles Bruguera]
+* changes on api people update [Paco Gregori]
+* add endpoint in ws to add community [Paco Gregori]
+* add community adapter to can rewrite in others package [Paco Gregori]
 
 2.22 (2015-11-10)
 -----------------

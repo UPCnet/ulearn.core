@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from plone import api
 from zope.component import getUtility
 from zope.component import getMultiAdapter
 from zope.publisher.browser import TestRequest
@@ -14,6 +15,7 @@ from ulearn.core.content.community import ICommunityTyped
 from ulearn.core.tests import uLearnTestBase
 from ulearn.core.content.community import ICommunityACL
 from ulearn.core.testing import ULEARN_CORE_FUNCTIONAL_TESTING
+from ulearn.core.testing import ULEARN_CORE_INTEGRATION_TESTING
 from ulearn.core.content.community import OPEN_PERMISSIONS
 from ulearn.core.content.community import CLOSED_PERMISSIONS
 from ulearn.core.api import queryRESTComponent
@@ -25,7 +27,7 @@ import json
 
 class TestAPI(uLearnTestBase):
 
-    layer = ULEARN_CORE_FUNCTIONAL_TESTING
+    layer = ULEARN_CORE_INTEGRATION_TESTING
 
     def setUp(self):
         self.app = self.layer['app']
@@ -70,37 +72,39 @@ class TestAPI(uLearnTestBase):
     def test_people_post(self):
         username_plone = 'ulearn.testuser1'
         login(self.portal, username_plone)
-        username = 'usertest'
+        username = 'ulearn.testuser2'
         perfil = dict(fullname=u'Test User',
                       password=u'test123',
-                      alias=u'testUser',
-                      email_bqn=u'test@blanquerna.es',
-                      email=u'test@email.es',
-                      phone=u'96 234 02 23',
-                      collectiveFaculty='PAS&&BQN||EST&&BQN',
-                      degree=u'Informática',
-                      description=u'Información personal y biografía',
-                      office_location=u'Nexus',
-                      office_phone=u'54560',
-                      department=u'Sistemas y seguridad',
-                      personalized_attention=u'Lunes a viernes de 8:00 a 15:00',
-                      social_networks=u'www.link.com/twitter')
+                      email=u'test@email.es')
+
+        people_view = self.request_API_endpoint(username_plone, ['api', 'people', username], body=perfil)
+        response = people_view.POST()
+        response = json.loads(response)
+        status = people_view.request.response.getStatus()
+        if status == 201:
+            self.assertEqual(response['message'], 'User {} created'.format(username))
+        else:
+            self.assertEqual(response['message'], 'User {} updated'.format(username))
+
+    def test_people_delete(self):
+        """ Delete the given user. """
+        username_plone = 'ulearn.testuser1'
+        login(self.portal, username_plone)
+        username = 'janet.dura'
+
+        user_view = self.request_API_endpoint(username, ['api', 'people', username])
+        user_view.DELETE()
+
+        self.assertIsNone(api.user.get('janet.dura'))
+
+        perfil = dict(fullname=u'Test User',
+                      password=u'test123',
+                      email=u'test@email.es')
 
         people_view = self.request_API_endpoint(username_plone, ['api', 'people', username], body=perfil)
         response = people_view.POST()
         response = json.loads(response)
         self.assertEqual(response['message'], 'User {} created'.format(username))
-
-    # def test_people_delete(self):
-    #     """ Delete the given community. """
-    #     username_plone = 'ulearn.testuser1'
-    #     login(self.portal, username_plone)
-    #     username = 'usertest'
-
-    #     user_view = self.request_API_endpoint(username, ['api', 'people', username])
-    #     user_view.DELETE()
-
-    #     self.assertTrue(username not in self.portal.objectIds())
 
     def test_news_post(self):
         username_plone = 'ulearn.testuser1'
@@ -117,6 +121,22 @@ class TestAPI(uLearnTestBase):
         response = new_view.POST()
         response = json.loads(response)
         self.assertEqual(response['message'], 'News Item {} created'.format(newid))
+
+    def test_community_subscribe_put(self):
+        username = 'ulearn.testuser1'
+        login(self.portal, username)
+        community = self.create_test_community()
+        gwuuid = IGWUUID(community).get()
+
+        acl = dict(users=[dict(id=u'janet.dura', displayName=u'Janet Durà', role=u'writer')])
+        subscriptions_view = self.request_API_endpoint(username, ['api', 'communities', gwuuid, 'subscriptions'], body=acl)
+        response = subscriptions_view.PUT()
+
+        response = json.loads(response)
+        self.assertEqual(subscriptions_view.request.response.getStatus(), 200)
+        self.assertTrue('message' in response)
+        self.assertTrue('janet.dura' == ICommunityACL(community)().attrs['acl']['users'][1]['id'])
+        logout()
 
     def test_community_subscribe_post(self):
         username = 'ulearn.testuser1'
@@ -216,7 +236,6 @@ class TestAPI(uLearnTestBase):
 
         self.assertEqual(community_view.request.response.getStatus(), 200)
         self.assertEqual(community.community_type, 'Closed')
-
         self.assertTrue('Reader' not in community.get_local_roles_for_userid(userid='AuthenticatedUsers'))
 
         max_community_info = self.get_max_context_info(community)
@@ -248,6 +267,50 @@ class TestAPI(uLearnTestBase):
 
         self.assertEqual(community_view.request.response.getStatus(), 200)
         self.assertEqual(community.community_type, 'Organizative')
+
+    def test_community_subscribe_post_user_not_found(self):
+        """ Try to subscribe principals to a community which the user has no permissions at all. """
+        username = 'ulearn.testuser1'
+        login(self.portal, username)
+        community = self.create_test_community()
+        gwuuid = IGWUUID(community).get()
+
+        acl = dict(users=[dict(id=u'janet.dura', displayName=u'Janet Durà', role=u'writer'),
+                          dict(id=u'victor.fernandez', displayName=u'Víctor Fernández de Alba', role=u'reader')],
+                   groups=[dict(id=u'PAS', displayName=u'PAS UPC', role=u'writer'),
+                           dict(id=u'UPCnet', displayName=u'UPCnet', role=u'reader')]
+                   )
+
+        subscriptions_view = self.request_API_endpoint(username, ['api', 'communities', gwuuid, 'subscriptions'], body=acl)
+        httpretty.enable()
+        http_mock_hub_syncacl(acl, self.settings.hub_server)
+        login(self.portal, 'ulearn.testuser2')
+
+        response = subscriptions_view.POST()
+        response = json.loads(response)
+        self.assertTrue(response['status_code'] == 404)
+
+    def test_community_subscribe_post_user_not_allowed(self):
+        username = 'ulearn.testuser1'
+        login(self.portal, username)
+        community = self.create_test_community(community_type='Open')
+        gwuuid = IGWUUID(community).get()
+
+        acl = dict(users=[dict(id=u'janet.dura', displayName=u'Janet Durà', role=u'writer'),
+                          dict(id=u'victor.fernandez', displayName=u'Víctor Fernández de Alba', role=u'reader')],
+                   groups=[dict(id=u'PAS', displayName=u'PAS UPC', role=u'writer'),
+                           dict(id=u'UPCnet', displayName=u'UPCnet', role=u'reader')]
+                   )
+
+        subscriptions_view = self.request_API_endpoint(username, ['api', 'communities', gwuuid, 'subscriptions'], body=acl)
+        httpretty.enable()
+        http_mock_hub_syncacl(acl, self.settings.hub_server)
+        login(self.portal, 'ulearn.testuser2')
+
+        response = subscriptions_view.POST()
+        response = json.loads(response)
+
+        self.assertTrue(response['status_code'] == 403)
 
     def test_communities_get(self):
         """ Gets all communities and its properties for the requester user. """
@@ -299,7 +362,7 @@ class TestAPI(uLearnTestBase):
                            dict(id=u'UPCnet', displayName=u'UPCnet', role=u'reader')]
                    )
 
-        adapter = getAdapter(community, ICommunityTyped, name=community.community_type)
+        adapter = community.adapted()
         adapter.update_acl(acl)
 
         group = u'UPCnet'
