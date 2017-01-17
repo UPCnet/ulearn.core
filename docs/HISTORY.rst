@@ -1,11 +1,12 @@
 Changelog
 =========
 
-2.46 (unreleased)
+2.46 (2017-01-17)
 -----------------
 
-- Nothing changed yet.
-
+* add setInterval to autoreload community activities [Paco Gregori]
+* Solucionar error soup bajas usuarios [Pilar Marinas]
+* Delete users in communities [Pilar Marinas]
 
 2.45 (2016-12-05)
 -----------------
