@@ -374,3 +374,104 @@ class TestAPI(uLearnTestBase):
         self.assertTrue(group in response[0]['groups'])
         self.assertTrue('janet.dura' in response[0]['users'])
         self.assertTrue('victor.fernandez' in response[0]['users'])
+
+    def test_events_post(self):
+        """ Post to add new event, and update data. """
+        username = 'manager'
+        login(self.portal, username)
+        self.portal.invokeFactory('Folder', 'events', title="A folder")
+        logout()
+
+        username = 'ulearn.testuser1'
+        login(self.portal, username)
+        eventid = u'evento-prueba'
+        event = dict(title=u'Evento de Prueba',
+                    description=u'Evento prueba test',
+                    body=u'Lorem ipsum dolor sit amet, consectetuer adipiscing elit.',
+                    start=u'18/10/2015/09:00',
+                    end=u'18/10/2015/09:00')
+
+        event_view = self.request_API_endpoint(username, ['api', 'events', eventid], body=event)
+        response = event_view.POST()
+        response = json.loads(response)
+
+        self.assertEqual(event_view.request.response.getStatus(), 201)
+        self.assertEqual(response['message'], 'Event {} created'.format(eventid))
+
+        # Then check that you also update the data
+        event = dict(title=u'Evento de Prueba',
+                    description=u'Evento prueba test',
+                    body=u'Actualizacion',
+                    start=u'18/10/2015/09:00',
+                    end=u'18/10/2015/09:00')
+
+        event_view = self.request_API_endpoint(username, ['api', 'events', eventid], body=event)
+        response = event_views.POST()
+        response = json.loads(response)
+
+        self.assertEqual(response['message'], 'Event {} updated'.format(eventid))
+        logout()
+
+    def test_community_subscribe_delete(self):
+        """ We subscribe to a user to later verify that we delete it correctly. """
+        username = 'ulearn.testuser1'
+        login(self.portal, username)
+        community = self.create_test_community()
+        gwuuid = IGWUUID(community).get()
+        acl = dict(users=[dict(id=u'janet.dura', displayName=u'Janet Durà', role=u'writer')])
+        subscriptions_view = self.request_API_endpoint(username, ['api', 'communities', gwuuid, 'subscriptions'], body=acl)
+        response = subscriptions_view.PUT()
+        response = json.loads(response)
+
+        self.assertEqual(2, len(ICommunityACL(community)().attrs['acl']['users']))
+
+        response = subscriptions_view.DELETE()
+        response = json.loads(response)
+
+        self.assertEqual(subscriptions_view.request.response.getStatus(), 200)
+        self.assertEqual(response['message'], 'Unsubscription to the requested community done.')
+        self.assertEqual(len(ICommunityACL(community)().attrs['acl']['users']), 1)
+        logout()
+
+    def test_people_sync_post(self):
+        """ Post to add new sync user local registry """
+        username = 'ulearn.testuser1'
+        login(self.portal, username)
+        users = dict(users=['janet.dura'])
+
+        user_view = self.request_API_endpoint(username, ['api', 'people', 'sync'], body=users)
+        response = user_view.POST()
+        response = json.loads(response)
+
+        self.assertEqual(user_view.request.response.getStatus(), 200)
+        self.assertEqual(response, {})
+        logout()
+
+    def test_people_subscribe_get(self):
+        """ Get all communities from the user  """
+        username_plone = 'ulearn.testuser1'
+        login(self.portal, username_plone)
+
+        acl = dict(users=[dict(id=u'janet.dura', displayName=u'Janet Durà', role=u'writer')])
+
+        community = self.create_test_community(id='test1', name=u'test1', community_type='Closed')
+        gwuuid = IGWUUID(community).get()
+        adapter = community.adapted()
+        adapter.update_acl(acl)
+
+        community = self.create_test_community(id='test2', name=u'test2', community_type='Open')
+        gwuuid = IGWUUID(community).get()
+        adapter = community.adapted()
+        adapter.update_acl(acl)
+
+        username = 'janet.dura'
+
+        user_view = self.request_API_endpoint(username_plone, ['api', 'people', username, 'subscriptions'])
+        response = user_view.GET()
+        response = json.loads(response)
+
+        self.assertEqual(user_view.request.response.getStatus(), 200)
+        self.assertEqual(len(response), 2)
+        self.assertEqual(response[0]['title'], 'test1')
+        self.assertEqual(response[1]['title'], 'test2')
+        logout()
