@@ -1,11 +1,11 @@
 Changelog
 =========
 
-2.47 (unreleased)
+2.47 (2017-01-31)
 -----------------
 
-- Nothing changed yet.
-
+* add workflow to News Item [Paco Gregori]
+* Add new test API [Iago López Fernández]
 
 2.46 (2017-01-17)
 -----------------
