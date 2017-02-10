@@ -1,11 +1,12 @@
 Changelog
 =========
 
-2.48 (unreleased)
+2.48 (2017-02-10)
 -----------------
 
-- Nothing changed yet.
-
+* Afegir traduccions addProfile [Pilar Marinas]
+* Get avatar properties in create user [Pilar Marinas]
+* fix bug newstoolbar [Paco Gregori]
 
 2.47 (2017-01-31)
 -----------------
