@@ -1,4 +1,4 @@
-<tal:block condition="viewlet/canManageSite" i18n:domain="ulearn">
+<tal:block i18n:domain="ulearn">
   <div class="toogle-group" tal:condition="viewlet/isManagementNewsActivate">
     <div id="newtoolbar-title" i18n:translate="label-newstoolbar">
       Gestión Noticia:
