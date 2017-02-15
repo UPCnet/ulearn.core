@@ -1,11 +1,10 @@
 Changelog
 =========
 
-2.49 (unreleased)
+2.49 (2017-02-15)
 -----------------
 
-- Nothing changed yet.
-
+* Manage portlets only Manager and WebMaster [Pilar Marinas]
 
 2.48 (2017-02-10)
 -----------------
