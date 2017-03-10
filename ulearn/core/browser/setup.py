@@ -252,6 +252,10 @@ class deleteUsersInCommunities(grok.View):
                 logger.info('Finished deleted users in communities: {}'.format(users))
 
 def getDestinationFolder(stats_folder,create_month=True):
+    """
+    This function creates if it doesn't exist a folder in <stats_folder>/<year>/<month>.
+    If  create_month is False, then only the <year> folder is created
+    """
     portal = api.portal.get()
     #setSite(portal)
     # Create 'stats_folder' folder if not exists
@@ -289,9 +293,15 @@ def makeFolder(portal, name):
 
 class ImportFileToFolder(grok.View):
     """
-    Download the content type as a CSV file.
-        # aquí hago lo que tenga que hacer y pinto OK o KO según haya ido.
-        # en el self.url hay una parte params
+    This view takes 2 arguments on the request GET data :
+    folder: the path without the '/' at the beginning, which is the base folder 
+        where the 'year' folders should be created
+    local_file: the complete path and filename of the file on server. Be carefully if the view is called
+        and there are many instanes. The best way is to call it through <ip>:<instance_port>
+
+    To test it: run python script with requests and:
+    payload={'folder':'test','local_file': '/home/vicente.iranzo/mongodb_VPN_2016_upcnet.xls'}
+    r = requests.get('http://localhost:8080/Plone/importfiletofolder', params=payload, auth=HTTPBasicAuth('admin', 'admin'))
     """
     grok.context(IPloneSiteRoot)
     grok.name('importfiletofolder')
