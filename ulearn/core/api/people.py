@@ -207,7 +207,7 @@ class Person(REST):
         maxclient.setActor(settings.max_restricted_username)
         maxclient.setToken(settings.max_restricted_token)
 
-        avatar = self.params.pop('avatar', None)
+        avatar = properties.pop('avatar', None)
 
         if not existing_user:
             args = dict(

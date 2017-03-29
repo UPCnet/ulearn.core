@@ -1682,3 +1682,25 @@ msgstr "Búsqueda..."
 
 msgid "flashesinformativos"
 msgstr "Última hora"
+
+msgid "User Name"
+msgstr "Nombre de usuario"
+
+msgid "Indicate the desired username. <br/> Exceptions: Minimum length is 5 characters. Accents will be removed. Blanks are not valid. Dots and dashes are accepted."
+msgstr "Indique el nombre de usuario deseado. <br/> Excepciones: La longitud mínima es de 5 caracteres. Los acentos se eliminarán. Los espacios en blanco no son válidos. Se aceptan puntos y guiones."
+
+msgid "label_portrait"
+msgstr "Foto"
+
+msgid "label_password"
+msgstr "Contraseña"
+
+msgid "help_new_password_creation"
+msgstr "Ingrese su nueva contraseña (mínimo 5 caracteres)."
+
+msgid "label_confirm_password"
+msgstr "Confirmar contraseña"
+
+msgid "help_confirm_password"
+msgstr "Vuelva a ingresar la contraseña. Asegúrese de que las contraseñas son idénticas."
+

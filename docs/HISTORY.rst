@@ -1,11 +1,36 @@
 Changelog
 =========
 
-2.46 (unreleased)
+2.50 (unreleased)
 -----------------
 
 - Nothing changed yet.
 
+
+2.49 (2017-02-15)
+-----------------
+
+* Manage portlets only Manager and WebMaster [Pilar Marinas]
+
+2.48 (2017-02-10)
+-----------------
+
+* Afegir traduccions addProfile [Pilar Marinas]
+* Get avatar properties in create user [Pilar Marinas]
+* fix bug newstoolbar [Paco Gregori]
+
+2.47 (2017-01-31)
+-----------------
+
+* add workflow to News Item [Paco Gregori]
+* Add new test API [Iago López Fernández]
+
+2.46 (2017-01-17)
+-----------------
+
+* add setInterval to autoreload community activities [Paco Gregori]
+* Solucionar error soup bajas usuarios [Pilar Marinas]
+* Delete users in communities [Pilar Marinas]
 
 2.45 (2016-12-05)
 -----------------

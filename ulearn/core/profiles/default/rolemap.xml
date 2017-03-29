@@ -50,5 +50,10 @@
       <role name="Site Administrator"/>
       <role name="Manager"/>
     </permission>
+    <permission name="Portlets: Manage portlets"
+                acquire="True">
+      <role name="Manager"/>
+      <role name="WebMaster"/>
+    </permission>
   </permissions>
 </rolemap>

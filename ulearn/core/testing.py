@@ -71,6 +71,7 @@ class UlearncoreLayer(PloneSandboxLayer):
         applyProfile(portal, 'ulearn.core:default')
 
         # portal.acl_users.userFolderAddUser('admin', 'secret', ['Manager'], [])
+        portal.acl_users.userFolderAddUser('manager', 'secret', ['Manager'], [])
         # portal.acl_users.userFolderAddUser('user', 'secret', ['Member'], [])
         # portal.acl_users.userFolderAddUser('poweruser', 'secret', ['Member', 'WebMaster'], [])
         portal.acl_users.userFolderAddUser('victor.fernandez', 'secret', ['Member'], [])

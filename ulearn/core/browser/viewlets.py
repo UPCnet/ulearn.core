@@ -95,8 +95,8 @@ class newsToolBar(viewletBase):
     grok.context(INewsItem)
     grok.template('newstoolbar')
     grok.viewletmanager(IAboveContentTitle)
-    grok.require('cmf.ModifyPortalContent')
     grok.layer(IUlearnTheme)
+    grok.require('cmf.ModifyPortalContent')
 
     def permisos_important(self):
         # TODO: Comprovar que l'usuari tingui permisos per a marcar com a important

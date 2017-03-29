@@ -1,8 +1,10 @@
+# -*- coding: utf-8 -*-
 from five import grok
 from zope.component import queryUtility
 from zope.component import getUtility
 from zope.component import getMultiAdapter
 from zope.component.hooks import getSite
+
 
 from plone.portlets.interfaces import IPortletManager
 from plone.portlets.interfaces import IPortletAssignmentMapping
@@ -22,6 +24,15 @@ from repoze.catalog.query import Eq
 from souper.soup import get_soup
 from genweb.core.gwuuid import IGWUUID
 from ulearn.core.browser.security import execute_under_special_role
+
+import transaction
+from datetime import datetime
+from Acquisition import aq_inner
+from zope.site.hooks import setSite
+from Products.CMFCore.utils import getToolByName
+from plone.namedfile.file import NamedBlobFile
+
+
 
 import logging
 logger = logging.getLogger(__name__)
@@ -239,3 +250,87 @@ class deleteUsersInCommunities(grok.View):
                         pass
 
                 logger.info('Finished deleted users in communities: {}'.format(users))
+
+def getDestinationFolder(stats_folder,create_month=True):
+    """
+    This function creates if it doesn't exist a folder in <stats_folder>/<year>/<month>.
+    If  create_month is False, then only the <year> folder is created
+    """
+    portal = api.portal.get()
+    #setSite(portal)
+    # Create 'stats_folder' folder if not exists
+    if portal.get(stats_folder) is None:
+        makeFolder(portal, stats_folder)
+    portal = portal.get(stats_folder)
+    today = datetime.now()
+    context = aq_inner(portal)
+#    tool = getToolByName(context, 'translation_service')
+#    month = tool.translate(today.strftime("%B"), 'ulearn', context=context).encode()
+    month = 'march'
+    month = month.lower()
+    year = today.strftime("%G")
+    # Create year folder and month folder if not exists
+    if portal.get(year) is None:
+        makeFolder(portal, year)
+        if create_month:
+            portal = portal.get(year)
+            makeFolder(portal, month)
+    # Create month folder if not exists
+    else:
+        portal = portal.get(year)
+        if portal.get(month) is None and create_month:
+            makeFolder(portal, month)
+            portal = portal.get(month)
+    return portal
+
+
+def makeFolder(portal, name):
+    transaction.begin()
+    obj = createContentInContainer(portal, 'Folder', id='{}'.format(name), title='{}'.format(name), description='{}'.format(name))
+    obj.reindexObject()
+    transaction.commit()
+
+
+class ImportFileToFolder(grok.View):
+    """
+    This view takes 2 arguments on the request GET data :
+    folder: the path without the '/' at the beginning, which is the base folder 
+        where the 'year' folders should be created
+    local_file: the complete path and filename of the file on server. Be carefully if the view is called
+        and there are many instanes. The best way is to call it through <ip>:<instance_port>
+
+    To test it: run python script with requests and:
+    payload={'folder':'test','local_file': '/home/vicente.iranzo/mongodb_VPN_2016_upcnet.xls'}
+    r = requests.get('http://localhost:8080/Plone/importfiletofolder', params=payload, auth=HTTPBasicAuth('admin', 'admin'))
+    """
+    grok.context(IPloneSiteRoot)
+    grok.name('importfiletofolder')
+    grok.require('genweb.webmaster')
+
+    def render(self):
+        portal = api.portal.get()
+        folder_name = self.request.get("folder")
+        local_file = self.request.get("local_file")
+
+        f = open(local_file,'r')
+        content = f.read()
+        f.close()
+
+        plone_folder = getDestinationFolder(folder_name,create_month=False)
+        from plone.protect.interfaces import IDisableCSRFProtection
+        from zope.interface import alsoProvides
+        alsoProvides(self.request, IDisableCSRFProtection)
+        file = NamedBlobFile(
+            data=content,
+            filename=u'{}'.format(local_file),
+            contentType='application/xls'
+            )
+        obj = createContentInContainer(
+            plone_folder,
+            'AppFile',
+            id='{}'.format(local_file.split('/')[-1]),
+            title='{}'.format(local_file.split('/')[-1]),
+            file=file,
+            checkConstraints=False
+            )
+        self.response.setBody('OK') 

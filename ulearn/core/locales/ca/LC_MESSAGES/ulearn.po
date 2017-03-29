@@ -1696,3 +1696,24 @@ msgstr "Gestió de riscos"
 
 msgid "flashesinformativos"
 msgstr "Última hora"
+
+msgid "User Name"
+msgstr "Nom d'usuari"
+
+msgid "Indicate the desired username. <br/> Exceptions: Minimum length is 5 characters. Accents will be removed. Blanks are not valid. Dots and dashes are accepted."
+msgstr "Indiqueu el nom d'usuari desitjat. <br/> Excepcions: La longitud mínima és de 5 caràcters. Els accents s'eliminaran. Els espais en blanc no són vàlids. S'accepten punts i guions."
+
+msgid "label_portrait"
+msgstr "Foto"
+
+msgid "label_password"
+msgstr "Contrasenya"
+
+msgid "help_new_password_creation"
+msgstr "Introduïu la nova contrasenya (mínim 5 caràcters)."
+
+msgid "label_confirm_password"
+msgstr "Confirmar contrasenya"
+
+msgid "help_confirm_password"
+msgstr "Torneu a introduir la contrasenya. Comproveu que les contrasenyes són idèntiques."
