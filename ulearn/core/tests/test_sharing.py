@@ -27,7 +27,7 @@ class TestExample(uLearnTestBase):
         self.portal = self.layer['portal']
         self.request = self.layer['request']
         api.portal.set_registry_record('genweb.controlpanel.core.IGenwebCoreControlPanelSettings.elasticsearch',
-                                       u'http://capricornius2.upc.es:9200')
+                                       u'http://pc60012.estacions.upcnet.es:9200')
         self.elastic = getUtility(IElasticSearch)
         self.elastic.create_new_connection()
         self.elastic().indices.create(index=ElasticSharing().get_index_name())
