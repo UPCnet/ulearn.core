@@ -873,6 +873,11 @@ msgstr "Shared content"
 msgid "shared_content_description"
 msgstr "All content shared by any member of this community"
 
+#. Default: "Shared content"
+#: ../../../../../../ulearn.core/ulearn/core/browser/sharing_templates/shared.pt:26
+msgid "shared_content_title"
+msgstr "Access to shared content"
+
 #. Default: "Create a new event"
 #: ../../../../ulearn.theme/ulearn/theme/portlets/templates/calendar.pt:97
 msgid "newevent"

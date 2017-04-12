@@ -248,6 +248,7 @@ class ElasticSharing(object):
 			return dict(
 				title=item_catalog.Title,
 				url=item_catalog.getURL(),
+				portal_type=item_catalog.portal_type,
 				community_displayname=community.Title,
 				community_url=community.getURL(),
 				by=item_catalog.Creator,
@@ -288,6 +289,9 @@ class ElasticSharing(object):
 		# Tha is_shared is still required?
 
 		results = [format_item(a) for a in shared_items if is_shared(a)]
+
+		# Ordena els resultats per title
+		results.sort(key=lambda a: a['title'].lower())
 
 		return results
 

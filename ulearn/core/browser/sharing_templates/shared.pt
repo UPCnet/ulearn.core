@@ -35,7 +35,9 @@
                               item_url contingut/getURL;">
               <div class="nofavorite">
                 <a tal:attributes="href python: item_url+'/view' if item_type in use_view_action else item_url;">
-                  <h4 tal:attributes="class item_type"><span tal:replace="contingut/Title">Title</span></h4>
+                  <h4 tal:attributes="class item_type"><span tal:replace="contingut/Title">Title</span>
+                  <i class="shared_icon fa fa-share-alt-square" aria-hidden="true"></i>
+                  </h4>
                   <p tal:condition="contingut/Description"><span tal:content="contingut/Description">Description</span>
                   </p>
                 </a>
