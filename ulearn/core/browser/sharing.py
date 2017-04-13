@@ -400,6 +400,13 @@ def SharingChanged(content, event):
 	elastic_sharing = queryUtility(IElasticSharing)
 	elastic_sharing.modified(content)
 
+def RemoveObject(content, event):
+	""" Hook delete object plone remove object elastic
+	"""
+	elastic_sharing = queryUtility(IElasticSharing)
+	current_local_roles = elastic_sharing.object_local_roles(content)
+	content.manage_delLocalRoles(current_local_roles)
+	elastic_sharing.modified(content)
 
 @indexer(IDexterityContent)
 def sharedIndexer(context):
