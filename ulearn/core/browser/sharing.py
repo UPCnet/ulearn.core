@@ -260,6 +260,9 @@ class ElasticSharing(object):
 
 			object = item_catalog._unrestrictedGetObject()
 			if username in object.__ac_local_roles__.keys():
+				is_Owner = [a for a in object.__ac_local_roles__[username] if a in ['Owner']]
+				if is_Owner:
+					return False
 				effective_roles = [a for a in object.__ac_local_roles__[username] if a not in ['Owner']]
 				if effective_roles:
 					return True
