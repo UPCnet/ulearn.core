@@ -32,7 +32,9 @@ from zope.site.hooks import setSite
 from Products.CMFCore.utils import getToolByName
 from plone.namedfile.file import NamedBlobFile
 
-
+from zope.component import queryUtility
+from ulearn.core.browser.sharing import IElasticSharing
+from ulearn.core.content.community import ICommunity
 
 import logging
 logger = logging.getLogger(__name__)
@@ -294,7 +296,7 @@ def makeFolder(portal, name):
 class ImportFileToFolder(grok.View):
     """
     This view takes 2 arguments on the request GET data :
-    folder: the path without the '/' at the beginning, which is the base folder 
+    folder: the path without the '/' at the beginning, which is the base folder
         where the 'year' folders should be created
     local_file: the complete path and filename of the file on server. Be carefully if the view is called
         and there are many instanes. The best way is to call it through <ip>:<instance_port>
@@ -333,4 +335,34 @@ class ImportFileToFolder(grok.View):
             file=file,
             checkConstraints=False
             )
-        self.response.setBody('OK') 
+        self.response.setBody('OK')
+
+class updateSharingCommunityElastic(grok.View):
+    """ Aquesta vista actualitza tots els objectes de la comunitat al elasticsearch """
+    grok.name('updatesharingcommunityelastic')
+    grok.context(IPloneSiteRoot)
+
+    render = ViewPageTemplateFile('views_templates/updatesharingcommunityelastic.pt')
+
+    def update(self):
+        try:
+            from plone.protect.interfaces import IDisableCSRFProtection
+            alsoProvides(self.request, IDisableCSRFProtection)
+        except:
+            pass
+        if self.request.environ['REQUEST_METHOD'] == 'POST':
+            pc = api.portal.get_tool('portal_catalog')
+            portal = getSite()
+            absolute_path = '/'.join(portal.getPhysicalPath())
+
+            if self.request.form['id'] != '':
+                id_community = absolute_path + '/' + self.request.form['id']
+                self.context.plone_log('Actualitzant elasticsearch dades comunitat {}'.format(id_community))
+                community = pc.searchResults(path=id_community)
+
+                for brain in community:
+                    obj = brain.getObject()
+                    if not ICommunity.providedBy(obj):
+                        elastic_sharing = queryUtility(IElasticSharing)
+                        elastic_sharing.modified(obj)
+                        self.context.plone_log('Actualitzat el objecte {} de la comunitat {}'.format(obj, id_community))
