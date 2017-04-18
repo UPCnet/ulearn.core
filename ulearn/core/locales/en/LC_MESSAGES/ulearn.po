@@ -823,26 +823,6 @@ msgstr "This is the threshold of Winwin #2."
 msgid "help_llindar_winwin3"
 msgstr "This is the threshold of Winwin #3."
 
-#. Default: "Configuració de Ulearn"
-#: ../../../../../../ulearn.core/ulearn/core/controlpanel.py:61
-msgid "help_ulearn_settings_editform"
-msgstr "Settings Ulearn"
-
-#. Default: "Llindar del winwin 1"
-#: ../../../../../../ulearn.core/ulearn/core/controlpanel.py:28
-msgid "llindar_winwin1"
-msgstr "Threshold Winwinn 1"
-
-#. Default: "Llindar del winwin 2"
-#: ../../../../../../ulearn.core/ulearn/core/controlpanel.py:37
-msgid "llindar_winwin2"
-msgstr "Threshold Winwinn 2"
-
-#. Default: "Llindar del winwin 3"
-#: ../../../../../../ulearn.core/ulearn/core/controlpanel.py:46
-msgid "llindar_winwin3"
-msgstr "Threshold Winwinn 3"
-
 #. Default: "Most valued portlet"
 #: ../../../../../../ulearn.theme/ulearn/theme/portlets/mostvalued.py:29
 msgid "mostvalued"
@@ -902,16 +882,6 @@ msgstr "password"
 #: ../../../../../../ulearn.theme/ulearn/theme/portlets/profile.py:36
 msgid "profile"
 msgstr "User profile"
-
-#. Default: "Cerca"
-#: ../../../../ulearn.theme/ulearn/theme/browser/views_templates/communities.pt:25
-msgid "search_communities"
-msgstr "Search"
-
-#. Default: "See more communities"
-#: ../../../../../../ulearn.theme/ulearn/theme/portlets/templates/communities.pt:35
-msgid "seemore"
-msgstr "See more communities"
 
 #. Default: "Your location - either city and country - or in a company setting, where your office is located."
 #: ./ulearn/core/userschema.py:49
@@ -1329,20 +1299,10 @@ msgstr "Hide news"
 msgid "maxui_form_bg"
 msgstr "Background color widget MAX."
 
-#. Default: "Most valued portlet"
-#: ../ulearn.theme/ulearn/theme/portlets/mostvalued.py:28
-msgid "mostvalued"
-msgstr "Most valued portlet"
-
 #. Default: "Habilitar portlet mrs_max_widget"
 #: ./ulearn/core/controlpanel.py:339
 msgid "mrs_max_widget"
 msgstr "Enable portlet mrs_max_widget"
-
-#. Default: "My communities"
-#: ../ulearn.theme/ulearn/theme/portlets/templates/buttonbar.pt:23
-msgid "my_communities"
-msgstr "My communities"
 
 #. Default: "My Communities"
 #: ../ulearn.theme/ulearn/theme/portlets/mycommunities/mycommunities.py:19
@@ -1365,33 +1325,13 @@ msgstr "My tags"
 msgid "newdiscussion"
 msgstr "Create a discussion"
 
-#. Default: "Create a new event"
-#: ../ulearn.theme/ulearn/theme/portlets/templates/calendar.pt:131
-msgid "newevent"
-msgstr "Create a new event"
-
 #: ./ulearn/core/controlpanel.py:632
 msgid "no_visibles"
 msgstr "No visible people"
 
-#. Default: "nom.usuari"
-#: ../ulearn.theme/ulearn/theme/skins/ulearntheme_custom/login_form.cpt:186
-msgid "nom_usuari"
-msgstr ""
-
-#. Default: "There are not events today"
-#: ../ulearn.theme/ulearn/theme/portlets/templates/calendar.pt:23
-msgid "not_events_for_today"
-msgstr "There are not events today"
-
 #: ./ulearn/core/content/community.py:219
 msgid "notify_activity_via_push_help"
 msgstr "If you click this option, all the activity regarding this community will be notified to all users subscribed through their mobile application UPCnet uTalk via push notification."
-
-#. Default: "contrasenya"
-#: ../ulearn.theme/ulearn/theme/skins/ulearntheme_custom/login_form.cpt:201
-msgid "password"
-msgstr ""
 
 #: ./ulearn/core/controlpanel.py:639
 msgid "people_literal"
@@ -1460,11 +1400,6 @@ msgstr "Enable portlet portlets_rss"
 #: ./ulearn/core/profiles/default/types/privateFolder.xml
 msgid "privateFolder"
 msgstr "Private folder"
-
-#. Default: "User profile"
-#: ../ulearn.theme/ulearn/theme/portlets/profile.py:34
-msgid "profile"
-msgstr "User profile"
 
 #. Default: "icon-link"
 #: ./ulearn/core/controlpanel.py:652
