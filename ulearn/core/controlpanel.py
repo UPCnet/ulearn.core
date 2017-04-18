@@ -79,7 +79,7 @@ class IUlearnControlPanelSettings(model.Schema):
         _(u'General'),
         fields=['campus_url', 'library_url', 'people_literal',
                 'threshold_winwin1', 'threshold_winwin2',
-                'threshold_winwin3', 'stats_button'])
+                'threshold_winwin3', 'stats_button', 'info_servei'])
 
     model.fieldset(
         'Specific',
@@ -156,6 +156,14 @@ class IUlearnControlPanelSettings(model.Schema):
                       default=_(u"Mostra o no el botó d'accés a estadístiques diàries a stats/activity i stats/chats")),
         required=False,
         default=False,
+    )
+
+    info_servei = schema.TextLine(
+        title=_(u'info_servei',
+                default=_(u'Informació del servei')),
+        description=_(u'help_info_servei',
+                      default=_(u'Aquest és l\'enllaç al servei.')),
+        required=False,
     )
 
     main_color = schema.TextLine(
