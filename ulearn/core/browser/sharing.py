@@ -144,26 +144,31 @@ class ElasticSharing(object):
 			Handler for local roles changed event. Will add or remove a record form elastic
 		"""
 		current_local_roles = self.object_local_roles(object)
-		# Search for records to be deleted
-		existing_records = self.get(object)
-		existing_principals = [aa['principal'] for aa in existing_records]
 
-		current_principals = current_local_roles.keys()
-		principals_to_delete = set(existing_principals) - set(current_principals)
+		try:
+			# Search for records to be deleted
+			existing_records = self.get(object)
+			existing_principals = [aa['principal'] for aa in existing_records]
 
-		for principal in principals_to_delete:
-			self.remove(object, principal)
-		# Add new records or modify existing ones
-		for principal, roles in current_local_roles.items():
+			current_principals = current_local_roles.keys()
+			principals_to_delete = set(existing_principals) - set(current_principals)
 
-			es_record = self.get(object, principal)
-			if not es_record:
-				self.add(object, principal)
-			elif es_record[0]['roles'] != roles:
-				self.modify(object, principal, attributes=roles)
-			else:
-				pass
-				# No changes to roles, ignore others
+			for principal in principals_to_delete:
+				self.remove(object, principal)
+			# Add new records or modify existing ones
+			for principal, roles in current_local_roles.items():
+
+				es_record = self.get(object, principal)
+
+				if not es_record:
+					self.add(object, principal)
+				elif es_record[0]['roles'] != roles:
+					self.modify(object, principal, attributes=roles)
+				else:
+					pass
+					# No changes to roles, ignore others
+		except:
+			pass
 
 	def add(self, object, principal):
 		"""

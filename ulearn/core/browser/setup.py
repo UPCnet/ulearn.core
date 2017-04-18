@@ -358,11 +358,43 @@ class updateSharingCommunityElastic(grok.View):
             if self.request.form['id'] != '':
                 id_community = absolute_path + '/' + self.request.form['id']
                 self.context.plone_log('Actualitzant elasticsearch dades comunitat {}'.format(id_community))
-                community = pc.searchResults(path=id_community)
+                community = pc.unrestrictedSearchResults(path=id_community)
 
                 for brain in community:
-                    obj = brain.getObject()
+                    obj = brain._unrestrictedGetObject()
                     if not ICommunity.providedBy(obj):
                         elastic_sharing = queryUtility(IElasticSharing)
                         elastic_sharing.modified(obj)
                         self.context.plone_log('Actualitzat el objecte {} de la comunitat {}'.format(obj, id_community))
+
+class updateSharingCommunitiesElastic(grok.View):
+    """ Aquesta vista actualitza el sharing de tots els objectes de totes les comunitats al elasticsearch """
+    grok.name('updatesharingcommunitieselastic')
+    grok.context(IPloneSiteRoot)
+
+    def render(self):
+        try:
+            from plone.protect.interfaces import IDisableCSRFProtection
+            alsoProvides(self.request, IDisableCSRFProtection)
+        except:
+            pass
+
+        pc = api.portal.get_tool('portal_catalog')
+        portal = getSite()
+        absolute_path = '/'.join(portal.getPhysicalPath())
+
+        comunnities = pc.unrestrictedSearchResults(portal_type="ulearn.community")
+        for num, community in enumerate(comunnities):
+            obj = community._unrestrictedGetObject()
+            id_community = absolute_path + '/' + obj.id
+            self.context.plone_log('Processant {} de {}. Comunitat {}'.format(num, len(comunnities), obj))
+            community = pc.unrestrictedSearchResults(path=id_community)
+
+            for brain in community:
+                obj = brain._unrestrictedGetObject()
+                if not ICommunity.providedBy(obj):
+                    elastic_sharing = queryUtility(IElasticSharing)
+                    elastic_sharing.modified(obj)
+                    self.context.plone_log('Actualitzat el objecte {} de la comunitat {}'.format(obj, id_community))
+
+        logger.info('Finished update sharing in communities: {}'.format(portal.absolute_url()))
