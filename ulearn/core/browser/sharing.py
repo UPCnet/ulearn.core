@@ -108,7 +108,6 @@ class ElasticSharing(object):
 		"""
 		path = self.relative_path(object)
 		self.elastic = getUtility(IElasticSearch)
-
 		if principal is None:
 			# Change to query elastic for a register matching principal and path
 			# and return a list of items or None if query empty
@@ -119,7 +118,9 @@ class ElasticSharing(object):
 											   )
 			result = []
 			if es_results['hits']['total'] > 0:
-				result = [es_results['hits']['hits'][0]['_source']]
+				# result = [es_results['hits']['hits'][0]['_source']]
+				for i in range(es_results['hits']['total']):
+					result.append(es_results['hits']['hits'][i]['_source'])
 
 		else:
 			# Change to Query elastic for all registers matching path
@@ -148,25 +149,50 @@ class ElasticSharing(object):
 		try:
 			# Search for records to be deleted
 			existing_records = self.get(object)
+
 			existing_principals = [aa['principal'] for aa in existing_records]
 
 			current_principals = current_local_roles.keys()
-			principals_to_delete = set(existing_principals) - set(current_principals)
+			current_principals_in_groups = []
 
+			for cprincipal in current_principals:
+				if api.group.get(groupname=cprincipal):
+					users = api.user.get_users(groupname=cprincipal)
+					for user in users:
+						current_principals_in_groups.append(user.id)
+
+			principals_to_delete = set(existing_principals) - set(current_principals_in_groups) - set(current_principals)
 			for principal in principals_to_delete:
 				self.remove(object, principal)
+
 			# Add new records or modify existing ones
 			for principal, roles in current_local_roles.items():
 
-				es_record = self.get(object, principal)
+				if api.group.get(groupname=principal):
+					users = api.user.get_users(groupname=principal)
+					owner = object.getOwner()._id
+					for user in users:
+						principal = user.id
 
-				if not es_record:
-					self.add(object, principal)
-				elif es_record[0]['roles'] != roles:
-					self.modify(object, principal, attributes=roles)
+						if principal != owner:
+							es_record = self.get(object, principal)
+
+							if not es_record:
+								self.add(object, principal)
+							elif es_record[0]['roles'] != roles:
+								self.modify(object, principal, attributes=roles)
+							else:
+								pass
 				else:
-					pass
-					# No changes to roles, ignore others
+					es_record = self.get(object, principal)
+
+					if not es_record:
+						self.add(object, principal)
+					elif es_record[0]['roles'] != roles:
+						self.modify(object, principal, attributes=roles)
+					else:
+						pass
+						# No changes to roles, ignore others
 		except:
 			pass
 
@@ -264,7 +290,19 @@ class ElasticSharing(object):
 			item_catalog = portal_catalog.unrestrictedSearchResults(gwuuid=str(item['uuid']))[0]
 
 			object = item_catalog._unrestrictedGetObject()
-			if username in object.__ac_local_roles__.keys():
+
+			groups = []
+			groups_user = api.group.get_groups(username=username)
+			if groups_user:
+				groups = [group.id for group in groups_user]
+
+			if [group for group in groups if group in object.__ac_local_roles__.keys()]:
+				owner = object.getOwner()._id
+				if username != owner:
+					return True
+				else:
+					return False
+			elif username in object.__ac_local_roles__.keys():
 				is_Owner = [a for a in object.__ac_local_roles__[username] if a in ['Owner']]
 				if is_Owner:
 					return False
