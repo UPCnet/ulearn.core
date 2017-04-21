@@ -35,6 +35,7 @@ from plone.namedfile.file import NamedBlobFile
 from zope.component import queryUtility
 from ulearn.core.browser.sharing import IElasticSharing
 from ulearn.core.content.community import ICommunity
+from genweb.core.utilities import IElasticSearch
 
 import logging
 logger = logging.getLogger(__name__)
@@ -390,11 +391,21 @@ class updateSharingCommunitiesElastic(grok.View):
             self.context.plone_log('Processant {} de {}. Comunitat {}'.format(num, len(comunnities), obj))
             community = pc.unrestrictedSearchResults(path=id_community)
 
+            try:
+                self.elastic = getUtility(IElasticSearch)
+                self.elastic().search(index=ElasticSharing().get_index_name())
+            except:
+                elastic_sharing = queryUtility(IElasticSharing)
+                principal = None
+                record = elastic_sharing.make_record(obj, principal)
+                self.elastic().create(**record)
+
             for brain in community:
                 obj = brain._unrestrictedGetObject()
                 if not ICommunity.providedBy(obj):
                     elastic_sharing = queryUtility(IElasticSharing)
                     elastic_sharing.modified(obj)
+
                     self.context.plone_log('Actualitzat el objecte {} de la comunitat {}'.format(obj, id_community))
 
         logger.info('Finished update sharing in communities: {}'.format(portal.absolute_url()))
