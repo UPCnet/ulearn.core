@@ -259,6 +259,32 @@ class Community(REST, CommunityMixin):
         else:
             return False
 
+class Count(REST, CommunityMixin):
+    """
+        /api/communities/count/{community_type}
+
+        /api/communities/count?community_type=Closed
+    """
+
+    grok.adapts(Communities, IPloneSiteRoot)
+    grok.require('genweb.authenticated')
+
+    def __init__(self, context, request):
+        super(Count, self).__init__(context, request)
+
+    @api_resource()
+    def GET(self):
+        """ Return the number of communities. """
+
+        pc = api.portal.get_tool('portal_catalog')
+        community_type = self.params.pop('community_type', None)
+        if community_type != None:
+            results = pc.unrestrictedSearchResults(portal_type='ulearn.community', community_type=community_type)
+        else:
+            results = pc.unrestrictedSearchResults(portal_type='ulearn.community')
+
+        return ApiResponse(len(results))
+
 
 class Subscriptions(REST, CommunityMixin):
     """
