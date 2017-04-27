@@ -361,6 +361,15 @@ class updateSharingCommunityElastic(grok.View):
                 self.context.plone_log('Actualitzant elasticsearch dades comunitat {}'.format(id_community))
                 community = pc.unrestrictedSearchResults(path=id_community)
 
+                try:
+                    self.elastic = getUtility(IElasticSearch)
+                    self.elastic().search(index=ElasticSharing().get_index_name())
+                except:
+                    elastic_sharing = queryUtility(IElasticSharing)
+                    principal = None
+                    record = elastic_sharing.make_record(obj, principal)
+                    self.elastic().create(**record)
+
                 for brain in community:
                     obj = brain._unrestrictedGetObject()
                     if not ICommunity.providedBy(obj):
