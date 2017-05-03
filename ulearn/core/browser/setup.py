@@ -36,6 +36,8 @@ from zope.component import queryUtility
 from ulearn.core.browser.sharing import IElasticSharing
 from ulearn.core.content.community import ICommunity
 from genweb.core.utilities import IElasticSearch
+from ulearn.core.browser.sharing import ElasticSharing
+
 
 import logging
 logger = logging.getLogger(__name__)
@@ -361,14 +363,29 @@ class updateSharingCommunityElastic(grok.View):
                 self.context.plone_log('Actualitzant elasticsearch dades comunitat {}'.format(id_community))
                 community = pc.unrestrictedSearchResults(path=id_community)
 
+                if community:
+                    obj = community[0]._unrestrictedGetObject()
+
+
                 try:
                     self.elastic = getUtility(IElasticSearch)
                     self.elastic().search(index=ElasticSharing().get_index_name())
                 except:
-                    elastic_sharing = queryUtility(IElasticSharing)
-                    principal = None
-                    record = elastic_sharing.make_record(obj, principal)
-                    self.elastic().create(**record)
+                    self.elastic().indices.create(
+                        index=ElasticSharing().get_index_name(),
+                        body={
+                            'mappings': {
+                                'sharing': {
+                                    'properties': {
+                                        'path': {'type': 'string'},
+                                        'principal': {'type': 'string','index': 'not_analyzed' },
+                                        'roles': {'type': 'string'},
+                                        'uuid': {'type': 'string'}
+                                    }
+                                }
+                            }
+                        }
+                    )
 
                 for brain in community:
                     obj = brain._unrestrictedGetObject()
@@ -404,10 +421,21 @@ class updateSharingCommunitiesElastic(grok.View):
                 self.elastic = getUtility(IElasticSearch)
                 self.elastic().search(index=ElasticSharing().get_index_name())
             except:
-                elastic_sharing = queryUtility(IElasticSharing)
-                principal = None
-                record = elastic_sharing.make_record(obj, principal)
-                self.elastic().create(**record)
+                self.elastic().indices.create(
+                    index=ElasticSharing().get_index_name(),
+                    body={
+                        'mappings': {
+                            'sharing': {
+                                'properties': {
+                                    'path': {'type': 'string'},
+                                    'principal': {'type': 'string','index': 'not_analyzed' },
+                                    'roles': {'type': 'string'},
+                                    'uuid': {'type': 'string'}
+                                }
+                            }
+                        }
+                    }
+                )
 
             for brain in community:
                 obj = brain._unrestrictedGetObject()
@@ -418,3 +446,39 @@ class updateSharingCommunitiesElastic(grok.View):
                     self.context.plone_log('Actualitzat el objecte {} de la comunitat {}'.format(obj, id_community))
 
         logger.info('Finished update sharing in communities: {}'.format(portal.absolute_url()))
+        self.response.setBody('OK')
+
+
+class createElasticSharing(grok.View):
+    """ Aquesta vista crea l'index de l'elasticsearch i li diu que el camp principal pot tenir caracters especials 'index': 'not_analyzed' """
+    grok.name('createelasticsharing')
+    grok.context(IPloneSiteRoot)
+
+    def render(self):
+        try:
+            from plone.protect.interfaces import IDisableCSRFProtection
+            alsoProvides(self.request, IDisableCSRFProtection)
+        except:
+            pass
+
+        try:
+            self.elastic = getUtility(IElasticSearch)
+            self.elastic().search(index=ElasticSharing().get_index_name())
+        except:
+            self.elastic().indices.create(
+                index=ElasticSharing().get_index_name(),
+                body={
+                    'mappings': {
+                        'sharing': {
+                            'properties': {
+                                'path': {'type': 'string'},
+                                'principal': {'type': 'string','index': 'not_analyzed' },
+                                'roles': {'type': 'string'},
+                                'uuid': {'type': 'string'}
+                            }
+                        }
+                    }
+                }
+            )
+
+            self.response.setBody('OK')
