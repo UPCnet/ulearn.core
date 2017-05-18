@@ -18,6 +18,7 @@ from genweb.core.gwuuid import IGWUUID
 
 import json
 import re
+import uuid
 
 
 class IElasticSharing(Interface):
@@ -91,11 +92,12 @@ class ElasticSharing(object):
 		record = dict(
 			index=self.get_index_name(),
 			doc_type='sharing',
+			id=str(uuid.uuid1()),
 			body=dict(
 				path=path,
 				principal=principal,
 				roles=api.user.get_roles(username=principal, obj=object),
-				uuid=IGWUUID(object).get()
+				uuid=IGWUUID(object).get(),
 			)
 		)
 
@@ -203,7 +205,6 @@ class ElasticSharing(object):
 		record = self.make_record(object, principal)
 		SharedMarker(object).share()
 		self.elastic = getUtility(IElasticSearch)
-
 		self.elastic().create(**record)
 
 	def modify(self, object, principal, attributes):
@@ -317,12 +318,12 @@ class ElasticSharing(object):
 		# principals should return a list of all the principals for the current
 		# user
 		self.elastic = getUtility(IElasticSearch)
-
 		shared_items = self.elastic().search(index=ElasticSharing().get_index_name(),
 											 doc_type='sharing',
 											 body={'query': {
-												   'filtered': {
-													   'query': {'match_all': {}},
+												   	'bool': {
+													   'must': {'match_all': {}
+													   },
 													   'filter': {
 														   'terms': {
 															   'principal': principals
