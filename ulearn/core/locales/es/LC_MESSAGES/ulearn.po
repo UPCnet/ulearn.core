@@ -1486,7 +1486,7 @@ msgstr "ulearn.core"
 #. Default: "Activity"
 #: ../ulearn.theme/ulearn/theme/browser/viewlets_templates/folderbar.pt:15
 msgid "ulearn_activity"
-msgstr "Activitat"
+msgstr "Actividad"
 
 #. Default: "Habilitar portlet angularRouteView"
 #: ./ulearn/core/controlpanel.py:510
@@ -1678,4 +1678,3 @@ msgstr "Confirmar contraseña"
 
 msgid "help_confirm_password"
 msgstr "Vuelva a ingresar la contraseña. Asegúrese de que las contraseñas son idénticas."
-
