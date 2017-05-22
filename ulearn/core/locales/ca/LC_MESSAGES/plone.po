@@ -441,3 +441,11 @@ msgstr "Afegir un document"
 
 msgid "Add a new link"
 msgstr "Afegir un enllaç"
+
+#: ../../../../ulern.core/ulearn/core/profiles/default/types/File.xml:5
+msgid "Add a new file"
+msgstr "Afegir un fitxer"
+
+#: ../../../../ulern.core/ulearn/core/profiles/default/types/Image.xml:4
+msgid "Add a new image"
+msgstr "Afegir una imatge"

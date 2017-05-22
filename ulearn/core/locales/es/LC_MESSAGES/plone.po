@@ -423,3 +423,11 @@ msgstr "Añadir un documento"
 
 msgid "Add a new link"
 msgstr "Añadir un enlace"
+
+#: ../../../../ulern.core/ulearn/core/profiles/default/types/File.xml:5
+msgid "Add a new file"
+msgstr "Añadir un archivo"
+
+#: ../../../../ulern.core/ulearn/core/profiles/default/types/Image.xml:4
+msgid "Add a new image"
+msgstr "Añadir una imagen"
