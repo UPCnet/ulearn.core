@@ -7,6 +7,9 @@ from Products.CMFPlone.interfaces.siteroot import IPloneSiteRoot
 from ulearn.core.controlpanel import IUlearnControlPanelSettings
 from zope.component import getUtility
 from mrs.max.utilities import IMAXClient
+from genweb.controlpanel.interface import IGenwebControlPanelSettings
+import transaction
+from ulearn.core.controlpanel import IUlearnControlPanelSettings
 
 
 class ulearnUtils(BrowserView):
@@ -41,3 +44,13 @@ class ulearnUtils(BrowserView):
     def url_max_server(self):
         self.maxclient, self.settings = getUtility(IMAXClient)()
         return self.settings.max_server
+
+    def is_activate_sharedwithme(self):
+        if (api.portal.get_registry_record('genweb.controlpanel.core.IGenwebCoreControlPanelSettings.elasticsearch') != None) and (api.portal.get_registry_record('ulearn.core.controlpanel.IUlearnControlPanelSettings.activate_sharedwithme') == True):
+            portal = api.portal.get()
+            if portal.portal_actions.object.local_roles.visible == False:
+                portal.portal_actions.object.local_roles.visible = True
+                transaction.commit()
+            return True
+        else:
+            return False
