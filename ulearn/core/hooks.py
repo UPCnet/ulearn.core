@@ -20,7 +20,6 @@ from repoze.catalog.query import Eq
 from DateTime.DateTime import DateTime
 from zope.component import providedBy
 from plone.app.workflow.interfaces import ILocalrolesModifiedEvent
-
 from plone.app.controlpanel.interfaces import IConfigurationChangedEvent
 from Products.PluggableAuthService.interfaces.events import IUserLoggedInEvent
 from zope.globalrequest import getRequest

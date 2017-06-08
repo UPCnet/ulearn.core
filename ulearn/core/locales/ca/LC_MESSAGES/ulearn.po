@@ -1137,11 +1137,6 @@ msgstr "Títol"
 msgid "label_not_subjects"
 msgstr "No hi ha assignatures disponibles."
 
-#. Default: "Portrait"
-#: ./ulearn/core/userschema.py:55
-msgid "label_portrait"
-msgstr "Imatge"
-
 #. Default: "Show all items"
 #: ../ulearn.theme/ulearn/theme/browser/views.py:411
 msgid "label_show_all"
@@ -1271,6 +1266,31 @@ msgstr "Els meus Tags"
 #: ../ulearn.theme/ulearn/theme/portlets/templates/discussion.pt:52
 msgid "newdiscussion"
 msgstr "Nou debat"
+
+#. Default: "Shared with me"
+#: ../../../../../../ulearn.theme/ulearn/theme/portlets/templates/buttonbar.pt:24
+msgid "no_content_shared_user"
+msgstr "No hi ha contingut compartit amb tu ara mateix"
+
+#. Default: "Shared with me"
+#: ../../../../../../ulearn.theme/ulearn/theme/portlets/templates/buttonbar.pt:24
+msgid "shared_with_me"
+msgstr "Compartit amb mi"
+
+#. Default: "Shared content"
+#: ../../../../../../ulearn.core/ulearn/core/browser/sharing_templates/shared.pt:26
+msgid "shared_content"
+msgstr "Contingut compartit"
+
+#. Default: "All content shared by any member of this community"
+#: ../../../../../../ulearn.core/ulearn/core/browser/sharing_templates/shared.pt:26
+msgid "shared_content_description"
+msgstr "Tots el contingut compartit per algun membre d'aquesta comunitat "
+
+#. Default: "Shared content"
+#: ../../../../../../ulearn.core/ulearn/core/browser/sharing_templates/shared.pt:26
+msgid "shared_content_title"
+msgstr "Accès a tot el contingut compartit"
 
 #. Default: "Create a new event"
 #: ../ulearn.theme/ulearn/theme/portlets/templates/calendar.pt:131
@@ -1670,6 +1690,9 @@ msgstr "Més Notícies"
 
 msgid "find_label"
 msgstr "Cerca..."
+
+msgid "Gestio de riscos"
+msgstr "Gestió de riscos"
 
 msgid "flashesinformativos"
 msgstr "Última hora"

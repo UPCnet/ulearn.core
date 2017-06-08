@@ -18,6 +18,9 @@ from ulearn.core import _
 from mrs.max.utilities import IMAXClient
 from collective.z3cform.datagridfield import DataGridFieldFactory
 from collective.z3cform.datagridfield.registry import DictRow
+from plone import api
+from genweb.controlpanel.interface import IGenwebControlPanelSettings
+import transaction
 
 
 class availableLanguages(object):
@@ -79,7 +82,7 @@ class IUlearnControlPanelSettings(model.Schema):
         _(u'General'),
         fields=['campus_url', 'library_url', 'people_literal',
                 'threshold_winwin1', 'threshold_winwin2',
-                'threshold_winwin3', 'stats_button'])
+                'threshold_winwin3', 'stats_button', 'info_servei', 'activate_sharedwithme'])
 
     model.fieldset(
         'Specific',
@@ -154,6 +157,23 @@ class IUlearnControlPanelSettings(model.Schema):
                 default=_(u"Mostrar botó d'accés a estadístiques diàries")),
         description=_(u'help_stats_button',
                       default=_(u"Mostra o no el botó d'accés a estadístiques diàries a stats/activity i stats/chats")),
+        required=False,
+        default=False,
+    )
+
+    info_servei = schema.TextLine(
+        title=_(u'info_servei',
+                default=_(u'Informació del servei')),
+        description=_(u'help_info_servei',
+                      default=_(u'Aquest és l\'enllaç al servei.')),
+        required=False,
+    )
+
+    activate_sharedwithme = schema.Bool(
+        title=_(u'activate_sharedwithme',
+                default=_(u"Mostra el que hi ha compartit amb mi")),
+        description=_(u'help_activate_sharedwithme',
+                      default=_(u"Mostra o no el botó del que hi ha compartit amb mi i el que hi ha compartit a les comunitats")),
         required=False,
         default=False,
     )
@@ -369,6 +389,22 @@ class UlearnControlPanelSettingsForm(controlpanel.RegistryEditForm):
 
             for user in make_vip:
                 maxclient.admin.security.roles['NonVisible'].users[user].post()
+
+        if data.get('activate_sharedwithme', True):
+            if api.portal.get_registry_record('genweb.controlpanel.core.IGenwebCoreControlPanelSettings.elasticsearch') != None:
+                portal = api.portal.get()
+                if portal.portal_actions.object.local_roles.visible == False:
+                    portal.portal_actions.object.local_roles.visible = True
+                    transaction.commit()
+            else:
+                IStatusMessage(self.request).addStatusMessage(_(u'Has marcat el comparteix pero falta la url del elasticsearch'),
+                                                              'info')
+        else:
+            portal = api.portal.get()
+            if portal.portal_actions.object.local_roles.visible == True:
+                portal.portal_actions.object.local_roles.visible = False
+                transaction.commit()
+
 
         IStatusMessage(self.request).addStatusMessage(_(u'Changes saved'),
                                                       'info')

@@ -10,7 +10,7 @@ from Products.PluggableAuthService.interfaces.plugins import IPropertiesPlugin
 from souper.soup import Record
 from souper.interfaces import ICatalogFactory
 from repoze.catalog.query import Eq
-from repoze.catalog.query import Or
+from repoze.catalog.query import And
 from souper.soup import get_soup
 
 from mrs.max.utilities import IMAXClient
