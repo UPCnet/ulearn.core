@@ -1,11 +1,32 @@
 Changelog
 =========
 
-2.50 (unreleased)
+2.50 (2017-06-08)
 -----------------
 
-- Nothing changed yet.
-
+* Merge remote-tracking branch 'origin/newsharing' into develop [Pilar Marinas]
+* Configuracion activate_sharedwithme [Pilar Marinas]
+* Escribir bien la ruta de los literales [Iago López Fernández]
+* Añadir nuevos literales [Iago López Fernández]
+* Traducción de literal [Iago López Fernández]
+* Canvis perque funcioni nova versio elasticsearch 5_3_0 [Pilar Marinas]
+* Vista para crear y inicializar el elasticsharing [Pilar Marinas]
+* Update Sharing Community [Pilar Marinas]
+* WS count number of communities [Pilar Marinas]
+* Recuperar todos los permisos si borramos bd elastic [Pilar Marinas]
+* Comparteix amb grups [Pilar Marinas]
+* Afegir info servei ulearn settings [Pilar Marinas]
+* updateSharingCommunitiesElastic [Pilar Marinas]
+* Translations [Pilar Marinas]
+* Si eres Owner y has quitado herencia objecto ya no aparece objecto en los compartidos conmigo [Pilar Marinas]
+* actualitza tots els objectes de la comunitat al elasticsearch [Pilar Marinas]
+* Hook delete object plone remove object elastic [Pilar Marinas]
+* Canvi disseny shared [Pilar Marinas]
+* Patches Notify LocalrolesModifiedEvent [Pilar Marinas]
+* Canvis perque funcioni newsharing [Pilar Marinas]
+* Merge remote-tracking branch 'origin/develop' into newsharing [Pilar Marinas]
+* added comments to ImportFileToFolder view on ulearn/core/browser/setup.py [Vicente Iranzo Maestre]
+* added ImportFileToFolder view on ulearn/core/browser/setup.py [Vicente Iranzo Maestre]
 
 2.49 (2017-02-15)
 -----------------
