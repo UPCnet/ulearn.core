@@ -360,6 +360,37 @@ class GiveAllCommunitiesGWUUID(grok.View):
 
         return 'Done'
 
+class GiveGWUUID(grok.View):
+    grok.context(IPloneSiteRoot)
+    grok.name('givegwuuid')
+
+    def render(self):
+        try:
+            from plone.protect.interfaces import IDisableCSRFProtection
+            alsoProvides(self.request, IDisableCSRFProtection)
+        except:
+            pass
+        pc = api.portal.get_tool('portal_catalog')
+        results = pc.searchResults(gwuuid=None)
+
+        generator = queryUtility(IUUIDGenerator)
+        if generator is None:
+            return
+
+        for result in results:
+            obj = result.getObject()
+            if not getattr(obj, ATTRIBUTE_NAME, False):
+                uuid = generator()
+                if not uuid:
+                    return
+
+                setattr(obj, ATTRIBUTE_NAME, uuid)
+                obj.reindexObject(idxs=['gwuuid'])
+
+        # pc.clearFindAndRebuild()
+
+        return 'Done'
+
 
 class MigrateOldStyleACLs(grok.View):
     grok.context(IPloneSiteRoot)
