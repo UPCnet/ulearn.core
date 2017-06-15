@@ -1,11 +1,15 @@
 Changelog
 =========
 
-2.51 (unreleased)
+2.51 (2017-06-15)
 -----------------
 
-- Nothing changed yet.
-
+* Canvis Givegwuuid [root]
+* GiveGWUUID [Pilar Marinas]
+* GiveGWUUID [Pilar Marinas]
+* Merge branch 'develop' of github.com:UPCnet/ulearn.core into develop [iago.lopez]
+* Merge branch 'develop' of github.com:UPCnet/ulearn.core into develop [iago.lopez]
+* Add collective.polls [iago.lopez]
 
 2.50 (2017-06-08)
 -----------------
