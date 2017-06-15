@@ -371,7 +371,7 @@ class GiveGWUUID(grok.View):
         except:
             pass
         pc = api.portal.get_tool('portal_catalog')
-        communities = pc.searchResults(portal_type='ulearn.community')
+        communities = pc.unrestrictedSearchResults(portal_type='ulearn.community')
 
         generator = queryUtility(IUUIDGenerator)
         if generator is None:
@@ -379,7 +379,7 @@ class GiveGWUUID(grok.View):
 
         for community in communities:
             obj_community = community.getObject()
-            results = pc.searchResults(path=('/'.join(obj_community.getPhysicalPath())))
+            results = pc.unrestrictedSearchResults(path=('/'.join(obj_community.getPhysicalPath())))
             for result in results:
                 obj = result.getObject()
                 if not getattr(obj, ATTRIBUTE_NAME, False):
