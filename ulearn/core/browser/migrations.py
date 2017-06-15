@@ -371,22 +371,24 @@ class GiveGWUUID(grok.View):
         except:
             pass
         pc = api.portal.get_tool('portal_catalog')
-        results = pc.searchResults(gwuuid=None)
+        communities = pc.searchResults(portal_type='ulearn.community')
 
         generator = queryUtility(IUUIDGenerator)
         if generator is None:
             return
 
-        for result in results:
-            obj = result.getObject()
-            if not getattr(obj, ATTRIBUTE_NAME, False):
-                uuid = generator()
-                if not uuid:
-                    return
+        for community in communities:
+            obj_community = community.getObject()
+            results = pc.searchResults(path=('/'.join(obj_community.getPhysicalPath())))
+            for result in results:
+                obj = result.getObject()
+                if not getattr(obj, ATTRIBUTE_NAME, False):
+                    uuid = generator()
+                    if not uuid:
+                        return
 
-                setattr(obj, ATTRIBUTE_NAME, uuid)
-                obj.reindexObject(idxs=['gwuuid'])
-
+                    setattr(obj, ATTRIBUTE_NAME, uuid)
+                    obj.reindexObject(idxs=['gwuuid'])
         # pc.clearFindAndRebuild()
 
         return 'Done'
