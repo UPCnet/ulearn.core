@@ -758,7 +758,7 @@ msgstr "Aquest és el color per les comunitats organitzatives."
 #. Default: "Enter full name, e.g. John Smith."
 #: ./ulearn/core/userschema.py:22
 msgid "help_full_name_creation"
-msgstr "Inidcar el nom sencer, per exemple, John Smith."
+msgstr "Indicar el nom sencer, per exemple, John Smith."
 
 #. Default: "Habilita el portlet esdeveniments."
 #: ./ulearn/core/controlpanel.py:431
