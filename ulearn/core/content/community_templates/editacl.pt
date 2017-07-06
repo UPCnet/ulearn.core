@@ -41,7 +41,7 @@
            ng-switch="ctrl.active_tab">
         <div ng-switch-when="users" ng-cloak>
 
-          <ui-select ng-model="ctrl.principals.selected" on-select="ctrl.selectUser($item, $model)" theme="selectize" style="width: 300px;">
+          <ui-select ng-model="ctrl.principals.selected" on-select="ctrl.selectUser($item, $model, $select)" theme="selectize" style="width: 300px;">
             <ui-select-match placeholder="{{'COMMUNITY_ACL.SEARCHUSERS' | translate}}">{{$select.selected.id}}</ui-select-match>
             <ui-select-choices repeat="principal in ctrl.principals"
                  refresh="ctrl.searchUser($select.search)"
@@ -79,7 +79,7 @@
         </div>
         <div ng-switch-when="groups" ng-cloak>
 
-          <ui-select ng-model="ctrl.group_results.selected" on-select="ctrl.selectGroup($item, $model)" theme="selectize" style="width: 300px;">
+          <ui-select ng-model="ctrl.group_results.selected" on-select="ctrl.selectGroup($item, $model, $select)" theme="selectize" style="width: 300px;">
             <ui-select-match placeholder="{{'COMMUNITY_ACL.SEARCHGROUPS' | translate}}">{{$select.selected.id}}</ui-select-match>
             <ui-select-choices repeat="principal in ctrl.group_results"
                  refresh="ctrl.searchGroup($select.search)"
