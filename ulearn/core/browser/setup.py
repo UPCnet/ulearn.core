@@ -85,6 +85,55 @@ class setupHomePage(grok.View):
         target_manager_assignments['econnect'] = econnectAssignment()
 
 
+class setupHomePageNews(grok.View):
+    grok.context(IPloneSiteRoot)
+    grok.require('zope2.ViewManagementScreens')
+
+    def render(self):
+        portal = getSite()
+        frontpage = portal['front-page']
+        # Add portlets programatically
+        target_manager = queryUtility(IPortletManager, name='genweb.portlets.HomePortletManager1', context=frontpage)
+        target_manager_assignments = getMultiAdapter((frontpage, target_manager), IPortletAssignmentMapping)
+        from ulearn.theme.portlets.profile import Assignment as profileAssignment
+        from ulearn.theme.portlets.communities import Assignment as communitiesAssignment
+        from ulearn.theme.portlets.thinnkers import Assignment as thinnkersAssignment
+        from mrs.max.portlets.maxui import Assignment as maxAssignment
+        from ulearn.theme.portlets.flashesinformativos.flashesinformativos import Assignment as flashesinformativosAssignment
+        from ulearn.theme.portlets.custombuttonbar.custombuttonbar import Assignment as custombuttonbarAssignment
+        from ulearn.theme.portlets.mycommunities.mycommunities import Assignment as mycommunitiesAssignment
+        from ulearn.theme.portlets.subscribednews.subscribednews import Assignment as subscribednewsAssignment
+        from ulearn.theme.portlets.importantnews.importantnews import Assignment as importantnewsAssignment
+        from ulearn.theme.portlets.calendar import Assignment as calendarAssignment
+        from ulearn.theme.portlets.stats import Assignment as statsAssignment
+        from ulearn.theme.portlets.econnect import Assignment as econnectAssignment
+        from ulearn.theme.portlets.angularrouteview import Assignment as angularrouteviewAssignment
+
+        target_manager_assignments['profile'] = profileAssignment()
+        target_manager_assignments['communities'] = communitiesAssignment()
+        target_manager_assignments['thinnkers'] = thinnkersAssignment()
+
+        target_manager = queryUtility(IPortletManager, name='genweb.portlets.HomePortletManager3', context=frontpage)
+        target_manager_assignments = getMultiAdapter((frontpage, target_manager), IPortletAssignmentMapping)
+        target_manager_assignments['angularroute'] = angularrouteviewAssignment()
+        target_manager_assignments['flashesinformativos'] = flashesinformativosAssignment()
+        target_manager_assignments['custombuttons'] = custombuttonbarAssignment()
+        target_manager_assignments['mycommunities'] = mycommunitiesAssignment()
+        target_manager_assignments['my-subscribed-news'] = subscribednewsAssignment()
+        target_manager_assignments['max'] = maxAssignment()
+
+        portletManager = getUtility(IPortletManager, 'genweb.portlets.HomePortletManager3')
+        spanstorage = getMultiAdapter((frontpage, portletManager), ISpanStorage)
+        spanstorage.span = '8'
+
+        target_manager = queryUtility(IPortletManager, name='genweb.portlets.HomePortletManager4', context=frontpage)
+        target_manager_assignments = getMultiAdapter((frontpage, target_manager), IPortletAssignmentMapping)
+        target_manager_assignments['importantnews'] = importantnewsAssignment()
+        target_manager_assignments['calendar'] = calendarAssignment()
+        target_manager_assignments['stats'] = statsAssignment()
+        target_manager_assignments['econnect'] = econnectAssignment()
+
+
 class ldapkillah(grok.View):
     grok.context(IPloneSiteRoot)
     grok.require('zope2.ViewManagementScreens')
