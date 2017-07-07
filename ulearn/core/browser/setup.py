@@ -313,9 +313,11 @@ def getDestinationFolder(stats_folder,create_month=True):
     portal = api.portal.get()
     #setSite(portal)
     # Create 'stats_folder' folder if not exists
-    if portal.get(stats_folder) is None:
-        makeFolder(portal, stats_folder)
-    portal = portal.get(stats_folder)
+    for stats_folder_part in stats_folder.split('/'):
+        if portal.get(stats_folder_part) is None:
+            makeFolder(portal, stats_folder_part)
+        portal = portal.get(stats_folder_part)
+    
     today = datetime.now()
     context = aq_inner(portal)
 #    tool = getToolByName(context, 'translation_service')
@@ -361,33 +363,51 @@ class ImportFileToFolder(grok.View):
     grok.name('importfiletofolder')
     grok.require('genweb.webmaster')
 
-    def render(self):
-        portal = api.portal.get()
-        folder_name = self.request.get("folder")
-        local_file = self.request.get("local_file")
 
-        f = open(local_file,'r')
-        content = f.read()
-        f.close()
 
-        plone_folder = getDestinationFolder(folder_name,create_month=False)
-        from plone.protect.interfaces import IDisableCSRFProtection
-        from zope.interface import alsoProvides
-        alsoProvides(self.request, IDisableCSRFProtection)
-        file = NamedBlobFile(
-            data=content,
-            filename=u'{}'.format(local_file),
-            contentType='application/xls'
-            )
-        obj = createContentInContainer(
-            plone_folder,
-            'AppFile',
-            id='{}'.format(local_file.split('/')[-1]),
-            title='{}'.format(local_file.split('/')[-1]),
-            file=file,
-            checkConstraints=False
-            )
-        self.response.setBody('OK')
+    render = ViewPageTemplateFile('views_templates/importfiletofolder.pt')
+
+    def update(self):
+        try:
+            from plone.protect.interfaces import IDisableCSRFProtection
+            alsoProvides(self.request, IDisableCSRFProtection)
+        except:
+            pass
+        if self.request.environ['REQUEST_METHOD'] == 'POST':
+            portal = api.portal.get()
+            folder_name = self.request.get("folder")
+            local_file = self.request.get("local_file")
+
+            f = open(local_file,'r')
+            content = f.read()
+            f.close()
+
+            for folder_name_part in folder_name.split('/'):
+                if portal.get(folder_name_part) is None:
+                    makeFolder(portal, folder_name_part)
+                portal = portal.get(folder_name_part)
+
+
+            #plone_folder = getDestinationFolder(folder_name,create_month=False)
+            file = NamedBlobFile(
+                data=content,
+                filename=u'{}'.format(local_file),
+                contentType='application/xls'
+                )
+            obj = createContentInContainer(
+                portal,
+                'AppFile',
+                id='{}'.format(local_file.split('/')[-1]),
+                title='{}'.format(local_file.split('/')[-1]),
+                file=file,
+                checkConstraints=False
+                )
+
+
+
+
+
+
 
 class updateSharingCommunityElastic(grok.View):
     """ Aquesta vista actualitza tots els objectes de la comunitat al elasticsearch """
