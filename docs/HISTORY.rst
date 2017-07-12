@@ -1,11 +1,14 @@
 Changelog
 =========
 
-2.52 (unreleased)
+2.52 (2017-07-12)
 -----------------
 
-- Nothing changed yet.
-
+* Validate terms addCommunity [Pilar Marinas]
+* re-added importfiletofolder [root]
+* Netejar valor cercat editacl [Pilar Marinas]
+* Added new setup - setupHomePageNews [iago.lopez]
+* Cambiado literal [iago.lopez]
 
 2.51 (2017-06-15)
 -----------------
