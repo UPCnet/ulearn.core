@@ -11,6 +11,7 @@ from plone.portlets.interfaces import IPortletAssignmentMapping
 from plone.dexterity.utils import createContentInContainer
 
 from Products.CMFPlone.interfaces import IPloneSiteRoot
+from Products.CMFPlone.interfaces.constrains import ISelectableConstrainTypes
 
 from genweb.portlets.browser.manager import ISpanStorage
 
@@ -132,6 +133,48 @@ class setupHomePageNews(grok.View):
         target_manager_assignments['calendar'] = calendarAssignment()
         target_manager_assignments['stats'] = statsAssignment()
         target_manager_assignments['econnect'] = econnectAssignment()
+
+
+class createMenuFolders(grok.View):
+    grok.context(IPloneSiteRoot)
+    grok.require('zope2.ViewManagementScreens')
+
+    def createOrGetObject(self, context, newid, title, type_name):
+        if newid in context.contentIds():
+            obj = context[newid]
+        else:
+            obj = createContentInContainer(context, type_name, title=title, checkConstrains=False)
+            transaction.savepoint()
+            if obj.id != newid:
+                context.manage_renameObject(obj.id, newid)
+            obj.reindexObject()
+        return obj
+
+    def newPrivateFolder(self, context, newid, title):
+        return self.createOrGetObject(context, newid, title, u'privateFolder')
+
+    def render(self):
+        portal = getSite()
+        gestion = self.newPrivateFolder(portal, 'gestion', u'Gestión')
+        gestion.exclude_from_nav = False
+        gestion.setLayout('folder_listing')
+        behavior = ISelectableConstrainTypes(gestion)
+        behavior.setConstrainTypesMode(1)
+        behavior.setLocallyAllowedTypes(('Folder', 'privateFolder',))
+        behavior.setImmediatelyAddableTypes(('Folder', 'privateFolder',))
+
+        enlaces_cabecera = self.newPrivateFolder(gestion, 'menu', u'Menu')
+        enlaces_cabecera.exclude_from_nav = False
+        enlaces_cabecera.reindexObject()
+
+        for language in portal['portal_languages'].getSupportedLanguages():
+            language_folder = self.newPrivateFolder(enlaces_cabecera, language, language)
+            language_folder.exclude_from_nav = False
+            language_folder.reindexObject()
+            behavior = ISelectableConstrainTypes(language_folder)
+            behavior.setConstrainTypesMode(1)
+            behavior.setLocallyAllowedTypes(('Folder', 'privateFolder', 'Link',))
+            behavior.setImmediatelyAddableTypes(('Folder', 'privateFolder', 'Link',))
 
 
 class ldapkillah(grok.View):
