@@ -1,11 +1,13 @@
 Changelog
 =========
 
-2.53 (unreleased)
+2.53 (2017-07-24)
 -----------------
 
-- Nothing changed yet.
-
+* Add privateFolder [Pilar Marinas]
+* Added indexer for the soup of the menu [iago.lopez]
+* Create setup: createmenufolders [iago.lopez]
+* Translations: menu folders [iago.lopez]
 
 2.52 (2017-07-12)
 -----------------
