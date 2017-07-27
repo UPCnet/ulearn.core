@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GenWebUPC\n"
-"POT-Creation-Date: 2017-07-27 11:23+0000\n"
+"POT-Creation-Date: 2017-07-27 12:59+0000\n"
 "PO-Revision-Date: 2014-04-14 11:20+0100\n"
 "Last-Translator: Corina Riba <corina.riba@upcnet.es>\n"
 "Language-Team: Plone Team@UPCnet <plone.team@upcnet.es>\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Preferred-Encodings: utf-8 latin1\n"
 "Domain: ulearn\n"
 
-#: ./ulearn/core/controlpanel.py:346
+#: ./ulearn/core/controlpanel.py:344
 msgid "/mail_password_form?userid="
 msgstr ""
 
@@ -48,10 +48,6 @@ msgstr "Afegir portlet Les meves noticies"
 msgid "Add a new private folder"
 msgstr "Afegir una carpeta privada"
 
-#: ./ulearn/core/controlpanel.py:314
-msgid "Add the quick links by language"
-msgstr "Text que es mostrarà com a títol dels enllaços directes."
-
 #. Default: "Habilitar portlet esdeveniments"
 #: ../ulearn.theme/ulearn/theme/controlportlets.py:162
 msgid "AgendaGW"
@@ -63,7 +59,7 @@ msgstr "Calendari"
 
 #: ../ulearn.theme/ulearn/theme/controlportlets.py:433
 #: ./ulearn/core/browser/views.py:175
-#: ./ulearn/core/controlpanel.py:408
+#: ./ulearn/core/controlpanel.py:406
 msgid "Cancel"
 msgstr "Cancel·la"
 
@@ -71,7 +67,7 @@ msgstr "Cancel·la"
 msgid "Català"
 msgstr "Català"
 
-#: ./ulearn/core/controlpanel.py:405
+#: ./ulearn/core/controlpanel.py:403
 msgid "Changes saved"
 msgstr "Canvis desats"
 
@@ -151,7 +147,7 @@ msgid "Edit Subscribed News Portlet"
 msgstr "Editar portlet Notícies destacades"
 
 #: ../ulearn.theme/ulearn/theme/controlportlets.py:435
-#: ./ulearn/core/controlpanel.py:410
+#: ./ulearn/core/controlpanel.py:408
 msgid "Edit cancelled"
 msgstr "Edició cancel·lada"
 
@@ -214,7 +210,7 @@ msgstr "Habilitar portlet FullNews"
 msgid "General"
 msgstr "General"
 
-#: ./ulearn/core/controlpanel.py:397
+#: ./ulearn/core/controlpanel.py:395
 msgid "Has marcat el comparteix pero falta la url del elasticsearch"
 msgstr ""
 
@@ -472,7 +468,7 @@ msgstr "Habilitar portlet UPC News"
 msgid "UPCnet only"
 msgstr "UPCnet ONLY"
 
-#: ./ulearn/core/controlpanel.py:354
+#: ./ulearn/core/controlpanel.py:352
 msgid "Ulearn settings"
 msgstr "Configuració de uLearn"
 
@@ -508,7 +504,7 @@ msgid "activate_sharedwithme"
 msgstr ""
 
 #: ./ulearn/core/content/community.py:162
-#: ./ulearn/core/controlpanel.py:334
+#: ./ulearn/core/controlpanel.py:332
 msgid "activity_view"
 msgstr "Visualització Activitats Comunitat"
 
@@ -711,7 +707,7 @@ msgid "help_activate_sharedwithme"
 msgstr ""
 
 #: ./ulearn/core/content/community.py:163
-#: ./ulearn/core/controlpanel.py:335
+#: ./ulearn/core/controlpanel.py:333
 msgid "help_activity_view"
 msgstr "Selecciona el mode de visualització de les activitats de la comunitat"
 
@@ -941,15 +937,15 @@ msgid "help_portrait"
 msgstr """Per afegir o canviar la imatge: feu clic al botó Examinar; seleccionar una imatge. La mida recomanada de la imatge és de 75 píxels d'amplada per 100 píxels d'alt."""
 
 #. Default: "Afegiu la icona del Font Awesome que voleu que es mostri"
-#: ./ulearn/core/controlpanel.py:321
+#: ./ulearn/core/controlpanel.py:320
 msgid "help_quicklinks_icon"
 msgstr "Icona del Font Awesome que apareix al costat del títol dels enllaços directes"
 
-#: ./ulearn/core/controlpanel.py:315
+#: ./ulearn/core/controlpanel.py:328
 msgid "help_quicklinks_literal"
 msgstr "Text que sortirà com a títol dels enllaços directes"
 
-#: ./ulearn/core/controlpanel.py:330
+#: ./ulearn/core/controlpanel.py:314
 msgid "help_quicklinks_table"
 msgstr "En aquesta taula s'han d'afegir tots els enllaços directes que volem mostrar"
 
@@ -1054,7 +1050,7 @@ msgid "help_ulearn_profile"
 msgstr "Habilita el portlet on mostra el perfil usuari, o la comunitat on estem."
 
 #. Default: "uLearn configuration registry."
-#: ./ulearn/core/controlpanel.py:355
+#: ./ulearn/core/controlpanel.py:353
 msgid "help_ulearn_settings_editform"
 msgstr "Configuració de uLearn"
 
@@ -1074,7 +1070,7 @@ msgid "help_ulearn_thinkers"
 msgstr "Habilita el portlet on es mostren els usuaris, amb la cerca."
 
 #. Default: "Url per defecte: \"/mail_password_form?userid=\". Per a dominis externs indiqueu la url completa, \"http://www.domini.cat\""
-#: ./ulearn/core/controlpanel.py:343
+#: ./ulearn/core/controlpanel.py:341
 msgid "help_url_forget_password"
 msgstr "Url per defecte: \"/mail_password_form?userid=\". Per a dominis externs indiqueu la url completa, \"http://www.domini.cat\""
 
@@ -1441,7 +1437,7 @@ msgid "profile"
 msgstr "Perfil d'usuari"
 
 #. Default: "icon-link"
-#: ./ulearn/core/controlpanel.py:319
+#: ./ulearn/core/controlpanel.py:318
 msgid "quicklinks_icon"
 msgstr "Icona Font Awesome"
 
@@ -1721,7 +1717,7 @@ msgid "ulearncalendar"
 msgstr "Calendari uLearn"
 
 #. Default: "URL contrasenya oblidada"
-#: ./ulearn/core/controlpanel.py:341
+#: ./ulearn/core/controlpanel.py:339
 msgid "url_forget_password"
 msgstr "URL contrasenya oblidada"
 

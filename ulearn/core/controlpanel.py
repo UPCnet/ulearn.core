@@ -311,9 +311,8 @@ class IUlearnControlPanelSettings(model.Schema):
 
     form.widget(quicklinks_literal=DataGridFieldFactory)
     quicklinks_literal = schema.List(title=_(u'Text Quick Links'),
-                                     description=_(u'Add the quick links by language'),
-                                     value_type=DictRow(title=_(u'help_quicklinks_literal'),
-                                                        schema=ILiteralQuickLinks))
+                                     description=_(u'help_quicklinks_table'),
+                                     value_type=DictRow(schema=ILiteralQuickLinks))
 
     quicklinks_icon = schema.TextLine(
         title=_(u'quicklinks_icon',
@@ -326,9 +325,8 @@ class IUlearnControlPanelSettings(model.Schema):
 
     form.widget(quicklinks_table=DataGridFieldFactory)
     quicklinks_table = schema.List(title=_(u'QuickLinks'),
-                                   description=_(u'Add the quick links by language'),
-                                   value_type=DictRow(title=_(u'help_quicklinks_table'),
-                                                      schema=ITableQuickLinks))
+                                   description=_(u'help_quicklinks_literal'),
+                                   value_type=DictRow(schema=ITableQuickLinks))
 
     activity_view = schema.Choice(
         title=_(u'activity_view'),
