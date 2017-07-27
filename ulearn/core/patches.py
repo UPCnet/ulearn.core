@@ -6,21 +6,24 @@ from zope.component import getUtility
 from zope.component import getUtilitiesFor
 from zope.interface import implements
 from souper.interfaces import ICatalogFactory
-
 from Acquisition import aq_inner
 from zExceptions import Forbidden
 from Products.CMFCore.interfaces import ISiteRoot
 from Products.CMFCore.utils import getToolByName
 from mrs.max.utilities import IMAXClient
 from Products.PloneLanguageTool.interfaces import INegotiateLanguage
-
 from genweb.core.utils import remove_user_from_catalog
 from repoze.catalog.query import Eq
 from souper.soup import get_soup
 from genweb.core.gwuuid import IGWUUID
+from zope.event import notify
+from plone.app.workflow.events import LocalrolesModifiedEvent
+from Products.statusmessages.interfaces import IStatusMessage
+from plone.app.workflow import PloneMessageFactory as _
 
 import logging
 logger = logging.getLogger('event.LDAPMultiPlugin')
+
 
 # We are patching the enumerateUsers method of the mutable_properties plugin to
 # make it return all the available user properties extension
@@ -38,8 +41,7 @@ def enumerateUsers(self, id=None, login=None, exact_match=False, **kw):
         criteria = copy.copy(kw)
 
         users = [(user, data) for (user, data) in self._storage.items()
-                 if self.testMemberData(data, criteria, exact_match)
-                 and not data.get('isGroup', False)]
+                 if self.testMemberData(data, criteria, exact_match) and not data.get('isGroup', False)]
 
         has_extended_properties = False
         extender_name = api.portal.get_registry_record('genweb.controlpanel.core.IGenwebCoreControlPanelSettings.user_properties_extender')
@@ -235,12 +237,6 @@ def authenticateCredentials(self, credentials):
     return (user.getId(), user.getUserName())
 
 
-
-from zope.event import notify
-from plone.app.workflow.events import LocalrolesModifiedEvent
-from Products.statusmessages.interfaces import IStatusMessage
-from plone.app.workflow import PloneMessageFactory as _
-
 # Notify LocalrolesModifiedEvent if settings
 # plone.app.workflow.browser.sharing.SharingView
 def handle_form(self):
@@ -279,11 +275,9 @@ def handle_form(self):
                 settings.append(
                     dict(id=entry['id'],
                          type=entry['type'],
-                         roles=[r for r in roles
-                            if entry.get('role_%s' % r, False)]))
+                         roles=[r for r in roles if entry.get('role_%s' % r, False)]))
             if settings:
-                reindex = self.update_role_settings(settings, reindex=False) \
-                            or reindex
+                reindex = self.update_role_settings(settings, reindex=False) or reindex
                 notify(LocalrolesModifiedEvent(self.context, self.request))
             if reindex:
                 self.context.reindexObjectSecurity()

@@ -26,11 +26,11 @@ msgstr "Se han guardado los cambios"
 #: ../../../../ulearn.core/ulearn/core/content/community_templates/communityadder.pt:15
 #: ../../../../ulearn.core/ulearn/core/content/community_templates/communityedit.pt:15
 msgid "Close"
-msgstr ""
+msgstr "Cerrar"
 
 #: ../../../../ulearn.core/ulearn/core/content/community.py:54
 msgid "Closed"
-msgstr ""
+msgstr "Cerrada"
 
 #: ../../../../ulearn.core/ulearn/core/browser/views.py:53
 msgid "Convidats moderadors"
@@ -39,11 +39,11 @@ msgstr ""
 #: ../../../../ulearn.core/ulearn/core/browser/views.py:87
 #: ../../../../ulearn.core/ulearn/core/content/community.py:212
 msgid "Crea la comunitat"
-msgstr ""
+msgstr "Crea la comunidad"
 
 #: ../../../../ulearn.core/ulearn/core/browser/views.py:40
 msgid "Data d'inici"
-msgstr ""
+msgstr "Fecha de inicio"
 
 #: ../../../../ulearn.core/ulearn/core/content/community.py:77
 msgid "Descripció"
@@ -59,7 +59,7 @@ msgstr "Documentos"
 
 #: ../../../../ulearn.core/ulearn/core/browser/views.py:46
 msgid "Durada de la reunió"
-msgstr ""
+msgstr "Duración de la reunión"
 
 #: ../../../../ulearn.core/ulearn/core/controlpanel.py:83
 msgid "Edit cancelled"
@@ -71,11 +71,11 @@ msgstr "Edición cancelada"
 
 #: ../../../../ulearn.core/ulearn/core/content/community.py:283
 msgid "Edita la comunitat"
-msgstr ""
+msgstr "Edita la comunidad"
 
 #: ../../../../ulearn.core/ulearn/core/content/community.py:372
 msgid "Enllaços"
-msgstr ""
+msgstr "Enlaces"
 
 #: ../../../../ulearn.theme/ulearn/theme/browser/views_templates/user_profile.pt:40
 msgid "Error"
@@ -83,15 +83,15 @@ msgstr "Error"
 
 #: ../../../../ulearn.core/ulearn/core/content/community.py:376
 msgid "Esdeveniments"
-msgstr ""
+msgstr "Eventos"
 
 #: ../../../../ulearn.core/ulearn/core/content/community.py:373
 msgid "Fotos"
-msgstr ""
+msgstr "Fotos"
 
 #: ../../../../ulearn.core/ulearn/core/browser/views.py:130
 msgid "Hi ha hagut algun problema i la reunió virtual no ha estat creada."
-msgstr ""
+msgstr "Debido a problemas técnicos, no se ha podido crear la reunión virtual."
 
 #: ../../../../ulearn.core/ulearn/core/content/community.py:99
 msgid "Imatge"
@@ -99,11 +99,11 @@ msgstr "Imagen"
 
 #: ../../../../ulearn.core/ulearn/core/content/community.py:100
 msgid "Imatge que defineix la comunitat"
-msgstr ""
+msgstr "Imagen que define la comunidad"
 
 #: ../../../../ulearn.core/ulearn/core/browser/views.py:47
 msgid "Indiqueu durada de la reunió."
-msgstr ""
+msgstr "Indique la duración de la reunión."
 
 #: ../../../../ulearn.core/ulearn/core/browser/views.py:66
 msgid "Indiqueu el nombre total d'assistents previstos."
@@ -222,7 +222,7 @@ msgstr "Comentarios"
 #. Default: "Communities portlet"
 #: ../../../../ulearn.theme/ulearn/theme/portlets/communities.py:29
 msgid "communities"
-msgstr ""
+msgstr "Comunidades"
 
 #: ../../../../ulearn.core/ulearn/core/content/community.py:84
 msgid "community_type_description"

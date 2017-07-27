@@ -8,20 +8,16 @@ from zope.component.hooks import getSite
 from zope.component import getMultiAdapter
 from zope.component import queryUtility
 from zope.component import getUtility
-
 from plone import api
 from plone.directives import form
 from plone.registry.interfaces import IRegistry
-
 from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.interfaces import IPloneSiteRoot
 from Products.statusmessages.interfaces import IStatusMessage
-
 from ulearn.core import _
 from ulearn.core.controlpanel import IUlearnControlPanelSettings
 from ulearn.theme.browser.interfaces import IUlearnTheme
 from datetime import datetime
-
 from souper.soup import get_soup
 from souper.soup import Record
 from repoze.catalog.query import Eq
@@ -30,13 +26,11 @@ from PIL import ImageOps
 from mrs.max.utilities import IMAXClient
 import os
 import PIL
-
 import logging
-
-logger = logging.getLogger(__name__)
-
 import json
 import requests
+
+logger = logging.getLogger(__name__)
 
 BBB_ENDPOINT = 'http://corronco.upc.edu:8088/webservices/addReservationNotification.php'
 BBB_SERVER = 'corronco'

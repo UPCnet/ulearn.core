@@ -140,7 +140,7 @@
   <metal:content-core define-macro="main">
 
    <div id="viewlet-above-content-title"></div>
-   <h1 class="documentFirstHeading" i18n:translate="stats">Stats</h1>
+   <h1 class="documentFirstHeading" i18n:translate="">stats</h1>
 
 
 <!-- _________________________________ FIRST MONTH ______________________________________________ -->

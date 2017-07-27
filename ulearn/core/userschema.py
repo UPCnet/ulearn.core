@@ -2,15 +2,12 @@
 from zope import schema
 from zope.interface import Interface
 from zope.interface import implements
-
 # from mrs.max.userdataschema import IEnhancedUserDataSchema
 from mrs.max.userdataschema import EnhancedUserDataPanelAdapter
 # from mrs.max.userdataschema import UserDataSchemaProvider
-
 from plone.app.users.browser.formlib import FileUpload
 from plone.app.users.userdataschema import IUserDataSchemaProvider
 from plone.app.users.userdataschema import checkEmailAddress
-
 from zope.interface import alsoProvides
 from zope.component import getUtility
 from mrs.max.utilities import IMAXClient
@@ -18,11 +15,8 @@ from Products.CMFCore.utils import getToolByName
 from ulearn.core.adapters.portrait import convertSquareImage
 import urllib
 from OFS.Image import Image
-
 from ulearn.core import _
-
 from five import grok
-
 from repoze.catalog.catalog import Catalog
 from repoze.catalog.indexes.field import CatalogFieldIndex
 from repoze.catalog.indexes.keyword import CatalogKeywordIndex
@@ -49,8 +43,7 @@ class IUlearnUserSchema(Interface):
     home_page = schema.TextLine(
         title=_(u'label_homepage', default=u'Home page'),
         description=_(u'help_homepage',
-                      default=u'The URL for your external home page, '
-                      'if you have one.'),
+                      default=_(u'The URL for your external home page, if you have one.')),
         required=False)
 
     description = schema.Text(
@@ -107,7 +100,7 @@ class IUlearnUserSchema(Interface):
     language = schema.Choice(
         title=_(u'label_language', default=u'Language'),
         description=_(u'help_language',
-                      default=u"Enter your language"),
+                      default=_(u'Aquest és l\'idioma de l\'espai, que es configura quan el paquet es reinstala.')),
         required=False,
         vocabulary=u"plone.app.vocabularies.SupportedContentLanguages",
     )
@@ -135,7 +128,6 @@ class ULearnUserDataPanelAdapter(EnhancedUserDataPanelAdapter):
             alsoProvides(self.request, IDisableCSRFProtection)
         except:
             pass
-
         maxclient, settings = getUtility(IMAXClient)()
         foto = maxclient.people[self.context.id].avatar
         imageUrl = foto.uri
@@ -143,12 +135,13 @@ class ULearnUserDataPanelAdapter(EnhancedUserDataPanelAdapter):
         portrait = urllib.urlretrieve(imageUrl)
 
         scaled, mimetype = convertSquareImage(portrait[0])
-        portrait = Image(id=self.context.id, file=scaled, title='')
+        if scaled:
+            portrait = Image(id=self.context.id, file=scaled, title='')
 
-        membertool = getToolByName(self.context, 'portal_memberdata')
-        membertool._setPortrait(portrait, self.context.id)
-        import transaction
-        transaction.commit()
+            membertool = getToolByName(self.context, 'portal_memberdata')
+            membertool._setPortrait(portrait, self.context.id)
+            import transaction
+            transaction.commit()
 
     def get_ubicacio(self):
         return self._getProperty('ubicacio')
@@ -183,4 +176,6 @@ class UserNewsSearchSoupCatalog(object):
         catalog['searches'] = CatalogKeywordIndex(hashindex)
 
         return catalog
+
+
 grok.global_utility(UserNewsSearchSoupCatalog, name='user_news_searches')

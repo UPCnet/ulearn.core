@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from AccessControl import Unauthorized
-from AccessControl import getSecurityManager
 from five import grok
 from plone import api
 from hashlib import sha1
@@ -10,7 +9,6 @@ from zope.app.container.interfaces import IObjectAddedEvent
 from zope.component import getMultiAdapter
 from zope.component import getUtility
 from zope.component import queryUtility
-from zope.component import getAdapter
 from zope.component.hooks import getSite
 from zope.container.interfaces import INameChooser
 from zope.event import notify
@@ -25,7 +23,6 @@ from zope.schema.vocabulary import SimpleVocabulary
 from zope.security import checkPermission
 from zope.interface import implementer
 from zope.globalrequest import getRequest
-from zope.publisher.interfaces.browser import IBrowserRequest
 from plone.dexterity.content import Container
 from plone.dexterity.utils import createContentInContainer
 from plone.directives import form
@@ -36,14 +33,12 @@ from plone.portlets.constants import CONTEXT_CATEGORY
 from plone.portlets.interfaces import ILocalPortletAssignmentManager
 from plone.portlets.interfaces import IPortletManager
 from plone.dexterity.interfaces import IDexterityContent
-
 from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.utils import safe_unicode
 from Products.CMFPlone.interfaces import IPloneSiteRoot
 from Products.CMFPlone.interfaces.constrains import ISelectableConstrainTypes
 from Products.statusmessages.interfaces import IStatusMessage
 from ZPublisher.HTTPRequest import FileUpload
-
 from repoze.catalog.catalog import Catalog
 from repoze.catalog.indexes.field import CatalogFieldIndex
 from repoze.catalog.indexes.keyword import CatalogKeywordIndex
@@ -53,7 +48,6 @@ from souper.soup import NodeAttributeIndexer
 from repoze.catalog.query import Eq, Or
 from souper.soup import get_soup
 from souper.soup import Record
-
 from genweb.core.utils import json_response
 from genweb.core.gwuuid import IGWUUID
 from genweb.core.adapters.favorites import IFavorite
@@ -61,18 +55,17 @@ from genweb.core.widgets.select2_maxuser_widget import Select2MAXUserInputFieldW
 from genweb.core.widgets.select2_user_widget import SelectWidgetConverter
 from mrs.max.utilities import IMAXClient
 from mrs.max.utilities import IHubClient
-
 from ulearn.core import _
 from ulearn.core.interfaces import IDXFileFactory
 from ulearn.core.interfaces import IDocumentFolder
 from ulearn.core.interfaces import IEventsFolder
 from ulearn.core.interfaces import IPhotosFolder
 from ulearn.core.interfaces import IDiscussionFolder
+from DateTime.DateTime import DateTime
 
 import json
 import logging
 import mimetypes
-from DateTime.DateTime import DateTime
 
 
 logger = logging.getLogger(__name__)
@@ -659,6 +652,8 @@ def imageFilename(context):
         populate the ``context.filename`` value and index it.
     """
     return context.image.filename
+
+
 grok.global_adapter(imageFilename, name='image_filename')
 
 
@@ -668,6 +663,8 @@ def subscribed_items(context):
         populate the ``context.subscribed`` value count it and index.
     """
     return len(list(set(context.readers + context.subscribed + context.owners)))
+
+
 grok.global_adapter(subscribed_items, name='subscribed_items')
 
 
@@ -677,6 +674,8 @@ def subscribed_users(context):
         populate the ``context.subscribed`` value count it and index.
     """
     return list(set(context.readers + context.subscribed + context.owners))
+
+
 grok.global_adapter(subscribed_users, name='subscribed_users')
 
 
@@ -686,6 +685,8 @@ def community_type(context):
         populate the ``community_type`` value count it and index.
     """
     return context.community_type
+
+
 grok.global_adapter(community_type, name='community_type')
 
 
@@ -695,6 +696,8 @@ def community_hash(context):
         populate the ``community_hash`` value count it and index.
     """
     return sha1(context.absolute_url()).hexdigest()
+
+
 grok.global_adapter(community_hash, name='community_hash')
 
 
@@ -1380,6 +1383,8 @@ class ACLSoupCatalog(object):
         groups = NodeAttributeIndexer('groups')
         catalog['groups'] = CatalogKeywordIndex(groups)
         return catalog
+
+
 grok.global_utility(ACLSoupCatalog, name='communities_acl')
 
 
@@ -1399,5 +1404,6 @@ class UserCommunityAccessCatalogFactory(object):
         dataindexer = NodeAttributeIndexer('data_access')
         catalog['data_access'] = CatalogFieldIndex(dataindexer)
         return catalog
+
 
 grok.global_utility(UserCommunityAccessCatalogFactory, name="user_community_access")

@@ -343,12 +343,13 @@ class deleteUsersInCommunities(grok.View):
                                     adapter = obj.adapted()
                                     adapter.set_plone_permissions(adapter.get_acl())
 
-                        logger.info('Delete user in communities: {}'.format(user))
+                        logger.info('Deleted user in communities: {}'.format(user))
                     except:
                         logger.error('User not deleted in communities: {}'.format(user))
                         pass
 
-                logger.info('Finished deleted users in communities: {}'.format(users))
+                logger.info('Finished. Deleted users from communities: {}'.format(users))
+
 
 def getDestinationFolder(stats_folder,create_month=True):
     """
@@ -356,17 +357,17 @@ def getDestinationFolder(stats_folder,create_month=True):
     If  create_month is False, then only the <year> folder is created
     """
     portal = api.portal.get()
-    #setSite(portal)
+    # setSite(portal)
     # Create 'stats_folder' folder if not exists
     for stats_folder_part in stats_folder.split('/'):
         if portal.get(stats_folder_part) is None:
             makeFolder(portal, stats_folder_part)
         portal = portal.get(stats_folder_part)
-    
+
     today = datetime.now()
-    context = aq_inner(portal)
-#    tool = getToolByName(context, 'translation_service')
-#    month = tool.translate(today.strftime("%B"), 'ulearn', context=context).encode()
+    # context = aq_inner(portal)
+    # tool = getToolByName(context, 'translation_service')
+    # month = tool.translate(today.strftime("%B"), 'ulearn', context=context).encode()
     month = 'march'
     month = month.lower()
     year = today.strftime("%G")

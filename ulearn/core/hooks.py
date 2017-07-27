@@ -251,7 +251,7 @@ def updateCustomLangCookie(event):
     if 'language' in event.data:
         if event.data['language']:
             event.context.request.response.setCookie('uLearn_I18N_Custom', event.data['language'], path='/')
-            event.context.request.response.redirect(event.context.context.absolute_url()+'/@@personal-information')
+            event.context.request.response.redirect(event.context.context.absolute_url() + '/@@personal-information')
 
 
 @grok.subscribe(IUserLoggedInEvent)

@@ -6,6 +6,7 @@ from souper.interfaces import ICatalogFactory
 from souper.soup import NodeAttributeIndexer
 from five import grok
 
+
 @implementer(ICatalogFactory)
 class MenuQuickLinksCatalogFactory(object):
     """ Les dades del menu que es mostraran segons language
@@ -22,5 +23,6 @@ class MenuQuickLinksCatalogFactory(object):
         containerindexer = NodeAttributeIndexer('dades')
         catalog['dades'] = CatalogFieldIndex(containerindexer)
         return catalog
+
 
 grok.global_utility(MenuQuickLinksCatalogFactory, name="menu_soup")

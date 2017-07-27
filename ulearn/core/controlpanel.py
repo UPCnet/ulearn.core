@@ -5,21 +5,16 @@ from zope.component import getUtility
 from z3c.form import button
 from zope.schema.vocabulary import SimpleVocabulary
 from zope.schema.interfaces import IVocabularyFactory
-
 from plone.supermodel import model
 from plone.directives import dexterity, form
 from plone.app.registry.browser import controlpanel
-
 from Products.statusmessages.interfaces import IStatusMessage
-
 from genweb.core.widgets.select2_maxuser_widget import Select2MAXUserInputFieldWidget
-
 from ulearn.core import _
 from mrs.max.utilities import IMAXClient
 from collective.z3cform.datagridfield import DataGridFieldFactory
 from collective.z3cform.datagridfield.registry import DictRow
 from plone import api
-from genweb.controlpanel.interface import IGenwebControlPanelSettings
 import transaction
 
 
@@ -34,6 +29,7 @@ class availableLanguages(object):
 
         return SimpleVocabulary(terms)
 
+
 grok.global_utility(availableLanguages, name=u'ulearn.core.language')
 
 
@@ -47,6 +43,7 @@ class communityActivityView(object):
         terms.append(SimpleVocabulary.createTerm(u'Activitats destacades', 'activitats_destacades', _(u'Activitats destacades')))
 
         return SimpleVocabulary(terms)
+
 
 grok.global_utility(communityActivityView, name=u'ulearn.core.activity_view')
 
@@ -405,9 +402,7 @@ class UlearnControlPanelSettingsForm(controlpanel.RegistryEditForm):
                 portal.portal_actions.object.local_roles.visible = False
                 transaction.commit()
 
-
-        IStatusMessage(self.request).addStatusMessage(_(u'Changes saved'),
-                                                      'info')
+        IStatusMessage(self.request).addStatusMessage(_(u'Changes saved'), 'info')
         self.context.REQUEST.RESPONSE.redirect('@@ulearn-controlpanel')
 
     @button.buttonAndHandler(_('Cancel'), name='cancel')

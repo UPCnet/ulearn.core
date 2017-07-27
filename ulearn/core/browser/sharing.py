@@ -22,7 +22,7 @@ import uuid
 
 
 class IElasticSharing(Interface):
-    """ Marker for ElasticSharing global utility """
+	""" Marker for ElasticSharing global utility """
 
 
 class ElasticSharing(object):
@@ -108,12 +108,11 @@ class ElasticSharing(object):
 			Returns an existing elastic index for a site object, empty object or list if no register found.
 			If principal not specified, will return all records for an object:
 		"""
-		path = self.relative_path(object)
+		# path = self.relative_path(object)
 		self.elastic = getUtility(IElasticSearch)
 		if principal is None:
 			# Change to query elastic for a register matching principal and path
 			# and return a list of items or None if query empty
-
 			es_results = self.elastic().search(index=ElasticSharing().get_index_name(),
 											   doc_type='sharing',
 											   body={'query': {'match': {'uuid': IGWUUID(object).get()}}}
@@ -127,7 +126,6 @@ class ElasticSharing(object):
 		else:
 			# Change to Query elastic for all registers matching path
 			# and returm ONE item
-
 			es_results = self.elastic().search(index=ElasticSharing().get_index_name(),
 											   doc_type='sharing',
 											   body={'query': {
@@ -138,7 +136,6 @@ class ElasticSharing(object):
 			result = []
 			if es_results['hits']['total'] > 0:
 				result = [es_results['hits']['hits'][0]['_source']]
-
 
 		return result
 
@@ -266,7 +263,7 @@ class ElasticSharing(object):
 		"""
 		user_groups = []
 		principals = user_groups + [username]
-		portal = api.portal.get()
+		# portal = api.portal.get()
 		portal_catalog = getToolByName(getSite(), 'portal_catalog')
 
 		communities_by_path = {a.getPath(): a for a in portal_catalog.unrestrictedSearchResults(portal_type='ulearn.community')}
@@ -321,7 +318,7 @@ class ElasticSharing(object):
 		shared_items = self.elastic().search(index=ElasticSharing().get_index_name(),
 											 doc_type='sharing',
 											 body={'query': {
-												   	'bool': {
+													'bool': {
 													   'must': {'match_all': {}
 													   },
 													   'filter': {
@@ -341,6 +338,7 @@ class ElasticSharing(object):
 		results.sort(key=lambda a: a['title'].lower())
 
 		return results
+
 
 grok.global_utility(ElasticSharing)
 
@@ -447,6 +445,7 @@ def SharingChanged(content, event):
 	elastic_sharing = queryUtility(IElasticSharing)
 	elastic_sharing.modified(content)
 
+
 def RemoveObject(content, event):
 	""" Hook delete object plone remove object elastic
 	"""
@@ -455,10 +454,13 @@ def RemoveObject(content, event):
 	content.manage_delLocalRoles(current_local_roles)
 	elastic_sharing.modified(content)
 
+
 @indexer(IDexterityContent)
 def sharedIndexer(context):
 	"""Create a catalogue indexer, registered as an adapter for DX content. """
 	return IShared(context).is_shared()
+
+
 grok.global_adapter(sharedIndexer, name='is_shared')
 
 
@@ -466,4 +468,6 @@ grok.global_adapter(sharedIndexer, name='is_shared')
 def sharedIndexerAT(context):
 	"""Create a catalogue indexer, registered as an adapter for AT content. """
 	return IShared(context).is_shared()
+
+
 grok.global_adapter(sharedIndexerAT, name='is_shared')

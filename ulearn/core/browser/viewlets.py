@@ -6,12 +6,10 @@ from zope.interface import Interface
 from zope.component.hooks import getSite
 from zope.security import checkPermission
 from plone.app.layout.viewlets.interfaces import IPortalHeader
-
 from genweb.core.gwuuid import IGWUUID
 from ulearn.core.content.community import ICommunity
 from ulearn.core import _
 from Acquisition import aq_chain
-
 from plone.app.contenttypes.interfaces import INewsItem
 from plone.app.layout.viewlets.interfaces import IAboveContentTitle
 from plone.memoize.view import memoize_contextless
@@ -24,7 +22,6 @@ from ulearn.theme.browser.interfaces import IUlearnTheme
 from souper.soup import get_soup
 from repoze.catalog.query import Eq
 import json
-
 from plone.portlets.interfaces import IPortletManager
 from plone.portlets.interfaces import IPortletAssignmentMapping
 from zope.component import getUtility, getMultiAdapter
