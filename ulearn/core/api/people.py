@@ -392,3 +392,23 @@ class Subscriptions(REST):
         records = [r for r in soup.query(Eq('gwuuid', gwuuid))]
         if records:
             return self.username in [a['id'] for a in records[0].attrs['acl']['users'] if a['role'] == u'owner']
+
+
+class Profile(REST):
+    """
+        /api/people/{username}/profile
+
+        Returns the user profile settings
+    """
+
+    grok.adapts(Person, IPloneSiteRoot)
+    grok.require('genweb.authenticated')
+
+    @api_resource()
+    def GET(self):
+        """ Returns all the user communities."""
+        # Hard security validation as the view is soft checked
+        # check_permission = self.check_roles(roles=['Member', ])
+        # if check_permission is not True:
+        #     return check_permission
+        return False
