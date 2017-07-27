@@ -39,6 +39,8 @@ from ulearn.core.content.community import ICommunity
 from genweb.core.utilities import IElasticSearch
 from ulearn.core.browser.sharing import ElasticSharing
 
+import json
+
 
 import logging
 logger = logging.getLogger(__name__)
@@ -400,7 +402,7 @@ class ImportFileToFolder(grok.View):
 
     To test it: run python script with requests and:
     payload={'folder':'test','local_file': '/home/vicente.iranzo/mongodb_VPN_2016_upcnet.xls'}
-    r = requests.get('http://localhost:8080/Plone/importfiletofolder', params=payload, auth=HTTPBasicAuth('admin', 'admin'))
+    r = requests.post('http://localhost:8080/Plone/importfiletofolder', params=payload, auth=HTTPBasicAuth('admin', 'admin'))
     """
     grok.context(IPloneSiteRoot)
     grok.name('importfiletofolder')
@@ -430,8 +432,6 @@ class ImportFileToFolder(grok.View):
                     makeFolder(portal, folder_name_part)
                 portal = portal.get(folder_name_part)
 
-
-            #plone_folder = getDestinationFolder(folder_name,create_month=False)
             file = NamedBlobFile(
                 data=content,
                 filename=u'{}'.format(local_file),
@@ -447,6 +447,25 @@ class ImportFileToFolder(grok.View):
                 )
 
 
+class listAllCommunitiesObjects(grok.View):
+    """ returns a json with all the comunities and the number of objects of each one"""
+    grok.name('listallcommunitiesobjects')
+    grok.context(IPloneSiteRoot)
+    # only for admin users
+    grok.require('cmf.ManagePortal')
+
+    def render(self):
+        pc = api.portal.get_tool(name='portal_catalog')
+        comunnities = pc.unrestrictedSearchResults(portal_type="ulearn.community")
+        result_list = []
+        for num, community in enumerate(comunnities):
+            num_docs = len(pc(path={"query": community.getPath(), "depth": 2}))
+            new_com = {
+                        "community_name" : community.getPath(),
+                        "community_docs" : str(num_docs),
+                      }
+            result_list.append(new_com)
+        return json.dumps(result_list)
 
 
 
