@@ -21,6 +21,9 @@ from souper.soup import get_soup
 from genweb.core.gwuuid import IGWUUID
 from Products.CMFCore.interfaces import ISiteRoot
 from zExceptions import Forbidden
+from souper.interfaces import ICatalogFactory
+from zope.component import getUtilitiesFor
+
 import logging
 import requests
 
@@ -411,4 +414,23 @@ class Profile(REST):
         # check_permission = self.check_roles(roles=['Member', ])
         # if check_permission is not True:
         #     return check_permission
-        return False
+        user_properties_utility = getUtility(ICatalogFactory, name='user_properties')
+
+        rendered_properties = []
+        extender_name = api.portal.get_registry_record('genweb.controlpanel.core.IGenwebCoreControlPanelSettings.user_properties_extender')
+        if extender_name in [a[0] for a in getUtilitiesFor(ICatalogFactory)]:
+            extended_user_properties_utility = getUtility(ICatalogFactory, name=extender_name)
+            for prop in extended_user_properties_utility.directory_properties:
+                rendered_properties.append(dict(
+                    name=prop,
+                    icon=extended_user_properties_utility.directory_icons[prop]
+                ))
+        else:
+            # If it's not extended, then return the simple set of data we know
+            # about the user using also the directory_properties field
+            for prop in user_properties_utility.directory_properties:
+                rendered_properties.append(dict(
+                    name=prop,
+                    icon=user_properties_utility.directory_icons[prop]
+                ))
+        return ApiResponse(rendered_properties)
