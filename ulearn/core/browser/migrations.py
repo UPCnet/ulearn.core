@@ -6,15 +6,11 @@ from zope.component import getUtility
 from zope.component import queryUtility
 from zope.component import getMultiAdapter
 from zope.component.hooks import getSite
-from zope.component import getAdapter
-
 from zope.interface import alsoProvides
 from zope.event import notify
 from zope.lifecycleevent import ObjectModifiedEvent
 from OFS.interfaces import IApplication
-
 from Products.CMFPlone.interfaces.constrains import ISelectableConstrainTypes
-
 from plone.portlets.constants import CONTEXT_CATEGORY
 from plone.portlets.interfaces import ILocalPortletAssignmentManager
 from plone.portlets.interfaces import IPortletManager
@@ -22,10 +18,8 @@ from plone.portlets.interfaces import IPortletAssignmentMapping
 from plone.dexterity.utils import createContentInContainer
 from plone.subrequest import subrequest
 from plone.uuid.interfaces import IUUIDGenerator
-
 from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.interfaces import IPloneSiteRoot
-
 from ulearn.core.interfaces import IDocumentFolder, ILinksFolder, IPhotosFolder, IEventsFolder
 from ulearn.core.content.community import IInitializedCommunity
 from ulearn.core.content.community import Community
@@ -33,15 +27,11 @@ from genweb.core.browser.helpers import listPloneSites
 from genweb.core.gwuuid import ATTRIBUTE_NAME
 from ulearn.core.interfaces import IDiscussionFolder
 from ulearn.core import _
-from ulearn.core.content.community import ICommunityTyped
 from genweb.core.utils import get_safe_member_by_id
 from mrs.max.utilities import IMAXClient
 from maxclient.rest import RequestError
-
 from itertools import chain
 import logging
-from genweb.core.gwuuid import IGWUUID
-from repoze.catalog.query import Eq, Or
 
 logger = logging.getLogger(__name__)
 
@@ -102,8 +92,8 @@ def createMAXUser(username):
             logger.info('MAX user already created for user: %s' % username)
 
     except RequestError:
-        import ipdb
-        ipdb.set_trace()
+        logger.error('Error IPDB found here and commented... maybe do you want to Stop here?... (RequestError): %s' % username)
+        #import ipdb; ipdb.set_trace()
     except:
         logger.error('Error creating MAX user for user: %s' % username)
 
@@ -357,8 +347,8 @@ class GiveAllCommunitiesGWUUID(grok.View):
                 obj.reindexObject(idxs=['gwuuid'])
 
         # pc.clearFindAndRebuild()
-
         return 'Done'
+
 
 class GiveGWUUID(grok.View):
     grok.context(IPloneSiteRoot)
@@ -390,7 +380,6 @@ class GiveGWUUID(grok.View):
                     setattr(obj, ATTRIBUTE_NAME, uuid)
                     obj.reindexObject(idxs=['gwuuid'])
         # pc.clearFindAndRebuild()
-
         return 'Done'
 
 
