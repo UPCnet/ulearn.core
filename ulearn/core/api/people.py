@@ -2,20 +2,16 @@
 from Acquisition import aq_inner
 from five import grok
 from zope.component import getUtility
-
 from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.interfaces import IPloneSiteRoot
 from plone import api
-
 from genweb.core.patches import changeMemberPortrait
 from mrs.max.utilities import IMAXClient
-
 from ulearn.core.api import ApiResponse
 from ulearn.core.api import REST
 from ulearn.core.api import api_resource
 from ulearn.core.api.root import APIRoot
 from ulearn.core.browser.security import execute_under_special_role
-
 from StringIO import StringIO
 from genweb.core.utils import add_user_to_catalog
 from genweb.core.utils import get_all_user_properties
@@ -23,12 +19,11 @@ from genweb.core.utils import remove_user_from_catalog
 from repoze.catalog.query import Eq
 from souper.soup import get_soup
 from genweb.core.gwuuid import IGWUUID
-from ulearn.core.content.community import ICommunityACL
-
+from Products.CMFCore.interfaces import ISiteRoot
+from zExceptions import Forbidden
 import logging
 import requests
 
-from Products.CMFCore.interfaces import ISiteRoot
 
 logger = logging.getLogger(__name__)
 
@@ -166,7 +161,7 @@ class Person(REST):
         maxclient.setActor(settings.max_restricted_username)
         maxclient.setToken(settings.max_restricted_token)
 
-        portal_url = api.portal.get().absolute_url()
+        # portal_url = api.portal.get().absolute_url()
         communities_subscription = maxclient.people[username].subscriptions.get()
 
         if communities_subscription != []:
@@ -294,7 +289,6 @@ class Person(REST):
             raise NotImplementedError('The underlying User Folder '
                                       'doesn\'t support deleting members.')
 
-
         # Delete member data in portal_memberdata.
         mdtool = api.portal.get_tool(name='portal_memberdata')
         if mdtool is not None:
@@ -312,7 +306,6 @@ class Person(REST):
                                    member_ids,
                                    reindex,
                                    recursive)
-
 
     # @api_resource(required=['username', 'email'])
     # def PUT(self):

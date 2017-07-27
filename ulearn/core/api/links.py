@@ -15,18 +15,35 @@ class Links(REST):
     """
         /api/links/
 
+        Returns multiple links (exemple with one):
+
+        {
+            "menu_carpetas": [
+                {
+                    "remote": "internal.web.upc.edu",
+                    "title": "Link1"
+                }
+            ],
+            "menu_gestion": [
+                {
+                    "remote": "http://www.upc.edu",
+                    "title": "UPC"
+                }
+            ]
+        }
+
     """
     grok.adapts(APIRoot, IPloneSiteRoot)
     grok.require('genweb.authenticated')
 
     @api_resource()
     def GET(self):
-        """ Return the links from gestion folder and panel control"""
+        """ Return the links from fixed gestion folder and ControlPanel """
         portal = api.portal.get()
         path = portal['gestion']['menu']['es']  # fixed en code... always in this path
         folders = api.content.find(context=path, depth=1)
         results = []
-        # Lins from gestion folder
+        # Links from gestion folder
         for folder in folders:
             menufolder = folder.getObject().items()
             for item in menufolder:
@@ -39,7 +56,7 @@ class Links(REST):
         settings = registry.forInterface(IUlearnControlPanelSettings, check=False)
 
         results2 = []
-        # Lins from controlpanel
+        # Links from controlpanel
         if settings.quicklinks_table is not None:
             for item in settings.quicklinks_table:
                 quickLink = dict(title=item['text'],

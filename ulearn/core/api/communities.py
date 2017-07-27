@@ -122,8 +122,8 @@ class Communities(REST):
                                       contentType=mime_type[0])
 
         if result:
-            community = result[0].getObject()
-            success_response = 'community already exists.'
+            # community = result[0].getObject()
+            success_response = 'Community already exists.'
             status = 200
         else:
             new_community_id = self.context.invokeFactory('ulearn.community', id_normalized,
@@ -160,6 +160,7 @@ class Communities(REST):
         records = [r for r in soup.query(Eq('gwuuid', gwuuid))]
         if records:
             return self.username in [a['id'] for a in records[0].attrs['acl']['users'] if a['role'] == u'owner']
+
 
 class Community(REST, CommunityMixin):
     """
@@ -259,6 +260,7 @@ class Community(REST, CommunityMixin):
         else:
             return False
 
+
 class Count(REST, CommunityMixin):
     """
         /api/communities/count/{community_type}
@@ -275,10 +277,9 @@ class Count(REST, CommunityMixin):
     @api_resource()
     def GET(self):
         """ Return the number of communities. """
-
         pc = api.portal.get_tool('portal_catalog')
         community_type = self.params.pop('community_type', None)
-        if community_type != None:
+        if community_type is not None:
             results = pc.unrestrictedSearchResults(portal_type='ulearn.community', community_type=community_type)
         else:
             results = pc.unrestrictedSearchResults(portal_type='ulearn.community')
