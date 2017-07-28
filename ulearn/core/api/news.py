@@ -1,19 +1,15 @@
 # -*- coding: utf-8 -*-
 from five import grok
-
 from Products.CMFPlone.interfaces import IPloneSiteRoot
 from plone import api
 from plone.app.contenttypes.behaviors.richtext import IRichText
 from plone.dexterity.utils import createContentInContainer
 from plone.namedfile.file import NamedBlobImage
-
 from ulearn.core.api import ApiResponse
 from ulearn.core.api import REST
 from ulearn.core.api import api_resource
 from ulearn.core.api.root import APIRoot
-
 from datetime import datetime
-
 import requests
 
 

@@ -13,44 +13,34 @@ from ulearn.core.controlpanel import IUlearnControlPanelSettings
 
 class Links(REST):
     """
-        /api/links/
+        /api/links
 
-        Returns multiple links (exemple with one):
+        GET params username, language
 
-        {
-            "menu_carpetas": [
-                {
-                    "remote": "internal.web.upc.edu",
-                    "title": "Link1"
-                }
-            ],
-            "menu_gestion": [
-                {
-                    "remote": "http://www.upc.edu",
-                    "title": "UPC"
-                }
-            ]
-        }
 
     """
+
     grok.adapts(APIRoot, IPloneSiteRoot)
     grok.require('genweb.authenticated')
 
-    @api_resource()
+    @api_resource(required=['username', 'language'])
     def GET(self):
         """ Return the links from fixed gestion folder and ControlPanel """
+        username = self.params['username']
+        language = self.params['language']
         portal = api.portal.get()
-        path = portal['gestion']['menu']['es']  # fixed en code... always in this path
+        path = portal['gestion']['menu'][language]  # fixed en code... always in this path
         folders = api.content.find(context=path, depth=1)
-        results = []
+        results = {}
         # Links from gestion folder
         for folder in folders:
+            results[folder.Title] = []
             menufolder = folder.getObject().items()
             for item in menufolder:
                 menuLink = dict(remote=item[1].remoteUrl,
                                 title=item[1].title,
                                 )
-                results.append(menuLink)
+                results[folder.Title].append(menuLink)
 
         registry = getUtility(IRegistry)
         settings = registry.forInterface(IUlearnControlPanelSettings, check=False)
@@ -61,6 +51,7 @@ class Links(REST):
             for item in settings.quicklinks_table:
                 quickLink = dict(title=item['text'],
                                  remote=item['link'],
+                                 icon=item['icon']
                                  )
             results2.append(quickLink)
         values = {'menu_gestion': results, 'menu_carpetas': results2}
