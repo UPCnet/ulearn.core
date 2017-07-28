@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2017-07-27 12:59+0000\n"
+"POT-Creation-Date: 2017-07-28 06:51+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -297,7 +297,7 @@ msgstr ""
 msgid "Llista d'emails dels convidats MODERADORS, separats per comes."
 msgstr ""
 
-#: ./ulearn/core/browser/migrations.py:201
+#: ./ulearn/core/browser/migrations.py:191
 #: ./ulearn/core/content/community.py:1274
 msgid "Media"
 msgstr ""

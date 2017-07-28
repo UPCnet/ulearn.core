@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GenWebUPC\n"
-"POT-Creation-Date: 2017-07-27 12:59+0000\n"
+"POT-Creation-Date: 2017-07-28 06:51+0000\n"
 "PO-Revision-Date: 2014-04-14 11:35+0100\n"
 "Last-Translator: Roberto Diaz <roberto.diaz@upcnet.es>\n"
 "Language-Team: Plone Team@UPCnet <>\n"
@@ -308,7 +308,7 @@ msgstr "Guest VIEWERS emails list, separated by commas."
 msgid "Llista d'emails dels convidats MODERADORS, separats per comes."
 msgstr "Guest MODERATORS emails list, separated by commas."
 
-#: ./ulearn/core/browser/migrations.py:201
+#: ./ulearn/core/browser/migrations.py:191
 #: ./ulearn/core/content/community.py:1274
 msgid "Media"
 msgstr "Media"

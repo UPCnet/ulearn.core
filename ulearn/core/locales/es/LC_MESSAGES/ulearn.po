@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GenWebUPC\n"
-"POT-Creation-Date: 2017-07-27 12:59+0000\n"
+"POT-Creation-Date: 2017-07-28 06:51+0000\n"
 "PO-Revision-Date: 2014-04-14 11:35+0100\n"
 "Last-Translator: Corina Riba <corina.riba@upcnet.es>\n"
 "Language-Team: Plone Team@UPCnet <plone.team@upcnet.es>\n"
@@ -296,7 +296,7 @@ msgstr "Lista de direcciones de correo electrónico de los invitados ESPECTADORE
 msgid "Llista d'emails dels convidats MODERADORS, separats per comes."
 msgstr "Lista de direcciones de correo electrónico de los invitados MODERADORES separadas por comas."
 
-#: ./ulearn/core/browser/migrations.py:201
+#: ./ulearn/core/browser/migrations.py:191
 #: ./ulearn/core/content/community.py:1274
 msgid "Media"
 msgstr "Media"
@@ -489,7 +489,7 @@ msgstr "Estado workflow"
 #. Default: "Mostra el que hi ha compartit amb mi"
 #: ./ulearn/core/controlpanel.py:170
 msgid "activate_sharedwithme"
-msgstr ""
+msgstr "Muestra lo que hay compartido conmigo"
 
 #: ./ulearn/core/content/community.py:162
 #: ./ulearn/core/controlpanel.py:332
@@ -514,12 +514,12 @@ msgstr "Comunidades"
 #. Default: "Color final dels gradients"
 #: ./ulearn/core/controlpanel.py:215
 msgid "alt_gradient_end_color"
-msgstr "Color final de los degradados"
+msgstr "Color final de los degradados."
 
 #. Default: "Color inicial dels gradients."
 #: ./ulearn/core/controlpanel.py:206
 msgid "alt_gradient_start_color"
-msgstr "Color inicial de los degradados"
+msgstr "Color inicial de los degradados."
 
 #. Default: "AngularRouteView"
 #: ../ulearn.theme/ulearn/theme/portlets/angularrouteview.py:19
@@ -574,17 +574,17 @@ msgstr "Habilitar Portlet collective_polls_VotePortlet"
 #. Default: "Color comunitat tancada"
 #: ./ulearn/core/controlpanel.py:260
 msgid "color_community_closed"
-msgstr "Color comunidad tancada"
+msgstr "Color comunidad Cerrada"
 
 #. Default: "Color comunitat oberta"
 #: ./ulearn/core/controlpanel.py:278
 msgid "color_community_open"
-msgstr "Color comunidad oberta"
+msgstr "Color comunidad Abierta"
 
 #. Default: "Color comunitat organitzativa"
 #: ./ulearn/core/controlpanel.py:269
 msgid "color_community_organizative"
-msgstr "Color comunidad organizativa"
+msgstr "Color comunidad Organizativa"
 
 #. Default: "Communities"
 #: ../ulearn.theme/ulearn/theme/portlets/communities.py:33
@@ -689,7 +689,7 @@ msgstr "El hashtag (por ejemplo: ulearn) que utilizará esta comunidad. No hace 
 #. Default: "Mostra o no el botó del que hi ha compartit amb mi i el que hi ha compartit a les comunitats"
 #: ./ulearn/core/controlpanel.py:172
 msgid "help_activate_sharedwithme"
-msgstr ""
+msgstr "Muestra el botón de lo que hay compartido conmigo y lo que hay compartido en las comunidades."
 
 #: ./ulearn/core/content/community.py:163
 #: ./ulearn/core/controlpanel.py:333
@@ -709,12 +709,12 @@ msgstr "Color inicial de los degradados"
 #. Default: "Aquest és el color de fons global o la propietat corresponent."
 #: ./ulearn/core/controlpanel.py:235
 msgid "help_background_color"
-msgstr "Color global de fondo o la propiedad correspondiente"
+msgstr "Color global de fondo."
 
 #. Default: "Aquest és la propietat de CSS de background."
 #: ./ulearn/core/controlpanel.py:226
 msgid "help_background_property"
-msgstr "Propiedad CSS de fondo"
+msgstr "Propiedad CSS de fondo."
 
 #. Default: "A short overview of who you are and what you do. Will be displayed on your author page, linked from the items you create."
 #: ./ulearn/core/userschema.py:51
@@ -799,7 +799,7 @@ msgstr "La URL para su página personal externa, si tiene una."
 #. Default: "Aquest és l'enllaç al servei."
 #: ./ulearn/core/controlpanel.py:164
 msgid "help_info_servei"
-msgstr ""
+msgstr "Enlace del servicio que aparece en la parte superior de la cabecera."
 
 #. Default: "Aquest és l'idioma de l'espai, que es configura quan el paquet es reinstala."
 #: ./ulearn/core/controlpanel.py:290
@@ -938,12 +938,12 @@ msgstr "Texto que se utilizará como deslegable de los enlaces directos"
 #. Default: "Aquest és el color secundari de l'espai."
 #: ./ulearn/core/controlpanel.py:190
 msgid "help_secondary_color"
-msgstr "Color secundario del espacio"
+msgstr "Color secundario del espacio."
 
 #. Default: "Mostra o no el botó d'accés a estadístiques diàries a stats/activity i stats/chats"
 #: ./ulearn/core/controlpanel.py:155
 msgid "help_stats_button"
-msgstr "Mostar o no el botón de acceso a estadísticas diarias a stats/activity y stats/chats"
+msgstr "Muestra o no el botón de acceso a estadísticas diarias, a stats/activity y a stats/chats."
 
 #. Default: "Contacte telefònic"
 #: ./ulearn/core/userschema.py:95
@@ -1091,7 +1091,7 @@ msgstr "Info"
 #. Default: "Informació del servei"
 #: ./ulearn/core/controlpanel.py:162
 msgid "info_servei"
-msgstr ""
+msgstr "Información del servicio"
 
 #. Default: "Gestión Noticia:"
 #: ./ulearn/core/browser/viewlets_templates/newstoolbar.pt:3
