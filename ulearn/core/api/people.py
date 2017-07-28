@@ -330,6 +330,35 @@ class Person(REST):
     #     elif status == 200:
     #         return ApiResponse.from_string('User {} updated'.format(self.params['username'].lower()), code=status)
 
+    @api_resource(required=['username'])
+    def GET(self):
+        """ Returns the user profile values. """
+        username = self.params['username']
+        user = api.user.get(username=username)
+
+        user_properties_utility = getUtility(ICatalogFactory, name='user_properties')
+
+        rendered_properties = []
+        extender_name = api.portal.get_registry_record('genweb.controlpanel.core.IGenwebCoreControlPanelSettings.user_properties_extender')
+        if extender_name in [a[0] for a in getUtilitiesFor(ICatalogFactory)]:
+            extended_user_properties_utility = getUtility(ICatalogFactory, name=extender_name)
+            for prop in extended_user_properties_utility.directory_properties:
+                rendered_properties.append(dict(
+                    name=prop,
+                    icon=extended_user_properties_utility.directory_icons[prop],
+                    value=user.getProperty(prop, '')
+                ))
+        else:
+            # If it's not extended, then return the simple set of data we know
+            # about the user using also the directory_properties field
+            for prop in user_properties_utility.directory_properties:
+                rendered_properties.append(dict(
+                    name=prop,
+                    icon=user_properties_utility.directory_icons[prop],
+                    value=user.getProperty(prop, '')
+                ))
+        return ApiResponse(rendered_properties)
+
 
 class Subscriptions(REST):
     """
@@ -395,42 +424,3 @@ class Subscriptions(REST):
         records = [r for r in soup.query(Eq('gwuuid', gwuuid))]
         if records:
             return self.username in [a['id'] for a in records[0].attrs['acl']['users'] if a['role'] == u'owner']
-
-
-class Profile(REST):
-    """
-        /api/people/{username}/profile
-
-        Returns the user profile settings
-    """
-
-    grok.adapts(Person, IPloneSiteRoot)
-    grok.require('genweb.authenticated')
-
-    @api_resource()
-    def GET(self):
-        """ Returns all the user communities."""
-        # Hard security validation as the view is soft checked
-        # check_permission = self.check_roles(roles=['Member', ])
-        # if check_permission is not True:
-        #     return check_permission
-        user_properties_utility = getUtility(ICatalogFactory, name='user_properties')
-
-        rendered_properties = []
-        extender_name = api.portal.get_registry_record('genweb.controlpanel.core.IGenwebCoreControlPanelSettings.user_properties_extender')
-        if extender_name in [a[0] for a in getUtilitiesFor(ICatalogFactory)]:
-            extended_user_properties_utility = getUtility(ICatalogFactory, name=extender_name)
-            for prop in extended_user_properties_utility.directory_properties:
-                rendered_properties.append(dict(
-                    name=prop,
-                    icon=extended_user_properties_utility.directory_icons[prop]
-                ))
-        else:
-            # If it's not extended, then return the simple set of data we know
-            # about the user using also the directory_properties field
-            for prop in user_properties_utility.directory_properties:
-                rendered_properties.append(dict(
-                    name=prop,
-                    icon=user_properties_utility.directory_icons[prop]
-                ))
-        return ApiResponse(rendered_properties)
