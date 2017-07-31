@@ -15,21 +15,20 @@ class Links(REST):
     """
         /api/links
 
-        GET params username, language
-
+        http://localhost:8090/Plone/api/links/?language=es
 
     """
 
     grok.adapts(APIRoot, IPloneSiteRoot)
     grok.require('genweb.authenticated')
 
-    @api_resource(required=['username', 'language'])
+    @api_resource(required=['language'])
     def GET(self):
         """ Return the links from fixed gestion folder and ControlPanel """
-        username = self.params['username']
         language = self.params['language']
         portal = api.portal.get()
         path = portal['gestion']['menu'][language]  # fixed en code... always in this path
+        # roles = api.user.get_roles(username=username, obj=path)
         folders = api.content.find(context=path, depth=1)
         results = {}
         # Links from gestion folder
