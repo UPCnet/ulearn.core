@@ -25,5 +25,9 @@ class Bitly(REST):
         url = self.params['url']
         session = requests.Session()
         resp = session.head(url, allow_redirects=True)
+        if 'came_from' in resp.url:
+            expanded = resp.url.split('came_from=')[1].replace('%3A', ':')
+        else:
+            expanded = resp.url
 
-        return ApiResponse(resp.url)
+        return ApiResponse(expanded)
