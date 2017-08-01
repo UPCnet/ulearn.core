@@ -1,0 +1,29 @@
+# -*- coding: utf-8 -*-
+from five import grok
+import requests
+from Products.CMFPlone.interfaces import IPloneSiteRoot
+from ulearn.core.api import ApiResponse
+from ulearn.core.api import REST
+from ulearn.core.api import api_resource
+from ulearn.core.api.root import APIRoot
+
+
+class Bitly(REST):
+    """
+        /api/links
+
+        http://localhost:8090/Plone/api/bitly/?url=BITLY_URL
+
+    """
+
+    grok.adapts(APIRoot, IPloneSiteRoot)
+    grok.require('genweb.authenticated')
+
+    @api_resource(required=['url'])
+    def GET(self):
+        """ Unshorten bitly links """
+        url = self.params['url']
+        session = requests.Session()
+        resp = session.head(url, allow_redirects=True)
+
+        return ApiResponse(resp.url)
