@@ -10,6 +10,7 @@ from ulearn.core.api import REST
 from ulearn.core.api import api_resource
 from ulearn.core.api.root import APIRoot
 from datetime import datetime
+from base64 import b64encode
 import requests
 
 
@@ -23,6 +24,27 @@ class News(REST):
 
     grok.adapts(APIRoot, IPloneSiteRoot)
     grok.require('genweb.authenticated')
+
+    @api_resource(required=[])
+    def GET(self):
+        portal = api.portal.get()
+        news = api.content.find(context=portal, depth=2, portal_type="News Item")
+        results = []
+        for item in news:
+            value = item.getObject()
+            new = dict(title=value.title,
+                       id=value.id,
+                       description=value.description,
+                       path=item.getURL(),
+                       text=value.text.output,
+                       filename=value.image.filename,
+                       caption=value.image_caption,
+                       creators=value.creators,
+                       raw_image=b64encode(value.image.data),
+                       content_type=value.image.contentType,
+                       )
+            results.append(new)
+        return ApiResponse(results)
 
 
 class New(REST):
@@ -136,3 +158,4 @@ class New(REST):
             resp = ApiResponse.from_string('News Item {} updated'.format(newid), code=200)
 
         return resp
+
