@@ -10,7 +10,7 @@ from ulearn.core.api.root import APIRoot
 
 class Bitly(REST):
     """
-        /api/links
+        /api/bitly
 
         http://localhost:8090/Plone/api/bitly/?url=BITLY_URL
 
