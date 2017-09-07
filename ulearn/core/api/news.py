@@ -17,6 +17,10 @@ import requests
 class News(REST):
     """
         /api/news
+        and
+        /api/news?path=/Plone/news/noticia
+
+        Get all News by "X-Oauth-Username"
     """
 
     placeholder_type = 'new'
@@ -28,7 +32,11 @@ class News(REST):
     @api_resource(required=[])
     def GET(self):
         portal = api.portal.get()
-        news = api.content.find(context=portal, depth=2, portal_type="News Item")
+        params = self.params
+        if not params:
+            news = api.content.find(context=portal, depth=2, portal_type="News Item")
+        else:
+            news = api.content.find(portal_type="News Item", path=self.params['path'])
         results = []
         for item in news:
             value = item.getObject()
@@ -36,6 +44,7 @@ class News(REST):
                        id=value.id,
                        description=value.description,
                        path=item.getURL(),
+                       absolute_url=value.absolute_url_path(),
                        text=value.text.output,
                        filename=value.image.filename,
                        caption=value.image_caption,
@@ -158,4 +167,3 @@ class New(REST):
             resp = ApiResponse.from_string('News Item {} updated'.format(newid), code=200)
 
         return resp
-
