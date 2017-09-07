@@ -34,6 +34,7 @@ logger = logging.getLogger(__name__)
 class People(REST):
     """
         /api/people
+        Returns all Users with their properties
     """
 
     placeholder_type = 'person'
@@ -41,6 +42,23 @@ class People(REST):
 
     grok.adapts(APIRoot, IPloneSiteRoot)
     grok.require('genweb.authenticated')
+
+    @api_resource(required=[])
+    def GET(self):
+        portal = api.portal.get()
+        soup = get_soup('user_properties', portal)
+        records = [r for r in soup.data.items()]
+
+        result = {}
+        for record in records:
+            item = {}
+            for key in record[1].attrs:
+                if key in ['fullname', 'email', 'telefon']:
+                    item[key] = record[1].attrs[key]
+
+            result[record[1].attrs['id']] = item
+
+        return ApiResponse(result)
 
 
 class Sync(REST):
