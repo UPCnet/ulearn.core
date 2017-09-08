@@ -31,27 +31,40 @@ class Item(REST):
         else:
             expanded = resp.url
 
-        expanded = 'http://localhost:8090/Plone/news/noticia-2/'
+        #expanded = 'http://localhost:8090/Plone/news/noticia-2'
+        expanded = 'http://localhost:8090/Plone/download.png'
+        #expanded = 'http://localhost:8090/Plone/documento'
 
         portal = api.portal.get()
-        local_url = portal.absolute_url()
+        local_url = 'http://localhost:8090'
         results = []
         if local_url in expanded:
             item = expanded.split(local_url)[1]
-            value = api.content.find(path=item)
-            new = dict(title=value.title,
+            value = api.content.find(path=item)[0]
+            item = value.getObject()
+            text = ''
+            image_caption = ''
+            faculty = ''
+            collective = ''
+            if value.portal_type == 'News Item':
+                text = item.text.output
+                image_caption = item.image_caption
+                faculty = item.faculty
+                collective = item.collective
+                image = item.image.filename
+            if value.portal_type == 'Image':
+                image = item.image.filename
+            new = dict(title=value.Title,
                        id=value.id,
-                       description=value.description,
-                       path=value.getURL(),
-                       absolute_url=value.absolute_url_path(),
-                       text=value.text.output,
-                       filename=value.image.filename,
-                       caption=value.image_caption,
-                       creators=value.creators,
-                       content_type=value.image.contentType,
+                       description=value.Description,
                        portal_type=value.portal_type,
-                       external_url=False
-
+                       external_url=False,
+                       absolute_url=expanded,
+                       text=text,
+                       image_caption=image_caption,
+                       faculty=faculty,
+                       collective=collective,
+                       image=image,
                        )
             results.append(new)
         else:
@@ -59,15 +72,14 @@ class Item(REST):
             new = dict(title='',
                        id='',
                        description='',
-                       path='',
+                       portal_type='',
+                       external_url=True,
                        absolute_url=expanded,
                        text='',
-                       filename='',
-                       caption='',
-                       creators='',
-                       content_type='',
-                       portal_type='',
-                       external_url=True
+                       image_caption='',
+                       faculty='',
+                       collective='',
+                       image='',
                        )
             results.append(new)
 
