@@ -8,6 +8,8 @@ from plone import api
 from genweb.core.patches import changeMemberPortrait
 from mrs.max.utilities import IMAXClient
 from ulearn.core.api import ApiResponse
+from ulearn.core.api import ObjectNotFound
+
 from ulearn.core.api import REST
 from ulearn.core.api import api_resource
 from ulearn.core.api.root import APIRoot
@@ -71,7 +73,8 @@ class People(REST):
                 for prop in user_properties_utility.directory_properties:
                     rendered_properties.append(dict(
                         name=prop,
-                        value=user.getProperty(prop, '')
+                        value=user.getProperty(prop, ''),
+                        icon=user_properties_utility.directory_icons[prop],
                     ))
 
             result[record[1].attrs['id']] = rendered_properties
@@ -375,22 +378,26 @@ class Person(REST):
         user_properties_utility = getUtility(ICatalogFactory, name='user_properties')
 
         rendered_properties = []
-        extender_name = api.portal.get_registry_record('genweb.controlpanel.core.IGenwebCoreControlPanelSettings.user_properties_extender')
-        if extender_name in [a[0] for a in getUtilitiesFor(ICatalogFactory)]:
-            extended_user_properties_utility = getUtility(ICatalogFactory, name=extender_name)
-            for prop in extended_user_properties_utility.profile_properties:
-                rendered_properties.append(dict(
-                    name=prop,
-                    value=user.getProperty(prop, ''),
-                ))
-        else:
-            # If it's not extended, then return the simple set of data we know
-            # about the user using also the profile_properties field
-            for prop in user_properties_utility.profile_properties:
-                rendered_properties.append(dict(
-                    name=prop,
-                    value=user.getProperty(prop, '')
-                ))
+        try:
+            extender_name = api.portal.get_registry_record('genweb.controlpanel.core.IGenwebCoreControlPanelSettings.user_properties_extender')
+            if extender_name in [a[0] for a in getUtilitiesFor(ICatalogFactory)]:
+                extended_user_properties_utility = getUtility(ICatalogFactory, name=extender_name)
+                for prop in extended_user_properties_utility.profile_properties:
+                    rendered_properties.append(dict(
+                        name=prop,
+                        value=user.getProperty(prop, ''),
+                    ))
+            else:
+                # If it's not extended, then return the simple set of data we know
+                # about the user using also the profile_properties field
+                for prop in user_properties_utility.profile_properties:
+                    rendered_properties.append(dict(
+                        name=prop,
+                        value=user.getProperty(prop, '')
+                    ))
+        except:
+            raise ObjectNotFound('User not found')
+
         return ApiResponse(rendered_properties)
 
 

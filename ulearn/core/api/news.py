@@ -11,6 +11,7 @@ from ulearn.core.api import api_resource
 from ulearn.core.api.root import APIRoot
 from datetime import datetime
 from base64 import b64encode
+from ulearn.core.api import ObjectNotFound
 import requests
 
 
@@ -96,7 +97,7 @@ class New(REST):
         default_path = api.portal.get().absolute_url_path() + '/news'
         value = api.content.find(portal_type="News Item", path=default_path, id=newid)
 
-        if value:
+        try:
             value = value[0].getObject()
             new = dict(title=value.title,
                        id=value.id,
@@ -110,8 +111,8 @@ class New(REST):
                        raw_image=b64encode(value.image.data),
                        content_type=value.image.contentType,
                        )
-        else:
-            new = {}
+        except:
+            raise ObjectNotFound('News Item not found')
 
         return ApiResponse(new)
 
