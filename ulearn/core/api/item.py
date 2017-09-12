@@ -7,6 +7,7 @@ from ulearn.core.api import REST
 from ulearn.core.api import api_resource
 from ulearn.core.api.root import APIRoot
 from plone import api
+from base64 import b64encode
 
 
 class Item(REST):
@@ -33,7 +34,7 @@ class Item(REST):
 
         #expanded = 'http://localhost:8090/Plone/news/noticia-2'
         #expanded = 'http://localhost:8090/Plone/download.png'
-        #expanded = 'http://localhost:8090/Plone/documento'
+        expanded = 'http://localhost:8090/Plone/documento'
 
         portal = api.portal.get()
         local_url = portal.absolute_url()
@@ -43,9 +44,8 @@ class Item(REST):
             item_path = api.portal.getSite().absolute_url_path() + '/' + item_id
             value = api.content.find(path=item_path)[0]
             item = value.getObject()
-            text = ''
-            image = ''
-            image_caption = ''
+            text = image = image_caption = ''
+            raw_image = content_type = ''
 
             if value.portal_type == 'News Item':
                 text = item.text.output
@@ -53,6 +53,8 @@ class Item(REST):
                 image = item.image.filename
             if value.portal_type == 'Image':
                 image = item.image.filename
+                raw_image = b64encode(item.image.data),
+                content_type = item.image.contentType
             new = dict(title=value.Title,
                        id=value.id,
                        description=value.Description,
@@ -62,6 +64,8 @@ class Item(REST):
                        text=text,
                        image_caption=image_caption,
                        image=image,
+                       raw_image=raw_image,
+                       content_type=content_type
                        )
             results.append(new)
         else:
@@ -77,6 +81,8 @@ class Item(REST):
                        text='',
                        image_caption='',
                        image='',
+                       raw_image='',
+                       content_type=''
                        )
             results.append(new)
 
