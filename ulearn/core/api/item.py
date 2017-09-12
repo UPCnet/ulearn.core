@@ -16,6 +16,10 @@ class Item(REST):
 
         http://localhost:8090/Plone/api/item/?url=BITLY_URL
 
+          Return item properties ald fields
+          Valid for Document / News Items / Image and maybe all other defautl types...
+          If bitly linked object is from other place then returns defaults empty values
+
     """
 
     grok.adapts(APIRoot, IPloneSiteRoot)
@@ -32,9 +36,9 @@ class Item(REST):
         else:
             expanded = resp.url
 
-        #expanded = 'http://localhost:8090/Plone/news/noticia-2'
-        #expanded = 'http://localhost:8090/Plone/download.png'
-        expanded = 'http://localhost:8090/Plone/documento'
+        # expanded = 'http://localhost:8090/Plone/news/noticia-2'
+        # expanded = 'http://localhost:8090/Plone/download.png'
+        # expanded = 'http://localhost:8090/Plone/documento'
 
         portal = api.portal.get()
         local_url = portal.absolute_url()
