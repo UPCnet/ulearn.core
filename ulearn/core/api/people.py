@@ -50,13 +50,31 @@ class People(REST):
         records = [r for r in soup.data.items()]
 
         result = {}
+        user_properties_utility = getUtility(ICatalogFactory, name='user_properties')
+        extender_name = api.portal.get_registry_record('genweb.controlpanel.core.IGenwebCoreControlPanelSettings.user_properties_extender')
         for record in records:
-            item = {}
-            for key in record[1].attrs:
-                if key in ['fullname', 'email', 'telefon']:
-                    item[key] = record[1].attrs[key]
 
-            result[record[1].attrs['id']] = item
+            username = record[1].attrs['username']
+            user = api.user.get(username=username)
+            rendered_properties = []
+            if extender_name in [a[0] for a in getUtilitiesFor(ICatalogFactory)]:
+                extended_user_properties_utility = getUtility(ICatalogFactory, name=extender_name)
+                for prop in extended_user_properties_utility.directory_properties:
+                    rendered_properties.append(dict(
+                        name=prop,
+                        value=user.getProperty(prop, ''),
+                        icon=extended_user_properties_utility.directory_icons[prop]
+                    ))
+            else:
+                # If it's not extended, then return the simple set of data we know
+                # about the user using also the directory_properties field
+                for prop in user_properties_utility.directory_properties:
+                    rendered_properties.append(dict(
+                        name=prop,
+                        value=user.getProperty(prop, '')
+                    ))
+
+            result[record[1].attrs['id']] = rendered_properties
 
         return ApiResponse(result)
 
@@ -360,19 +378,17 @@ class Person(REST):
         extender_name = api.portal.get_registry_record('genweb.controlpanel.core.IGenwebCoreControlPanelSettings.user_properties_extender')
         if extender_name in [a[0] for a in getUtilitiesFor(ICatalogFactory)]:
             extended_user_properties_utility = getUtility(ICatalogFactory, name=extender_name)
-            for prop in extended_user_properties_utility.directory_properties:
+            for prop in extended_user_properties_utility.profile_properties:
                 rendered_properties.append(dict(
                     name=prop,
-                    icon=extended_user_properties_utility.directory_icons[prop],
-                    value=user.getProperty(prop, '')
+                    value=user.getProperty(prop, ''),
                 ))
         else:
             # If it's not extended, then return the simple set of data we know
-            # about the user using also the directory_properties field
-            for prop in user_properties_utility.directory_properties:
+            # about the user using also the profile_properties field
+            for prop in user_properties_utility.profile_properties:
                 rendered_properties.append(dict(
                     name=prop,
-                    icon=user_properties_utility.directory_icons[prop],
                     value=user.getProperty(prop, '')
                 ))
         return ApiResponse(rendered_properties)
