@@ -18,7 +18,7 @@ class News(REST):
     """
         /api/news
         and
-        /api/news?path=/Plone/news/noticia
+        /api/news/NEW_ID
 
         Get all News by "X-Oauth-Username"
     """
@@ -31,28 +31,26 @@ class News(REST):
 
     @api_resource(required=[])
     def GET(self):
-        portal = api.portal.get()
-        params = self.params
-        if not params:
-            news = api.content.find(context=portal, depth=2, portal_type="News Item")
-        else:
-            news = api.content.find(portal_type="News Item", path=self.params['path'])
+        default_path = api.portal.get().absolute_url_path() + '/news'
+        news = api.content.find(portal_type="News Item", path=default_path)
         results = []
-        for item in news:
-            value = item.getObject()
-            new = dict(title=value.title,
-                       id=value.id,
-                       description=value.description,
-                       path=item.getURL(),
-                       absolute_url=value.absolute_url_path(),
-                       text=value.text.output,
-                       filename=value.image.filename,
-                       caption=value.image_caption,
-                       creators=value.creators,
-                       raw_image=b64encode(value.image.data),
-                       content_type=value.image.contentType,
-                       )
-            results.append(new)
+        if news:
+            for item in news:
+                value = item.getObject()
+                new = dict(title=value.title,
+                           id=value.id,
+                           description=value.description,
+                           path=item.getURL(),
+                           absolute_url=value.absolute_url_path(),
+                           text=value.text.output,
+                           filename=value.image.filename,
+                           caption=value.image_caption,
+                           creators=value.creators,
+                           raw_image=b64encode(value.image.data),
+                           content_type=value.image.contentType,
+                           )
+                results.append(new)
+
         return ApiResponse(results)
 
 
@@ -91,6 +89,31 @@ class New(REST):
                                  date_end)
 
         return result
+
+    @api_resource(required=['newid'])
+    def GET(self):
+        newid = self.params['newid']
+        default_path = api.portal.get().absolute_url_path() + '/news'
+        value = api.content.find(portal_type="News Item", path=default_path, id=newid)
+
+        if value:
+            value = value[0].getObject()
+            new = dict(title=value.title,
+                       id=value.id,
+                       description=value.description,
+                       path=value.absolute_url(),
+                       absolute_url=value.absolute_url_path(),
+                       text=value.text.output,
+                       filename=value.image.filename,
+                       caption=value.image_caption,
+                       creators=value.creators,
+                       raw_image=b64encode(value.image.data),
+                       content_type=value.image.contentType,
+                       )
+        else:
+            new = {}
+
+        return ApiResponse(new)
 
     def create_new(self, newid, title, desc, body, imgData, imgName, date_start, date_end):
         date_start = date_start.split('/')
