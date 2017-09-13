@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GenWebUPC\n"
-"POT-Creation-Date: 2017-07-28 06:51+0000\n"
+"POT-Creation-Date: 2017-09-13 10:20+0000\n"
 "PO-Revision-Date: 2014-04-14 11:20+0100\n"
 "Last-Translator: Corina Riba <corina.riba@upcnet.es>\n"
 "Language-Team: Plone Team@UPCnet <plone.team@upcnet.es>\n"
@@ -16,7 +16,7 @@ msgstr ""
 
 #: ./ulearn/core/controlpanel.py:344
 msgid "/mail_password_form?userid="
-msgstr ""
+msgstr "/mail_password_form?userid="
 
 #: ./ulearn/core/content/community.py:127
 #: ./ulearn/core/controlpanel.py:43
@@ -59,7 +59,7 @@ msgstr "Calendari"
 
 #: ../ulearn.theme/ulearn/theme/controlportlets.py:433
 #: ./ulearn/core/browser/views.py:175
-#: ./ulearn/core/controlpanel.py:406
+#: ./ulearn/core/controlpanel.py:415
 msgid "Cancel"
 msgstr "Cancel·la"
 
@@ -67,13 +67,13 @@ msgstr "Cancel·la"
 msgid "Català"
 msgstr "Català"
 
-#: ./ulearn/core/controlpanel.py:403
+#: ./ulearn/core/controlpanel.py:412
 msgid "Changes saved"
 msgstr "Canvis desats"
 
 #: ./ulearn/core/patches.py:286
 msgid "Changes saved."
-msgstr ""
+msgstr "Canvis guardats."
 
 #: ./ulearn/core/content/community.py:111
 msgid "Closed"
@@ -147,7 +147,7 @@ msgid "Edit Subscribed News Portlet"
 msgstr "Editar portlet Notícies destacades"
 
 #: ../ulearn.theme/ulearn/theme/controlportlets.py:435
-#: ./ulearn/core/controlpanel.py:408
+#: ./ulearn/core/controlpanel.py:417
 msgid "Edit cancelled"
 msgstr "Edició cancel·lada"
 
@@ -210,9 +210,9 @@ msgstr "Habilitar portlet FullNews"
 msgid "General"
 msgstr "General"
 
-#: ./ulearn/core/controlpanel.py:395
+#: ./ulearn/core/controlpanel.py:404
 msgid "Has marcat el comparteix pero falta la url del elasticsearch"
-msgstr ""
+msgstr "Has marcat el comparteix però falta la URL del elasticsearch"
 
 #. Default: "Ha habido algún problema y la reunión virtual no se ha creado"
 #: ./ulearn/core/browser/views.py:164
@@ -255,7 +255,7 @@ msgstr "Inici estadístiques"
 
 #: ./ulearn/core/configure.zcml:70
 msgid "Installs the ulearn.core package"
-msgstr ""
+msgstr "Installs the ulearn.core package"
 
 #. Default: "Invitados espectadores"
 #: ./ulearn/core/browser/views.py:79
@@ -334,7 +334,7 @@ msgstr "Les meves notícies subscrites"
 
 #: ../ulearn.theme/ulearn/theme/portlets/mytags/mytags.py:26
 msgid "My Tags"
-msgstr ""
+msgstr "My Tags"
 
 #: ./ulearn/core/controlpanel.py:69
 msgid "New window"
@@ -432,19 +432,19 @@ msgstr "Títol dels enllaços directes"
 
 #: ../ulearn.theme/ulearn/theme/portlets/flashesinformativos/flashesinformativos.py:189
 msgid "This portlet displays Flashes Informativos."
-msgstr ""
+msgstr "This portlet displays Flashes Informativos."
 
 #: ../ulearn.theme/ulearn/theme/portlets/mysubjects/mysubjects.py:84
 msgid "This portlet displays my subjects on moodle."
-msgstr ""
+msgstr "This portlet displays my subjects on moodle."
 
 #: ../ulearn.theme/ulearn/theme/portlets/importantnews/importantnews.py:176
 msgid "This portlet displays recent News Items."
-msgstr ""
+msgstr "This portlet displays recent News Items."
 
 #: ../ulearn.theme/ulearn/theme/portlets/subscribednews/subscribednews.py:202
 msgid "This portlet displays subscribed News Items."
-msgstr ""
+msgstr "This portlet displays subscribed News Items."
 
 #: ./ulearn/core/content/community.py:154
 msgid "Tipus de comunitat"
@@ -466,9 +466,9 @@ msgstr "Habilitar portlet UPC News"
 
 #: ./ulearn/core/controlpanel.py:104
 msgid "UPCnet only"
-msgstr "UPCnet ONLY"
+msgstr "UPCnet"
 
-#: ./ulearn/core/controlpanel.py:352
+#: ./ulearn/core/controlpanel.py:361
 msgid "Ulearn settings"
 msgstr "Configuració de uLearn"
 
@@ -478,11 +478,11 @@ msgstr "Una comunitat administrable"
 
 #: ./ulearn/core/configure.zcml:78
 msgid "Uninstall base setup for ulearn."
-msgstr ""
+msgstr "Uninstall base setup for ulearn."
 
 #: ./ulearn/core/configure.zcml:78
 msgid "Uninstall ulearn.core"
-msgstr ""
+msgstr "Uninstall ulearn.core"
 
 #. Default: "Usuario <span class=\"formHelp\"></span>"
 #: ./ulearn/core/browser/stats_templates/statsview.pt:224
@@ -501,7 +501,7 @@ msgstr "Estats"
 #. Default: "Mostra el que hi ha compartit amb mi"
 #: ./ulearn/core/controlpanel.py:170
 msgid "activate_sharedwithme"
-msgstr ""
+msgstr "Mostra el que hi ha compartit amb mi"
 
 #: ./ulearn/core/content/community.py:162
 #: ./ulearn/core/controlpanel.py:332
@@ -704,7 +704,7 @@ msgstr "El hashtag (per exemple: ulearn) que utilitzarà aquesta comunitat. No c
 #. Default: "Mostra o no el botó del que hi ha compartit amb mi i el que hi ha compartit a les comunitats"
 #: ./ulearn/core/controlpanel.py:172
 msgid "help_activate_sharedwithme"
-msgstr ""
+msgstr "Mostra o no el botó del que hi ha compartit amb mi i el que hi ha compartit a les Comunitats."
 
 #: ./ulearn/core/content/community.py:163
 #: ./ulearn/core/controlpanel.py:333
@@ -814,7 +814,7 @@ msgstr "La direcció URL de la seva pàgina web, si vostè en té un."
 #. Default: "Aquest és l'enllaç al servei."
 #: ./ulearn/core/controlpanel.py:164
 msgid "help_info_servei"
-msgstr ""
+msgstr "Aquest és l'enllaç al servei."
 
 #. Default: "Aquest és l'idioma de l'espai, que es configura quan el paquet es reinstala."
 #: ./ulearn/core/controlpanel.py:290
@@ -929,7 +929,7 @@ msgstr "Habilita el portlet portlets_rss."
 #. Default: "Settings Portlets. Configure allowed Portlets."
 #: ../ulearn.theme/ulearn/theme/controlportlets.py:368
 msgid "help_portlets_settings_editform"
-msgstr ""
+msgstr "Settings Portlets. Configure allowed Portlets."
 
 #. Default: "To add or change the portrait: click the \"Browse\" button; select a picture of yourself. Recommended image size is 75 pixels wide by 100 pixels tall."
 #: ./ulearn/core/userschema.py:67
@@ -953,6 +953,11 @@ msgstr "En aquesta taula s'han d'afegir tots els enllaços directes que volem mo
 #: ./ulearn/core/controlpanel.py:190
 msgid "help_secondary_color"
 msgstr "Aquest és el color secundari de l'espai."
+
+#. Default: "If selected, then gives the option to show the News Items in Mobile App."
+#: ./ulearn/core/controlpanel.py:349
+msgid "help_show_news_in_app"
+msgstr "Si es marca aquesta opció, les notícies es mostraran a la App. Es pot desactivar individualment a cada notícia."
 
 #. Default: "Mostra o no el botó d'accés a estadístiques diàries a stats/activity i stats/chats"
 #: ./ulearn/core/controlpanel.py:155
@@ -1050,14 +1055,14 @@ msgid "help_ulearn_profile"
 msgstr "Habilita el portlet on mostra el perfil usuari, o la comunitat on estem."
 
 #. Default: "uLearn configuration registry."
-#: ./ulearn/core/controlpanel.py:353
+#: ./ulearn/core/controlpanel.py:362
 msgid "help_ulearn_settings_editform"
 msgstr "Configuració de uLearn"
 
 #. Default: "Habilita el portlet per a veure el compartit amb mi."
 #: ../ulearn.theme/ulearn/theme/controlportlets.py:353
 msgid "help_ulearn_sharedwithme"
-msgstr ""
+msgstr "Habilita el portlet per a veure el compartit amb mi."
 
 #. Default: "Habilita el portlet per a veure les estadístiques."
 #: ../ulearn.theme/ulearn/theme/controlportlets.py:344
@@ -1105,7 +1110,7 @@ msgstr "Informació"
 #. Default: "Informació del servei"
 #: ./ulearn/core/controlpanel.py:162
 msgid "info_servei"
-msgstr ""
+msgstr "Informació del servei"
 
 #. Default: "Gestión Noticia:"
 #: ./ulearn/core/browser/viewlets_templates/newstoolbar.pt:3
@@ -1540,7 +1545,12 @@ msgstr "Compartit amb mi"
 #. Default: "SharedWithMe"
 #: ../ulearn.theme/ulearn/theme/portlets/sharedwithme.py:19
 msgid "sharedwithme"
-msgstr ""
+msgstr "Compartit amb mi"
+
+#. Default: "Show News Items in App"
+#: ./ulearn/core/controlpanel.py:347
+msgid "show_news_in_app"
+msgstr "Mostra les notícies a la App"
 
 #. Default: "Stats"
 #: ../ulearn.theme/ulearn/theme/portlets/stats.py:20
@@ -1598,7 +1608,7 @@ msgstr "Ubicació"
 
 #: ./ulearn/core/configure.zcml:70
 msgid "ulearn.core"
-msgstr ""
+msgstr "ulearn.core"
 
 #. Default: "Activity"
 #: ../ulearn.theme/ulearn/theme/browser/viewlets_templates/folderbar.pt:15
@@ -1699,7 +1709,7 @@ msgstr "Habilitar portlet Ulearn Profile"
 #. Default: "Habilitar portlet compartit amb mi"
 #: ../ulearn.theme/ulearn/theme/controlportlets.py:351
 msgid "ulearn_sharedwithme"
-msgstr ""
+msgstr "Habilitar portlet compartit amb mí"
 
 #. Default: "Habilitar portlet Ulearn Stats"
 #: ../ulearn.theme/ulearn/theme/controlportlets.py:342

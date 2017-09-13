@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2017-07-28 06:51+0000\n"
+"POT-Creation-Date: 2017-09-13 10:20+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -62,7 +62,7 @@ msgstr ""
 
 #: ../ulearn.theme/ulearn/theme/controlportlets.py:433
 #: ./ulearn/core/browser/views.py:175
-#: ./ulearn/core/controlpanel.py:406
+#: ./ulearn/core/controlpanel.py:415
 msgid "Cancel"
 msgstr ""
 
@@ -70,7 +70,7 @@ msgstr ""
 msgid "Català"
 msgstr ""
 
-#: ./ulearn/core/controlpanel.py:403
+#: ./ulearn/core/controlpanel.py:412
 msgid "Changes saved"
 msgstr ""
 
@@ -147,7 +147,7 @@ msgid "Edit Subscribed News Portlet"
 msgstr ""
 
 #: ../ulearn.theme/ulearn/theme/controlportlets.py:435
-#: ./ulearn/core/controlpanel.py:408
+#: ./ulearn/core/controlpanel.py:417
 msgid "Edit cancelled"
 msgstr ""
 
@@ -209,7 +209,7 @@ msgstr ""
 msgid "General"
 msgstr ""
 
-#: ./ulearn/core/controlpanel.py:395
+#: ./ulearn/core/controlpanel.py:404
 msgid "Has marcat el comparteix pero falta la url del elasticsearch"
 msgstr ""
 
@@ -456,7 +456,7 @@ msgstr ""
 msgid "UPCnet only"
 msgstr ""
 
-#: ./ulearn/core/controlpanel.py:352
+#: ./ulearn/core/controlpanel.py:361
 msgid "Ulearn settings"
 msgstr ""
 
@@ -937,6 +937,11 @@ msgstr ""
 msgid "help_secondary_color"
 msgstr ""
 
+#. Default: "If selected, then gives the option to show the News Items in Mobile App."
+#: ./ulearn/core/controlpanel.py:349
+msgid "help_show_news_in_app"
+msgstr ""
+
 #. Default: "Mostra o no el botó d'accés a estadístiques diàries a stats/activity i stats/chats"
 #: ./ulearn/core/controlpanel.py:155
 msgid "help_stats_button"
@@ -1033,7 +1038,7 @@ msgid "help_ulearn_profile"
 msgstr ""
 
 #. Default: "uLearn configuration registry."
-#: ./ulearn/core/controlpanel.py:353
+#: ./ulearn/core/controlpanel.py:362
 msgid "help_ulearn_settings_editform"
 msgstr ""
 
@@ -1519,6 +1524,11 @@ msgstr ""
 #. Default: "SharedWithMe"
 #: ../ulearn.theme/ulearn/theme/portlets/sharedwithme.py:19
 msgid "sharedwithme"
+msgstr ""
+
+#. Default: "Show News Items in App"
+#: ./ulearn/core/controlpanel.py:347
+msgid "show_news_in_app"
 msgstr ""
 
 #: ../ulearn.theme/ulearn/theme/portlets/stats.py:20

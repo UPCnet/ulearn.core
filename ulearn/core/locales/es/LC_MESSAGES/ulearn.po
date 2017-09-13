@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GenWebUPC\n"
-"POT-Creation-Date: 2017-07-28 06:51+0000\n"
+"POT-Creation-Date: 2017-09-13 10:20+0000\n"
 "PO-Revision-Date: 2014-04-14 11:35+0100\n"
 "Last-Translator: Corina Riba <corina.riba@upcnet.es>\n"
 "Language-Team: Plone Team@UPCnet <plone.team@upcnet.es>\n"
@@ -16,7 +16,7 @@ msgstr ""
 
 #: ./ulearn/core/controlpanel.py:344
 msgid "/mail_password_form?userid="
-msgstr ""
+msgstr "/mail_password_form?userid="
 
 #: ./ulearn/core/content/community.py:127
 #: ./ulearn/core/controlpanel.py:43
@@ -38,11 +38,11 @@ msgstr "Añadir Portlet Mis Asignaturas"
 
 #: ../ulearn.theme/ulearn/theme/portlets/importantnews/importantnews.py:175
 msgid "Add News Portlet"
-msgstr "Añadir Portlet Notícias"
+msgstr "Añadir Portlet Noticias"
 
 #: ../ulearn.theme/ulearn/theme/portlets/subscribednews/subscribednews.py:201
 msgid "Add Subscribed News Portlet"
-msgstr "Añadir Portlet Mis notícias"
+msgstr "Añadir Portlet Mis noticias"
 
 #: ./ulearn/core/profiles/default/types/privateFolder.xml
 msgid "Add a new private folder"
@@ -59,7 +59,7 @@ msgstr "Calendario"
 
 #: ../ulearn.theme/ulearn/theme/controlportlets.py:433
 #: ./ulearn/core/browser/views.py:175
-#: ./ulearn/core/controlpanel.py:406
+#: ./ulearn/core/controlpanel.py:415
 msgid "Cancel"
 msgstr "Cancelar"
 
@@ -67,13 +67,13 @@ msgstr "Cancelar"
 msgid "Català"
 msgstr "Catalán"
 
-#: ./ulearn/core/controlpanel.py:403
+#: ./ulearn/core/controlpanel.py:412
 msgid "Changes saved"
 msgstr "Cambios guardados"
 
 #: ./ulearn/core/patches.py:286
 msgid "Changes saved."
-msgstr ""
+msgstr "Cambios guardados."
 
 #: ./ulearn/core/content/community.py:111
 msgid "Closed"
@@ -137,14 +137,14 @@ msgstr "Editar portlet mis asignaturas"
 
 #: ../ulearn.theme/ulearn/theme/portlets/importantnews/importantnews.py:185
 msgid "Edit News Portlet"
-msgstr "Editar portlet notícias destacadas"
+msgstr "Editar portlet noticias destacadas"
 
 #: ../ulearn.theme/ulearn/theme/portlets/subscribednews/subscribednews.py:210
 msgid "Edit Subscribed News Portlet"
-msgstr "Editar portlet Notícias suscritas"
+msgstr "Editar portlet Noticias suscritas"
 
 #: ../ulearn.theme/ulearn/theme/controlportlets.py:435
-#: ./ulearn/core/controlpanel.py:408
+#: ./ulearn/core/controlpanel.py:417
 msgid "Edit cancelled"
 msgstr "Edición cancelada"
 
@@ -206,9 +206,9 @@ msgstr "Habilitar Portlet Full news"
 msgid "General"
 msgstr "General"
 
-#: ./ulearn/core/controlpanel.py:395
+#: ./ulearn/core/controlpanel.py:404
 msgid "Has marcat el comparteix pero falta la url del elasticsearch"
-msgstr ""
+msgstr "Has marcado la opción de compartir pero falta la URL del Elasticsearch."
 
 #: ./ulearn/core/browser/views.py:164
 msgid "Hi ha hagut algun problema i la reunió virtual no ha estat creada."
@@ -319,11 +319,11 @@ msgstr "Mes inicial"
 
 #: ../ulearn.theme/ulearn/theme/portlets/subscribednews/subscribednews.py:49
 msgid "My Subscribed News"
-msgstr "Mis notícias suscritas"
+msgstr "Mis noticias suscritas"
 
 #: ../ulearn.theme/ulearn/theme/portlets/mytags/mytags.py:26
 msgid "My Tags"
-msgstr ""
+msgstr "My Tags"
 
 #: ./ulearn/core/controlpanel.py:69
 msgid "New window"
@@ -344,7 +344,7 @@ msgstr "Nombre de la sesión"
 #. Default: "Habilitar portlet News"
 #: ../ulearn.theme/ulearn/theme/controlportlets.py:171
 msgid "NoticiesPropi"
-msgstr "Habilitar Portlet Notícias"
+msgstr "Habilitar Portlet Noticias"
 
 #: ./ulearn/core/content/community.py:217
 msgid "Notify activity and comments via push"
@@ -374,7 +374,7 @@ msgstr "Propietarios"
 
 #: ../ulearn.theme/ulearn/theme/controlportlets.py:367
 msgid "Portlets settings"
-msgstr ""
+msgstr "Portlets settings"
 
 #: ./ulearn/core/controlpanel.py:100
 msgid "QuickLinks"
@@ -428,11 +428,11 @@ msgstr "Este portlet muestra mis asignaturas en moodle"
 
 #: ../ulearn.theme/ulearn/theme/portlets/importantnews/importantnews.py:176
 msgid "This portlet displays recent News Items."
-msgstr "Este portlet muestra las notícias destacadas."
+msgstr "Este portlet muestra las noticias destacadas."
 
 #: ../ulearn.theme/ulearn/theme/portlets/subscribednews/subscribednews.py:202
 msgid "This portlet displays subscribed News Items."
-msgstr "Este portlet muestra las notícias suscritas"
+msgstr "Este portlet muestra las noticias suscritas"
 
 #: ./ulearn/core/content/community.py:154
 msgid "Tipus de comunitat"
@@ -454,9 +454,9 @@ msgstr "UPCNews"
 
 #: ./ulearn/core/controlpanel.py:104
 msgid "UPCnet only"
-msgstr "Solo UPCnet"
+msgstr "UPCnet"
 
-#: ./ulearn/core/controlpanel.py:352
+#: ./ulearn/core/controlpanel.py:361
 msgid "Ulearn settings"
 msgstr "Configuración de uLearn"
 
@@ -914,7 +914,7 @@ msgstr "Habilitar el portlet portlets_rss."
 #. Default: "Settings Portlets. Configure allowed Portlets."
 #: ../ulearn.theme/ulearn/theme/controlportlets.py:368
 msgid "help_portlets_settings_editform"
-msgstr ""
+msgstr "Settings Portlets. Configure allowed Portlets."
 
 ## Generali profile
 #. Default: "To add or change the portrait: click the \"Browse\" button; select a picture of yourself. Recommended image size is 75 pixels wide by 100 pixels tall."
@@ -939,6 +939,11 @@ msgstr "Texto que se utilizará como deslegable de los enlaces directos"
 #: ./ulearn/core/controlpanel.py:190
 msgid "help_secondary_color"
 msgstr "Color secundario del espacio."
+
+#. Default: "If selected, then gives the option to show the News Items in Mobile App."
+#: ./ulearn/core/controlpanel.py:349
+msgid "help_show_news_in_app"
+msgstr "Si se marca esta opción, las noticias se mostrarán en la App. Se puede desactivar individualmente en cada notícia."
 
 #. Default: "Mostra o no el botó d'accés a estadístiques diàries a stats/activity i stats/chats"
 #: ./ulearn/core/controlpanel.py:155
@@ -1036,14 +1041,14 @@ msgid "help_ulearn_profile"
 msgstr "Habilitar el portlet donde muestra el perfil de usuario, o la comunidad donde estamos."
 
 #. Default: "uLearn configuration registry."
-#: ./ulearn/core/controlpanel.py:353
+#: ./ulearn/core/controlpanel.py:362
 msgid "help_ulearn_settings_editform"
 msgstr "Configuración de uLearn"
 
 #. Default: "Habilita el portlet per a veure el compartit amb mi."
 #: ../ulearn.theme/ulearn/theme/controlportlets.py:353
 msgid "help_ulearn_sharedwithme"
-msgstr ""
+msgstr "Habilita el portlet para ver lo compartido conmigo."
 
 #. Default: "Habilita el portlet per a veure les estadístiques."
 #: ../ulearn.theme/ulearn/theme/controlportlets.py:344
@@ -1081,7 +1086,7 @@ msgstr "Página personal"
 
 #: ../ulearn.theme/ulearn/theme/portlets/importantnews/importantnews.py:46
 msgid "importantnews"
-msgstr "Notícias importantes"
+msgstr "Noticias importantes"
 
 #. Default: "Info"
 #: ./ulearn/core/content/community_templates/view.pt:44
@@ -1524,7 +1529,12 @@ msgstr "Compartido conmigo"
 #. Default: "SharedWithMe"
 #: ../ulearn.theme/ulearn/theme/portlets/sharedwithme.py:19
 msgid "sharedwithme"
-msgstr ""
+msgstr "SharedWithMe"
+
+#. Default: "Show News Items in App"
+#: ./ulearn/core/controlpanel.py:347
+msgid "show_news_in_app"
+msgstr "Muestra las noticias en la App"
 
 #. Default: "Stats"
 #: ../ulearn.theme/ulearn/theme/portlets/stats.py:20
@@ -1683,7 +1693,7 @@ msgstr "Habilitar portlet Ulearn Profile"
 #. Default: "Habilitar portlet compartit amb mi"
 #: ../ulearn.theme/ulearn/theme/controlportlets.py:351
 msgid "ulearn_sharedwithme"
-msgstr ""
+msgstr "Habilitar portlet compartido conmigo"
 
 #. Default: "Habilitar portlet Ulearn Stats"
 #: ../ulearn.theme/ulearn/theme/controlportlets.py:342
