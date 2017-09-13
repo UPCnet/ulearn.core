@@ -102,7 +102,7 @@ class IUlearnControlPanelSettings(model.Schema):
 
     model.fieldset('UPCnet only',
                    _(u'UPCnet only'),
-                   fields=['language', 'activity_view', 'url_forget_password'])
+                   fields=['language', 'activity_view', 'url_forget_password', 'show_news_in_app'])
 
     campus_url = schema.TextLine(
         title=_(u'campus_url',
@@ -343,6 +343,15 @@ class IUlearnControlPanelSettings(model.Schema):
         required=True,
         default=_(u'/mail_password_form?userid='))
 
+    show_news_in_app = schema.Bool(
+        title=_(u'show_news_in_app',
+                default=_(u"Show News Items in App")),
+        description=_(u'help_show_news_in_app',
+                      default=_(u"If selected, then gives the option to show the News Items in Mobile App.")),
+        required=False,
+        default=False,
+    )
+
 
 class UlearnControlPanelSettingsForm(controlpanel.RegistryEditForm):
     """ Ulearn settings form """
@@ -386,9 +395,9 @@ class UlearnControlPanelSettingsForm(controlpanel.RegistryEditForm):
                 maxclient.admin.security.roles['NonVisible'].users[user].post()
 
         if data.get('activate_sharedwithme', True):
-            if api.portal.get_registry_record('genweb.controlpanel.core.IGenwebCoreControlPanelSettings.elasticsearch') != None:
+            if api.portal.get_registry_record('genweb.controlpanel.core.IGenwebCoreControlPanelSettings.elasticsearch') is not None:
                 portal = api.portal.get()
-                if portal.portal_actions.object.local_roles.visible == False:
+                if portal.portal_actions.object.local_roles.visible is False:
                     portal.portal_actions.object.local_roles.visible = True
                     transaction.commit()
             else:
@@ -396,7 +405,7 @@ class UlearnControlPanelSettingsForm(controlpanel.RegistryEditForm):
                                                               'info')
         else:
             portal = api.portal.get()
-            if portal.portal_actions.object.local_roles.visible == True:
+            if portal.portal_actions.object.local_roles.visible is True:
                 portal.portal_actions.object.local_roles.visible = False
                 transaction.commit()
 

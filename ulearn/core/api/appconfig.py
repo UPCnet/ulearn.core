@@ -31,7 +31,7 @@ class Appconfig(REST):
         resp = session.get(oauth_server)
         max_oauth_server = resp.json()['max.oauth_server']
 
-        show_news_in_app = 'TODO'
+        show_news_in_app = api.portal.get_registry_record(name='ulearn.core.controlpanel.IUlearnControlPanelSettings.show_news_in_app')
 
         info = dict(main_color=main_color,
                     secondary_color=secondary_color,
@@ -44,7 +44,3 @@ class Appconfig(REST):
                     show_news_in_app=show_news_in_app
                     )
         return ApiResponse(info)
-
-
-
-#    noticias si o no
