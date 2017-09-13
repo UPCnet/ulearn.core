@@ -21,7 +21,7 @@ class ulearnUtils(BrowserView):
         portal = getToolByName(context, 'portal_url').getPortalObject()
         base_path = '/'.join(portal.getPhysicalPath())
         registry = queryUtility(IRegistry)
-        settings = registry.forInterface(IUlearnControlPanelSettings)
+        settings = registry.forInterface(IUlearnControlPanelSettings, check=False)
         if 'http' in settings.url_forget_password:
             return settings.url_forget_password
         else:

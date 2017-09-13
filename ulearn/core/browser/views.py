@@ -190,7 +190,7 @@ class AjaxUserSearch(grok.View):
         query = self.request.form.get('q', '')
         results = dict(more=False, results=[])
         registry = queryUtility(IRegistry)
-        settings = registry.forInterface(IUlearnControlPanelSettings)
+        settings = registry.forInterface(IUlearnControlPanelSettings, check=False)
 
         if query:
             portal = getSite()

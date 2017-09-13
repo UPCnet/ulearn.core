@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2017-09-13 10:20+0000\n"
+"POT-Creation-Date: 2017-09-13 14:43+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1096,22 +1096,27 @@ msgid "info_servei"
 msgstr ""
 
 #. Default: "Gestión Noticia:"
-#: ./ulearn/core/browser/viewlets_templates/newstoolbar.pt:3
+#: ./ulearn/core/browser/viewlets_templates/newstoolbar.pt:4
 msgid "label-newstoolbar"
 msgstr ""
 
+#. Default: "App"
+#: ./ulearn/core/browser/viewlets_templates/newstoolbar.pt:68
+msgid "label-toogle-app"
+msgstr ""
+
 #. Default: "Flash"
-#: ./ulearn/core/browser/viewlets_templates/newstoolbar.pt:29
+#: ./ulearn/core/browser/viewlets_templates/newstoolbar.pt:28
 msgid "label-toogle-flash"
 msgstr ""
 
 #. Default: "Destacada"
-#: ./ulearn/core/browser/viewlets_templates/newstoolbar.pt:51
+#: ./ulearn/core/browser/viewlets_templates/newstoolbar.pt:48
 msgid "label-toogle-important"
 msgstr ""
 
 #. Default: "Lista"
-#: ./ulearn/core/browser/viewlets_templates/newstoolbar.pt:7
+#: ./ulearn/core/browser/viewlets_templates/newstoolbar.pt:8
 msgid "label-toogle-list"
 msgstr ""
 

@@ -177,6 +177,19 @@ class newsToolBar(viewletBase):
         else:
             return False
 
+    def isViewInAppChecked(self):
+        try:
+            show_news_in_app = api.portal.get_registry_record(
+                name='ulearn.core.controlpanel.IUlearnControlPanelSettings.show_news_in_app')
+        except:
+            show_news_in_app = True
+        return show_news_in_app
+
+    def isNewApp(self):
+        context = aq_inner(self.context)
+        is_important = IImportant(context).is_important
+        return is_important
+
 
 class ListTagsNews(viewletBase):
     grok.name('genweb.listtags')

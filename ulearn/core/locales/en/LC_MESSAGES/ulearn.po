@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GenWebUPC\n"
-"POT-Creation-Date: 2017-09-13 10:20+0000\n"
+"POT-Creation-Date: 2017-09-13 14:43+0000\n"
 "PO-Revision-Date: 2014-04-14 11:35+0100\n"
 "Last-Translator: Roberto Diaz <roberto.diaz@upcnet.es>\n"
 "Language-Team: Plone Team@UPCnet <>\n"
@@ -1116,22 +1116,27 @@ msgid "info_servei"
 msgstr "Service information"
 
 #. Default: "Gestión Noticia:"
-#: ./ulearn/core/browser/viewlets_templates/newstoolbar.pt:3
+#: ./ulearn/core/browser/viewlets_templates/newstoolbar.pt:4
 msgid "label-newstoolbar"
 msgstr "News management:"
 
+#. Default: "App"
+#: ./ulearn/core/browser/viewlets_templates/newstoolbar.pt:68
+msgid "label-toogle-app"
+msgstr ""
+
 #. Default: "Flash"
-#: ./ulearn/core/browser/viewlets_templates/newstoolbar.pt:29
+#: ./ulearn/core/browser/viewlets_templates/newstoolbar.pt:28
 msgid "label-toogle-flash"
 msgstr "Flash"
 
 #. Default: "Destacada"
-#: ./ulearn/core/browser/viewlets_templates/newstoolbar.pt:51
+#: ./ulearn/core/browser/viewlets_templates/newstoolbar.pt:48
 msgid "label-toogle-important"
 msgstr "Important"
 
 #. Default: "Lista"
-#: ./ulearn/core/browser/viewlets_templates/newstoolbar.pt:7
+#: ./ulearn/core/browser/viewlets_templates/newstoolbar.pt:8
 msgid "label-toogle-list"
 msgstr "List"
 

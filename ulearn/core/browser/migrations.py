@@ -93,7 +93,7 @@ def createMAXUser(username):
 
     except RequestError:
         logger.error('Error IPDB found here and commented... maybe do you want to Stop here?... (RequestError): %s' % username)
-        #import ipdb; ipdb.set_trace()
+        # import ipdb; ipdb.set_trace()
     except:
         logger.error('Error creating MAX user for user: %s' % username)
 

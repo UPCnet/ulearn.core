@@ -4,17 +4,12 @@ from zope.component import queryUtility
 from zope.component import getUtility
 from zope.component import getMultiAdapter
 from zope.component.hooks import getSite
-
-
 from plone.portlets.interfaces import IPortletManager
 from plone.portlets.interfaces import IPortletAssignmentMapping
 from plone.dexterity.utils import createContentInContainer
-
 from Products.CMFPlone.interfaces import IPloneSiteRoot
 from Products.CMFPlone.interfaces.constrains import ISelectableConstrainTypes
-
 from genweb.portlets.browser.manager import ISpanStorage
-
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from plone import api
 from zope.interface import alsoProvides
@@ -24,16 +19,9 @@ from genweb.core.utils import remove_user_from_catalog
 from repoze.catalog.query import Eq
 from souper.soup import get_soup
 from genweb.core.gwuuid import IGWUUID
-from ulearn.core.browser.security import execute_under_special_role
-
 import transaction
 from datetime import datetime
-from Acquisition import aq_inner
-from zope.site.hooks import setSite
-from Products.CMFCore.utils import getToolByName
 from plone.namedfile.file import NamedBlobFile
-
-from zope.component import queryUtility
 from ulearn.core.browser.sharing import IElasticSharing
 from ulearn.core.content.community import ICommunity
 from genweb.core.utilities import IElasticSearch
@@ -41,10 +29,8 @@ from ulearn.core.browser.sharing import ElasticSharing
 
 import json
 
-
 import logging
 logger = logging.getLogger(__name__)
-
 
 
 class setupHomePage(grok.View):
@@ -221,12 +207,11 @@ class changeURLCommunities(grok.View):
         if self.request.environ['REQUEST_METHOD'] == 'POST':
             pc = api.portal.get_tool('portal_catalog')
             communities = pc.searchResults(portal_type='ulearn.community')
-            # portal_url = api.portal.get().absolute_url()
 
             if self.request.form['url'] != '':
                 url_nova = self.request.form['url']
                 url_antiga = self.request.form['url_antiga']
-                self.context.plone_log('Buscant comunitats per modificar la url')
+                self.context.plone_log('Cercant comunitats per modificar la url...')
 
                 for brain in communities:
                     obj = brain.getObject()
@@ -236,7 +221,8 @@ class changeURLCommunities(grok.View):
                     properties_to_update = dict(url=community_url_nova)
 
                     community.maxclient.contexts[community_url].put(**properties_to_update)
-                    self.context.plone_log('Comunitat amb url {} actualitzada per {}'.format(community_url, community_url_nova))
+                    self.context.plone_log('Comunitat amb url: {} - Actualitzada per: {}'.format(community_url, community_url_nova))
+
 
 class deleteUsers(grok.View):
     """ Delete users from the plone & max & communities """
@@ -264,10 +250,10 @@ class deleteUsers(grok.View):
                         remove_user_from_catalog(user.lower())
                         pc = api.portal.get_tool(name='portal_catalog')
                         username = user
-                        comunnities = pc.unrestrictedSearchResults(portal_type="ulearn.community")
-                        for num, community in enumerate(comunnities):
+                        communities = pc.unrestrictedSearchResults(portal_type="ulearn.community")
+                        for num, community in enumerate(communities):
                             obj = community._unrestrictedGetObject()
-                            self.context.plone_log('Processant {} de {}. Comunitat {}'.format(num, len(comunnities), obj))
+                            self.context.plone_log('Processant {} de {}. Comunitat {}'.format(num, len(communities), obj))
                             gwuuid = IGWUUID(obj).get()
                             portal = api.portal.get()
                             soup = get_soup('communities_acl', portal)
@@ -290,12 +276,13 @@ class deleteUsers(grok.View):
                         maxclient.setActor(settings.max_restricted_username)
                         maxclient.setToken(settings.max_restricted_token)
                         maxclient.people[username].delete()
-                        logger.info('Delete user: {}'.format(user))
+                        logger.info('Deleted user: {}'.format(user))
                     except:
                         logger.error('User not deleted: {}'.format(user))
                         pass
 
-                logger.info('Finished deleted users: {}'.format(users))
+                logger.info('Finished process. Deleted users: {}'.format(users))
+
 
 class deleteUsersInCommunities(grok.View):
     """ Delete users from the plone & max & communities """
@@ -321,10 +308,10 @@ class deleteUsersInCommunities(grok.View):
                     try:
                         pc = api.portal.get_tool(name='portal_catalog')
                         username = user
-                        comunnities = pc.unrestrictedSearchResults(portal_type="ulearn.community")
-                        for num, community in enumerate(comunnities):
+                        communities = pc.unrestrictedSearchResults(portal_type="ulearn.community")
+                        for num, community in enumerate(communities):
                             obj = community._unrestrictedGetObject()
-                            self.context.plone_log('Processant {} de {}. Comunitat {}'.format(num, len(comunnities), obj))
+                            self.context.plone_log('Processant {} de {}. Comunitat {}'.format(num, len(communities), obj))
                             gwuuid = IGWUUID(obj).get()
                             portal = api.portal.get()
                             soup = get_soup('communities_acl', portal)
@@ -351,13 +338,12 @@ class deleteUsersInCommunities(grok.View):
                 logger.info('Finished. Deleted users from communities: {}'.format(users))
 
 
-def getDestinationFolder(stats_folder,create_month=True):
+def getDestinationFolder(stats_folder, create_month=True):
     """
     This function creates if it doesn't exist a folder in <stats_folder>/<year>/<month>.
     If  create_month is False, then only the <year> folder is created
     """
     portal = api.portal.get()
-    # setSite(portal)
     # Create 'stats_folder' folder if not exists
     for stats_folder_part in stats_folder.split('/'):
         if portal.get(stats_folder_part) is None:
@@ -409,8 +395,6 @@ class ImportFileToFolder(grok.View):
     grok.name('importfiletofolder')
     grok.require('genweb.webmaster')
 
-
-
     render = ViewPageTemplateFile('views_templates/importfiletofolder.pt')
 
     def update(self):
@@ -424,7 +408,7 @@ class ImportFileToFolder(grok.View):
             folder_name = self.request.get("folder")
             local_file = self.request.get("local_file")
 
-            f = open(local_file,'r')
+            f = open(local_file, 'r')
             content = f.read()
             f.close()
 
@@ -437,15 +421,15 @@ class ImportFileToFolder(grok.View):
                 data=content,
                 filename=u'{}'.format(local_file),
                 contentType='application/xls'
-                )
-            obj = createContentInContainer(
+            )
+            createContentInContainer(
                 portal,
                 'AppFile',
                 id='{}'.format(local_file.split('/')[-1]),
                 title='{}'.format(local_file.split('/')[-1]),
                 file=file,
                 checkConstraints=False
-                )
+            )
 
 
 class listAllCommunitiesObjects(grok.View):
@@ -457,19 +441,15 @@ class listAllCommunitiesObjects(grok.View):
 
     def render(self):
         pc = api.portal.get_tool(name='portal_catalog')
-        comunnities = pc.unrestrictedSearchResults(portal_type="ulearn.community")
+        communities = pc.unrestrictedSearchResults(portal_type="ulearn.community")
         result_list = []
-        for num, community in enumerate(comunnities):
+        for num, community in enumerate(communities):
             num_docs = len(pc(path={"query": community.getPath(), "depth": 2}))
-            new_com = {
-                        "community_name" : community.getPath(),
-                        "community_docs" : str(num_docs),
-                      }
+            new_com = {"community_name": community.getPath(),
+                       "community_docs": str(num_docs),
+                       }
             result_list.append(new_com)
         return json.dumps(result_list)
-
-
-
 
 
 class updateSharingCommunityElastic(grok.View):
@@ -492,12 +472,11 @@ class updateSharingCommunityElastic(grok.View):
 
             if self.request.form['id'] != '':
                 id_community = absolute_path + '/' + self.request.form['id']
-                self.context.plone_log('Actualitzant elasticsearch dades comunitat {}'.format(id_community))
+                self.context.plone_log('Actualitzant Elasticsearch dades comunitat {}'.format(id_community))
                 community = pc.unrestrictedSearchResults(path=id_community)
 
                 if community:
                     obj = community[0]._unrestrictedGetObject()
-
 
                 try:
                     self.elastic = getUtility(IElasticSearch)
@@ -510,7 +489,7 @@ class updateSharingCommunityElastic(grok.View):
                                 'sharing': {
                                     'properties': {
                                         'path': {'type': 'string'},
-                                        'principal': {'type': 'string','index': 'not_analyzed' },
+                                        'principal': {'type': 'string', 'index': 'not_analyzed'},
                                         'roles': {'type': 'string'},
                                         'uuid': {'type': 'string'}
                                     }
@@ -524,7 +503,8 @@ class updateSharingCommunityElastic(grok.View):
                     if not ICommunity.providedBy(obj):
                         elastic_sharing = queryUtility(IElasticSharing)
                         elastic_sharing.modified(obj)
-                        self.context.plone_log('Actualitzat el objecte {} de la comunitat {}'.format(obj, id_community))
+                        self.context.plone_log('Actualitzat objecte: {}, de la comunitat: {}'.format(obj, id_community))
+
 
 class updateSharingCommunitiesElastic(grok.View):
     """ Aquesta vista actualitza el sharing de tots els objectes de totes les comunitats al elasticsearch """
@@ -542,11 +522,11 @@ class updateSharingCommunitiesElastic(grok.View):
         portal = getSite()
         absolute_path = '/'.join(portal.getPhysicalPath())
 
-        comunnities = pc.unrestrictedSearchResults(portal_type="ulearn.community")
-        for num, community in enumerate(comunnities):
+        communities = pc.unrestrictedSearchResults(portal_type="ulearn.community")
+        for num, community in enumerate(communities):
             obj = community._unrestrictedGetObject()
             id_community = absolute_path + '/' + obj.id
-            self.context.plone_log('Processant {} de {}. Comunitat {}'.format(num, len(comunnities), obj))
+            self.context.plone_log('Processant {} de {}. Comunitat {}'.format(num, len(communities), obj))
             community = pc.unrestrictedSearchResults(path=id_community)
 
             try:
@@ -560,7 +540,7 @@ class updateSharingCommunitiesElastic(grok.View):
                             'sharing': {
                                 'properties': {
                                     'path': {'type': 'string'},
-                                    'principal': {'type': 'string','index': 'not_analyzed' },
+                                    'principal': {'type': 'string', 'index': 'not_analyzed'},
                                     'roles': {'type': 'string'},
                                     'uuid': {'type': 'string'}
                                 }
@@ -575,7 +555,7 @@ class updateSharingCommunitiesElastic(grok.View):
                     elastic_sharing = queryUtility(IElasticSharing)
                     elastic_sharing.modified(obj)
 
-                    self.context.plone_log('Actualitzat el objecte {} de la comunitat {}'.format(obj, id_community))
+                    self.context.plone_log('Actualitzat objecte: {}, de la comunitat: {}'.format(obj, id_community))
 
         logger.info('Finished update sharing in communities: {}'.format(portal.absolute_url()))
         self.response.setBody('OK')
@@ -604,7 +584,7 @@ class createElasticSharing(grok.View):
                         'sharing': {
                             'properties': {
                                 'path': {'type': 'string'},
-                                'principal': {'type': 'string','index': 'not_analyzed' },
+                                'principal': {'type': 'string', 'index': 'not_analyzed'},
                                 'roles': {'type': 'string'},
                                 'uuid': {'type': 'string'}
                             }

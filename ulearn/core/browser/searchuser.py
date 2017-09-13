@@ -3,16 +3,11 @@ from plone import api
 from zope.component.hooks import getSite
 from zope.component import getUtility
 from zope.component import getUtilitiesFor
-
 from Products.CMFPlone.interfaces import IPloneSiteRoot
-from Products.PluggableAuthService.interfaces.plugins import IPropertiesPlugin
-
 from souper.soup import Record
 from souper.interfaces import ICatalogFactory
 from repoze.catalog.query import Eq
-from repoze.catalog.query import And
 from souper.soup import get_soup
-
 from mrs.max.utilities import IMAXClient
 from ulearn.core.content.community import ICommunity
 
@@ -22,7 +17,7 @@ import unicodedata
 
 def searchUsersFunction(context, request, search_string):  # noqa
     portal = getSite()
-    pm = api.portal.get_tool(name='portal_membership')
+    # pm = api.portal.get_tool(name='portal_membership')
     nonvisibles = api.portal.get_registry_record(name='ulearn.core.controlpanel.IUlearnControlPanelSettings.nonvisibles')
 
     current_user = api.user.get_current()
@@ -173,7 +168,7 @@ def searchUsersFunction(context, request, search_string):  # noqa
                         user_dict.update({user_property: user.attrs.get(user_property, '')})
 
                 user_dict.update(dict(id=user.attrs['username']))
-                userImage = '<img src="' + settings.max_server + '/people/' + user.attrs['username'] + '/avatar/large" alt="' +  user.attrs['username'] + '" title="' +  user.attrs['username'] + '" height="105" width="105" >'
+                userImage = '<img src="' + settings.max_server + '/people/' + user.attrs['username'] + '/avatar/large" alt="' + user.attrs['username'] + '" title="' + user.attrs['username'] + '" height="105" width="105" >'
                 # userImage = pm.getPersonalPortrait(user.attrs['username'])
                 # userImage.alt = user.attrs['username']
                 # userImage.title = user.attrs['username']
@@ -195,7 +190,7 @@ def searchUsersFunction(context, request, search_string):  # noqa
                         user_dict.update({user_property: user.get(user_property, '')})
 
                 user_dict.update(dict(id=user.get('id', '')))
-                userImage = '<img src="' + settings.max_server + '/people/' + user.attrs['username'] + '/avatar/large" alt="' +  user.attrs['username'] + '" title="' +  user.attrs['username'] + '" height="105" width="105" >'
+                userImage = '<img src="' + settings.max_server + '/people/' + user.attrs['username'] + '/avatar/large" alt="' + user.attrs['username'] + '" title="' + user.attrs['username'] + '" height="105" width="105" >'
                 # userImage = pm.getPersonalPortrait(user.attrs['username'])
                 # userImage.alt = user.attrs['username']
                 # userImage.title = user.attrs['username']

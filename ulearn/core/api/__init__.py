@@ -249,7 +249,7 @@ class REST(REST_BASE):
 
     def get_max_client(self):
         registry = queryUtility(IRegistry)
-        maxui_settings = registry.forInterface(IMAXUISettings)
+        maxui_settings = registry.forInterface(IMAXUISettings, check=False)
 
         maxclient = MaxClient(maxui_settings.max_server, maxui_settings.oauth_server)
         maxclient.setActor(maxui_settings.max_restricted_username)
