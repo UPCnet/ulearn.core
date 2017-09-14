@@ -45,7 +45,12 @@ class Item(REST):
         results = []
         if local_url in expanded:
             item_id = expanded.split(local_url)[1][1:]
-            item_path = api.portal.getSite().absolute_url_path() + '/' + item_id
+            mountpoint_id = self.context.getPhysicalPath()[1]
+            if mountpoint_id == self.context.id:
+                item_path = api.portal.getSite().absolute_url_path() + '/' + item_id
+            else:
+                item_path = '/' + mountpoint_id + '/' + api.portal.get().id + '/' + item_id
+
             value = api.content.find(path=item_path)[0]
             item = value.getObject()
             text = image = image_caption = ''
@@ -57,7 +62,7 @@ class Item(REST):
                 image = item.image.filename
             if value.portal_type == 'Image':
                 image = item.image.filename
-                raw_image = b64encode(item.image.data),
+                raw_image = 'b64encode(item.image.data)',
                 content_type = item.image.contentType
             new = dict(title=value.Title,
                        id=value.id,
