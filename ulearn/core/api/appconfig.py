@@ -30,10 +30,8 @@ class Appconfig(REST):
         session = requests.Session()
         resp = session.get(oauth_server)
         max_oauth_server = resp.json()['max.oauth_server']
-        try:
-            show_news_in_app = api.portal.get_registry_record(name='ulearn.core.controlpanel.IUlearnControlPanelSettings.show_news_in_app')
-        except:
-            show_news_in_app = 'WARNING: Reinstall ulearn.core to get the correct value.'
+        show_news_in_app = api.portal.get_registry_record(name='ulearn.core.controlpanel.IUlearnControlPanelSettings.show_news_in_app')
+
         info = dict(main_color=main_color,
                     secondary_color=secondary_color,
                     max_server=max_server,
