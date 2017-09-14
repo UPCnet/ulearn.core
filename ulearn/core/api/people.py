@@ -62,21 +62,28 @@ class People(REST):
             if extender_name in [a[0] for a in getUtilitiesFor(ICatalogFactory)]:
                 extended_user_properties_utility = getUtility(ICatalogFactory, name=extender_name)
                 for prop in extended_user_properties_utility.directory_properties:
-                    rendered_properties.append(dict(
-                        name=prop,
-                        value=user.getProperty(prop, ''),
-                        icon=extended_user_properties_utility.directory_icons[prop]
-                    ))
+                    userProp=user.getProperty(prop, '')
+                    if userProp:
+                        rendered_properties.append(dict(
+                            name=prop,
+                            value=userProp,
+                            icon=extended_user_properties_utility.directory_icons[prop]
+                        ))
             else:
                 # If it's not extended, then return the simple set of data we know
                 # about the user using also the directory_properties field
                 for prop in user_properties_utility.directory_properties:
-                    rendered_properties.append(dict(
-                        name=prop,
-                        value=user.getProperty(prop, ''),
-                        icon=user_properties_utility.directory_icons[prop],
-                    ))
-
+                    try:
+                        userProp=user.getProperty(prop, '')
+                        if userProp:
+                            rendered_properties.append(dict(
+                                name=prop,
+                                value=userProp,
+                                icon=user_properties_utility.directory_icons[prop],
+                            ))
+                    except:
+                      # Some users has @ in the username and is not valid...
+                      pass
             result[record[1].attrs['id']] = rendered_properties
 
         return ApiResponse(result)
@@ -383,18 +390,22 @@ class Person(REST):
             if extender_name in [a[0] for a in getUtilitiesFor(ICatalogFactory)]:
                 extended_user_properties_utility = getUtility(ICatalogFactory, name=extender_name)
                 for prop in extended_user_properties_utility.profile_properties:
-                    rendered_properties.append(dict(
-                        name=prop,
-                        value=user.getProperty(prop, ''),
-                    ))
+                    userProp=user.getProperty(prop, '')
+                    if userProp:
+                        rendered_properties.append(dict(
+                            name=prop,
+                            value=userProp,
+                        ))
             else:
                 # If it's not extended, then return the simple set of data we know
                 # about the user using also the profile_properties field
                 for prop in user_properties_utility.profile_properties:
-                    rendered_properties.append(dict(
-                        name=prop,
-                        value=user.getProperty(prop, '')
-                    ))
+                    userProp=user.getProperty(prop, '')
+                    if userProp:
+                        rendered_properties.append(dict(
+                            name=prop,
+                            value=userProp,
+                        ))
         except:
             raise ObjectNotFound('User not found')
 
