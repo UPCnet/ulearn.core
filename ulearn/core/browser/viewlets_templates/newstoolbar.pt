@@ -67,7 +67,7 @@
 
     <div id="toggle-newsinapp" tal:condition="viewlet/isViewInAppChecked">
         <div class="literal-toggle" i18n:translate="label-toogle-app">App</div>
-        <div tal:condition="viewlet/isNewApp">
+        <div tal:condition="not:viewlet/isNewApp">
             <label class="switch">
                 <input type="checkbox">
                 <div class="sliderbutton round"
@@ -75,7 +75,7 @@
                 </div>
             </label>
         </div>
-        <div tal:condition="not:viewlet/isNewApp">
+        <div tal:condition="viewlet/isNewApp">
             <label class="switch">
                 <input type="checkbox" checked>
                 <div class="sliderbutton round"

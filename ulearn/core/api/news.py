@@ -32,29 +32,34 @@ class News(REST):
 
     @api_resource(required=[])
     def GET(self):
-        mountpoint_id = self.context.getPhysicalPath()[1]
-        if mountpoint_id == self.context.id:
-            default_path = api.portal.get().absolute_url_path() + '/news'
-        else:
-            default_path = '/' + mountpoint_id + '/' + api.portal.get().id + '/news'
-        news = api.content.find(portal_type="News Item", path=default_path)
+        show_news_in_app = api.portal.get_registry_record(name='ulearn.core.controlpanel.IUlearnControlPanelSettings.show_news_in_app')
         results = []
-        if news:
-            for item in news:
-                value = item.getObject()
-                new = dict(title=value.title,
-                           id=value.id,
-                           description=value.description,
-                           path=item.getURL(),
-                           absolute_url=value.absolute_url_path(),
-                           text=value.text.output,
-                           filename=value.image.filename,
-                           caption=value.image_caption,
-                           creators=value.creators,
-                           raw_image=b64encode(value.image.data),
-                           content_type=value.image.contentType,
-                           )
-                results.append(new)
+        if show_news_in_app:
+            mountpoint_id = self.context.getPhysicalPath()[1]
+            if mountpoint_id == self.context.id:
+                default_path = api.portal.get().absolute_url_path() + '/news'
+            else:
+                default_path = '/' + mountpoint_id + '/' + api.portal.get().id + '/news'
+            news = api.content.find(
+                portal_type="News Item",
+                path=default_path,
+                is_inapp=True)
+            if news:
+                for item in news:
+                    value = item.getObject()
+                    new = dict(title=value.title,
+                               id=value.id,
+                               description=value.description,
+                               path=item.getURL(),
+                               absolute_url=value.absolute_url_path(),
+                               text=value.text.output,
+                               filename=value.image.filename,
+                               caption=value.image_caption,
+                               creators=value.creators,
+                               raw_image=b64encode(value.image.data),
+                               content_type=value.image.contentType,
+                               )
+                    results.append(new)
 
         return ApiResponse(results)
 

@@ -137,7 +137,7 @@ class newsToolBar(viewletBase):
 
     def isNewApp(self):
         context = aq_inner(self.context)
-        return IShowInApp(context).in_app
+        return IShowInApp(context).is_inapp
 
     def getListOfPortlets(self):
         site = getSite()
