@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <object>
-  <hidden manager= "plone.abovecontenttitle" skinname="UlearnTheme">
+  <order manager= "plone.abovecontenttitle" skinname="UlearnTheme">
     <viewlet name="ulearn.newstoolbar"/>
-  </hidden>
+  </order>
 </object>
