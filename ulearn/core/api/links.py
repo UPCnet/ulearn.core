@@ -44,7 +44,8 @@ class Link(REST):
             folders = api.content.find(context=path, depth=1)
             found = True
         except:
-            resultsGestion = 'Menu Gestion not configured or Language not found.'
+            # 'Menu Gestion not configured or Language not found.'
+            resultsGestion = ''
             found = False
 
         if found:
@@ -59,7 +60,8 @@ class Link(REST):
                     resultsGestion[folder.Title].append(menuLink)
 
             if not resultsGestion:
-                resultsGestion = 'No Menu Gestion configured in this Site.'
+                # 'No Menu Gestion configured in this Site.'
+                resultsGestion = ''
 
         registry = getUtility(IRegistry)
         settings = registry.forInterface(IUlearnControlPanelSettings, check=False)
@@ -75,7 +77,8 @@ class Link(REST):
             resultsControlPanel.append(quickLink)
 
         if not resultsControlPanel:
-            resultsControlPanel = 'Menu Quicklinks not configured in the ControlPanel.'
+            # 'Menu Quicklinks not configured in the ControlPanel.'
+            resultsControlPanel = ''
 
         values = {'Menu_Gestion': resultsGestion, 'Menu_Controlpanel': resultsControlPanel}
 
