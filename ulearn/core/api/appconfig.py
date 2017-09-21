@@ -29,7 +29,12 @@ class Appconfig(REST):
 
         session = requests.Session()
         resp = session.get(oauth_server)
-        max_oauth_server = resp.json()['max.oauth_server']
+
+        try:
+            max_oauth_server = resp.json()['max.oauth_server']
+        except:
+            max_oauth_server = 'ERROR: UNABLE TO CONNECT TO MAX OAUTH SERVER'
+
         show_news_in_app = api.portal.get_registry_record(name='ulearn.core.controlpanel.IUlearnControlPanelSettings.show_news_in_app')
 
         info = dict(main_color=main_color,
