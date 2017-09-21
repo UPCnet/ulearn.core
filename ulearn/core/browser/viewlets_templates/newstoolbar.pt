@@ -4,6 +4,7 @@
     <div id="newtoolbar-title" i18n:translate="label-newstoolbar">
       Gestión Noticia:
     </div>
+
     <div id="toggle-outoflist" tal:condition="viewlet/isPortletListActivate">
         <div class="literal-toggle" i18n:translate="label-toogle-list">Lista</div>
         <div tal:condition="viewlet/isNewOutOfList">
@@ -64,7 +65,7 @@
         </div>
     </div>
 
-    <div id="toggle-important" tal:condition="viewlet/isViewInAppChecked">
+    <div id="toggle-newsinapp" tal:condition="viewlet/isViewInAppChecked">
         <div class="literal-toggle" i18n:translate="label-toogle-app">App</div>
         <div tal:condition="viewlet/isNewApp">
             <label class="switch">

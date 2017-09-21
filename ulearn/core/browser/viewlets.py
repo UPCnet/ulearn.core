@@ -17,6 +17,7 @@ from Products.CMFCore.utils import getToolByName
 from genweb.core.adapters import IImportant
 from genweb.core.adapters import IFlash
 from genweb.core.adapters import IOutOfList
+from genweb.core.adapters import IShowInApp
 from genweb.core.utils import genweb_config
 from ulearn.theme.browser.interfaces import IUlearnTheme
 from souper.soup import get_soup
@@ -95,6 +96,9 @@ class newsToolBar(viewletBase):
     grok.layer(IUlearnTheme)
     grok.require('cmf.ModifyPortalContent')
 
+    def canManageSite(self):
+        return checkPermission("plone.app.controlpanel.Overview", self.portal())
+
     def permisos_important(self):
         # TODO: Comprovar que l'usuari tingui permisos per a marcar com a important
         return not IImportant(self.context).is_important and checkPermission("plone.app.controlpanel.Overview", self.portal())
@@ -103,13 +107,9 @@ class newsToolBar(viewletBase):
         # TODO: Comprovar que l'usuari tingui permisos per a marcar com a notimportant
         return IImportant(self.context).is_important and checkPermission("plone.app.controlpanel.Overview", self.portal())
 
-    def canManageSite(self):
-        return checkPermission("plone.app.controlpanel.Overview", self.portal())
-
     def isNewImportant(self):
         context = aq_inner(self.context)
-        is_important = IImportant(context).is_important
-        return is_important
+        return IImportant(context).is_important
 
     def permisos_flash(self):
         # TODO: Comprovar que l'usuari tingui permisos per a marcar com a important
@@ -121,8 +121,7 @@ class newsToolBar(viewletBase):
 
     def isNewFlash(self):
         context = aq_inner(self.context)
-        is_flash = IFlash(context).is_flash
-        return is_flash
+        return IFlash(context).is_flash
 
     def permisos_outoflist(self):
         # TODO: Comprovar que l'usuari tingui permisos per a marcar com a important
@@ -134,12 +133,15 @@ class newsToolBar(viewletBase):
 
     def isNewOutOfList(self):
         context = aq_inner(self.context)
-        is_outoflist = IOutOfList(context).is_outoflist
-        return is_outoflist
+        return IOutOfList(context).is_outoflist
+
+    def isNewApp(self):
+        context = aq_inner(self.context)
+        return IShowInApp(context).in_app
 
     def getListOfPortlets(self):
         site = getSite()
-        activate_portlets = []
+        active_portlets = []
         portlets_slots = ["plone.leftcolumn", "plone.rightcolumn",
                           "genweb.portlets.HomePortletManager1", "genweb.portlets.HomePortletManager2",
                           "genweb.portlets.HomePortletManager3", "genweb.portlets.HomePortletManager4",
@@ -151,44 +153,36 @@ class newsToolBar(viewletBase):
             if 'genweb' in manager_name:
                 manager = getUtility(IPortletManager, name=manager_name, context=site['front-page'])
                 mapping = getMultiAdapter((site['front-page'], manager), IPortletAssignmentMapping)
-                [activate_portlets.append(item[0]) for item in mapping.items()]
+                [active_portlets.append(item[0]) for item in mapping.items()]
             else:
                 manager = getUtility(IPortletManager, name=manager_name, context=site)
                 mapping = getMultiAdapter((site, manager), IPortletAssignmentMapping)
-                [activate_portlets.append(item[0]) for item in mapping.items()]
-        return activate_portlets
+                [active_portlets.append(item[0]) for item in mapping.items()]
+        return active_portlets
 
     def isPortletListActivate(self):
-        activate_portlets = self.getListOfPortlets()
-        return True if 'my-subscribed-news' in activate_portlets else False
+        active_portlets = self.getListOfPortlets()
+        return True if 'my-subscribed-news' in active_portlets else False
 
     def isPortletFlashActivate(self):
-        activate_portlets = self.getListOfPortlets()
-        return True if 'flashesinformativos' in activate_portlets else False
+        active_portlets = self.getListOfPortlets()
+        return True if 'flashesinformativos' in active_portlets else False
 
     def isPortletImportantActivate(self):
-        activate_portlets = self.getListOfPortlets()
-        return True if 'importantnews' in activate_portlets else False
+        active_portlets = self.getListOfPortlets()
+        return True if 'importantnews' in active_portlets else False
+
+    def isViewInAppChecked(self):
+        show_news_in_app = api.portal.get_registry_record(
+            name='ulearn.core.controlpanel.IUlearnControlPanelSettings.show_news_in_app')
+        return show_news_in_app
 
     def isManagementNewsActivate(self):
-        activate_portlets = self.getListOfPortlets()
-        if 'my-subscribed-news' in activate_portlets or 'flashesinformativos' in activate_portlets or 'importantnews' in activate_portlets:
+        active_portlets = self.getListOfPortlets()
+        if 'my-subscribed-news' in active_portlets or 'flashesinformativos' in active_portlets or 'importantnews' in active_portlets or self.isViewInAppChecked():
             return True
         else:
             return False
-
-    def isViewInAppChecked(self):
-        try:
-            show_news_in_app = api.portal.get_registry_record(
-                name='ulearn.core.controlpanel.IUlearnControlPanelSettings.show_news_in_app')
-        except:
-            show_news_in_app = True
-        return show_news_in_app
-
-    def isNewApp(self):
-        context = aq_inner(self.context)
-        is_important = IImportant(context).is_important
-        return is_important
 
 
 class ListTagsNews(viewletBase):
