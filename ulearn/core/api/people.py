@@ -62,7 +62,7 @@ class People(REST):
             if extender_name in [a[0] for a in getUtilitiesFor(ICatalogFactory)]:
                 extended_user_properties_utility = getUtility(ICatalogFactory, name=extender_name)
                 for prop in extended_user_properties_utility.directory_properties:
-                    userProp=user.getProperty(prop, '')
+                    userProp = user.getProperty(prop, '')
                     if userProp:
                         rendered_properties.append(dict(
                             name=prop,
@@ -74,7 +74,7 @@ class People(REST):
                 # about the user using also the directory_properties field
                 for prop in user_properties_utility.directory_properties:
                     try:
-                        userProp=user.getProperty(prop, '')
+                        userProp = user.getProperty(prop, '')
                         if userProp:
                             rendered_properties.append(dict(
                                 name=prop,
@@ -82,8 +82,8 @@ class People(REST):
                                 icon=user_properties_utility.directory_icons[prop],
                             ))
                     except:
-                      # Some users has @ in the username and is not valid...
-                      pass
+                        # Some users has @ in the username and is not valid...
+                        pass
             result[record[1].attrs['id']] = rendered_properties
 
         return ApiResponse(result)
@@ -390,7 +390,7 @@ class Person(REST):
             if extender_name in [a[0] for a in getUtilitiesFor(ICatalogFactory)]:
                 extended_user_properties_utility = getUtility(ICatalogFactory, name=extender_name)
                 for prop in extended_user_properties_utility.profile_properties:
-                    userProp=user.getProperty(prop, '')
+                    userProp = user.getProperty(prop, '')
                     if userProp:
                         rendered_properties.append(dict(
                             name=prop,
@@ -400,7 +400,7 @@ class Person(REST):
                 # If it's not extended, then return the simple set of data we know
                 # about the user using also the profile_properties field
                 for prop in user_properties_utility.profile_properties:
-                    userProp=user.getProperty(prop, '')
+                    userProp = user.getProperty(prop, '')
                     if userProp:
                         rendered_properties.append(dict(
                             name=prop,
