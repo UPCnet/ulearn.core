@@ -51,7 +51,7 @@ class News(REST):
                            filename=value.image.filename,
                            caption=value.image_caption,
                            creators=value.creators,
-                           raw_image='b64encode(value.image.data)',
+                           raw_image=b64encode(value.image.data),
                            content_type=value.image.contentType,
                            )
                 results.append(new)
@@ -101,7 +101,7 @@ class New(REST):
         mountpoint_id = self.context.getPhysicalPath()[1]
         if mountpoint_id == self.context.id:
             default_path = api.portal.get().absolute_url_path() + '/news'
-	else:
+        else:
             default_path = '/' + mountpoint_id + '/' + api.portal.get().id + '/news'
         value = api.content.find(portal_type="News Item", path=default_path, id=newid)
 
@@ -116,7 +116,7 @@ class New(REST):
                        filename=value.image.filename,
                        caption=value.image_caption,
                        creators=value.creators,
-                       raw_image='b64encode(value.image.data)',
+                       raw_image=b64encode(value.image.data),
                        content_type=value.image.contentType,
                        )
         except:

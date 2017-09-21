@@ -62,7 +62,7 @@ class Item(REST):
                 image = item.image.filename
             if value.portal_type == 'Image':
                 image = item.image.filename
-                raw_image = 'b64encode(item.image.data)',
+                raw_image = b64encode(item.image.data),
                 content_type = item.image.contentType
             new = dict(title=value.Title,
                        id=value.id,
