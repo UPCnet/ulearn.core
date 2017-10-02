@@ -74,7 +74,7 @@ class Link(REST):
                                  url=item['link'],
                                  icon=item['icon'],
                                  )
-            resultsControlPanel.append(quickLink)
+                resultsControlPanel.append(quickLink)
 
         if not resultsControlPanel:
             # 'Menu Quicklinks not configured in the ControlPanel.'
