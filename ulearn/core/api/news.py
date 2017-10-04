@@ -47,6 +47,10 @@ class News(REST):
             if news:
                 for item in news:
                     value = item.getObject()
+                    if value.effective_date:
+                        date = value.effective_date.strftime("%d/%m/%Y")
+                    else:
+                        date = value.creation_date.strftime("%d/%m/%Y")
                     new = dict(title=value.title,
                                id=value.id,
                                description=value.description,
@@ -55,7 +59,7 @@ class News(REST):
                                text=value.text.output,
                                filename=value.image.filename,
                                caption=value.image_caption,
-                               effective_date=value.effective_date.strftime("%d/%m/%Y"),
+                               effective_date=date,
                                creators=value.creators,
                                raw_image=b64encode(value.image.data),
                                content_type=value.image.contentType,
@@ -113,6 +117,10 @@ class New(REST):
 
         try:
             value = value[0].getObject()
+            if value.effective_date:
+                date = value.effective_date.strftime("%d/%m/%Y")
+            else:
+                date = value.creation_date.strftime("%d/%m/%Y")
             new = dict(title=value.title,
                        id=value.id,
                        description=value.description,
@@ -121,7 +129,7 @@ class New(REST):
                        text=value.text.output,
                        filename=value.image.filename,
                        caption=value.image_caption,
-                       effective_date=value.effective_date.strftime("%d/%m/%Y"),
+                       effective_date=date,
                        creators=value.creators,
                        raw_image=b64encode(value.image.data),
                        content_type=value.image.contentType,
