@@ -51,12 +51,16 @@ class News(REST):
                         date = value.effective_date.strftime("%d/%m/%Y")
                     else:
                         date = value.creation_date.strftime("%d/%m/%Y")
+                    if value.text:
+                        text = value.text.output
+                    else:
+                        text = ''
                     new = dict(title=value.title,
                                id=value.id,
                                description=value.description,
                                path=item.getURL(),
                                absolute_url=value.absolute_url_path(),
-                               text=value.text.output,
+                               text=text,
                                filename=value.image.filename,
                                caption=value.image_caption,
                                is_inapp=item.is_inapp,
