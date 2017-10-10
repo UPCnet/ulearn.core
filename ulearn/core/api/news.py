@@ -59,6 +59,10 @@ class News(REST):
                                text=value.text.output,
                                filename=value.image.filename,
                                caption=value.image_caption,
+                               is_inapp=item.is_inapp,
+                               is_outoflist=item.is_outoflist,
+                               is_flash=item.is_flash,
+                               is_important=item.is_important,
                                effective_date=date,
                                creators=value.creators,
                                raw_image=b64encode(value.image.data),
@@ -113,10 +117,9 @@ class New(REST):
             default_path = api.portal.get().absolute_url_path() + '/news'
         else:
             default_path = '/' + mountpoint_id + '/' + api.portal.get().id + '/news'
-        value = api.content.find(portal_type="News Item", path=default_path, id=newid)
-
+        item = api.content.find(portal_type="News Item", path=default_path, id=newid)
         try:
-            value = value[0].getObject()
+            value = item[0].getObject()
             if value.effective_date:
                 date = value.effective_date.strftime("%d/%m/%Y")
             else:
@@ -129,6 +132,10 @@ class New(REST):
                        text=value.text.output,
                        filename=value.image.filename,
                        caption=value.image_caption,
+                       is_inapp=item[0].is_inapp,
+                       is_outoflist=item[0].is_outoflist,
+                       is_flash=item[0].is_flash,
+                       is_important=item[0].is_important,
                        effective_date=date,
                        creators=value.creators,
                        raw_image=b64encode(value.image.data),
