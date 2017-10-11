@@ -395,6 +395,7 @@ class Person(REST):
                         rendered_properties.append(dict(
                             name=prop,
                             value=userProp,
+                            icon=extended_user_properties_utility.directory_icons[prop]
                         ))
             else:
                 # If it's not extended, then return the simple set of data we know
@@ -405,6 +406,7 @@ class Person(REST):
                         rendered_properties.append(dict(
                             name=prop,
                             value=userProp,
+                            icon=user_properties_utility.directory_icons[prop]
                         ))
         except:
             raise ObjectNotFound('User not found')
