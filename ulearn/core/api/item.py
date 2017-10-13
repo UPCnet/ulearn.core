@@ -50,6 +50,8 @@ class Item(REST):
                 item_path = api.portal.getSite().absolute_url_path() + '/' + item_id
             else:
                 item_path = '/' + mountpoint_id + '/' + api.portal.get().id + '/' + item_id
+            if item_path[-5:] == '/view':
+                item_path = item_path.replace('/view', '')
 
             value = api.content.find(path=item_path)[0]
             item = value.getObject()
