@@ -34,6 +34,13 @@ class News(REST):
     def GET(self):
         show_news_in_app = api.portal.get_registry_record(name='ulearn.core.controlpanel.IUlearnControlPanelSettings.show_news_in_app')
         results = []
+        # pagination = 10 # items per page
+        # if not bool(self.params): # empt value --> give first 10 items
+        # else:
+        #     page = int(self.params['newid'])
+        #     increment = 10
+        #     initial_item = (page) * increment
+        # int(self.params['newid'])
         if show_news_in_app:
             mountpoint_id = self.context.getPhysicalPath()[1]
             if mountpoint_id == self.context.id:
@@ -55,6 +62,10 @@ class News(REST):
                         text = value.text.output
                     else:
                         text = ''
+                    is_inapp = getattr(item, 'is_inapp', None)
+                    is_outoflist = getattr(item, 'is_outoflist', None)
+                    is_flash = getattr(item, 'is_flash', None)
+                    is_important = getattr(item, 'is_important', None)
                     new = dict(title=value.title,
                                id=value.id,
                                description=value.description,
@@ -63,10 +74,10 @@ class News(REST):
                                text=text,
                                filename=value.image.filename,
                                caption=value.image_caption,
-                               is_inapp=item.is_inapp,
-                               is_outoflist=item.is_outoflist,
-                               is_flash=item.is_flash,
-                               is_important=item.is_important,
+                               is_inapp=is_inapp,
+                               is_outoflist=is_outoflist,
+                               is_flash=is_flash,
+                               is_important=is_important,
                                effective_date=date,
                                creators=value.creators,
                                raw_image=b64encode(value.image.data),
@@ -115,40 +126,95 @@ class New(REST):
 
     @api_resource(required=['newid'])
     def GET(self):
-        newid = self.params['newid']
-        mountpoint_id = self.context.getPhysicalPath()[1]
-        if mountpoint_id == self.context.id:
-            default_path = api.portal.get().absolute_url_path() + '/news'
+        if isinstance(int(self.params['newid']), int):
+            # Es un numero, he de paginar noticias...
+            values = self.paginated_news()
+            return ApiResponse(values)
         else:
-            default_path = '/' + mountpoint_id + '/' + api.portal.get().id + '/news'
-        item = api.content.find(portal_type="News Item", path=default_path, id=newid)
-        try:
-            value = item[0].getObject()
-            if value.effective_date:
-                date = value.effective_date.strftime("%d/%m/%Y")
+            newid = self.params['newid']
+            mountpoint_id = self.context.getPhysicalPath()[1]
+            if mountpoint_id == self.context.id:
+                default_path = api.portal.get().absolute_url_path() + '/news'
             else:
-                date = value.creation_date.strftime("%d/%m/%Y")
-            new = dict(title=value.title,
-                       id=value.id,
-                       description=value.description,
-                       path=value.absolute_url(),
-                       absolute_url=value.absolute_url_path(),
-                       text=value.text.output,
-                       filename=value.image.filename,
-                       caption=value.image_caption,
-                       is_inapp=item[0].is_inapp,
-                       is_outoflist=item[0].is_outoflist,
-                       is_flash=item[0].is_flash,
-                       is_important=item[0].is_important,
-                       effective_date=date,
-                       creators=value.creators,
-                       raw_image=b64encode(value.image.data),
-                       content_type=value.image.contentType,
-                       )
-        except:
-            raise ObjectNotFound('News Item not found')
+                default_path = '/' + mountpoint_id + '/' + api.portal.get().id + '/news'
+            item = api.content.find(portal_type="News Item", path=default_path, id=newid)
+            try:
+                value = item[0].getObject()
+                if value.effective_date:
+                    date = value.effective_date.strftime("%d/%m/%Y")
+                else:
+                    date = value.creation_date.strftime("%d/%m/%Y")
+                new = dict(title=value.title,
+                           id=value.id,
+                           description=value.description,
+                           path=value.absolute_url(),
+                           absolute_url=value.absolute_url_path(),
+                           text=value.text.output,
+                           filename=value.image.filename,
+                           caption=value.image_caption,
+                           is_inapp=item[0].is_inapp,
+                           is_outoflist=item[0].is_outoflist,
+                           is_flash=item[0].is_flash,
+                           is_important=item[0].is_important,
+                           effective_date=date,
+                           creators=value.creators,
+                           raw_image=b64encode(value.image.data),
+                           content_type=value.image.contentType,
+                           )
+            except:
+                raise ObjectNotFound('News Item not found')
 
-        return ApiResponse(new)
+            return ApiResponse(new)
+
+    def paginated_news(self):
+        page = int(self.params['newid'])
+        increment = 10
+        initial_item = (page) * increment
+        show_news_in_app = api.portal.get_registry_record(name='ulearn.core.controlpanel.IUlearnControlPanelSettings.show_news_in_app')
+        results = []
+        if show_news_in_app:
+            mountpoint_id = self.context.getPhysicalPath()[1]
+            if mountpoint_id == self.context.id:
+                default_path = api.portal.get().absolute_url_path() + '/news'
+            else:
+                default_path = '/' + mountpoint_id + '/' + api.portal.get().id + '/news'
+            news = api.content.find(portal_type="News Item",
+                                    path=default_path,
+                                    is_inapp=True)[initial_item:initial_item + increment]
+            if news:
+                for item in news:
+                    value = item.getObject()
+                    if value.effective_date:
+                        date = value.effective_date.strftime("%d/%m/%Y")
+                    else:
+                        date = value.creation_date.strftime("%d/%m/%Y")
+                    if value.text:
+                        text = value.text.output
+                    else:
+                        text = ''
+                    is_inapp = getattr(item, 'is_inapp', None)
+                    is_outoflist = getattr(item, 'is_outoflist', None)
+                    is_flash = getattr(item, 'is_flash', None)
+                    is_important = getattr(item, 'is_important', None)
+                    new = dict(title=value.title,
+                               id=value.id,
+                               description=value.description,
+                               path=item.getURL(),
+                               absolute_url=value.absolute_url_path(),
+                               text=text,
+                               filename=value.image.filename,
+                               caption=value.image_caption,
+                               is_inapp=is_inapp,
+                               is_outoflist=is_outoflist,
+                               is_flash=is_flash,
+                               is_important=is_important,
+                               effective_date=date,
+                               creators=value.creators,
+                               raw_image=b64encode(value.image.data),
+                               content_type=value.image.contentType,
+                               )
+                    results.append(new)
+        return results
 
     def create_new(self, newid, title, desc, body, imgData, imgName, date_start, date_end):
         date_start = date_start.split('/')
