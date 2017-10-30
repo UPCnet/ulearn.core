@@ -48,7 +48,7 @@ class News(REST):
                 path=default_path,
                 sort_order='descending',
                 sort_on='effective',
-                is_inapp=True))
+                is_inapp=True)) 
             if pagination_page:
                 # si page = 0, devolvemos la 1
                 if pagination_page == '0':
@@ -86,10 +86,18 @@ class News(REST):
                         text = value.text.output
                     else:
                         text = ''
-                    is_inapp = getattr(item, 'is_inapp', None)
-                    is_outoflist = getattr(item, 'is_outoflist', None)
-                    is_flash = getattr(item, 'is_flash', None)
-                    is_important = getattr(item, 'is_important', None)
+                    is_inapp = None
+                    is_outoflist = None
+                    is_flash = None
+                    is_important = None
+                    if getattr(item, 'is_inapp', None):
+                        is_inapp = item.is_inapp
+                    if getattr(item, 'is_outoflist', None):
+                        is_outoflist = item.is_outoflist
+                    if getattr(item, 'is_flash', None):
+                        is_flash = item.is_flash
+                    if getattr(item, 'is_important', None):
+                        is_important = item.is_important
                     new = dict(title=value.title,
                                id=value.id,
                                description=value.description,
@@ -167,16 +175,30 @@ class New(REST):
                 date = value.effective_date.strftime("%d/%m/%Y")
             else:
                 date = value.creation_date.strftime("%d/%m/%Y")
-            is_inapp = getattr(newitem, 'is_inapp', None)
-            is_outoflist = getattr(newitem, 'is_outoflist', None)
-            is_flash = getattr(newitem, 'is_flash', None)
-            is_important = getattr(newitem, 'is_important', None)
+            if value.text:
+                text = value.text.output
+            else:
+                text = ''
+
+            is_inapp = None
+            is_outoflist = None
+            is_flash = None
+            is_important = None
+            if getattr(newitem, 'is_inapp', None):
+                is_inapp = newitem.is_inapp
+            if getattr(newitem, 'is_outoflist', None):
+                is_outoflist = newitem.is_outoflist
+            if getattr(newitem, 'is_flash', None):
+                is_flash = newitem.is_flash
+            if getattr(newitem, 'is_important', None):
+                is_important = newitem.is_important
+
             new = dict(title=value.title,
                        id=value.id,
                        description=value.description,
                        path=value.absolute_url(),
                        absolute_url=value.absolute_url_path(),
-                       text=value.text.output,
+                       text=text,
                        filename=value.image.filename,
                        caption=value.image_caption,
                        is_inapp=is_inapp,
@@ -190,7 +212,7 @@ class New(REST):
                        )
         else:
             raise ObjectNotFound('News Item not found')
-
+        
         return ApiResponse(new)
 
     def create_new(self, newid, title, desc, body, imgData, imgName, date_start, date_end):
