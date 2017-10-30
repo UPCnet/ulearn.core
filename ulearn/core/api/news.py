@@ -36,12 +36,19 @@ class News(REST):
         results = []
         news_per_page = 10  # Default items per page
         pagination_page = self.params.pop('page', None)
+        more_items = False
         if show_news_in_app:
             mountpoint_id = self.context.getPhysicalPath()[1]
             if mountpoint_id == self.context.id:
                 default_path = api.portal.get().absolute_url_path() + '/news'
             else:
                 default_path = '/' + mountpoint_id + '/' + api.portal.get().id + '/news'
+            total_news = len(api.content.find(
+                portal_type="News Item",
+                path=default_path,
+                sort_order='descending',
+                sort_on='effective',
+                is_inapp=True))
             if pagination_page:
                 # si page = 0, devolvemos la 1
                 if pagination_page == '0':
@@ -49,12 +56,15 @@ class News(REST):
                 start = int(news_per_page) * (int(pagination_page) - 1)
                 end = int(news_per_page) * int(pagination_page)
                 # Devolvemos paginado de 10 en 10
+
                 news = api.content.find(
                     portal_type="News Item",
                     path=default_path,
                     sort_order='descending',
                     sort_on='effective',
                     is_inapp=True)[start:end]
+                if end < total_news:
+                    more_items = True
             else:
                 # No paginammos, solo devolvemos 10 primeras => ?page=1
                 news = api.content.find(
@@ -62,7 +72,9 @@ class News(REST):
                     path=default_path,
                     sort_order='descending',
                     sort_on='effective',
-                    is_inapp=True)[0:10]
+                    is_inapp=True)[0:news_per_page]
+                if news_per_page < total_news:
+                    more_items = True
             for item in news:
                 if item:
                     value = item.getObject()
@@ -96,8 +108,11 @@ class News(REST):
                                content_type=value.image.contentType,
                                )
                     results.append(new)
+        values = dict(items=results,
+                      more_items=more_items,
+                      total_news=total_news)
+        return ApiResponse(values)
 
-        return ApiResponse(results)
 
 
 class New(REST):
