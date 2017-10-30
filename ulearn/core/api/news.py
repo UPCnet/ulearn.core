@@ -167,6 +167,10 @@ class New(REST):
                 date = value.effective_date.strftime("%d/%m/%Y")
             else:
                 date = value.creation_date.strftime("%d/%m/%Y")
+            is_inapp = getattr(newitem, 'is_inapp', None)
+            is_outoflist = getattr(newitem, 'is_outoflist', None)
+            is_flash = getattr(newitem, 'is_flash', None)
+            is_important = getattr(newitem, 'is_important', None)
             new = dict(title=value.title,
                        id=value.id,
                        description=value.description,
@@ -175,10 +179,10 @@ class New(REST):
                        text=value.text.output,
                        filename=value.image.filename,
                        caption=value.image_caption,
-                       is_inapp=newitem.is_inapp,
-                       is_outoflist=newitem.is_outoflist,
-                       is_flash=newitem.is_flash,
-                       is_important=newitem.is_important,
+                       is_inapp=is_inapp,
+                       is_outoflist=is_outoflist,
+                       is_flash=is_flash,
+                       is_important=is_important,
                        effective_date=date,
                        creators=value.creators,
                        raw_image=b64encode(value.image.data),
