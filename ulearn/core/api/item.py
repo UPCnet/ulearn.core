@@ -36,10 +36,6 @@ class Item(REST):
         else:
             expanded = resp.url
 
-        # expanded = 'http://localhost:8090/Plone/news/noticia-2'
-        # expanded = 'http://localhost:8090/Plone/download.png'
-        # expanded = 'http://localhost:8090/Plone/documento'
-
         portal = api.portal.get()
         local_url = portal.absolute_url()
         results = []
@@ -66,6 +62,9 @@ class Item(REST):
                 image = item.image.filename
                 raw_image = b64encode(item.image.data),
                 content_type = item.image.contentType
+            if value.portal_type == 'Document':
+                text = item.text.output
+
             new = dict(title=value.Title,
                        id=value.id,
                        description=value.Description,
