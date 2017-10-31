@@ -13,6 +13,8 @@ from datetime import datetime
 from base64 import b64encode
 from ulearn.core.api import ObjectNotFound
 import requests
+import PIL
+import os
 
 
 class News(REST):
@@ -48,15 +50,14 @@ class News(REST):
                 path=default_path,
                 sort_order='descending',
                 sort_on='effective',
-                is_inapp=True)) 
+                is_inapp=True))
             if pagination_page:
-                # si page = 0, devolvemos la 1
+                # Si page = 0, devolvemos la ?page=1 (que es lo mismo)
                 if pagination_page == '0':
                     pagination_page = 1
                 start = int(news_per_page) * (int(pagination_page) - 1)
                 end = int(news_per_page) * int(pagination_page)
-                # Devolvemos paginado de 10 en 10
-
+                # Devolvemos paginando
                 news = api.content.find(
                     portal_type="News Item",
                     path=default_path,
@@ -78,6 +79,23 @@ class News(REST):
             for item in news:
                 if item:
                     value = item.getObject()
+                    thumb_filename = value.image.open().name + '-thumb.jpg'
+                    file_exist = os.path.isfile(thumb_filename)
+                    # print thumb_filename
+                    if file_exist:
+                        # file exists
+                        with open(thumb_filename, "rb") as image_file:
+                            raw_thumb_image = b64encode(image_file.read())
+                    else:
+                        # File not exists. Create THUMBNAIL
+                        img = PIL.Image.open(value.image._blob.open())
+                        basewidth = 450
+                        wpercent = basewidth / float(img.size[0])
+                        hsize = int(float(img.size[1]) * float(wpercent))
+                        img = img.resize((basewidth, hsize), PIL.Image.ANTIALIAS)
+                        img.save(thumb_filename)
+                        with open(thumb_filename, "rb") as image_file:
+                            raw_thumb_image = b64encode(image_file.read())
                     if value.effective_date:
                         date = value.effective_date.strftime("%d/%m/%Y")
                     else:
@@ -112,7 +130,7 @@ class News(REST):
                                is_important=is_important,
                                effective_date=date,
                                creators=value.creators,
-                               raw_image=b64encode(value.image.data),
+                               raw_image=raw_thumb_image,
                                content_type=value.image.contentType,
                                )
                     results.append(new)
@@ -120,7 +138,6 @@ class News(REST):
                       more_items=more_items,
                       total_news=total_news)
         return ApiResponse(values)
-
 
 
 class New(REST):
@@ -212,7 +229,7 @@ class New(REST):
                        )
         else:
             raise ObjectNotFound('News Item not found')
-        
+
         return ApiResponse(new)
 
     def create_new(self, newid, title, desc, body, imgData, imgName, date_start, date_end):
