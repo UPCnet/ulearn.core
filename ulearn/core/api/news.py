@@ -79,7 +79,7 @@ class News(REST):
             for item in news:
                 if item:
                     value = item.getObject()
-                    thumb_filename = value.image.open().name + '-thumb.jpg'
+                    thumb_filename = value.image.open().name + '-thumbnail.png'
                     file_exist = os.path.isfile(thumb_filename)
                     # print thumb_filename
                     if file_exist:
