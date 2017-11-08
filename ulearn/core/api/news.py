@@ -10,11 +10,8 @@ from ulearn.core.api import REST
 from ulearn.core.api import api_resource
 from ulearn.core.api.root import APIRoot
 from datetime import datetime
-from base64 import b64encode
 from ulearn.core.api import ObjectNotFound
 import requests
-import PIL
-import os
 
 
 class News(REST):
@@ -77,63 +74,47 @@ class News(REST):
                 if news_per_page < total_news:
                     more_items = True
             for item in news:
-                if item:
-                    value = item.getObject()
-                    thumb_filename = value.image.open().name + '-thumbnail.png'
-                    file_exist = os.path.isfile(thumb_filename)
-                    # print thumb_filename
-                    if file_exist:
-                        # file exists
-                        with open(thumb_filename, "rb") as image_file:
-                            raw_thumb_image = b64encode(image_file.read())
-                    else:
-                        # File not exists. Create THUMBNAIL
-                        img = PIL.Image.open(value.image._blob.open())
-                        basewidth = 450
-                        wpercent = basewidth / float(img.size[0])
-                        hsize = int(float(img.size[1]) * float(wpercent))
-                        img = img.resize((basewidth, hsize), PIL.Image.ANTIALIAS)
-                        img.save(thumb_filename)
-                        with open(thumb_filename, "rb") as image_file:
-                            raw_thumb_image = b64encode(image_file.read())
-                    if value.effective_date:
-                        date = value.effective_date.strftime("%d/%m/%Y")
-                    else:
-                        date = value.creation_date.strftime("%d/%m/%Y")
-                    if value.text:
-                        text = value.text.output
-                    else:
-                        text = ''
-                    is_inapp = None
-                    is_outoflist = None
-                    is_flash = None
-                    is_important = None
-                    if getattr(item, 'is_inapp', None):
-                        is_inapp = item.is_inapp
-                    if getattr(item, 'is_outoflist', None):
-                        is_outoflist = item.is_outoflist
-                    if getattr(item, 'is_flash', None):
-                        is_flash = item.is_flash
-                    if getattr(item, 'is_important', None):
-                        is_important = item.is_important
-                    new = dict(title=value.title,
-                               id=value.id,
-                               description=value.description,
-                               path=item.getURL(),
-                               absolute_url=value.absolute_url_path(),
-                               text=text,
-                               filename=value.image.filename,
-                               caption=value.image_caption,
-                               is_inapp=is_inapp,
-                               is_outoflist=is_outoflist,
-                               is_flash=is_flash,
-                               is_important=is_important,
-                               effective_date=date,
-                               creators=value.creators,
-                               raw_image=raw_thumb_image,
-                               content_type=value.image.contentType,
-                               )
-                    results.append(new)
+                value = item.getObject()
+                if value.effective_date:
+                    date = value.effective_date.strftime("%d/%m/%Y")
+                else:
+                    date = value.creation_date.strftime("%d/%m/%Y")
+                if value.text:
+                    text = value.text.output
+                else:
+                    text = ''
+
+                is_inapp = None
+                is_outoflist = None
+                is_flash = None
+                is_important = None
+
+                if getattr(item, 'is_inapp', None):
+                    is_inapp = item.is_inapp
+                if getattr(item, 'is_outoflist', None):
+                    is_outoflist = item.is_outoflist
+                if getattr(item, 'is_flash', None):
+                    is_flash = item.is_flash
+                if getattr(item, 'is_important', None):
+                    is_important = item.is_important
+                new = dict(title=value.title,
+                           id=value.id,
+                           description=value.description,
+                           path=item.getURL(),
+                           absolute_url=value.absolute_url_path(),
+                           text=text,
+                           filename=value.image.filename,
+                           caption=value.image_caption,
+                           is_inapp=is_inapp,
+                           is_outoflist=is_outoflist,
+                           is_flash=is_flash,
+                           is_important=is_important,
+                           effective_date=date,
+                           creators=value.creators,
+                           raw_image=value.absolute_url() + '/thumbnail-image',
+                           content_type=value.image.contentType,
+                           )
+                results.append(new)
         values = dict(items=results,
                       more_items=more_items,
                       total_news=total_news)
@@ -201,6 +182,7 @@ class New(REST):
             is_outoflist = None
             is_flash = None
             is_important = None
+
             if getattr(newitem, 'is_inapp', None):
                 is_inapp = newitem.is_inapp
             if getattr(newitem, 'is_outoflist', None):
@@ -209,7 +191,6 @@ class New(REST):
                 is_flash = newitem.is_flash
             if getattr(newitem, 'is_important', None):
                 is_important = newitem.is_important
-
             new = dict(title=value.title,
                        id=value.id,
                        description=value.description,
@@ -224,8 +205,8 @@ class New(REST):
                        is_important=is_important,
                        effective_date=date,
                        creators=value.creators,
-                       raw_image=b64encode(value.image.data),
                        content_type=value.image.contentType,
+                       raw_image=value.absolute_url() + '/thumbnail-image',
                        )
         else:
             raise ObjectNotFound('News Item not found')

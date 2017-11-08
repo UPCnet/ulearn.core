@@ -5,7 +5,7 @@ from zope.component import getUtility
 
 from zope.component.hooks import getSite
 from zope.app.container.interfaces import IObjectAddedEvent
-
+from zope.lifecycleevent.interfaces import IObjectModifiedEvent
 from Products.CMFCore.utils import getToolByName
 
 from ulearn.core.interfaces import IAppImage
@@ -22,7 +22,14 @@ from zope.component import providedBy
 from plone.app.workflow.interfaces import ILocalrolesModifiedEvent
 from plone.app.controlpanel.interfaces import IConfigurationChangedEvent
 from Products.PluggableAuthService.interfaces.events import IUserLoggedInEvent
+from plone.app.contenttypes.interfaces import INewsItem
 from zope.globalrequest import getRequest
+from plone.namedfile.file import NamedBlobImage
+from io import BytesIO as StringIO
+from base64 import b64encode
+import io
+import PIL
+
 
 import logging
 
@@ -265,3 +272,31 @@ def updateCustomLangCookieLogginIn(event):
     lang = event.object.getProperty('language', None)
     if lang and request is not None:
         request.response.setCookie('uLearn_I18N_Custom', lang, path='/')
+
+
+@grok.subscribe(INewsItem, IObjectAddedEvent)
+@grok.subscribe(INewsItem, IObjectModifiedEvent)
+def CreateThumbImage(content, event):
+    """ Update thumb from News Item image on save
+    """
+    if getattr(content, 'image', None):
+        content_type = content.image.contentType
+        filename = content.image.filename
+        raw_file = content.image.data
+        raw_content = StringIO(raw_file)
+        img = PIL.Image.open(raw_content).convert('RGB')
+
+        basewidth = 450
+        wpercent = basewidth / float(img.size[0])
+        hsize = int(float(img.size[1]) * float(wpercent))
+        resized = img.resize((basewidth, hsize), PIL.Image.ANTIALIAS)
+        output_tmp = io.BytesIO()
+        resized.save(output_tmp, format='JPEG')
+        hex_data = output_tmp.getvalue()
+        thumb_image = NamedBlobImage(
+            data=hex_data,
+            filename=filename,
+            contentType=str(content_type))
+        content.thumbnail_image = thumb_image
+    else:
+        content.thumbnail_image = None

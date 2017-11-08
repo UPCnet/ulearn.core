@@ -8,6 +8,7 @@
     i18n_domain="ulearn">
 
     <includeDependencies package="." />
+    <include file="behaviors.zcml" />
 
     <permission
       id="ulearn.addCommunity"
@@ -85,6 +86,14 @@
       permission="zope2.Public"
       allowed_interface=".interfaces.IUlearnUtils"
       />
+
+    <browser:page
+      for="*"
+      name="thumbnail-image"
+      class=".behaviors.view-thumb.Thumbnail"
+      layer="ulearn.theme.browser.interfaces.IUlearnTheme"
+      permission="zope2.Public"
+    />
 
     <adapter
         factory=".patches.NegotiateLanguage"
