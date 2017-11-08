@@ -14,6 +14,8 @@ from ulearn.core.content.community import ICommunity
 import random
 import unicodedata
 
+from operator import itemgetter
+
 
 def searchUsersFunction(context, request, search_string):  # noqa
     portal = getSite()
@@ -157,7 +159,7 @@ def searchUsersFunction(context, request, search_string):  # noqa
 
     users_profile = []
     for user in users:
-        if user is not None:
+        if user is not None and user.attrs['username'] != 'admin':
             if isinstance(user, Record):
                 user_dict = {}
                 for user_property in user_properties_utility.properties:
@@ -209,4 +211,5 @@ def searchUsersFunction(context, request, search_string):  # noqa
             llista.append(users_profile[escollit])
         return {'content': llista, 'length': len_usuaris, 'big': True}
     else:
+        users_profile.sort(key=itemgetter('username'))
         return {'content': users_profile, 'length': len_usuaris, 'big': False}
