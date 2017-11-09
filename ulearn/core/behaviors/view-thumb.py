@@ -21,6 +21,14 @@ class Thumbnail(BrowserView):
                 'content-disposition', 'inline; filename=' + str(filename))
             self.request.response.setHeader('content-length', len(img_data))
         else:
-            img_data = None
+            # Si no te la Thumb, que no peti i doni la gran...
+            img_data = context.image.open().read()
+            contentType = context.image.contentType
+            filename = context.image.filename
+
+            self.request.response.setHeader('content-type', contentType)
+            self.request.response.setHeader(
+                'content-disposition', 'inline; filename=' + str(filename))
+            self.request.response.setHeader('content-length', len(img_data))
 
         return img_data
