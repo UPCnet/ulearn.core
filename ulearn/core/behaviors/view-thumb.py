@@ -1,18 +1,26 @@
 # -*- coding: utf-8 -*-
-from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.Five.browser import BrowserView
-from base64 import b64encode
 
 
 class Thumbnail(BrowserView):
-    __call__ = ViewPageTemplateFile('view-thumb.pt')
 
-    def getImage(self):
+    def __init__(self, context, request):
+        self.context = context
+        self.request = request
+
+    def __call__(self):
         context = self.context
 
         if getattr(context, 'thumbnail_image', None):
-            thumb = b64encode(context.thumbnail_image.data)
-        else:
-            thumb = None
+            img_data = context.thumbnail_image.open().read()
+            contentType = context.thumbnail_image.contentType
+            filename = context.thumbnail_image.filename
 
-        return thumb
+            self.request.response.setHeader('content-type', contentType)
+            self.request.response.setHeader(
+                'content-disposition', 'inline; filename=' + str(filename))
+            self.request.response.setHeader('content-length', len(img_data))
+        else:
+            img_data = None
+
+        return img_data
