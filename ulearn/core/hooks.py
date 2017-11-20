@@ -30,6 +30,10 @@ from base64 import b64encode
 import io
 import PIL
 
+from zope.component.hooks import getSite
+from plone.memoize import ram
+from time import time
+
 
 import logging
 
@@ -194,8 +198,20 @@ def findContainerCommunity(content):
 
     return None
 
+@ram.cache(lambda *args: time() // (60 * 60))
+def packages_installed():
+    portal = getSite()
+
+    qi_tool = getToolByName(portal, 'portal_quickinstaller')
+    installed = [p['id'] for p in qi_tool.listInstalledProducts()]
+    return installed
 
 def addActivityPost(content):
+    installed = packages_installed()
+    if 'ulearn.abacus' in installed:
+        if content.portal_type == 'Event':
+            return False
+
     for parent in aq_chain(content):
         if parent.portal_type == 'privateFolder':
             return False
