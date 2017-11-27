@@ -10,31 +10,26 @@ from zope.interface import alsoProvides
 from zope.event import notify
 from zope.lifecycleevent import ObjectModifiedEvent
 from OFS.interfaces import IApplication
-
 from Products.CMFPlone.interfaces.constrains import ISelectableConstrainTypes
-
 from plone.portlets.constants import CONTEXT_CATEGORY
 from plone.portlets.interfaces import ILocalPortletAssignmentManager
 from plone.portlets.interfaces import IPortletManager
 from plone.portlets.interfaces import IPortletAssignmentMapping
 from plone.dexterity.utils import createContentInContainer
 from plone.subrequest import subrequest
-
+from plone.uuid.interfaces import IUUIDGenerator
 from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.interfaces import IPloneSiteRoot
-
 from ulearn.core.interfaces import IDocumentFolder, ILinksFolder, IPhotosFolder, IEventsFolder
 from ulearn.core.content.community import IInitializedCommunity
 from ulearn.core.content.community import Community
 from genweb.core.browser.helpers import listPloneSites
-
+from genweb.core.gwuuid import ATTRIBUTE_NAME
 from ulearn.core.interfaces import IDiscussionFolder
 from ulearn.core import _
-
-
+from genweb.core.utils import get_safe_member_by_id
 from mrs.max.utilities import IMAXClient
 from maxclient.rest import RequestError
-
 from itertools import chain
 import logging
 
@@ -47,8 +42,8 @@ class portletfix(grok.View):
 
     def render(self):
         portal = getSite()
-        pc = getToolByName(portal, "portal_catalog")
-        communities = pc.searchResults(portal_type="ulearn.community")
+        pc = getToolByName(portal, 'portal_catalog')
+        communities = pc.searchResults(portal_type='ulearn.community')
 
         for community in communities:
             community = community.getObject()
@@ -69,7 +64,7 @@ class linkFolderFix(grok.View):
 
     def render(self):
         portal = getSite()
-        pc = getToolByName(portal, "portal_catalog")
+        pc = getToolByName(portal, 'portal_catalog')
         folder_ifaces = {IDocumentFolder.__identifier__: 'documents',
                          ILinksFolder.__identifier__: 'links',
                          IPhotosFolder.__identifier__: 'media',
@@ -80,7 +75,7 @@ class linkFolderFix(grok.View):
             for result in results:
                 parent = aq_parent(aq_inner(result.getObject()))
                 parent.manage_renameObjects((result.id,), (folder_ifaces[iface],))
-                print("renamed {} to {} in community {}".format(result.id, folder_ifaces[iface], parent))
+                print('renamed {} to {} in community {}'.format(result.id, folder_ifaces[iface], parent))
 
 
 def createMAXUser(username):
@@ -97,7 +92,8 @@ def createMAXUser(username):
             logger.info('MAX user already created for user: %s' % username)
 
     except RequestError:
-        import ipdb;ipdb.set_trace()
+        logger.error('Error IPDB found here and commented... maybe do you want to Stop here?... (RequestError): %s' % username)
+        # import ipdb; ipdb.set_trace()
     except:
         logger.error('Error creating MAX user for user: %s' % username)
 
@@ -143,14 +139,14 @@ class CreateDiscussionFolders(grok.View):
     grok.require('zope2.ViewManagementScreens')
 
     def render(self):
-        pc = api.portal.get_tool(name="portal_catalog")
-        communities = pc.searchResults(portal_type="ulearn.community")
+        pc = api.portal.get_tool(name='portal_catalog')
+        communities = pc.searchResults(portal_type='ulearn.community')
         for community in communities:
             community = community.getObject()
-            if not 'discussion' in community.objectIds():
+            if 'discussion' not in community.objectIds():
                 # Create the default discussion container and set title
                 discussion = createContentInContainer(community, 'Folder', title='discussion', checkConstraints=False)
-                discussion.setTitle(community.translate(_(u"Discussion")))
+                discussion.setTitle(community.translate(_(u'Discussion')))
 
                 discussion.setLayout('discussion_folder_view')
 
@@ -162,13 +158,13 @@ class CreateDiscussionFolders(grok.View):
                 behavior.setImmediatelyAddableTypes(('ulearn.discussion', 'Folder'))
 
                 # Blacklist the right column portlets on discussion
-                right_manager = queryUtility(IPortletManager, name=u"plone.rightcolumn")
+                right_manager = queryUtility(IPortletManager, name=u'plone.rightcolumn')
                 blacklist = getMultiAdapter((discussion, right_manager), ILocalPortletAssignmentManager)
                 blacklist.setBlacklistStatus(CONTEXT_CATEGORY, True)
 
                 discussion.reindexObject()
 
-                logger.info("Created discussion folder in {}".format(community.absolute_url()))
+                logger.info('Created discussion folder in {}'.format(community.absolute_url()))
 
         return 'Done.'
 
@@ -178,8 +174,8 @@ class InitializeVideos(grok.View):
     grok.require('zope2.ViewManagementScreens')
 
     def render(self):
-        pc = api.portal.get_tool(name="portal_catalog")
-        communities = pc.searchResults(portal_type="ulearn.community")
+        pc = api.portal.get_tool(name='portal_catalog')
+        communities = pc.searchResults(portal_type='ulearn.community')
 
         text = []
         for community in communities:
@@ -192,7 +188,7 @@ class InitializeVideos(grok.View):
             behavior.setImmediatelyAddableTypes(('Image', 'ulearn.video', 'Folder'))
 
             if media_folder.title != 'Media':
-                media_folder.setTitle(community.translate(_(u"Media")))
+                media_folder.setTitle(community.translate(_(u'Media')))
 
             text.append('Added type video to {}\n'.format(community.absolute_url()))
         return ''.join(text)
@@ -207,9 +203,14 @@ class MigrateCommunities(grok.View):
     grok.require('zope2.ViewManagementScreens')
 
     def render(self):
+        try:
+            from plone.protect.interfaces import IDisableCSRFProtection
+            alsoProvides(self.request, IDisableCSRFProtection)
+        except:
+            pass
         portal = api.portal.get()
-        pc = api.portal.get_tool(name="portal_catalog")
-        communities = pc.searchResults(portal_type="ulearn.community")
+        pc = api.portal.get_tool(name='portal_catalog')
+        communities = pc.searchResults(portal_type='ulearn.community')
 
         text = []
         for community_brain in communities:
@@ -222,6 +223,42 @@ class MigrateCommunities(grok.View):
                 portal._setOb(community.id, community)
 
                 text.append('Migrated community {}\n'.format(community.absolute_url()))
+        return ''.join(text) + '\nDone!'
+
+
+class MigrateTypesDocumentsCommunities(grok.View):
+    """ It should be executed on an running instance with no MAX hooks enabled
+        to avoid them to be executed when persisting the new communities objects
+    """
+    grok.context(IPloneSiteRoot)
+    grok.name('migrate_types_documents_communities')
+    grok.require('zope2.ViewManagementScreens')
+
+    def render(self):
+        try:
+            from plone.protect.interfaces import IDisableCSRFProtection
+            alsoProvides(self.request, IDisableCSRFProtection)
+        except:
+            pass
+        portal = api.portal.get()
+        pc = api.portal.get_tool(name='portal_catalog')
+        communities = pc.searchResults(portal_type='ulearn.community')
+
+        text = []
+        for community_brain in communities:
+            # We assume that there will be only communities in Portal Site Root
+            community = portal[community_brain.id]
+
+            # Set on them the allowable content types
+            behavior = ISelectableConstrainTypes(community['documents'])
+            behavior.setConstrainTypesMode(1)
+            behavior.setLocallyAllowedTypes(('Document', 'File', 'Folder', 'Link', 'Image', 'privateFolder', 'ulearn.video', 'ulearn.video_embed'))
+            behavior.setImmediatelyAddableTypes(('Document', 'File', 'Folder', 'Link', 'Image', 'privateFolder', 'ulearn.video', 'ulearn.video_embed'))
+
+            community.reindexObject()
+
+            text.append('Migrated types community {}\n'.format(community.absolute_url()))
+
         return ''.join(text) + '\nDone!'
 
 
@@ -279,4 +316,210 @@ class BulkReinstalluLearn(grok.View):
         for plonesite in plonesites:
             response = subrequest('/'.join(plonesite.getPhysicalPath()) + '/reinstall_ulearncontrolpanel')
             output.append(response.getBody())
+        return '\n'.join(output)
+
+
+class GiveAllCommunitiesGWUUID(grok.View):
+    grok.context(IPloneSiteRoot)
+    grok.name('GiveAllCommunitiesGWUUID')
+
+    def render(self):
+        try:
+            from plone.protect.interfaces import IDisableCSRFProtection
+            alsoProvides(self.request, IDisableCSRFProtection)
+        except:
+            pass
+        pc = api.portal.get_tool('portal_catalog')
+        communities = pc.searchResults(portal_type='ulearn.community')
+
+        generator = queryUtility(IUUIDGenerator)
+        if generator is None:
+            return
+
+        for community in communities:
+            obj = community.getObject()
+            if not getattr(obj, ATTRIBUTE_NAME, False):
+                uuid = generator()
+                if not uuid:
+                    return
+
+                setattr(obj, ATTRIBUTE_NAME, uuid)
+                obj.reindexObject(idxs=['gwuuid'])
+
+        # pc.clearFindAndRebuild()
+        return 'Done'
+
+
+class GiveGWUUID(grok.View):
+    grok.context(IPloneSiteRoot)
+    grok.name('givegwuuid')
+
+    def render(self):
+        try:
+            from plone.protect.interfaces import IDisableCSRFProtection
+            alsoProvides(self.request, IDisableCSRFProtection)
+        except:
+            pass
+        pc = api.portal.get_tool('portal_catalog')
+        communities = pc.unrestrictedSearchResults(portal_type='ulearn.community')
+
+        generator = queryUtility(IUUIDGenerator)
+        if generator is None:
+            return
+
+        for community in communities:
+            obj_community = community.getObject()
+            results = pc.unrestrictedSearchResults(path=('/'.join(obj_community.getPhysicalPath())))
+            for result in results:
+                obj = result.getObject()
+                if not getattr(obj, ATTRIBUTE_NAME, False):
+                    uuid = generator()
+                    if not uuid:
+                        return
+
+                    setattr(obj, ATTRIBUTE_NAME, uuid)
+                    obj.reindexObject(idxs=['gwuuid'])
+        # pc.clearFindAndRebuild()
+        return 'Done'
+
+
+class MigrateOldStyleACLs(grok.View):
+    grok.context(IPloneSiteRoot)
+    grok.name('migrate_acls')
+
+    def render(self):
+        try:
+            from plone.protect.interfaces import IDisableCSRFProtection
+            alsoProvides(self.request, IDisableCSRFProtection)
+        except:
+            pass
+        pc = api.portal.get_tool('portal_catalog')
+        communities = pc.searchResults(portal_type='ulearn.community')
+        permission_map = {
+            'readers': 'reader',
+            'subscribed': 'writer',
+            'owners': 'owner'
+        }
+
+        for brain in communities:
+            acl = dict(users=[], groups=[])
+            community = brain.getObject()
+            adapter = community.adapted()
+
+            logger.warn('{} -- {}'.format(community.id, community.absolute_url()))
+
+            for old_role in permission_map:
+                users = getattr(community, old_role)
+                for username in users:
+                    acl['users'].append(dict(id=username,
+                                             displayName=get_safe_member_by_id(username).get('fullname', u''),
+                                             role=permission_map[old_role]))
+            adapter.update_acl(acl)
+            try:
+                adapter.update_hub_subscriptions()
+            except:
+                pass
+
+            logger.warn('migrated community {} with acl: {}'.format(community.absolute_url(), acl))
+
+        return 'Done'
+
+
+class MigrateOldStyleFolders(grok.View):
+    grok.context(IPloneSiteRoot)
+    grok.name('migrate_folders')
+
+    def render(self):
+        try:
+            from plone.protect.interfaces import IDisableCSRFProtection
+            alsoProvides(self.request, IDisableCSRFProtection)
+        except:
+            pass
+        pc = api.portal.get_tool('portal_catalog')
+        communities = pc.searchResults(portal_type='ulearn.community')
+
+        for brain in communities:
+            obj = brain.getObject()
+
+            # Set the default view to 'documents' folder
+            obj['documents'].setLayout('filtered_contents_search_view')
+
+            if 'media' in obj.objectIds():
+                if IPhotosFolder.providedBy(obj['media']):
+                    try:
+                        api.content.move(source=obj['media'], target=obj['documents'], safe_id=True)
+                        logger.warn('Successfully migrated "links" community folder {}.'.format(obj.absolute_url()))
+                    except:
+                        logger.error('Error moving content from "media" folder: {}'.format(obj.absolute_url()))
+
+            if 'links' in obj.objectIds():
+                if ILinksFolder.providedBy(obj['links']):
+                    # If it's empty do nothing
+                    if obj['links'].objectIds():
+                        try:
+                            api.content.move(source=obj['links'], target=obj['documents'], safe_id=True)
+                            logger.warn('Successfully migrated "links" community folder {}.'.format(obj.absolute_url()))
+                        except:
+                            logger.error('Error moving content from "links" folder: {}'.format(obj.absolute_url()))
+                    else:
+                        logger.warn('The links folder in {} is empty. Doing nothing.'.format(obj.absolute_url()))
+
+        return 'Done'
+
+
+class BulkRestrictTransformuLearn(grok.View):
+    """
+        Restrict script and other nasty tags to uLearn
+    """
+    grok.context(IApplication)
+    grok.name('bulk_restrict_transform')
+    grok.require('cmf.ManagePortal')
+
+    def setup_safe_html_transform(self, portal):
+        transforms = getToolByName(portal, 'portal_transforms')
+        transform = getattr(transforms, 'safe_html')
+
+        valid = transform.get_parameter_value('valid_tags')
+        nasty = transform.get_parameter_value('nasty_tags')
+        stripped = transform.get_parameter_value('stripped_attributes')
+
+        # uLearn nasty tags
+        ulearn_nasty = ['script', 'applet', 'iframe']
+        for tag in ulearn_nasty:
+            if tag in valid:
+                # Delete from valid
+                valid[tag] = 0
+                del valid[tag]
+            # Add to nasty
+            if tag not in nasty:
+                nasty[tag] = 1
+
+        current_style_whitelist = [a for a in transform.get_parameter_value('style_whitelist')]
+        current_style_whitelist.append('color')
+
+        kwargs = {}
+        kwargs['valid_tags'] = valid
+        kwargs['nasty_tags'] = nasty
+        kwargs['stripped_attributes'] = stripped
+        kwargs['style_whitelist'] = current_style_whitelist
+        for k in list(kwargs):
+            if isinstance(kwargs[k], dict):
+                v = kwargs[k]
+                kwargs[k + '_key'] = v.keys()
+                kwargs[k + '_value'] = [str(s) for s in v.values()]
+                del kwargs[k]
+
+        transform.set_parameters(**kwargs)
+        transform._p_changed = True
+        transform.reload()
+
+    def render(self):
+        context = aq_inner(self.context)
+        plonesites = listPloneSites(context)
+        output = []
+        for plonesite in plonesites:
+            self.setup_safe_html_transform(plonesite)
+            output.append('Restricted {}'.format(plonesite.id))
+            # response = subrequest('/'.join(plonesite.getPhysicalPath()) + '/reinstall_ulearncontrolpanel')
+            # output.append(response.getBody())
         return '\n'.join(output)

@@ -13,7 +13,7 @@ from zExceptions import NotFound
 
 class APIRoot(grok.View):
     grok.context(IPloneSiteRoot)
-    grok.require('ulearn.APIAccess')
+    grok.require('genweb.authenticated')
     grok.name('api')
 
     def publishTraverse(self, request, name):
@@ -24,6 +24,7 @@ class APIRoot(grok.View):
             if hasattr(self, name):
                 notify(RESTMethodPublishedEvent(self, name))
                 return getattr(self, name)
+
         view = queryRESTComponent(
             (self, self.context),
             (self.context, request),

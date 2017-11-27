@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from datetime import datetime, timedelta
 from plone.app.event.base import localized_now
 from Products.CMFCore.utils import getToolByName
 from ulearn.theme.portlets import calendar as portlet_calendar
@@ -14,15 +13,16 @@ from zope.component import getUtility
 from zope.component import getMultiAdapter
 from zope.component.hooks import setHooks
 from zope.component.hooks import setSite
+from ulearn.core.tests import uLearnTestBase
+from mrs.max.utilities import IMAXClient
 
-import unittest2 as unittest
+from datetime import timedelta
+from plone.app.event.dx.behaviors import EventAccessor
 
-import transaction
-
-TZNAME = "Europe/Vienna"
+TZNAME = 'Europe/Vienna'
 
 
-class RendererTest(unittest.TestCase):
+class RendererTest(uLearnTestBase):
     layer = ULEARN_CORE_INTEGRATION_TESTING
 
     def setUp(self):
@@ -34,41 +34,44 @@ class RendererTest(unittest.TestCase):
         setHooks()
         setSite(portal)
 
+        self.maxclient, settings = getUtility(IMAXClient)()
+        self.username = settings.max_restricted_username
+        self.token = settings.max_restricted_token
+
+        self.maxclient.setActor(settings.max_restricted_username)
+        self.maxclient.setToken(settings.max_restricted_token)
         # Make sure Events use simple_publication_workflow
         # self.portal.portal_workflow.setChainForPortalTypes(
         #     ['Event'], ['simple_publication_workflow']
         # )
 
-    def create_test_community(self):
-        nom = u'community-test'
-        description = 'Blabla'
-        subscribed = [u'usuari.iescude']
-        image = None
-        community_type = 'Open'
-        twitter_hashtag = 'helou'
-        login(self.portal, 'usuari.iescude')
-        self.portal.invokeFactory('ulearn.community', 'community-test',
-                                 title=nom,
-                                 description=description,
-                                 subscribed=subscribed,
-                                 image=image,
-                                 community_type=community_type,
-                                 twitter_hashtag=twitter_hashtag)
-        logout()
+    def tearDown(self):
+        self.maxclient.contexts['http://nohost/plone/community-test'].delete()
 
-        # transaction.commit()  # This is for not conflict with each other
-        # TODO: Do the teardown properly
-        return self.portal['community-test']
+    def create_event(self, context, id='e1', title='New event', days=(1, 1), start=0, end=1, whole_day=False, open_end=False):
+        """ Creates an event with delta days tuple (start, end) beggining from
+            now. The start and end arguments are also treated as delta hours.
+        """
+        delta_start = timedelta(hours=start, days=days[0])
+        delta_end = timedelta(hours=end, days=days[1])
 
-    def create_event(self, context, day, start, end, event_id='e1'):
-        now = localized_now().replace(minute=0, second=0, microsecond=0)
-        start = localized_now().replace(day=now.day + day, hour=now.hour + start)
-        end = localized_now().replace(day=now.day + day, hour=now.hour + end)
+        start = localized_now() + delta_start
+        end = localized_now() + delta_end
 
-        login(self.portal, 'usuari.iescude')
-        context.events.invokeFactory('Event', event_id, start=start, end=end, timezone=TZNAME, whole_day=False)
-        logout()
-        return context.events[event_id]
+        EventAccessor.event_type = 'Event'
+        acc = EventAccessor.create(
+            container=context,
+            content_id=id,
+            title=title,
+            start=start,
+            end=end,
+            timezone=TZNAME,
+            whole_day=whole_day,
+            open_end=open_end
+        )
+        acc.location = u'Graz, Austria'
+
+        return context[id]
 
     def renderer(self, context=None, request=None, view=None, manager=None,
                  assignment=None):
@@ -87,11 +90,12 @@ class RendererTest(unittest.TestCase):
         )
 
     def test_nearest_event_today_only(self):
+        login(self.portal, 'ulearn.testuser1')
+
         test_community = self.create_test_community()
-        event = self.create_event(test_community, 0, 2, 3)
+        self.create_event(test_community['events'], days=(0, 0), start=2, end=3)
 
         portlet = self.renderer(context=test_community, assignment=portlet_calendar.Assignment())
-        login(self.portal, 'usuari.iescude')
         portlet.update()
         rd = portlet.render()
 
@@ -102,11 +106,12 @@ class RendererTest(unittest.TestCase):
         logout()
 
     def test_nearest_event_today_tomorrow(self):
+        login(self.portal, 'ulearn.testuser1')
         test_community = self.create_test_community()
-        event = self.create_event(test_community, 1, 2, 3)
+        self.create_event(test_community['events'], start=2, end=3)
 
         portlet = self.renderer(context=test_community, assignment=portlet_calendar.Assignment())
-        login(self.portal, 'usuari.iescude')
+
         portlet.update()
         rd = portlet.render()
 
@@ -117,12 +122,13 @@ class RendererTest(unittest.TestCase):
         logout()
 
     def test_nearest_event_today_two_events(self):
+        login(self.portal, 'ulearn.testuser1')
         test_community = self.create_test_community()
-        event = self.create_event(test_community, 0, 2, 3)
-        event_must_not_show = self.create_event(test_community, 0, 4, 5, event_id='e2')
+        event = self.create_event(test_community['events'], days=(0, 0), start=2, end=3)
+        self.create_event(test_community['events'], days=(0, 0), start=4, end=5, id='e2')
 
         portlet = self.renderer(context=test_community, assignment=portlet_calendar.Assignment())
-        login(self.portal, 'usuari.iescude')
+
         portlet.update()
         rd = portlet.render()
 
@@ -133,12 +139,13 @@ class RendererTest(unittest.TestCase):
         logout()
 
     def test_next_three_events_today_two_events(self):
+        login(self.portal, 'ulearn.testuser1')
         test_community = self.create_test_community()
-        event = self.create_event(test_community, 0, 2, 3)
-        event_must_show = self.create_event(test_community, 0, 4, 5, event_id='e2')
+        self.create_event(test_community['events'], days=(0, 0), start=2, end=3)
+        event_must_show = self.create_event(test_community['events'], days=(0, 0), start=4, end=5, id='e2')
 
         portlet = self.renderer(context=test_community, assignment=portlet_calendar.Assignment())
-        login(self.portal, 'usuari.iescude')
+
         portlet.update()
         rd = portlet.render()
 
@@ -149,12 +156,13 @@ class RendererTest(unittest.TestCase):
         logout()
 
     def test_dayname(self):
+        login(self.portal, 'ulearn.testuser1')
         portlet = self.renderer(context=self.portal, assignment=portlet_calendar.Assignment())
-        login(self.portal, 'usuari.iescude')
-        portlet.update()
-        rd = portlet.render()
 
-        today = portlet.today()
+        portlet.update()
+        portlet.render()
+
+        portlet.today()
 
         # self.assertTrue(near_event)
         # self.assertTrue('e1' in rd)

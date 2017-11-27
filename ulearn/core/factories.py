@@ -4,11 +4,8 @@ from thread import allocate_lock
 from zope.component import getMultiAdapter
 from zope.component import adapts
 from zope.container.interfaces import INameChooser
-from zope.lifecycleevent import ObjectModifiedEvent
-from zope.event import notify
 from zope.interface import implements
 
-from Products.Archetypes.event import ObjectInitializedEvent
 from Products.CMFCore.utils import getToolByName
 from Products.CMFCore.interfaces._content import IFolderish
 
@@ -39,8 +36,8 @@ class DXFileFactory(object):
         ctr = getToolByName(self.context, 'content_type_registry')
         type_ = ctr.findTypeName(name.lower(), '', '') or 'File'
 
-        name = name.decode("utf8")
-        title = title.decode("utf8")
+        name = name.decode('utf8')
+        title = title.decode('utf8')
 
         chooser = INameChooser(self.context)
 

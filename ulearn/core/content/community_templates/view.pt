@@ -14,6 +14,16 @@
     <script type="text/javascript"
       tal:attributes="src string:${view/portal_url}/++maxui++static/maxui.loader.js">
     </script>
+    <script type="text/javascript">
+      setInterval(function(){$("#maxui-news-activities .maxui-button").trigger("click");}, 180000);
+      $(document).ready(function(){
+        if (!window.location.origin) {
+            window.location.origin = window.location.protocol + '//' + window.location.hostname + (window.location.port ? (':' + window.location.port) : '');
+        }
+        $.get(window.location.origin + window.location.pathname + "/updateuseraccessdatetime", function(data){
+        });
+      });
+    </script>
   </div>
   <metal:block fill-slot="top_slot"
                  tal:define="dummy python:request.set('disable_border',1)" />
@@ -25,45 +35,29 @@
 
   <metal:content-core define-macro="main">
 
-    <div id="subscribealert" class="alert alert-info" role="alert"
-         tal:condition="view/show_community_open_but_not_subscribed">
-      <button data-dismiss="alert" class="close" type="button">×</button>
-      <p>
-      <strong i18n:translate="info">
-                Info
-      </strong>
-      <tal:msg i18n:translate="community_open_and_no_subscribed">
-        This is an open community, but you are not currently subscribed.
-      </tal:msg>
-      </p>
-      <p>
-        <a  i18n:translate="subscribe" class="btn btn-info" href="#"
-           tal:attributes="data-community string:${context/absolute_url};
-                           data-name context/Title">
+    <div ng-controller="subscribeToOpenCommunity as ctrl">
+      <alert ng-if="ctrl.show_alert"
+             close="ctrl.closeAlert()"
+             type="info"
+             ng-cloak>
+        <p>
+        <strong i18n:translate="info">
+          Info
+        </strong>
+        <tal:msg i18n:translate="community_open_and_no_subscribed">
+          This is an open community, but you are not currently subscribed.
+        </tal:msg>
+        </p>
+        <p>
+          <a i18n:translate="subscribe" class="btn btn-info"
+             ng-click="ctrl.confirmSubscribe()"
+             tal:attributes="data-community string:${context/absolute_url};
+                             data-name context/Title">
             Subscribe
-        </a>
-      </p>
-    </div>
+          </a>
+        </p>
+      </alert>
 
-    <div id="subscribeupgradealert" class="alert alert-info" role="alert"
-         tal:condition="view/show_community_open_subscribed_readonly">
-      <button data-dismiss="alert" class="close" type="button">×</button>
-      <p>
-      <strong i18n:translate="info">
-                Info
-      </strong>
-      <tal:msg i18n:translate="community_open_and_subscribed_but_readonly">
-        This is an open community, but currently you have read-only permissions.
-        Please, upgrade your subscription type in order to edit content.
-      </tal:msg>
-      </p>
-      <p>
-        <a  i18n:translate="upgrade_subscription" class="btn btn-info" href="#"
-           tal:attributes="data-community string:${context/absolute_url};
-                           data-name context/Title">
-            Upgrade
-        </a>
-      </p>
     </div>
 
     <div class="tab-pane active" id="maxui-widget-container"></div>

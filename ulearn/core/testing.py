@@ -6,8 +6,6 @@ from plone.app.testing import applyProfile
 from plone.app.testing import PLONE_FIXTURE
 from plone.app.testing import IntegrationTesting
 from plone.app.testing import FunctionalTesting
-from plone.app.testing import TEST_USER_ID
-from plone.app.testing import setRoles
 from plone.app.testing import login
 from plone.app.testing import logout
 
@@ -19,8 +17,11 @@ from zope.interface import alsoProvides
 from mrs.max.utilities import IMAXClient
 from mrs.max.utilities import set_user_oauth_token
 
-from genweb.core.testing import GENWEBUPC_FIXTURE
 from ulearn.theme.browser.interfaces import IUlearnTheme
+from plone.app.contenttypes.testing import PLONE_APP_CONTENTTYPES_FIXTURE
+
+import requests.packages.urllib3
+requests.packages.urllib3.disable_warnings()
 
 
 def setup_max(restricted, password):
@@ -30,6 +31,12 @@ def setup_max(restricted, password):
     settings.max_restricted_token = token
 
     set_user_oauth_token(restricted, token)
+
+
+def setup_user_max(username, password):
+    maxclient, settings = getUtility(IMAXClient)()
+    token = maxclient.getToken(username, password)
+    api.user.get(username).setMemberProperties(mapping={'oauth_token': token})
 
 
 def set_browserlayer(request):
@@ -43,7 +50,7 @@ def set_browserlayer(request):
 
 class UlearncoreLayer(PloneSandboxLayer):
 
-    defaultBases = (GENWEBUPC_FIXTURE, PLONE_FIXTURE,)
+    defaultBases = (PLONE_APP_CONTENTTYPES_FIXTURE, PLONE_FIXTURE,)
 
     def setUpZope(self, app, configurationContext):
         # Load ZCML
@@ -55,38 +62,40 @@ class UlearncoreLayer(PloneSandboxLayer):
         )
 
         # Needed to make p.a.iterate permissions available as g.core needs them
-        import plone.app.iterate.permissions
-
-#    def tearDownZope(self, app):
-#        # Uninstall products installed above
-#        z2.uninstallProduct(app, 'Products.PloneFormGen')
+        import plone.app.iterate.permissions  # noqa
 
     def setUpPloneSite(self, portal):
+        # Needed for PAC not complain about not having one... T_T
+        portal.portal_workflow.setDefaultChain("simple_publication_workflow")
+
         applyProfile(portal, 'ulearn.core:default')
 
-        portal.acl_users.userFolderAddUser('admin', 'secret', ['Manager'], [])
-        portal.acl_users.userFolderAddUser('user', 'secret', ['Member'], [])
-        portal.acl_users.userFolderAddUser('poweruser', 'secret', ['Member', 'WebMaster'], [])
+        # portal.acl_users.userFolderAddUser('admin', 'secret', ['Manager'], [])
+        portal.acl_users.userFolderAddUser('manager', 'secret', ['Manager'], [])
+        # portal.acl_users.userFolderAddUser('user', 'secret', ['Member'], [])
+        # portal.acl_users.userFolderAddUser('poweruser', 'secret', ['Member', 'WebMaster'], [])
         portal.acl_users.userFolderAddUser('victor.fernandez', 'secret', ['Member'], [])
         portal.acl_users.userFolderAddUser('janet.dura', 'secret', ['Member'], [])
-        portal.acl_users.userFolderAddUser('usuari.iescude', 'secret', ['Member', 'WebMaster'], [])
+        # portal.acl_users.userFolderAddUser('usuari.iescude', 'secret', ['Member', 'WebMaster'], [])
         portal.acl_users.userFolderAddUser('ulearn.testuser1', 'secret', ['Member', 'WebMaster'], [])
+        portal.acl_users.userFolderAddUser('ulearn.testuser2', 'secret', ['Member', ], [])
 
         api.user.get('ulearn.testuser1').setMemberProperties(mapping={'location': u'Test', 'telefon': u'123456'})
         api.user.get('janet.dura').setMemberProperties(mapping={'fullname': u'Janet Durà', 'location': u'Barcelona', 'telefon': u'654321 123 123'})
 
         login(portal, 'admin')
         setup_max(u'ulearn.testuser1', '99994183a')
-        portal.portal_workflow.setDefaultChain("genweb_intranet")
+        setup_user_max('ulearn.testuser2', '99994184a')
+        portal.portal_workflow.setDefaultChain('genweb_intranet')
         logout()
         # setRoles(portal, TEST_USER_ID, ['Manager'])
 
 ULEARN_CORE_FIXTURE = UlearncoreLayer()
 ULEARN_CORE_INTEGRATION_TESTING = IntegrationTesting(
     bases=(ULEARN_CORE_FIXTURE,),
-    name="UlearncoreLayer:Integration"
+    name='UlearncoreLayer:Integration'
 )
 ULEARN_CORE_FUNCTIONAL_TESTING = FunctionalTesting(
     bases=(ULEARN_CORE_FIXTURE, z2.ZSERVER_FIXTURE),
-    name="UlearncoreLayer:Functional"
+    name='UlearncoreLayer:Functional'
 )

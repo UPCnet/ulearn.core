@@ -5,4 +5,24 @@
     <column value="subscribed_users"/>
     <column value="community_type"/>
     <column value="community_hash"/>
+    <column value="is_shared"/>
+    <column value="is_inapp"/>
+    <column value="is_outoflist"/>
+    <column value="is_flash"/>
+
+    <index name="is_flash" meta_type="BooleanIndex">
+      <indexed_attr value="is_flash"/>
+    </index>
+    <column value="is_flash"/>
+
+    <index name="is_inapp" meta_type="BooleanIndex">
+      <indexed_attr value="is_inapp"/>
+    </index>
+    <column value="is_inapp"/>
+
+    <index name="is_outoflist" meta_type="BooleanIndex">
+      <indexed_attr value="is_outoflist"/>
+    </index>
+    <column value="is_outoflist"/>
+
 </object>

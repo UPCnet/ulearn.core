@@ -1,7 +1,7 @@
 from zope.i18nmessageid import MessageFactory
 import logging
 
-_ = MessageFactory("ulearn")
+_ = MessageFactory('ulearn')
 
-requests_log = logging.getLogger("requests")
+requests_log = logging.getLogger('requests')
 requests_log.setLevel(logging.WARNING)

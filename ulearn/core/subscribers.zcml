@@ -35,7 +35,6 @@
              zope.app.container.interfaces.IObjectAddedEvent"
         />
 
-    
     <!-- Modified Event Subscriber -->
     <subscriber
         handler=".hooks.Modified"
@@ -47,6 +46,18 @@
         handler=".hooks.Modified"
         for="plone.app.contenttypes.interfaces.IEvent
              zope.lifecycleevent.interfaces.IObjectModifiedEvent"
+        />
+
+    <subscriber
+        handler=".browser.sharing.SharingChanged"
+        for="plone.dexterity.interfaces.IDexterityContent
+             plone.app.workflow.interfaces.ILocalrolesModifiedEvent"
+        />
+
+    <subscriber
+        handler=".browser.sharing.RemoveObject"
+        for="plone.dexterity.interfaces.IDexterityContent
+             zope.app.container.interfaces.IObjectRemovedEvent"
         />
 
 </configure>

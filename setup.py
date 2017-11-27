@@ -1,23 +1,23 @@
 from setuptools import setup, find_packages
 import os
 
-version = '1.68.dev0'
+version = '2.55.dev0'
 
-README = open("README.rst").read()
-HISTORY = open(os.path.join("docs", "HISTORY.rst")).read()
+README = open('README.rst').read()
+HISTORY = open(os.path.join('docs', 'HISTORY.rst')).read()
 
 setup(name='ulearn.core',
       version=version,
-      description="",
-      long_description=README + "\n" + HISTORY,
+      description='',
+      long_description=README + '\n' + HISTORY,
       classifiers=[
-          "Environment :: Web Environment",
-          "Framework :: Plone",
-          "Operating System :: OS Independent",
-          "Programming Language :: Python",
-          "Programming Language :: Python :: 2.6",
-          "Programming Language :: Python :: 2.7",
-          "Topic :: Software Development :: Libraries :: Python Modules",
+          'Environment :: Web Environment',
+          'Framework :: Plone',
+          'Operating System :: OS Independent',
+          'Programming Language :: Python',
+          'Programming Language :: Python :: 2.6',
+          'Programming Language :: Python :: 2.7',
+          'Topic :: Software Development :: Libraries :: Python Modules',
       ],
       keywords='theme genweb plone',
       author='UPCnet Plone Team',
@@ -40,6 +40,9 @@ setup(name='ulearn.core',
           'infrae.rest',
           'Products.PloneFormGen',
           'collective.z3cform.datagridfield',
+          'genweb.smartportlet',
+          'collective.polls'
+          # 'experimental.securityindexing'
       ],
       extras_require={'test': ['plone.app.testing',
                                'Products.PloneLDAP',

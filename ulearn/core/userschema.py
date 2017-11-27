@@ -2,16 +2,27 @@
 from zope import schema
 from zope.interface import Interface
 from zope.interface import implements
-
 # from mrs.max.userdataschema import IEnhancedUserDataSchema
 from mrs.max.userdataschema import EnhancedUserDataPanelAdapter
 # from mrs.max.userdataschema import UserDataSchemaProvider
-
 from plone.app.users.browser.formlib import FileUpload
 from plone.app.users.userdataschema import IUserDataSchemaProvider
 from plone.app.users.userdataschema import checkEmailAddress
-
+from zope.interface import alsoProvides
+from zope.component import getUtility
+from mrs.max.utilities import IMAXClient
+from Products.CMFCore.utils import getToolByName
+from ulearn.core.adapters.portrait import convertSquareImage
+import urllib
+from OFS.Image import Image
 from ulearn.core import _
+from five import grok
+from repoze.catalog.catalog import Catalog
+from repoze.catalog.indexes.field import CatalogFieldIndex
+from repoze.catalog.indexes.keyword import CatalogKeywordIndex
+from souper.interfaces import ICatalogFactory
+from souper.soup import NodeAttributeIndexer
+from zope.interface import implementer
 
 
 class IUlearnUserSchema(Interface):
@@ -20,7 +31,7 @@ class IUlearnUserSchema(Interface):
     fullname = schema.TextLine(
         title=_(u'label_full_name', default=u'Full Name'),
         description=_(u'help_full_name_creation',
-                      default=u"Enter full name, e.g. John Smith."),
+                      default=u'Enter full name, e.g. John Smith.'),
         required=True)
 
     email = schema.ASCIILine(
@@ -32,27 +43,27 @@ class IUlearnUserSchema(Interface):
     home_page = schema.TextLine(
         title=_(u'label_homepage', default=u'Home page'),
         description=_(u'help_homepage',
-                      default=u"The URL for your external home page, "
-                      "if you have one."),
+                      default=_(u'The URL for your external home page, if you have one.')),
         required=False)
 
     description = schema.Text(
         title=_(u'label_biography', default=u'Biography'),
         description=_(u'help_biography',
-                      default=u"A short overview of who you are and what you "
-                      "do. Will be displayed on your author page, linked "
-                      "from the items you create."),
+                      default=u'A short overview of who you are and what you '
+                      'do. Will be displayed on your author page, linked '
+                      'from the items you create.'),
         required=False)
 
     location = schema.TextLine(
         title=_(u'label_location', default=u'Location'),
         description=_(u'help_location',
-                      default=u"Your location - either city and "
-                      "country - or in a company setting, where "
-                      "your office is located."),
+                      default=u'Your location - either city and '
+                      'country - or in a company setting, where '
+                      'your office is located.'),
         required=False)
 
-    portrait = FileUpload(title=_(u'label_portrait', default=u'Portrait'),
+    portrait = FileUpload(
+        title=_(u'label_portrait', default=u'Portrait'),
         description=_(u'help_portrait',
                       default=u'To add or change the portrait: click the '
                       '"Browse" button; select a picture of yourself. '
@@ -68,22 +79,30 @@ class IUlearnUserSchema(Interface):
     twitter_username = schema.TextLine(
         title=_(u'label_twitter', default=u'Twitter username'),
         description=_(u'help_twitter',
-                      default=u"Fill in your Twitter username."),
+                      default=u'Fill in your Twitter username.'),
         required=False,
     )
 
     ubicacio = schema.TextLine(
         title=_(u'label_ubicacio', default=u'Ubicació'),
         description=_(u'help_ubicacio',
-                      default=u"Equip, Àrea / Companyia / Departament"),
+                      default=u'Equip, Àrea / Companyia / Departament'),
         required=False,
     )
 
     telefon = schema.TextLine(
         title=_(u'label_telefon', default=u'Telèfon'),
         description=_(u'help_telefon',
-                      default=u"Contacte telefònic"),
+                      default=u'Contacte telefònic'),
         required=False,
+    )
+
+    language = schema.Choice(
+        title=_(u'label_language', default=u'Language'),
+        description=_(u'help_language',
+                      default=_(u'Aquest és l\'idioma de l\'espai, que es configura quan el paquet es reinstala.')),
+        required=False,
+        vocabulary=u"plone.app.vocabularies.SupportedContentLanguages",
     )
 
 
@@ -97,6 +116,33 @@ class UlearnUserSchema(object):
 
 
 class ULearnUserDataPanelAdapter(EnhancedUserDataPanelAdapter):
+
+    def __init__(self, context):
+        """ Load MAX avatar in portrait.
+
+        """
+        super(EnhancedUserDataPanelAdapter, self).__init__(context)
+
+        try:
+            from plone.protect.interfaces import IDisableCSRFProtection
+            alsoProvides(self.request, IDisableCSRFProtection)
+        except:
+            pass
+        maxclient, settings = getUtility(IMAXClient)()
+        foto = maxclient.people[self.context.id].avatar
+        imageUrl = foto.uri
+
+        portrait = urllib.urlretrieve(imageUrl)
+
+        scaled, mimetype = convertSquareImage(portrait[0])
+        if scaled:
+            portrait = Image(id=self.context.id, file=scaled, title='')
+
+            membertool = getToolByName(self.context, 'portal_memberdata')
+            membertool._setPortrait(portrait, self.context.id)
+            import transaction
+            transaction.commit()
+
     def get_ubicacio(self):
         return self._getProperty('ubicacio')
 
@@ -110,3 +156,26 @@ class ULearnUserDataPanelAdapter(EnhancedUserDataPanelAdapter):
     def set_telefon(self, value):
         return self.context.setMemberProperties({'telefon': value})
     telefon = property(get_telefon, set_telefon)
+
+    def get_language(self):
+        return self._getProperty('language')
+
+    def set_language(self, value):
+        return self.context.setMemberProperties({'language': value})
+
+    language = property(get_language, set_language)
+
+
+@implementer(ICatalogFactory)
+class UserNewsSearchSoupCatalog(object):
+    def __call__(self, context):
+        catalog = Catalog()
+        idindexer = NodeAttributeIndexer('id')
+        catalog['id'] = CatalogFieldIndex(idindexer)
+        hashindex = NodeAttributeIndexer('searches')
+        catalog['searches'] = CatalogKeywordIndex(hashindex)
+
+        return catalog
+
+
+grok.global_utility(UserNewsSearchSoupCatalog, name='user_news_searches')

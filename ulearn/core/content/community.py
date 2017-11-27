@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 from AccessControl import Unauthorized
-from AccessControl import getSecurityManager
 from five import grok
 from plone import api
+from hashlib import sha1
 from z3c.form import button
 from zope import schema
-from zope.annotation.interfaces import IAnnotations
 from zope.app.container.interfaces import IObjectAddedEvent
 from zope.component import getMultiAdapter
 from zope.component import getUtility
@@ -16,15 +15,14 @@ from zope.event import notify
 from zope.interface import implements
 from zope.interface import Interface
 from zope.interface import alsoProvides
-from zope.globalrequest import getRequest
 from zope.lifecycleevent import ObjectModifiedEvent
 from zope.lifecycleevent.interfaces import IObjectModifiedEvent
 from zope.lifecycleevent.interfaces import IObjectRemovedEvent
-from zope.schema.fieldproperty import FieldProperty
 from zope.schema.interfaces import IContextSourceBinder
 from zope.schema.vocabulary import SimpleVocabulary
 from zope.security import checkPermission
-
+from zope.interface import implementer
+from zope.globalrequest import getRequest
 from plone.dexterity.content import Container
 from plone.dexterity.utils import createContentInContainer
 from plone.directives import form
@@ -34,53 +32,87 @@ from plone.namedfile.field import NamedBlobImage
 from plone.portlets.constants import CONTEXT_CATEGORY
 from plone.portlets.interfaces import ILocalPortletAssignmentManager
 from plone.portlets.interfaces import IPortletManager
-from plone.registry.interfaces import IRegistry
 from plone.dexterity.interfaces import IDexterityContent
-
 from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.utils import safe_unicode
 from Products.CMFPlone.interfaces import IPloneSiteRoot
 from Products.CMFPlone.interfaces.constrains import ISelectableConstrainTypes
 from Products.statusmessages.interfaces import IStatusMessage
 from ZPublisher.HTTPRequest import FileUpload
+from repoze.catalog.catalog import Catalog
+from repoze.catalog.indexes.field import CatalogFieldIndex
+from repoze.catalog.indexes.keyword import CatalogKeywordIndex
+from repoze.catalog.indexes.text import CatalogTextIndex
+from souper.interfaces import ICatalogFactory
+from souper.soup import NodeAttributeIndexer
+from repoze.catalog.query import Eq, Or
+from souper.soup import get_soup
+from souper.soup import Record
+from genweb.core.utils import json_response
+from genweb.core.gwuuid import IGWUUID
 from genweb.core.adapters.favorites import IFavorite
 from genweb.core.widgets.select2_maxuser_widget import Select2MAXUserInputFieldWidget
-
 from genweb.core.widgets.select2_user_widget import SelectWidgetConverter
-from hashlib import sha1
-from maxclient.rest import MaxClient
-from mrs.max.browser.controlpanel import IMAXUISettings
 from mrs.max.utilities import IMAXClient
+from mrs.max.utilities import IHubClient
 from ulearn.core import _
 from ulearn.core.interfaces import IDXFileFactory
 from ulearn.core.interfaces import IDocumentFolder
 from ulearn.core.interfaces import IEventsFolder
-from ulearn.core.interfaces import ILinksFolder
 from ulearn.core.interfaces import IPhotosFolder
 from ulearn.core.interfaces import IDiscussionFolder
+from DateTime.DateTime import DateTime
 
 import json
-import mimetypes
 import logging
+import mimetypes
+
 
 logger = logging.getLogger(__name__)
+VALID_COMMUNITY_ROLES = ['reader', 'writer', 'owner']
+
+OPEN_PERMISSIONS = dict(read='subscribed',
+                        write='subscribed',
+                        subscribe='public',
+                        unsubscribe='public')
+
+CLOSED_PERMISSIONS = dict(read='subscribed',
+                          write='restricted',
+                          subscribe='restricted',
+                          unsubscribe='public')
+
+ORGANIZATIVE_PERMISSIONS = dict(read='subscribed',
+                                write='restricted',
+                                subscribe='restricted',
+                                unsubscribe='restricted')
+
+
+class CommunityForbiddenAction(Exception):
+    """
+        Exception to be raised when trying to execute an action that
+        is forbidden in the context being executed
+    """
 
 
 @grok.provider(IContextSourceBinder)
 def availableCommunityTypes(context):
-    proot = getSite()
-    pm = getToolByName(proot, 'portal_membership')
-    sm = getSecurityManager()
-    user = pm.getAuthenticatedMember()
     terms = []
 
-    terms.append(SimpleVocabulary.createTerm(u'Closed', 'closed', _(u'Closed')))
-    terms.append(SimpleVocabulary.createTerm(u'Open', 'open', _(u'Open')))
+    user_roles = api.user.get_roles()
 
-    if sm.checkPermission('Modify portal content', context) or \
-       ('Manager' in user.getRoles()) or \
-       ('WebMaster' in user.getRoles()) or \
-       ('Site Administrator' in user.getRoles()):
+    if 'CC open' in user_roles or \
+       'WebMaster' in user_roles or \
+       'Manager' in user_roles:
+        terms.append(SimpleVocabulary.createTerm(u'Open', 'open', _(u'Open')))
+
+    if 'CC closed' in user_roles or \
+       'WebMaster' in user_roles or \
+       'Manager' in user_roles:
+        terms.append(SimpleVocabulary.createTerm(u'Closed', 'closed', _(u'Closed')))
+
+    if 'CC organizative' in user_roles or \
+       'WebMaster' in user_roles or \
+       'Manager' in user_roles:
         terms.append(SimpleVocabulary.createTerm(u'Organizative', 'organizative', _(u'Organizative')))
 
     return SimpleVocabulary(terms)
@@ -98,8 +130,7 @@ def communityActivityViews(context):
 
 
 class IInitializedCommunity(Interface):
-    """
-        A Community that has been succesfully initialized
+    """ A Community that has been succesfully initialized
     """
 
 
@@ -108,36 +139,37 @@ class ICommunity(form.Schema):
     """
 
     title = schema.TextLine(
-        title=_(u"Nom"),
-        description=_(u"Nom de la comunitat"),
+        title=_(u'Nom'),
+        description=_(u'Nom de la comunitat'),
         required=True
     )
 
     description = schema.Text(
-        title=_(u"Descripció"),
-        description=_(u"La descripció de la comunitat"),
+        title=_(u'Descripció'),
+        description=_(u'La descripció de la comunitat'),
         required=False
     )
-
+    form.mode(community_type='hidden')
     community_type = schema.Choice(
-        title=_(u"Tipus de comunitat"),
-        description=_(u"community_type_description"),
+        title=_(u'Tipus de comunitat'),
+        description=_(u'community_type_description'),
         source=availableCommunityTypes,
         required=True,
         default=u'Closed'
     )
 
     activity_view = schema.Choice(
-        title=_(u"activity_view"),
-        description=_(u"help_activity_view"),
+        title=_(u'activity_view'),
+        description=_(u'help_activity_view'),
         source=communityActivityViews,
         required=True,
         default=u'Darreres activitats')
 
+    form.omitted('readers', 'subscribed', 'owners')
     form.widget(readers=Select2MAXUserInputFieldWidget)
     readers = schema.List(
-        title=_(u"Readers"),
-        description=_(u"Subscribed people with read-only permissions"),
+        title=_(u'Readers'),
+        description=_(u'Subscribed people with read-only permissions'),
         value_type=schema.TextLine(),
         required=False,
         missing_value=[],
@@ -147,8 +179,8 @@ class ICommunity(form.Schema):
     # understanding that it refers to users with read/write permissions
     form.widget(subscribed=Select2MAXUserInputFieldWidget)
     subscribed = schema.List(
-        title=_(u"Editors"),
-        description=_(u"Subscribed people with editor permissions"),
+        title=_(u'Editors'),
+        description=_(u'Subscribed people with editor permissions'),
         value_type=schema.TextLine(),
         required=False,
         missing_value=[],
@@ -156,312 +188,516 @@ class ICommunity(form.Schema):
 
     form.widget(owners=Select2MAXUserInputFieldWidget)
     owners = schema.List(
-        title=_(u"Owners"),
-        description=_(u"Subscribed people with owner permissions"),
+        title=_(u'Owners'),
+        description=_(u'Subscribed people with owner permissions'),
         value_type=schema.TextLine(),
         required=False,
         missing_value=[],
         default=[])
 
     image = NamedBlobImage(
-        title=_(u"Imatge"),
-        description=_(u"Imatge que defineix la comunitat"),
+        title=_(u'Imatge'),
+        description=_(u'Imatge que defineix la comunitat'),
         required=False,
     )
 
     twitter_hashtag = schema.TextLine(
-        title=_(u"Twitter hashtag"),
+        title=_(u'Twitter hashtag'),
         description=_(u'hashtag_help'),
         required=False
     )
 
     notify_activity_via_push = schema.Bool(
-        title=_(u"Notify activity via push"),
+        title=_(u'Notify activity via push'),
         description=_(u'notify_activity_via_push_help'),
         required=False
     )
 
     notify_activity_via_push_comments_too = schema.Bool(
-        title=_(u"Notify activity and comments via push"),
+        title=_(u'Notify activity and comments via push'),
         description=_(u'help_notify_activity_via_push_comments_too'),
         required=False
     )
 
 
+class ICommunityACL(Interface):
+    """Helper to retrieve the community ACL safely by adapting any ICommunity"""
+
+
+@grok.implementer(ICommunityACL)
+@grok.adapter(ICommunity)
+class GetCommunityACL(object):
+    def __init__(self, context):
+        self.context = context
+
+    def __call__(self):
+        portal = api.portal.get()
+        soup = get_soup('communities_acl', portal)
+        gwuuid = IGWUUID(self.context).get()
+        records = [r for r in soup.query(Eq('gwuuid', gwuuid))]
+
+        if records:
+            return records[0]
+        else:
+            return None
+
+
+class ICommunityTyped(Interface):
+    """ The adapter for the ICommunity It would adapt the Community instances in
+        order to have a centralized way of dealing with community types and the
+        common processes with them.
+    """
+
+
+class CommunityAdapterMixin(object):
+    """ Common methods for community adapters """
+
+    # Role that will be given to a user when auto-subscribing in allowed communities
+    # As by default a community adapter allows auto-ubscription, if you want to disable it
+    # for a community adapter, you have to provide an subscribe_user method that disallows it.
+    subscription_community_role = None
+
+    # Roles that will be available as valid community roles,
+    # and so displayed in the edtiacl view
+    available_roles = ['reader', 'writer', 'owner']
+
+    def __init__(self, context):
+        self.context = context
+        self.get_max_client()
+        self.get_hub_client()
+
+        # Determine the value for notifications
+        if self.context.notify_activity_via_push and self.context.notify_activity_via_push_comments_too:
+            self.max_notifications = 'comments'
+        elif not self.context.notify_activity_via_push and self.context.notify_activity_via_push_comments_too:
+            self.max_notifications = 'comments'
+        elif self.context.notify_activity_via_push and not self.context.notify_activity_via_push_comments_too:
+            self.max_notifications = 'posts'
+        elif not self.context.notify_activity_via_push and not self.context.notify_activity_via_push_comments_too:
+            self.max_notifications = False
+
+    def get_max_client(self):
+        self.maxclient, self.settings = getUtility(IMAXClient)()
+        self.maxclient.setActor(self.settings.max_restricted_username)
+        self.maxclient.setToken(self.settings.max_restricted_token)
+
+    def get_hub_client(self):
+        self.hubclient, settings = getUtility(IHubClient)()
+        self.hubclient.setActor(settings.max_restricted_username)
+        self.hubclient.setToken(settings.max_restricted_token)
+
+    def create_max_context(self):
+        """ Add context for the community on MAX server given a set of
+            properties like context permissions and notifications.
+        """
+        self.maxclient.contexts.post(
+            url=self.context.absolute_url(),
+            displayName=self.context.title,
+            permissions=self.max_permissions,
+            notifications=self.max_notifications,
+            # Include notify=False
+        )
+
+    def set_initial_max_metadata(self):
+        # Update twitter hashtag
+        self.maxclient.contexts[self.context.absolute_url()].put(
+            twitterHashtag=self.context.twitter_hashtag
+        )
+
+        # Update community tag
+        self.maxclient.contexts[self.context.absolute_url()].tags.put(data=['[COMMUNITY]'])
+
+    def set_initial_subscription(self, acl):
+        self.maxclient.people[self.context.Creator()].subscriptions.post(object_url=self.context.absolute_url())
+        self.update_acl(acl)
+
+        for permission in self.community_role_mappings['owner']['max']:
+            self.maxclient.contexts[self.context.absolute_url()].permissions[self.context.Creator()][permission].put()
+
+        self.update_hub_subscriptions()
+
+    def update_community_type(self):
+        # Guard in case the update could already be made by other means
+        context_current_info = self.maxclient.contexts[self.context.absolute_url()].get()
+        should_update = False
+        for key in self.max_permissions:
+            if self.max_permissions[key] != context_current_info['permissions'][key]:
+                should_update = True
+        if should_update:
+            properties_to_update = dict(permissions=self.max_permissions)
+            self.maxclient.contexts[self.context.absolute_url()].put(**properties_to_update)
+
+        # Update the community_type field
+        self.context.community_type = self.__component_name__
+
+        # and related permissions
+        self.set_plone_permissions(self.get_acl())
+
+        self.context.reindexObject()
+
+    def delete_community_all(self):
+        self.delete_max_context()
+        self.delete_acl()
+
+    def get_acl(self):
+        return ICommunityACL(self.context)().attrs.get('acl', '')
+
+    def update_acl(self, acl):
+        gwuuid = IGWUUID(self.context).get()
+        portal = api.portal.get()
+        soup = get_soup('communities_acl', portal)
+
+        records = [r for r in soup.query(Eq('gwuuid', gwuuid))]
+
+        # Save ACL into the communities_acl soup
+        if records:
+            acl_record = records[0]
+        else:
+            # The community isn't indexed in the acl catalog yet, so do it now.
+            record = Record()
+            record.attrs['path'] = '/'.join(self.context.getPhysicalPath())
+            record.attrs['gwuuid'] = gwuuid
+            record.attrs['hash'] = sha1(self.context.absolute_url()).hexdigest()
+            record_id = soup.add(record)
+            acl_record = soup.get(record_id)
+
+        acl_record.attrs['groups'] = [g['id'] for g in acl.get('groups', []) if g.get('id', False)]
+        acl_record.attrs['acl'] = acl
+
+        soup.reindex(records=[acl_record])
+
+    def delete_acl(self):
+        """ In case that we delete the community, delete its ACL record. """
+        gwuuid = IGWUUID(self.context).get()
+        portal = api.portal.get()
+        soup = get_soup('communities_acl', portal)
+
+        records = [r for r in soup.query(Eq('gwuuid', gwuuid))]
+
+        if records:
+            del soup[records[0]]
+
+    def remove_acl_atomic(self, username):
+        acl = self.get_acl()
+
+        for user in acl['users']:
+            if user['id'] == username:
+                acl['users'].remove(user)
+
+        self.update_acl(acl)
+
+    def update_acl_atomic(self, username, role):
+        """ This method is used when it is required to perform an atomic (single
+            user) acl update to a community. It supports either adding a new
+            user and updating an existing one.
+        """
+        acl = self.get_acl()
+        new_user_acl = dict(id=username, displayName=u'', role=role)
+
+        updating = False
+        for user in acl['users']:
+            if user['id'] == username:
+                # We are updating
+                user['role'] = role
+                updating = True
+
+        if not updating:
+            # We are adding
+            acl['users'].append(new_user_acl)
+
+        self.update_acl(acl)
+
+    def update_hub_subscriptions(self):
+        max_permission_mappings = {role: mappings['max'] for role, mappings in self.community_role_mappings.items()}
+        portal = api.portal.get()
+        subscribe_request = {}
+        subscribe_request['component'] = dict(type='communities', id=portal.absolute_url())
+        subscribe_request['permission_mapping'] = max_permission_mappings
+        subscribe_request['ignore_grants_and_vetos'] = True
+        subscribe_request['context'] = self.context.absolute_url()
+        subscribe_request['acl'] = self.get_acl()
+
+        self.hubclient.api.domains[self.settings.domain].services['syncacl'].post(**subscribe_request)
+
+    def add_max_subscription_atomic(self, username):
+        """ Used in auto-subscribe an user to an Open community. """
+        self.maxclient.people[username].subscriptions.post(object_url=self.context.absolute_url())
+
+    def remove_max_subscription_atomic(self, username):
+        """ Used in unsubscribe an user to an Open or Closed community. """
+        self.maxclient.people[username].subscriptions[self.context.absolute_url()].delete()
+
+    def update_max_context(self):
+        # Get current MAX context information
+        context_current_info = self.maxclient.contexts[self.context.absolute_url()].get()
+
+        # collect updated properties
+        properties_to_update = {}
+        if context_current_info:
+            if context_current_info.get('twitterHashtag', None) != self.context.twitter_hashtag:
+                properties_to_update['twitterHashtag'] = self.context.twitter_hashtag
+
+            if context_current_info.get('displayName', '') != self.context.title:
+                properties_to_update['displayName'] = self.context.title
+
+            if context_current_info.get('notifications', '') != self.max_notifications:
+                properties_to_update['notifications'] = self.max_notifications
+
+        # update context properties that have changed
+        if properties_to_update:
+            self.maxclient.contexts[self.context.absolute_url()].put(**properties_to_update)
+
+    def delete_max_context(self):
+        self.maxclient.contexts[self.context.absolute_url()].delete()
+
+    def set_plone_permissions(self, acl, changed=False):
+        """ Set the Plone local roles given the acl. Shameless ripped off from
+            sharing.py in p.a.workflow
+        """
+        acl_user_and_groups = acl.get('users', []) + acl.get('groups', [])
+
+        # First, get a list with the current principals assigned to Plone ACL
+        # and exclude 'AuthenticatedUsers'
+        current_acl_principals = [p[0] for p in self.context.get_local_roles()]
+        if 'AuthenticatedUsers' in current_acl_principals:
+            current_acl_principals.remove('AuthenticatedUsers')
+
+        member_ids_to_clear = frozenset(current_acl_principals) - frozenset([p['id'] for p in acl_user_and_groups])
+        # Search for users no longer in ACL and sanitize the list, just in case
+        user_and_groups = [p for p in acl_user_and_groups if p.get('id', False) and p.get('role', False) and p.get('role', '') in VALID_COMMUNITY_ROLES]
+
+        for principal in user_and_groups:
+            user_id = principal['id']
+            existing_roles = frozenset(self.context.get_local_roles_for_userid(userid=user_id))
+
+            # Determine which Plone Roles we have to use base on the principal's copmmunity role
+            # The mapping of community role --> plone roles is defined per-community in the adapter
+            fallback_default = dict(max=['read'], plone=['Reader'])
+            role_mappings = self.community_role_mappings
+            selected_roles = frozenset(role_mappings.get(principal['role'], fallback_default).get('plone'))
+
+            managed_roles = frozenset(['Reader', 'Contributor', 'Editor', 'Owner'])
+            relevant_existing_roles = managed_roles & existing_roles
+
+            # If, for the managed roles, the new set is the same as the
+            # current set we do not need to do anything.
+            if relevant_existing_roles == selected_roles:
+                continue
+
+            # We will remove those roles that we are managing and which set
+            # on the context, but which were not selected
+            to_remove = relevant_existing_roles - selected_roles
+
+            # Leaving us with the selected roles, less any roles that we
+            # want to remove
+            wanted_roles = (selected_roles | existing_roles) - to_remove
+
+            # take away roles that we are managing, that were not selected
+            # and which were part of the existing roles
+
+            if wanted_roles:
+                self.context.manage_setLocalRoles(user_id, list(wanted_roles))
+                changed = True
+            elif existing_roles:
+                member_ids_to_clear.append(user_id)
+
+        if member_ids_to_clear:
+            self.context.manage_delLocalRoles(userids=member_ids_to_clear)
+            changed = True
+
+        if changed:
+            self.context.reindexObjectSecurity()
+
+    def unsubscribe_user(self, user_id):
+        """
+            Removes a user both from max and plone, updating related permissions
+        """
+        self.remove_max_subscription_atomic(user_id)
+
+        # Remove from acl
+        self.remove_acl_atomic(user_id)
+
+        acl = self.get_acl()
+        # Finally, we update the plone permissions
+        self.set_plone_permissions(acl)
+
+        # Unfavorite
+        IFavorite(self.context).remove(user_id)
+
+    def subscribe_user(self, user_id):
+        """
+            Adds a user both to max and plone, updating related permissions
+        """
+        #     community.community_type == u'Open' and \
+        # 'Reader' in api.user.get_roles(obj=self.context):
+
+        # Subscribe to context
+        self.add_max_subscription_atomic(user_id)
+
+        # For this use case, the user is able to auto-subscribe to the
+        # community with write permissions
+        self.update_acl_atomic(user_id, self.subscription_community_role)
+
+        acl = self.get_acl()
+        # Finally, we update the plone permissions
+        self.set_plone_permissions(acl)
+
+
+@grok.implementer(ICommunityTyped)
+@grok.adapter(ICommunity, Interface, name='Organizative')
+class OrganizativeCommunity(CommunityAdapterMixin):
+    """ Named adapter for the organizative communities """
+    def __init__(self, context, request):
+        super(OrganizativeCommunity, self).__init__(context)
+        self.max_permissions = ORGANIZATIVE_PERMISSIONS
+        self.community_role_mappings = dict(
+            reader={
+                'plone': ['Reader'],
+                'max': ['read']
+            },
+            writer={
+                'plone': ['Reader', 'Contributor', 'Editor'],
+                'max': ['read', 'write']
+            },
+            owner={
+                'plone': ['Reader', 'Contributor', 'Editor', 'Owner'],
+                'max': ['read', 'write', 'unsubscribe', 'flag', 'invite', 'kick', 'delete']
+            }
+        )
+
+    def unsubscribe_user(self, user_id):
+        raise CommunityForbiddenAction('Unsubscription from organizative community forbidden.')
+
+    def subscribe_user(self, user_id):
+        raise CommunityForbiddenAction('Subscription to organizative community forbidden.')
+
+
+@grok.implementer(ICommunityTyped)
+@grok.adapter(ICommunity, Interface, name='Open')
+class OpenCommunity(CommunityAdapterMixin):
+    """ Named adapter for the open communities """
+    def __init__(self, context, request):
+        super(OpenCommunity, self).__init__(context)
+        self.max_permissions = OPEN_PERMISSIONS
+        self.subscription_community_role = 'writer'
+        self.community_role_mappings = dict(
+            reader={
+                'plone': ['Reader'],
+                'max': ['read', 'unsubscribe']
+            },
+            writer={
+                'plone': ['Reader', 'Contributor', 'Editor'],
+                'max': ['read', 'write', 'unsubscribe']
+            },
+            owner={
+                'plone': ['Reader', 'Contributor', 'Editor', 'Owner'],
+                'max': ['read', 'write', 'unsubscribe', 'flag', 'invite', 'kick', 'delete']
+            }
+        )
+
+    def set_plone_permissions(self, acl, changed=False):
+        if not self.context.get_local_roles_for_userid(userid='AuthenticatedUsers'):
+            self.context.manage_setLocalRoles('AuthenticatedUsers', ['Reader'])
+            changed = True
+
+        super(OpenCommunity, self).set_plone_permissions(acl, changed)
+
+
+@grok.implementer(ICommunityTyped)
+@grok.adapter(ICommunity, Interface, name='Closed')
+class ClosedCommunity(CommunityAdapterMixin):
+    """ Named adapter for the closed communities """
+    def __init__(self, context, request):
+        super(ClosedCommunity, self).__init__(context)
+        self.max_permissions = CLOSED_PERMISSIONS
+        self.community_role_mappings = dict(
+            reader={
+                'plone': ['Reader'],
+                'max': ['read', 'unsubscribe']
+            },
+            writer={
+                'plone': ['Reader', 'Contributor', 'Editor'],
+                'max': ['read', 'write', 'unsubscribe']
+            },
+            owner={
+                'plone': ['Reader', 'Contributor', 'Editor', 'Owner'],
+                'max': ['read', 'write', 'unsubscribe', 'flag', 'invite', 'kick', 'delete']
+            }
+        )
+
+    def set_plone_permissions(self, acl, changed=False):
+        if self.context.get_local_roles_for_userid(userid='AuthenticatedUsers'):
+            self.context.manage_delLocalRoles(['AuthenticatedUsers'])
+            changed = True
+
+        super(ClosedCommunity, self).set_plone_permissions(acl, changed)
+
+    def subscribe_user(self, user_id):
+        raise CommunityForbiddenAction('Subscription to closed community forbidden.')
+
+
 class Community(Container):
     implements(ICommunity)
 
-    def add_subscription(self, username, role):
-        if role == 'readers':
-            self.readers = list(set(self.readers + [username, ]))
-        if role == 'subscribed':
-            self.subscribed = list(set(self.subscribed + [username, ]))
-        if role == 'owners':
-            self.owners = list(set(self.owners + [username, ]))
-
-    def remove_subscription(self, username, role):
-        if role == 'readers':
-            self.readers = list(set(self.readers) - set([username, ]))
-        if role == 'subscribed':
-            self.subscribed = list(set(self.subscribed) - set([username, ]))
-        if role == 'owners':
-            self.owners = list(set(self.owners) - set([username, ]))
-
-    def get_max_client(self):
-        maxclient, settings = getUtility(IMAXClient)()
-        maxclient.setActor(settings.max_restricted_username)
-        maxclient.setToken(settings.max_restricted_token)
-
-        return maxclient
-
-    def _get_max_subscribed_to_context(self):
-        """ Get subscribed users from MAX """
-        portal = getSite()
-        wrapped_community = self.__of__(portal)
-        # print('Getting subscribed users for {}'.format(wrapped_community.absolute_url()))
-        return [user.get('username', '') for user in self.get_max_client().contexts[wrapped_community.absolute_url()].subscriptions.get(qs={'limit': 0})]
-
-    def _intersect_subscribed_users_by_role(self):
-        """ We assume that the default user role assignment will be editor
-            otherwise noted. So try to map each of the other roles (reader,
-            owner) and if not matched, then assign them to the default (editor)
-        """
-        request = getRequest()
-
-        key = 'cache-subscribed-{}'.format(self.id)
-
-        cache = IAnnotations(request)
-        subscribed = cache.get(key, None)
-        if not subscribed:
-            subscribed = self._get_max_subscribed_to_context()
-            cache[key] = subscribed
-
-        readers = []
-        editors = []
-        owners = []
-
-        for user in subscribed:
-            if user in self._readers:
-                readers.append(user)
-            if user in self._owners:
-                owners.append(user)
-            if user in self._editors:
-                editors.append(user)
-
-        return dict(readers=readers, editors=editors, owners=owners)
-
-    def clear_subscribed_cache(self):
-        request = getRequest()
-        key = 'cache-subscribed-{}'.format(self.id)
-
-        cache = IAnnotations(request)
-        subscribed = cache.get(key, None)
-        if subscribed:
-            del cache[key]
-
-    def create_max_context(self):
-        # Determine the kind of security the community should have provided the type
-        # of community
-        if self._ctype == u'Open':
-            community_permissions = dict(read='subscribed', write='subscribed', subscribe='public', unsubscribe='public')
-        elif self._ctype == u'Closed':
-            community_permissions = dict(read='subscribed', write='restricted', subscribe='restricted', unsubscribe='public')
-        elif self._ctype == u'Organizative':
-            community_permissions = dict(read='subscribed', write='restricted', subscribe='restricted', unsubscribe='restricted')
-
-        if not getattr(self, 'notify_activity_via_push', False):
-            notify_push = False
-        else:
-            notify_push = self.notify_activity_via_push
-
-        if not getattr(self, 'notify_activity_via_push_comments_too', False):
-            notify_push_comments = False
-        else:
-            notify_push_comments = self.notify_activity_via_push_comments_too
-
-        # Determine the value for notifications
-        if notify_push and notify_push_comments:
-            notifications = 'comments'
-        elif notify_push and not notify_push_comments:
-            notifications = 'posts'
-        elif not notify_push and not notify_push_comments:
-            notifications = False
-
-        portal = getSite()
-        wrapped_community = self.__of__(portal)
-
-        # Add context for the community on MAX server
-        self.get_max_client().contexts.post(
-            url=wrapped_community.absolute_url(),
-            displayName=self.title,
-            permissions=community_permissions,
-            notifications=notifications,
-        )
-
-    def subscribe_max_user_per_role(self, user, permission):
-        portal = getSite()
-        wrapped_community = self.__of__(portal)
-        maxclient = self.get_max_client()
-
-        if not getattr(portal, self.id, False):
-            self.create_max_context()
-
-        maxclient.people[user].subscriptions.post(object_url=wrapped_community.absolute_url())
-        maxclient.contexts[wrapped_community.absolute_url()].permissions[user][permission].put()
-        if permission == 'read':
-            # Make sure the user only gets the read permission by unset the write one
-            # This is the case of the permission roaming user...
-            maxclient.contexts[wrapped_community.absolute_url()].permissions[user][permission].delete()
-
-    def remove_max_user_permission(self, user, permission):
-        portal = getSite()
-        maxclient = self.get_max_client()
-        wrapped_community = self.__of__(portal)
-        maxclient.contexts[wrapped_community.absolute_url()].permissions[user][permission].delete()
-
-    def unsubscribe_user(self, user):
-        portal = getSite()
-        wrapped_community = self.__of__(portal)
-        maxclient = self.get_max_client()
-        maxclient.people[user].subscriptions[wrapped_community.absolute_url()].delete()
-
-    def set_plone_permissions(self, user, role):
-        if role == 'reader':
-            self.manage_setLocalRoles(user, ['Reader', ])
-
-        if role == 'editor':
-            self.manage_setLocalRoles(user, ['Reader', 'Contributor', 'Editor'])
-
-        if role == 'owner':
-            self.manage_setLocalRoles(user, ['Reader', 'Contributor', 'Editor', 'Owner'])
-
-    def unset_plone_permissions(self, user):
-        self.manage_delLocalRoles([user, ])
-
-    _ctype = FieldProperty(ICommunity['community_type'])
-
-    _readers = FieldProperty(ICommunity['readers'])
-
-    def get_readers(self):
-        return self._intersect_subscribed_users_by_role()['readers']
-
-    def set_readers(self, value):
-        # print u'\nreader setter: {}'.format(value)
-        subscribe = set(value) - set(self._readers)
-        for user in subscribe:
-            # print u'\nreaders subscribing: {}'.format(user)
-            self.subscribe_max_user_per_role(user, 'read')
-            self.clear_subscribed_cache()
-            self.set_plone_permissions(user, 'reader')
-        unsubscribe = set(self._readers) - set(value)
-        for user in unsubscribe:
-            if user not in self._editors and \
-               user not in self._owners:
-                # print u'\nreaders unsubscribing: {}'.format(user)
-                self.unsubscribe_user(user)
-                self.clear_subscribed_cache()
-                self.unset_plone_permissions(user)
-        self._readers = value
-
-    readers = property(get_readers, set_readers)
-
-    _editors = FieldProperty(ICommunity['subscribed'])
-
-    def get_editors(self):
-        return self._intersect_subscribed_users_by_role()['editors']
-
-    def set_editors(self, value):
-        # print u'\neditors setter: {}'.format(value)
-        subscribe = set(value) - set(self._editors)
-        for user in subscribe:
-            # print u'\neditors subscribing: {}'.format(user)
-            self.subscribe_max_user_per_role(user, 'write')
-            self.clear_subscribed_cache()
-            self.set_plone_permissions(user, 'editor')
-        unsubscribe = set(self._editors) - set(value)
-        for user in unsubscribe:
-            if user not in self._readers and \
-               user not in self._owners:
-                # print u'\neditors unsubscribing: {}'.format(user)
-                self.unsubscribe_user(user)
-                self.clear_subscribed_cache()
-                self.unset_plone_permissions(user)
-        self._editors = value
-
-    subscribed = property(get_editors, set_editors)
-
-    _owners = FieldProperty(ICommunity['owners'])
-
-    def get_owners(self):
-        return self._intersect_subscribed_users_by_role()['owners']
-
-    def set_owners(self, value):
-        # print u'\nowners setter: {}'.format(value)
-        subscribe = set(value) - set(self._owners)
-        for user in subscribe:
-            # print u'\nowners subscribing: {}'.format(user)
-            self.subscribe_max_user_per_role(user, 'write')
-            self.subscribe_max_user_per_role(user, 'flag')
-            self.clear_subscribed_cache()
-            self.set_plone_permissions(user, 'owner')
-        unsubscribe = set(self._owners) - set(value)
-        for user in unsubscribe:
-            if user not in self._readers and \
-               user not in self._editors:
-                # print u'\nowners unsubscribing: {}'.format(user)
-                self.unsubscribe_user(user)
-                self.clear_subscribed_cache()
-                self.unset_plone_permissions(user)
-            else:
-                # User is still reader OR editor so take away the flag permission
-                self.remove_max_user_permission(user, 'flag')
-        self._owners = value
-
-    owners = property(get_owners, set_owners)
+    def adapted(self, request=None, name=None):
+        effective_name = self.community_type if name is None else name
+        request = request if request is not None else getRequest()
+        adapter = getMultiAdapter((self, request), ICommunityTyped, name=effective_name)
+        return adapter
 
 
 @indexer(ICommunity)
 def imageFilename(context):
-    """Create a catalogue indexer, registered as an adapter, which can
-    populate the ``context.filename`` value and index it.
+    """ Create a catalogue indexer, registered as an adapter, which can
+        populate the ``context.filename`` value and index it.
     """
     return context.image.filename
+
+
 grok.global_adapter(imageFilename, name='image_filename')
 
 
 @indexer(ICommunity)
 def subscribed_items(context):
-    """Create a catalogue indexer, registered as an adapter, which can
-    populate the ``context.subscribed`` value count it and index.
+    """ Create a catalogue indexer, registered as an adapter, which can
+        populate the ``context.subscribed`` value count it and index.
     """
     return len(list(set(context.readers + context.subscribed + context.owners)))
+
+
 grok.global_adapter(subscribed_items, name='subscribed_items')
 
 
 @indexer(ICommunity)
 def subscribed_users(context):
-    """Create a catalogue indexer, registered as an adapter, which can
-    populate the ``context.subscribed`` value count it and index.
+    """ Create a catalogue indexer, registered as an adapter, which can
+        populate the ``context.subscribed`` value count it and index.
     """
     return list(set(context.readers + context.subscribed + context.owners))
+
+
 grok.global_adapter(subscribed_users, name='subscribed_users')
 
 
 @indexer(ICommunity)
 def community_type(context):
-    """Create a catalogue indexer, registered as an adapter, which can
-    populate the ``community_type`` value count it and index.
+    """ Create a catalogue indexer, registered as an adapter, which can
+        populate the ``community_type`` value count it and index.
     """
     return context.community_type
+
+
 grok.global_adapter(community_type, name='community_type')
 
 
 @indexer(ICommunity)
 def community_hash(context):
-    """Create a catalogue indexer, registered as an adapter, which can
-    populate the ``community_hash`` value count it and index.
+    """ Create a catalogue indexer, registered as an adapter, which can
+        populate the ``community_hash`` value count it and index.
     """
     return sha1(context.absolute_url()).hexdigest()
+
+
 grok.global_adapter(community_hash, name='community_hash')
 
 
@@ -480,7 +716,7 @@ class View(grok.View):
         return getSite()
 
     def is_user_subscribed(self):
-        pm = getToolByName(self.context, "portal_membership")
+        pm = getToolByName(self.context, 'portal_membership')
         current_user = pm.getAuthenticatedMember().getUserName()
         return current_user in self.context.readers or \
             current_user in self.context.subscribed or \
@@ -494,7 +730,11 @@ class View(grok.View):
             return False
 
     def show_community_open_subscribed_readonly(self):
-        pm = getToolByName(self.context, "portal_membership")
+        """ DEPRECATED: This use case happens when given a closed community and then is
+            converted to an open one, the users with reader role stays with that
+            role, but are allowed to 'upgrade' it to writer.
+        """
+        pm = getToolByName(self.context, 'portal_membership')
         current_user = pm.getAuthenticatedMember().getUserName()
         if self.context.community_type == 'Open' and \
            current_user in self.context.readers and \
@@ -505,8 +745,144 @@ class View(grok.View):
             return False
 
 
+class UpdateUserAccessDateTime(grok.View):
+    grok.context(ICommunity)
+
+    @json_response
+    def render(self):
+        """ Quan accedeixes a la comunitat, actualitza la data d'accès de l'usuari a la comunitat
+            i per tant, el comptador de pendents queda a 0.
+        """
+        portal = api.portal.get()
+        current_user = api.user.get_current()
+        user_community = current_user.id + '_' + self.context.id
+        soup_access = get_soup('user_community_access', portal)
+        exist = [r for r in soup_access.query(Eq('user_community', user_community))]
+        if not exist:
+            record = Record()
+            record.attrs['user_community'] = user_community
+            record.attrs['data_access'] = DateTime()
+            soup_access.add(record)
+        else:
+            exist[0].attrs['data_access'] = DateTime()
+        soup_access.reindex()
+
+        return dict(message='Done', status_code=200)
+
+
 class EditACL(grok.View):
     grok.context(ICommunity)
+
+    def get_gwuuid(self):
+        return IGWUUID(self.context).get()
+
+    def get_acl(self):
+        acl = ICommunityACL(self.context)().attrs.get('acl', '')
+        # Search for users with missing or empty displayname
+        query_missing_displaynames = [Eq('username', user.get('id')) for user in acl['users'] if not user.get('displayName', '')]
+        if query_missing_displaynames:
+            # Generate a query to find properties from all users
+            # that lacks the displayname
+            portal = api.portal.get()
+            soup = get_soup('user_properties', portal)
+            query_missing_displaynames = Or(*query_missing_displaynames)
+            results = soup.query(query_missing_displaynames)
+
+            # Store all the found displaynames indexed by user
+            displaynames = {}
+            for result in results:
+                try:
+                    displaynames[result.attrs['username']] = result.attrs['fullname']
+                except:
+                    pass
+
+            # Update the acl list with recovered displaynames from soup
+            for user in acl['users']:
+                userid = user.get('id')
+                if userid in displaynames:
+                    user['displayName'] = displaynames[userid]
+
+        return json.dumps(acl)
+
+    def get_acl_roles(self):
+        roles = self.context.adapted().available_roles
+        return [{'id': role, 'header': role.upper()} for role in roles]
+
+    def get_acl_roles_json(self):
+        roles = self.context.adapted().available_roles
+        return json.dumps([{'id': role, 'header': role.upper()} for role in roles])
+
+
+class NotifyAtomicChange(grok.View):
+    """ This is a context endpoint for notify the context with external changes
+        to the context. This changes can be originated for example, by an user
+        changing the context programatically via the maxclient or via the
+        uLearnHub user interface.
+
+        The MAX server will notify the change to this endpoint using the form:
+
+            {
+              "action": "", // one of subscribe, unsubscribe, change_permissions
+              "username": "victor.fernandez",
+              "subscription": {
+                "hash": "93717fe74ad7cdee87312f98863de2c4cb9c98a2",
+                "url": "https://max.upc.edu",
+                "displayName": "Max UPC",
+                "permissions": [
+                  "read",
+                  "write",
+                  "unsubscribe"
+                ],
+
+                // More properties here [..]
+
+                "objectType": "subscription"
+              }
+            }
+
+        The available actions are: subscribe, unsubscribe, change_permissions
+        The username is the person who receives the action.
+        The subscription object holds the subscription information of the
+        username to the context
+    """
+    grok.context(ICommunity)
+    grok.name('notify')
+
+    @json_response
+    def render(self):
+        if self.request.method == 'POST':
+            data = json.loads(self.request['BODY'])
+            adapter = self.context.adapted()
+
+            if 'read' in data['subscription']['permissions']:
+                permission = u'reader'
+            if 'write' in data['subscription']['permissions']:
+                permission = u'writer'
+            # For now, we took for granted that those users that has the
+            # permissions 'flag', 'unsubscribe', 'invite' i 'kick' are owners
+            if 'flag' in data['subscription']['permissions'] and \
+               'unsubscribe' in data['subscription']['permissions'] and \
+               'invite' in data['subscription']['permissions'] and \
+               'kick' in data['subscription']['permissions']:
+                permission = u'owner'
+
+            if data['action'] == 'subscribe':
+                adapter.update_acl_atomic(data['username'], permission)
+            elif data['action'] == 'unsubscribe':
+                adapter.remove_acl_atomic(data['username'])
+            elif data['action'] == 'change_permissions':
+                adapter.update_acl_atomic(data['username'], permission)
+
+            acl = adapter.get_acl()
+
+            # Finally, we update the plone permissions
+            adapter.set_plone_permissions(acl)
+
+            return dict(message='Done', status_code=200)
+
+        if self.request.method != 'POST':
+            return dict(error='Bad request. POST request expected.',
+                        status_code=400)
 
 
 class UploadFile(grok.View):
@@ -524,19 +900,29 @@ class UploadFile(grok.View):
     def portal(self):
         return getSite()
 
-    def is_user_subscribed(self):
-        pm = getToolByName(self.context, "portal_membership")
-        current_user = pm.getAuthenticatedMember().getUserName()
-        return current_user in self.context.readers or \
-            current_user in self.context.subscribed or \
-            current_user in self.context.owners
-
     def get_images_folder(self):
+        """ Gets the media folder. It looks for it on the expected place with a
+            fallback, just in case
+        """
+        if self.context.get('documents', False):
+            if self.context['documents'].get('media', False):
+                if IPhotosFolder.providedBy(self.context['documents']['media']):
+                    return self.context['documents']['media']
+        # Fallback
         for obj in self.context.objectIds():
-            if IPhotosFolder.providedBy(self.context[obj]):
-                return self.context[obj]
+            if IDocumentFolder.providedBy(self.context[obj]):
+                for doc in self.context[obj].objectIds():
+                    if IPhotosFolder.providedBy(self.context[obj][doc]):
+                        return self.context[obj][doc]
 
     def get_documents_folder(self):
+        """ Gets the documents folder. It looks for it on the expected place
+            with a fallback, just in case
+        """
+        if self.context.get('documents', False):
+            if IDocumentFolder.providedBy(self.context['documents']):
+                return self.context['documents']
+        # Fallback
         for obj in self.context.objectIds():
             if IDocumentFolder.providedBy(self.context[obj]):
                 return self.context[obj]
@@ -544,9 +930,9 @@ class UploadFile(grok.View):
     def render(self):
         if 'multipart/form-data' not in self.request['CONTENT_TYPE'] and \
            len(self.request.form.keys()) != 1:
-            self.request.response.setHeader("Content-type", "application/json")
+            self.request.response.setHeader('Content-type', 'application/json')
             self.request.response.setStatus(400)
-            return json.dumps({"Error": "Not supported upload method"})
+            return json.dumps({'Error': 'Not supported upload method'})
 
         for key in self.request.form.keys():
             if isinstance(self.request.form[key], FileUpload):
@@ -563,82 +949,86 @@ class UploadFile(grok.View):
         else:
             container = self.get_images_folder()
 
-        content_type = mimetypes.guess_type(filename)[0] or ""
+        content_type = mimetypes.guess_type(filename)[0] or ''
         factory = IDXFileFactory(container)
 
         try:
             thefile = factory(filename, content_type, input_file, activity_text, self.request)
             self.request.response.setStatus(201)
-            return json.dumps({"uploadURL": thefile.absolute_url(), "thumbURL": "{}/@@images/image/mini".format(thefile.absolute_url())})
+            return json.dumps({'uploadURL': thefile.absolute_url(), 'thumbURL': '{}/@@images/image/mini'.format(thefile.absolute_url())})
         except Unauthorized:
-            self.request.response.setHeader("Content-type", "application/json")
+            self.request.response.setHeader('Content-type', 'application/json')
             self.request.response.setStatus(401)
-            return json.dumps({"Error": "Unauthorized"})
+            return json.dumps({'Error': 'Unauthorized'})
 
 
 class ToggleFavorite(grok.View):
     grok.context(IDexterityContent)
     grok.name('toggle-favorite')
 
+    @json_response
     def render(self):
-        pm = getToolByName(self.context, "portal_membership")
-        current_user = pm.getAuthenticatedMember().getUserName()
-        if current_user in IFavorite(self.context).get():
-            IFavorite(self.context).remove(current_user)
-        else:
-            IFavorite(self.context).add(current_user)
-        return "Toggled"
+        if self.request.method == 'POST':
+            current_user = api.user.get_current()
+            if current_user.id in IFavorite(self.context).get():
+                IFavorite(self.context).remove(current_user)
+                return dict(message='UnFavorited', status_code=200)
+            else:
+                IFavorite(self.context).add(current_user)
+                return dict(message='Favorited', status_code=200)
+
+        if self.request.method != 'POST':
+            return dict(error='Bad request. POST request expected.',
+                        status_code=400)
 
 
-class ToggleSubscribe(grok.View):
-    """ Toggle subscription in an Open or Closed community. """
-
+class Subscribe(grok.View):
+    """" Subscribe a requester user to an open community """
     grok.context(ICommunity)
-    grok.name('toggle-subscribe')
+    grok.name('subscribe')
 
+    @json_response
     def render(self):
         community = self.context
-        pm = getToolByName(self.context, "portal_membership")
-        current_user = pm.getAuthenticatedMember().getUserName()
+        current_user = api.user.get_current()
 
-        if community.community_type == u'Open' or community.community_type == u'Closed':
-            if self.user_is_subscribed(current_user, community):
-                self.remove_user_from_subscriptions(current_user, community)
-                if current_user in IFavorite(community).get():
-                    IFavorite(community).remove(current_user)
-            else:
-                community.add_subscription(unicode(current_user), 'subscribed')
+        if self.request.method == 'POST':
+            adapter = community.adapted()
+            adapter.subscribe_user(current_user.id)
+            return dict(message='Successfully unsubscribed')
+        else:
+            return dict(message='Bad request. POST request expected.',
+                        status_code=400)
 
-            community.reindexObject()
-            notify(ObjectModifiedEvent(community))
-            return True
 
-        elif community.community_type == u'Organizative':
-            # Bad, bad guy... You shouldn't been trying this...
-            return False
+class UnSubscribe(grok.View):
+    """ Unsubscribe from an Open or Closed community. """
 
-    def user_is_subscribed(self, user, community):
-        return user in community.readers + community.subscribed + community.owners
+    grok.context(ICommunity)
+    grok.name('unsubscribe')
 
-    def remove_user_from_subscriptions(self, user, community):
-        if user in community.readers:
-            community.readers.remove(user)
-            community.remove_subscription(unicode(user), 'readers')
-        if user in community.subscribed:
-            community.remove_subscription(unicode(user), 'subscribed')
-        if user in community.owners:
-            community.remove_subscription(unicode(user), 'owners')
+    @json_response
+    def render(self):
+        current_user = api.user.get_current()
+
+        if self.request.method == 'POST':
+            adapter = self.context.adapted()
+            adapter.unsubscribe_user(current_user.id)
+            return dict(message='Successfully unsubscribed')
+        else:
+            return dict(error='Bad request. POST request expected.',
+                        status_code=400)
 
 
 class UpgradeSubscribe(grok.View):
-    """ Upgrade subscription from reader to editor in an open community. """
+    """ DEPRECATED: ASK JAVIER. Upgrade subscription from reader to editor in an open community. """
 
     grok.context(ICommunity)
     grok.name('upgrade-subscribe')
 
     def render(self):
         community = self.context
-        pm = getToolByName(self.context, "portal_membership")
+        pm = getToolByName(self.context, 'portal_membership')
         current_user = pm.getAuthenticatedMember().getUserName()
 
         if community.community_type == u'Open':
@@ -668,22 +1058,20 @@ class communityAdder(form.SchemaForm):
         super(communityAdder, self).update()
         self.actions['save'].addClass('context')
 
-    @button.buttonAndHandler(_(u'Crea la comunitat'), name="save")
+    def updateWidgets(self):
+        super(communityAdder, self).updateWidgets()
+        # Override the interface forced 'hidden' to 'input' for add form only
+        self.widgets['community_type'].mode = 'input'
+
+    @button.buttonAndHandler(_(u'Crea la comunitat'), name='save')
     def handleApply(self, action):
         data, errors = self.extractData()
         if errors:
             self.status = self.formErrorsMessage
             return
 
-        # Handle order here. For now, just print it to the console. A more
-        # realistic action would be to send the order to another system, send
-        # an email, or similar
-
         nom = data['title']
         description = data['description']
-        readers = data['readers']
-        subscribed = data['subscribed']
-        owners = data['owners']
         image = data['image']
         community_type = data['community_type']
         activity_view = data['activity_view']
@@ -691,8 +1079,8 @@ class communityAdder(form.SchemaForm):
         notify_activity_via_push = data['notify_activity_via_push']
         notify_activity_via_push_comments_too = data['notify_activity_via_push_comments_too']
 
-        portal = getSite()
-        pc = getToolByName(portal, 'portal_catalog')
+        portal = api.portal.get()
+        pc = api.portal.get_tool('portal_catalog')
 
         nom = safe_unicode(nom)
         chooser = INameChooser(self.context)
@@ -701,30 +1089,23 @@ class communityAdder(form.SchemaForm):
         result = pc.unrestrictedSearchResults(portal_type='ulearn.community', id=id_normalized)
 
         if result:
-            msgid = _(u"comunitat_existeix", default=u'La comunitat ${comunitat} ja existeix, si us plau, escolliu un altre nom.', mapping={u"comunitat": nom})
+            msgid = _(u'comunitat_existeix', default=u'La comunitat ${comunitat} ja existeix, si us plau, escolliu un altre nom.', mapping={u'comunitat': nom})
 
             translated = self.context.translate(msgid)
 
             messages = IStatusMessage(self.request)
-            messages.addStatusMessage(translated, type="info")
+            messages.addStatusMessage(translated, type='info')
 
             self.request.response.redirect('{}/++add++ulearn.community'.format(portal.absolute_url()))
         else:
-            # Just to be safe in some corner cases, we set the current user as
-            # owner of the community in this point
-            owners = list(set(owners + [unicode(api.user.get_current().id.encode('utf-8'))]))
-
             new_comunitat_id = self.context.invokeFactory(
                 'ulearn.community',
                 id_normalized,
                 title=nom,
                 description=description,
-                readers=readers,
-                subscribed=subscribed,
-                owners=owners,
                 image=image,
                 community_type=community_type,
-                activity_view = activity_view,
+                activity_view=activity_view,
                 twitter_hashtag=twitter_hashtag,
                 notify_activity_via_push=notify_activity_via_push,
                 notify_activity_via_push_comments_too=notify_activity_via_push_comments_too,
@@ -732,12 +1113,12 @@ class communityAdder(form.SchemaForm):
 
             new_comunitat = self.context[new_comunitat_id]
             # Redirect back to the front page with a status message
-            msgid = _(u"comunitat_creada", default=u'La comunitat ${comunitat} ha estat creada.', mapping={u"comunitat": nom})
+            msgid = _(u'comunitat_creada', default=u'La comunitat ${comunitat} ha estat creada.', mapping={u'comunitat': nom})
 
             translated = self.context.translate(msgid)
 
             messages = IStatusMessage(self.request)
-            messages.addStatusMessage(translated, type="info")
+            messages.addStatusMessage(translated, type='info')
 
             self.request.response.redirect(new_comunitat.absolute_url())
 
@@ -760,32 +1141,32 @@ class communityEdit(form.SchemaForm):
     def updateWidgets(self):
         super(communityEdit, self).updateWidgets()
 
-        self.widgets["title"].value = self.context.title
-        self.widgets["description"].value = self.context.description
-        self.widgets["community_type"].value = [self.ctype_map[self.context.community_type]]
-        self.widgets["activity_view"].value = [self.cview_map[self.context.activity_view]]
-        self.widgets["twitter_hashtag"].value = self.context.twitter_hashtag
+        self.widgets['title'].value = self.context.title
+        self.widgets['description'].value = self.context.description
+        self.widgets['community_type'].value = [self.ctype_map[self.context.community_type]]
+        self.widgets['activity_view'].value = [self.cview_map[self.context.activity_view]]
+        self.widgets['twitter_hashtag'].value = self.context.twitter_hashtag
 
         if self.context.notify_activity_via_push:
-            self.widgets["notify_activity_via_push"].value = ['selected']
+            self.widgets['notify_activity_via_push'].value = ['selected']
             # Bool widgets should call update() once modified
-            self.widgets["notify_activity_via_push"].update()
+            self.widgets['notify_activity_via_push'].update()
 
         if self.context.notify_activity_via_push_comments_too:
-            self.widgets["notify_activity_via_push_comments_too"].value = ['selected']
+            self.widgets['notify_activity_via_push_comments_too'].value = ['selected']
             # Bool widgets should call update() once modified
-            self.widgets["notify_activity_via_push_comments_too"].update()
+            self.widgets['notify_activity_via_push_comments_too'].update()
 
-        converter = SelectWidgetConverter(self.fields['readers'].field, self.widgets["readers"])
-        self.widgets["readers"].value = converter.toWidgetValue(self.context.readers)
+        converter = SelectWidgetConverter(self.fields['readers'].field, self.widgets['readers'])
+        self.widgets['readers'].value = converter.toWidgetValue(self.context.readers)
 
-        converter = SelectWidgetConverter(self.fields['subscribed'].field, self.widgets["subscribed"])
-        self.widgets["subscribed"].value = converter.toWidgetValue(self.context.subscribed)
+        converter = SelectWidgetConverter(self.fields['subscribed'].field, self.widgets['subscribed'])
+        self.widgets['subscribed'].value = converter.toWidgetValue(self.context.subscribed)
 
-        converter = SelectWidgetConverter(self.fields['owners'].field, self.widgets["owners"])
-        self.widgets["owners"].value = converter.toWidgetValue(self.context.owners)
+        converter = SelectWidgetConverter(self.fields['owners'].field, self.widgets['owners'])
+        self.widgets['owners'].value = converter.toWidgetValue(self.context.owners)
 
-    @button.buttonAndHandler(_(u'Edita la comunitat'), name="save")
+    @button.buttonAndHandler(_(u'Edita la comunitat'), name='save')
     def handleApply(self, action):
         data, errors = self.extractData()
         if errors:
@@ -809,12 +1190,12 @@ class communityEdit(form.SchemaForm):
         result = pc.unrestrictedSearchResults(portal_type='ulearn.community', Title=nom)
 
         if result and self.context.title != nom:
-            msgid = _(u"comunitat_existeix", default=u'La comunitat ${comunitat} ja existeix, si us plau, escolliu un altre nom.', mapping={u"comunitat": nom})
+            msgid = _(u'comunitat_existeix', default=u'La comunitat ${comunitat} ja existeix, si us plau, escolliu un altre nom.', mapping={u'comunitat': nom})
 
             translated = self.context.translate(msgid)
 
             messages = IStatusMessage(self.request)
-            messages.addStatusMessage(translated, type="info")
+            messages.addStatusMessage(translated, type='info')
 
             self.request.response.redirect('{}/edit'.format(self.context.absolute_url()))
 
@@ -838,213 +1219,136 @@ class communityEdit(form.SchemaForm):
 
             notify(ObjectModifiedEvent(self.context))
 
-            msgid = _(u"comunitat_modificada", default=u'La comunitat ${comunitat} ha estat modificada.', mapping={u"comunitat": nom})
+            msgid = _(u'comunitat_modificada', default=u'La comunitat ${comunitat} ha estat modificada.', mapping={u'comunitat': nom})
 
             translated = self.context.translate(msgid)
 
             messages = IStatusMessage(self.request)
-            messages.addStatusMessage(translated, type="info")
+            messages.addStatusMessage(translated, type='info')
 
             self.request.response.redirect(self.context.absolute_url())
 
 
+class ICommunityInitializeAdapter(Interface):
+    """ The marker interface for initialize community adapter used for a especific
+        folders and templates. The idea is to have a default (core) action and
+        then other that override the default one using IBrowserLayer
+    """
+
+
+@grok.implementer(ICommunityInitializeAdapter)
+@grok.adapter(ICommunity, Interface)
+class CommunityInitializeAdapter(object):
+    """ Default adapter for initialize community custom actions """
+    def __init__(self, context, request):
+        self.context = context
+        self.request = request
+
+    def __call__(self, community):
+        """ On creation we only initialize the community based on its type and all
+            the Plone-based processes. On the MAX side, for convenience we create
+            the context directly into the MAX server with only the creator as
+            subscriber (and owner).
+        """
+        initial_acl = dict(users=[dict(id=unicode(community.Creator().encode('utf-8')), role='owner')])
+        adapter = community.adapted()
+
+        adapter.create_max_context()
+        adapter.set_initial_max_metadata()
+        adapter.set_initial_subscription(initial_acl)
+        adapter.set_plone_permissions(initial_acl)
+
+        # Disable Inheritance
+        community.__ac_local_roles_block__ = True
+
+        # Auto-favorite the creator user to this community
+        IFavorite(community).add(community.Creator())
+
+        # Create default content containers
+        documents = createContentInContainer(community, 'Folder', title='documents', checkConstraints=False)
+        media = createContentInContainer(documents, 'Folder', title='media', checkConstraints=False)
+        events = createContentInContainer(community, 'Folder', title='events', checkConstraints=False)
+
+        # Set the correct title, translated
+        documents.setTitle(community.translate(_(u'Documents')))
+        media.setTitle(community.translate(_(u'Media')))
+        events.setTitle(community.translate(_(u'Esdeveniments')))
+
+        # Create the default discussion container and set title
+        discussion = createContentInContainer(community, 'Folder', title='discussion', checkConstraints=False)
+        discussion.setTitle(community.translate(_(u'Discussion')))
+
+        # Set default view layout
+        documents.setLayout('filtered_contents_search_view')
+        media.setLayout('folder_summary_view')
+        events.setLayout('folder_summary_view')
+        discussion.setLayout('discussion_folder_view')
+
+        # Mark them with a marker interface
+        alsoProvides(documents, IDocumentFolder)
+        alsoProvides(media, IPhotosFolder)
+        alsoProvides(events, IEventsFolder)
+        alsoProvides(discussion, IDiscussionFolder)
+
+        # Set on them the allowable content types
+        behavior = ISelectableConstrainTypes(documents)
+        behavior.setConstrainTypesMode(1)
+        behavior.setLocallyAllowedTypes(('Document', 'File', 'Folder', 'Link', 'Image', 'privateFolder'))
+        behavior.setImmediatelyAddableTypes(('Document', 'File', 'Folder', 'Link', 'Image', 'privateFolder'))
+        behavior = ISelectableConstrainTypes(media)
+        behavior.setConstrainTypesMode(1)
+        behavior.setLocallyAllowedTypes(('Image', 'Folder'))
+        behavior.setImmediatelyAddableTypes(('Image', 'Folder'))
+        behavior = ISelectableConstrainTypes(events)
+        behavior.setConstrainTypesMode(1)
+        behavior.setLocallyAllowedTypes(('Event', 'Folder'))
+        behavior.setImmediatelyAddableTypes(('Event', 'Folder'))
+        behavior = ISelectableConstrainTypes(discussion)
+        behavior.setConstrainTypesMode(1)
+        behavior.setLocallyAllowedTypes(('ulearn.discussion', 'Folder'))
+        behavior.setImmediatelyAddableTypes(('ulearn.discussion', 'Folder'))
+
+        # Blacklist the right column portlets on documents
+        right_manager = queryUtility(IPortletManager, name=u'plone.rightcolumn')
+        blacklist = getMultiAdapter((documents, right_manager), ILocalPortletAssignmentManager)
+        blacklist.setBlacklistStatus(CONTEXT_CATEGORY, True)
+
+        # Blacklist the right column portlets on media
+        right_manager = queryUtility(IPortletManager, name=u'plone.rightcolumn')
+        blacklist = getMultiAdapter((media, right_manager), ILocalPortletAssignmentManager)
+        blacklist.setBlacklistStatus(CONTEXT_CATEGORY, True)
+
+        # Blacklist the right column portlets on events
+        right_manager = queryUtility(IPortletManager, name=u'plone.rightcolumn')
+        blacklist = getMultiAdapter((events, right_manager), ILocalPortletAssignmentManager)
+        blacklist.setBlacklistStatus(CONTEXT_CATEGORY, True)
+
+        # Blacklist the right column portlets on discussion
+        right_manager = queryUtility(IPortletManager, name=u'plone.rightcolumn')
+        blacklist = getMultiAdapter((discussion, right_manager), ILocalPortletAssignmentManager)
+        blacklist.setBlacklistStatus(CONTEXT_CATEGORY, True)
+
+        # Reindex all created objects
+        community.reindexObject()
+        documents.reindexObject()
+        media.reindexObject()
+        events.reindexObject()
+        discussion.reindexObject()
+
+        # Mark community as initialitzated, to avoid previous
+        # folder creations to trigger modify event
+        alsoProvides(community, IInitializedCommunity)
+
+
 @grok.subscribe(ICommunity, IObjectAddedEvent)
 def initialize_community(community, event):
-    registry = queryUtility(IRegistry)
-    maxui_settings = registry.forInterface(IMAXUISettings)
-
-    maxclient = MaxClient(maxui_settings.max_server, maxui_settings.oauth_server)
-    maxclient.setActor(maxui_settings.max_restricted_username)
-    maxclient.setToken(maxui_settings.max_restricted_token)
-
-    # Fallback for some rare cases when we arrive at this point and the MAX
-    # context is not created. This happens when the community has been created
-    # using the default Dexterity machinery.
-    try:
-        maxclient.contexts[community.absolute_url()].get()
-    except:
-        create_max_context(community)
-
-    # Add creator to owners field - Not making use of .append() to force the setter
-    community.owners = list(set(community.owners + [unicode(community.Creator().encode('utf-8'))]))
-
-    # # Determine the value for notifications
-    # if community.notify_activity_via_push and community.notify_activity_via_push_comments_too:
-    #     notifications = 'comments'
-    # elif community.notify_activity_via_push and not community.notify_activity_via_push_comments_too:
-    #     notifications = 'posts'
-    # elif not community.notify_activity_via_push and not community.notify_activity_via_push_comments_too:
-    #     notifications = False
-
-    # # Determine the kind of security the community should have provided the type
-    # # of community
-    # if community.community_type == u'Open':
-    #     community_permissions = dict(read='subscribed', write='subscribed', subscribe='public')
-    # elif community.community_type == u'Closed':
-    #     community_permissions = dict(read='subscribed', write='restricted', subscribe='restricted', unsubscribe='public')
-    # elif community.community_type == u'Organizative':
-    #     community_permissions = dict(read='subscribed', write='restricted', subscribe='restricted')
-
-    # # Add context for the community on MAX server
-    # maxclient.contexts.post(
-    #     url=community.absolute_url(),
-    #     displayName=community.title,
-    #     permissions=community_permissions,
-    #     notifications=community.notify_activity_via_push,
-    # )
-
-    # Update twitter hashtag
-    maxclient.contexts[community.absolute_url()].put(
-        twitterHashtag=community.twitter_hashtag
-    )
-
-    # Update community tag
-    maxclient.contexts[community.absolute_url()].tags.put(data=['[COMMUNITY]'])
-
-    # Subscribe the invited users and grant them permission
-    # for reader in community.readers:
-    #     maxclient.people[reader].subscriptions.post(object_url=community.absolute_url())
-    #     maxclient.contexts[community.absolute_url()].permissions[reader]['read'].put()
-    # for writter in community.subscribed:
-    #     maxclient.people[writter].subscriptions.post(object_url=community.absolute_url())
-    #     maxclient.contexts[community.absolute_url()].permissions[writter]['write'].put()
-    # for owner in community.owners:
-    #     maxclient.people[owner].subscriptions.post(object_url=community.absolute_url())
-    #     maxclient.contexts[community.absolute_url()].permissions[owner]['write'].put()
-
-    # Auto-favorite the creator user to this community
-    IFavorite(community).add(community.Creator())
-
-    # Change workflow to intranet
-    # portal_workflow = getToolByName(community, 'portal_workflow')
-    # portal_workflow.doActionFor(community, 'publishtointranet')
-
-    # Disable Inheritance
-    community.__ac_local_roles_block__ = True
-
-    # Set uLearn permissions
-    for reader in community.readers:
-        community.manage_setLocalRoles(reader, ['Reader'])
-
-    for writter in community.subscribed:
-        community.manage_setLocalRoles(writter, ['Reader', 'Contributor', 'Editor'])
-
-    for owner in community.owners:
-        community.manage_setLocalRoles(owner, ['Reader', 'Contributor', 'Editor', 'Owner'])
-
-    # If the community is of the type "Open", then allow any auth user to see it
-    if community.community_type == u'Open':
-        community.manage_setLocalRoles('AuthenticatedUsers', ['Reader'])
-
-    # Create default content containers
-    documents = createContentInContainer(community, 'Folder', title='documents', checkConstraints=False)
-    # links = createContentInContainer(community, 'Folder', title='links', checkConstraints=False)
-    # photos = createContentInContainer(community, 'Folder', title='media', checkConstraints=False)
-
-    # Set the correct title, translated
-    documents.setTitle(community.translate(_(u"Documents")))
-    # photos.setTitle(community.translate(_(u"Media")))
-    # links.setTitle(community.translate(_(u"Enllaços")))
-
-    # Create the default events container and set title
-    events = createContentInContainer(community, 'Folder', title='events', checkConstraints=False)
-    events.setTitle(community.translate(_(u"Esdeveniments")))
-
-    # Create the default discussion container and set title
-    discussion = createContentInContainer(community, 'Folder', title='discussion', checkConstraints=False)
-    discussion.setTitle(community.translate(_(u"Discussion")))
-
-    # Set default view layout
-    documents.setLayout('filtered_contents_search_view')
-    # links.setLayout('folder_summary_view')
-    # photos.setLayout('folder_summary_view')
-    events.setLayout('folder_summary_view')
-    discussion.setLayout('discussion_folder_view')
-
-    # Mark them with a marker interface
-    alsoProvides(documents, IDocumentFolder)
-    # alsoProvides(links, ILinksFolder)
-    # alsoProvides(photos, IPhotosFolder)
-    alsoProvides(events, IEventsFolder)
-    alsoProvides(discussion, IDiscussionFolder)
-
-    # Set on them the allowable content types
-    behavior = ISelectableConstrainTypes(documents)
-    behavior.setConstrainTypesMode(1)
-    behavior.setLocallyAllowedTypes(('Document', 'File', 'Folder','Link','Image'))
-    behavior.setImmediatelyAddableTypes(('Document', 'File', 'Folder','Link','Image'))
-    # behavior = ISelectableConstrainTypes(links)
-    # behavior.setConstrainTypesMode(1)
-    # behavior.setLocallyAllowedTypes(('Link', 'Folder'))
-    # behavior.setImmediatelyAddableTypes(('Link', 'Folder'))
-    # behavior = ISelectableConstrainTypes(photos)
-    # behavior.setConstrainTypesMode(1)
-    # behavior.setLocallyAllowedTypes(('Image', 'Folder'))
-    # behavior.setImmediatelyAddableTypes(('Image', 'Folder'))
-    behavior = ISelectableConstrainTypes(events)
-    behavior.setConstrainTypesMode(1)
-    behavior.setLocallyAllowedTypes(('Event', 'Folder'))
-    behavior.setImmediatelyAddableTypes(('Event', 'Folder'))
-    behavior = ISelectableConstrainTypes(discussion)
-    behavior.setConstrainTypesMode(1)
-    behavior.setLocallyAllowedTypes(('ulearn.discussion', 'Folder'))
-    behavior.setImmediatelyAddableTypes(('ulearn.discussion', 'Folder'))
-
-    # Change workflow to intranet ** no longer needed
-    # portal_workflow.doActionFor(documents, 'publishtointranet')
-    # portal_workflow.doActionFor(links, 'publishtointranet')
-    # portal_workflow.doActionFor(photos, 'publishtointranet')
-
-    # Add portlets programatically
-    # target_manager = queryUtility(IPortletManager, name='plone.leftcolumn', context=community)
-    # target_manager_assignments = getMultiAdapter((community, target_manager), IPortletAssignmentMapping)
-    # from ulearn.theme.portlets.profile import Assignment as profileAssignment
-    # from ulearn.theme.portlets.thinnkers import Assignment as thinnkersAssignment
-    # from ulearn.theme.portlets.communities import Assignment as communitiesAssignment
-    # from ulearn.theme.portlets.stats import Assignment as statsAssignment
-    # from plone.app.portlets.portlets.navigation import Assignment as navigationAssignment
-    # target_manager_assignments['profile'] = profileAssignment()
-    # target_manager_assignments['navigation'] = navigationAssignment(root=u'/{}'.format(community.id))
-    # target_manager_assignments['communities'] = communitiesAssignment()
-    # target_manager_assignments['thinnkers'] = thinnkersAssignment()
-    # target_manager_assignments['stats'] = statsAssignment()
-
-    # Blacklist the right column portlets on documents
-    right_manager = queryUtility(IPortletManager, name=u"plone.rightcolumn")
-    blacklist = getMultiAdapter((documents, right_manager), ILocalPortletAssignmentManager)
-    blacklist.setBlacklistStatus(CONTEXT_CATEGORY, True)
-
-    # # Blacklist the right column portlets on photos
-    # right_manager = queryUtility(IPortletManager, name=u"plone.rightcolumn")
-    # blacklist = getMultiAdapter((photos, right_manager), ILocalPortletAssignmentManager)
-    # blacklist.setBlacklistStatus(CONTEXT_CATEGORY, True)
-
-    # # Blacklist the right column portlets on links
-    # right_manager = queryUtility(IPortletManager, name=u"plone.rightcolumn")
-    # blacklist = getMultiAdapter((links, right_manager), ILocalPortletAssignmentManager)
-    # blacklist.setBlacklistStatus(CONTEXT_CATEGORY, True)
-
-    # Blacklist the right column portlets on events
-    right_manager = queryUtility(IPortletManager, name=u"plone.rightcolumn")
-    blacklist = getMultiAdapter((events, right_manager), ILocalPortletAssignmentManager)
-    blacklist.setBlacklistStatus(CONTEXT_CATEGORY, True)
-
-    # Blacklist the right column portlets on discussion
-    right_manager = queryUtility(IPortletManager, name=u"plone.rightcolumn")
-    blacklist = getMultiAdapter((discussion, right_manager), ILocalPortletAssignmentManager)
-    blacklist.setBlacklistStatus(CONTEXT_CATEGORY, True)
-
-    # Reindex all created objects
-    community.reindexObject()
-    documents.reindexObject()
-    # links.reindexObject()
-    # photos.reindexObject()
-    events.reindexObject()
-    discussion.reindexObject()
-
-    # Mark community as initialitzated, to avoid  previous
-    # folder creations to trigger modify event
-    alsoProvides(community, IInitializedCommunity)
+    """ On creation we only initialize the community based on its type and all
+        the Plone-based processes. On the MAX side, for convenience we create
+        the context directly into the MAX server with only the creator as
+        subscriber (and owner).
+    """
+    adapter = getMultiAdapter((event.object, event.object.REQUEST), ICommunityInitializeAdapter)
+    adapter(community)
 
 
 @grok.subscribe(ICommunity, IObjectModifiedEvent)
@@ -1053,178 +1357,53 @@ def edit_community(community, event):
     if not IInitializedCommunity.providedBy(community):
         return
 
-    registry = queryUtility(IRegistry)
-    maxui_settings = registry.forInterface(IMAXUISettings)
-
-    maxclient = MaxClient(maxui_settings.max_server, maxui_settings.oauth_server)
-    maxclient.setActor(maxui_settings.max_restricted_username)
-    maxclient.setToken(maxui_settings.max_restricted_token)
-
-    # Get current MAX context information
-    context_current_info = maxclient.contexts[community.absolute_url()].get()
-
-    # Determine the kind of security the community should have provided the type
-    # of community
-    if community.community_type == u'Open':
-        community_permissions = dict(read='subscribed', write='subscribed', subscribe='public', unsubscribe='public')
-    elif community.community_type == u'Closed':
-        community_permissions = dict(read='subscribed', write='restricted', subscribe='restricted', unsubscribe='public')
-    elif community.community_type == u'Organizative':
-        community_permissions = dict(read='subscribed', write='restricted', subscribe='restricted', unsubscribe='restricted')
-
-    # collect updated properties
-    properties_to_update = {}
-    if context_current_info:
-        if context_current_info.get('twitterHashtag', None) != community.twitter_hashtag:
-            properties_to_update['twitterHashtag'] = community.twitter_hashtag
-
-        update_permissions = False
-        for permission, value in community_permissions.items():
-            if context_current_info['permissions'][permission] != value:
-                update_permissions = True
-
-        if update_permissions:
-            properties_to_update['permissions'] = community_permissions
-
-        if context_current_info.get('displayName', '') != community.title:
-            properties_to_update['displayName'] = community.title
-
-        # Determine the value for notifications
-        if community.notify_activity_via_push and community.notify_activity_via_push_comments_too:
-            notifications = 'comments'
-        elif community.notify_activity_via_push and not community.notify_activity_via_push_comments_too:
-            notifications = 'posts'
-        elif not community.notify_activity_via_push and not community.notify_activity_via_push_comments_too:
-            notifications = False
-
-        if context_current_info.get('notifications', '') != notifications:
-            properties_to_update['notifications'] = notifications
-
-    # update context properties that have changed
-    if properties_to_update:
-        maxclient.contexts[community.absolute_url()].put(**properties_to_update)
-
-    # Update/Subscribe the invited users and grant them permission on MAX
-    # Guard in case that the user does not exist or the community does not exist
-    # for reader in community.readers:
-    #     try:
-    #         maxclient.people[reader].subscriptions.post(object_url=community.absolute_url())
-    #         maxclient.contexts[community.absolute_url()].permissions[reader]['read'].put()
-    #     except:
-    #         logger.error('Impossible to subscribe user {} as reader in the {} community.'.format(reader, community.absolute_url()))
-
-    # for writter in community.subscribed:
-    #     try:
-    #         maxclient.people[writter].subscriptions.post(object_url=community.absolute_url())
-    #         maxclient.contexts[community.absolute_url()].permissions[writter]['write'].put()
-    #     except:
-    #         logger.error('Impossible to subscribe user {} as editor in the {} community.'.format(writter, community.absolute_url()))
-
-    # for owner in community.owners:
-    #     try:
-    #         maxclient.people[owner].subscriptions.post(object_url=community.absolute_url())
-    #         maxclient.contexts[community.absolute_url()].permissions[owner]['write'].put()
-    #     except:
-    #         logger.error('Impossible to subscribe user {} as owner in the {} community.'.format(owner, community.absolute_url()))
-
-    # If the community is of the type "Open", then allow any auth user to see it
-    if community.community_type == u'Open':
-        community.manage_setLocalRoles('AuthenticatedUsers', ['Reader'])
-    elif community.community_type == u'Closed':
-        community.manage_delLocalRoles(['AuthenticatedUsers'])
-
-    # Update subscribed user permissions on uLearn
-    # for reader in community.readers:
-    #     community.manage_setLocalRoles(reader, ['Reader'])
-
-    # for writter in community.subscribed:
-    #     community.manage_setLocalRoles(writter, ['Reader', 'Contributor', 'Editor'])
-
-    # for owner in community.owners:
-    #     community.manage_setLocalRoles(owner, ['Reader', 'Contributor', 'Editor', 'Owner'])
-
-    # Unsubscribe no longer members from community
-    # all_subscribers = list(set(community.readers + community.subscribed + community.owners))
-    # Normalize to lower case all uLearn users
-    # all_subscribers = [b.lower() for b in all_subscribers]
-    # subscribed = [user.get('username', '') for user in maxclient.contexts[community.absolute_url()].subscriptions.get(qs={'limit': 0})]
-    # unsubscribe = [a for a in subscribed if a not in all_subscribers]
-
-    # for user in unsubscribe:
-    #     maxclient.people[user].subscriptions[community.absolute_url()].delete()
-
-    # Update unsubscribed user permissions
-    # community.manage_delLocalRoles(unsubscribe)
-
-    # Reindex all operations in object
-    community.reindexObject()
-    community.reindexObjectSecurity()
+    adapter = community.adapted()
+    adapter.update_max_context()
 
 
 @grok.subscribe(ICommunity, IObjectRemovedEvent)
 def delete_community(community, event):
     try:
-        registry = queryUtility(IRegistry)
-        maxui_settings = registry.forInterface(IMAXUISettings)
-
-        maxclient = MaxClient(maxui_settings.max_server, maxui_settings.oauth_server)
-        maxclient.setActor(maxui_settings.max_restricted_username)
-        maxclient.setToken(maxui_settings.max_restricted_token)
-
-        maxclient.contexts[event.object.absolute_url()].delete()
+        adapter = community.adapted()
+        adapter.delete_community_all()
     except:
-        pass
+        logger.error('There was an error deleting the community {}'.format(community.absolute_url()))
 
 
-def create_max_context(community):
-    maxclient, settings = getUtility(IMAXClient)()
-    maxclient.setActor(settings.max_restricted_username)
-    maxclient.setToken(settings.max_restricted_token)
+@implementer(ICatalogFactory)
+class ACLSoupCatalog(object):
+    def __call__(self, context):
+        catalog = Catalog()
+        pathindexer = NodeAttributeIndexer('path')
+        catalog['path'] = CatalogFieldIndex(pathindexer)
+        hashindex = NodeAttributeIndexer('hash')
+        catalog['hash'] = CatalogFieldIndex(hashindex)
+        gwuuid = NodeAttributeIndexer('gwuuid')
+        catalog['gwuuid'] = CatalogFieldIndex(gwuuid)
+        groups = NodeAttributeIndexer('groups')
+        catalog['groups'] = CatalogKeywordIndex(groups)
+        return catalog
 
-    # Determine the value for notifications
-    if community.notify_activity_via_push and community.notify_activity_via_push_comments_too:
-        notifications = 'comments'
-    elif community.notify_activity_via_push and not community.notify_activity_via_push_comments_too:
-        notifications = 'posts'
-    elif not community.notify_activity_via_push and not community.notify_activity_via_push_comments_too:
-        notifications = False
 
-    # Determine the kind of security the community should have provided the type
-    # of community
-    if community.community_type == u'Open':
-        community_permissions = dict(read='subscribed', write='subscribed', subscribe='public', unsubscribe='public')
-    elif community.community_type == u'Closed':
-        community_permissions = dict(read='subscribed', write='restricted', subscribe='restricted', unsubscribe='public')
-    elif community.community_type == u'Organizative':
-        community_permissions = dict(read='subscribed', write='restricted', subscribe='restricted', unsubscribe='restricted')
+grok.global_utility(ACLSoupCatalog, name='communities_acl')
 
-    # Add context for the community on MAX server
-    maxclient.contexts.post(
-        url=community.absolute_url(),
-        displayName=community.title,
-        permissions=community_permissions,
-        notifications=notifications,
-    )
 
-    # Update/Subscribe the invited users and grant them permission on MAX
-    # Guard in case that the user does not exist or the community does not exist
-    for reader in community.readers:
-        try:
-            maxclient.people[reader].subscriptions.post(object_url=community.absolute_url())
-            maxclient.contexts[community.absolute_url()].permissions[reader]['read'].put()
-        except:
-            logger.error('Impossible to subscribe user {} as reader in the {} community.'.format(reader, community.absolute_url()))
+@implementer(ICatalogFactory)
+class UserCommunityAccessCatalogFactory(object):
+    """ Save the date of user access to the community
 
-    for writter in community.subscribed:
-        try:
-            maxclient.people[writter].subscriptions.post(object_url=community.absolute_url())
-            maxclient.contexts[community.absolute_url()].permissions[writter]['write'].put()
-        except:
-            logger.error('Impossible to subscribe user {} as editor in the {} community.'.format(writter, community.absolute_url()))
+        :index user_community: TextIndex - user_community = current_user + '_' + community
+        :index data_access: FieldIndex -  DateTime of user access to the community
 
-    for owner in community.owners:
-        try:
-            maxclient.people[owner].subscriptions.post(object_url=community.absolute_url())
-            maxclient.contexts[community.absolute_url()].permissions[owner]['write'].put()
-        except:
-            logger.error('Impossible to subscribe user {} as owner in the {} community.'.format(owner, community.absolute_url()))
+    """
+
+    def __call__(self, context):
+        catalog = Catalog()
+        idindexer = NodeAttributeIndexer('user_community')
+        catalog['user_community'] = CatalogTextIndex(idindexer)
+        dataindexer = NodeAttributeIndexer('data_access')
+        catalog['data_access'] = CatalogFieldIndex(dataindexer)
+        return catalog
+
+
+grok.global_utility(UserCommunityAccessCatalogFactory, name="user_community_access")

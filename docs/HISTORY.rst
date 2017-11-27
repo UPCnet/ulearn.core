@@ -1,11 +1,618 @@
 Changelog
 =========
 
-1.68 (unreleased)
+2.55 (unreleased)
 -----------------
 
 - Nothing changed yet.
 
+
+2.54 (2017-11-21)
+-----------------
+
+* No notificar eventos en abacus [Pilar Marinas]
+* waiting to solve the css & js imports... [Roberto Diaz]
+* inline image [Roberto Diaz]
+* aadded behavior [Roberto Diaz]
+* added thumb image [Roberto Diaz]
+* Ordenar lista de usuarios en el directorio y quitar al admin [iago.lopez]
+* changed to png extension [root]
+* PIL thumb news image [Roberto Diaz]
+* checked empty [root]
+* added check empty value [Roberto Diaz]
+* added more_items flag [Roberto Diaz]
+* added document to bitly [root]
+* added pagination to news [Roberto Diaz]
+* testing pagination news [Roberto Diaz]
+* remove /item from url [root]
+* added icon to user info [Roberto Diaz]
+* flash News has no text value [root]
+* added indexes to show news item type in app [Roberto Diaz]
+* if no effective, return creation [root]
+* added effective date [Roberto Diaz]
+* added tab to function... [root]
+* renamed id and api updated [Roberto Diaz]
+* Show News Items in App Code [Roberto Diaz]
+* PEP8 [Roberto Diaz]
+* show News actions viewlet depending on selection [Roberto Diaz]
+* removes string errors [Roberto Diaz]
+* readded b4encode [Roberto Diaz]
+* added comprobation when checking the max_oauth_server [Roberto Diaz]
+* updated to get mountpoint. commented raw_image [root]
+* added mountpoint to path and hide raw_image content (blocks system) [root]
+* updated people to hide empty values [root]
+* updated links api to check empty values [Roberto Diaz]
+* updated links APi to remove ?language pattern [Roberto Diaz]
+* removed try in appconfig [Roberto Diaz]
+* added check false to iregistry and PEP8. Testing news in app... [Roberto Diaz]
+* updated translations [Roberto Diaz]
+* added controlpanel news in mobile option [Roberto Diaz]
+* appconfig [Roberto Diaz]
+* added rasies [Roberto Diaz]
+* default config file [Roberto Diaz]
+* added comments [Roberto Diaz]
+* Added raw_image to items API [Roberto Diaz]
+* return single and multiple news checking if exists and corrected path [Roberto Diaz]
+* removed bitly api WS [Roberto Diaz]
+* API: directory icons and associated view results [Roberto Diaz]
+* Updated items api [Roberto Diaz]
+* remove versionable from news and discussion [Roberto Diaz]
+* updated item json by portal_type [Roberto Diaz]
+* API: Testing search all content_type and return basic properties [Roberto Diaz]
+* mispelled text [Roberto Diaz]
+* single news item search [Roberto Diaz]
+* Return all users and their properties [Roberto Diaz]
+* updated bitly [Roberto Diaz]
+* API: unshorten bitly links [Roberto Diaz]
+* api all news items [Roberto Diaz]
+* updated api links [Roberto Diaz]
+* updated links code [Roberto Diaz]
+* Endpoint user profile [Roberto Diaz]
+* updated contropanel translations [Roberto Diaz]
+* updated controlpanel translations [Roberto Diaz]
+* removed found IPDB [Roberto Diaz]
+* testing profile api [Roberto Diaz]
+* PEP8 and i18n [Roberto Diaz]
+* creating profile api [Roberto Diaz]
+* bypass admin error with no photo found [Roberto Diaz]
+* added listAllCommunitiesObjects view that return a json with all comunities objects number [Vicente Iranzo Maestre]
+*  [Vicente Iranzo Maestre]
+* added listAllCommunitiesObjects view that return a json with all comunities objects number [Vicente Iranzo Maestre]
+* updated paths [Roberto Diaz]
+* PEP8 [Roberto Diaz]
+* api return all links [Roberto Diaz]
+
+2.53 (2017-07-24)
+-----------------
+
+* Add privateFolder [Pilar Marinas]
+* Added indexer for the soup of the menu [iago.lopez]
+* Create setup: createmenufolders [iago.lopez]
+* Translations: menu folders [iago.lopez]
+
+2.52 (2017-07-12)
+-----------------
+
+* Validate terms addCommunity [Pilar Marinas]
+* re-added importfiletofolder [root]
+* Netejar valor cercat editacl [Pilar Marinas]
+* Added new setup - setupHomePageNews [iago.lopez]
+* Cambiado literal [iago.lopez]
+
+2.51 (2017-06-15)
+-----------------
+
+* Canvis Givegwuuid [root]
+* GiveGWUUID [Pilar Marinas]
+* GiveGWUUID [Pilar Marinas]
+* Merge branch 'develop' of github.com:UPCnet/ulearn.core into develop [iago.lopez]
+* Merge branch 'develop' of github.com:UPCnet/ulearn.core into develop [iago.lopez]
+* Add collective.polls [iago.lopez]
+
+2.50 (2017-06-08)
+-----------------
+
+* Merge remote-tracking branch 'origin/newsharing' into develop [Pilar Marinas]
+* Configuracion activate_sharedwithme [Pilar Marinas]
+* Escribir bien la ruta de los literales [Iago López Fernández]
+* Añadir nuevos literales [Iago López Fernández]
+* Traducción de literal [Iago López Fernández]
+* Canvis perque funcioni nova versio elasticsearch 5_3_0 [Pilar Marinas]
+* Vista para crear y inicializar el elasticsharing [Pilar Marinas]
+* Update Sharing Community [Pilar Marinas]
+* WS count number of communities [Pilar Marinas]
+* Recuperar todos los permisos si borramos bd elastic [Pilar Marinas]
+* Comparteix amb grups [Pilar Marinas]
+* Afegir info servei ulearn settings [Pilar Marinas]
+* updateSharingCommunitiesElastic [Pilar Marinas]
+* Translations [Pilar Marinas]
+* Si eres Owner y has quitado herencia objecto ya no aparece objecto en los compartidos conmigo [Pilar Marinas]
+* actualitza tots els objectes de la comunitat al elasticsearch [Pilar Marinas]
+* Hook delete object plone remove object elastic [Pilar Marinas]
+* Canvi disseny shared [Pilar Marinas]
+* Patches Notify LocalrolesModifiedEvent [Pilar Marinas]
+* Canvis perque funcioni newsharing [Pilar Marinas]
+* Merge remote-tracking branch 'origin/develop' into newsharing [Pilar Marinas]
+* added comments to ImportFileToFolder view on ulearn/core/browser/setup.py [Vicente Iranzo Maestre]
+* added ImportFileToFolder view on ulearn/core/browser/setup.py [Vicente Iranzo Maestre]
+
+2.49 (2017-02-15)
+-----------------
+
+* Manage portlets only Manager and WebMaster [Pilar Marinas]
+
+2.48 (2017-02-10)
+-----------------
+
+* Afegir traduccions addProfile [Pilar Marinas]
+* Get avatar properties in create user [Pilar Marinas]
+* fix bug newstoolbar [Paco Gregori]
+
+2.47 (2017-01-31)
+-----------------
+
+* add workflow to News Item [Paco Gregori]
+* Add new test API [Iago López Fernández]
+
+2.46 (2017-01-17)
+-----------------
+
+* add setInterval to autoreload community activities [Paco Gregori]
+* Solucionar error soup bajas usuarios [Pilar Marinas]
+* Delete users in communities [Pilar Marinas]
+
+2.45 (2016-12-05)
+-----------------
+
+* add directives to allow youtube fullscreen [Paco Gregori]
+* api people ldap property fix bug [Paco Gregori]
+* api people, resolver error invalidateCache [Paco Gregori]
+
+2.44 (2016-11-30)
+-----------------
+
+* solved bug show important news check [Paco Gregori]
+* added migrating avatar images [roberto.diaz]
+
+2.43 (2016-11-25)
+-----------------
+
+* newstoolbar changes [Paco Gregori]
+* solucionar problema soup busquedas noticias [Paco Gregori]
+* Merge branch 'develop' of github.com:UPCnet/ulearn.core into develop [Paco Gregori]
+* translates [Paco Gregori]
+
+2.42 (2016-11-23)
+-----------------
+
+* add views to search news [Paco Gregori]
+* merge [Paco Gregori]
+* añadir gestion noticias + vista cotenidos + selector idioma [Paco Gregori]
+* Afegir log login usuaris [Pilar Marinas]
+* Al borrar usuario que lo borre de las comunidades [Pilar Marinas]
+* Literal delete users [Pilar Marinas]
+* Add clouseau delete users [Pilar Marinas]
+* Esborrar permisos sharing delete user [Pilar Marinas]
+* Delete user communities subscribe [Pilar Marinas]
+* resize profile image [Paco Gregori]
+* Quitar comprobacion avatar [Pilar Marinas]
+
+2.41 (2016-10-10)
+-----------------
+
+* A la cerca personas si peta imatge max mostra imatge per defecte [Pilar Marinas]
+* Avatar mini in widget community [Pilar Marinas]
+
+2.40 (2016-10-05)
+-----------------
+
+* View avatar MAX [Pilar Marinas]
+* no actualización documentos pendientes en comunidad IE. Solucionado [Paco Gregori]
+* Sincronitzacio dades usuari al soup del directori [Pilar Marinas]
+
+2.39 (2016-09-06)
+-----------------
+
+* api/__init__.py solved error /api/people/sync [Vicente Iranzo Maestre]
+*  [Vicente Iranzo Maestre]
+* /api/people/sync failed when request send only one user in users array. [Vicente Iranzo Maestre]
+* Now we check if object in params is a list or a string [Vicente Iranzo Maestre]
+* removed comments [roberto.diaz]
+
+2.38 (2016-07-26)
+-----------------
+
+* Solucionar error guardar editacl [Pilar Marinas]
+* Update setup.py [Roberto Diaz]
+*  [Roberto Diaz]
+* Adding ulearn.patches package [Roberto Diaz]
+
+2.37 (2016-07-22)
+-----------------
+
+* Traduccions [Pilar Marinas]
+
+2.36 (2016-07-22)
+-----------------
+
+* Solucionar error WS sync [Pilar Marinas]
+* solved error on webservice sync [Paco Gregori]
+* separargestion portlets de ulearn settings [Paco Gregori]
+* Translate stats [Pilar Marinas]
+* Translate user properties default [Pilar Marinas]
+* anadir comprobación al crear comunidad y marcar solo el check de notificar actividad y comentarios [Paco Gregori]
+* Corregir traducciones [Pilar Marinas]
+* tranlates [Paco Gregori]
+
+2.35 (2016-06-29)
+-----------------
+
+* Modify translate [Pilar Marinas]
+
+2.34 (2016-06-29)
+-----------------
+
+* Translate [Pilar Marinas]
+
+2.33 (2016-06-29)
+-----------------
+
+* translates ulearn.core [Paco Gregori]
+* removed i18n js [roberto.diaz]
+* updated translations [roberto.diaz]
+
+2.32 (2016-06-29)
+-----------------
+
+* esconder viewlets noticias [Paco Gregori]
+* esconder los nuevos viewlets de noticias, añadir que al reinstalar paquete registre los portlets de ulearn settings [Paco Gregori]
+* updated i18n [roberto.diaz]
+* generali bug solved: make users nonvisible in searches [roberto.diaz]
+* updated translations [roberto.diaz]
+* Translate seemore_communities [Pilar Marinas]
+* Solucionar error al guardar los permisos de la comunidad [Pilar Marinas]
+* add listtag template [Paco Gregori]
+* replace id_normalize to increase max length [Paco Gregori]
+* add tags portlets [Paco Gregori]
+* adding layer to view [Roberto Diaz]
+* remove flash_news adapter [Paco Gregori]
+* remove flash behavior [Paco Gregori]
+* add flash and outoflist widgets to news type [Paco Gregori]
+* Change url communities [Pilar Marinas]
+* add xml flashinformatius and newsimportant [Paco Gregori]
+* add portlets controlpanel, migrate portlets flashinformatius and newsimportant [Paco Gregori]
+* change image from 205px to 105px [roberto.diaz]
+* aded title & alt to images [roberto.diaz]
+* estadistiques afegides a la base [Alberto Duran]
+
+2.31 (2016-04-18)
+-----------------
+
+* add patch when remove user on userpref, remove on max too [Paco Gregori]
+* Solucionar test_people [Pilar Marinas]
+* Afegir mes contiguts a Folder [Pilar Marinas]
+* change test test_auto_subscribe_to_open [Paco Gregori]
+* ws change community type [Paco Gregori]
+* Migrate Types Documents Communities [Pilar Marinas]
+* Afegir nous tipus contingut folder [Pilar Marinas]
+* Afegir nous tipus contingut folder [Pilar Marinas]
+* solved bug when suscribe user with ws [Paco Gregori]
+* Migrate acl try update_hub_subscriptions [root@shayla]
+* Try trusted [root@shayla]
+
+2.30 (2016-04-04)
+-----------------
+
+* Fix trusted=True [Victor Fernandez de Alba]
+* Test adapter communities [Pilar Marinas]
+* Get roles [root@shayla]
+* Adapted community [root@shayla]
+* Migrate folders communities V2 [Pilar Marinas]
+* esconder el boton subir al nivel superior, en la carpeta documents de una comunidad [Paco Gregori]
+* add translations [Paco Gregori]
+
+2.29 (2016-03-17)
+-----------------
+
+* modify search users. Now search with id instead of username [Paco Gregori]
+* add exceptions on ws [Paco Gregori]
+* Traduccions profile generali [root@shayla]
+* modify delete community server [Paco Gregori]
+* add translations [Paco Gregori]
+* lower users id lower 2 [Paco Gregori]
+* lower users id on webservice [root muntanyeta]
+* modify ws responses [Paco Gregori]
+* modify unsubscribe WS and viewlet CommunityNGDirective [Paco Gregori]
+* modify communityngdirective to take info when stay into community url [Paco Gregori]
+* modify remove community ws [Paco Gregori]
+* modify ws subscribe community [Paco Gregori]
+* lower username on getUserOauthToken [Paco Gregori]
+* add translations [Paco Gregori]
+
+2.28 (2016-02-23)
+-----------------
+
+* display username without error [Alberto Duran]
+* ws put community [Paco Gregori]
+
+2.27 (2016-02-22)
+-----------------
+
+* community delete ws remove object [Paco Gregori]
+* communities webservice PUT and DELETE modified [Paco Gregori]
+* change add community api to add image [Paco Gregori]
+* change api communities post [Paco Gregori]
+* Nuevas vistas contentypes [Pilar Marinas]
+* Delete user cache before synchronizing the user [Pilar Marinas]
+
+2.26 (2016-02-10)
+-----------------
+
+* translate nexus24 [Paco Gregori]
+* Deletes a user from the plone & max & communities subscribe [Pilar Marinas]
+* add translate nexus24 [Paco Gregori]
+
+2.25 (2016-01-19)
+-----------------
+
+* Canvis communities [Pilar Marinas]
+* OrganizativeCommunity [Pilar Marinas]
+
+2.24 (2016-01-19)
+-----------------
+
+* DisplayName in editacl [Pilar Marinas]
+* Error mappings [Pilar Marinas]
+* Fix subscribe & unsubscribe success responses [Carles Bruguera]
+* Parametrize in adapter which communities allow auto-subsribing and with which community role [Carles Bruguera]
+* Parametrize plone roles <-> community roles map [Carles Bruguera]
+* editacl fails [Alberto Duran]
+* Properties extended Switchmed [Pilar Marinas]
+* Fix output not being JSON [Carles Bruguera]
+
+2.23 (2016-01-14)
+-----------------
+
+* Updateuseraccessdatetime [Pilar Marinas]
+* Add filter portal_type in stat_by_folder [Pilar Marinas]
+* Add the angular view to the setuphomepage view [Victor Fernandez de Alba]
+* Add guard in case portrait upload fails [Victor Fernandez de Alba]
+* Fix location of files in stats [Victor Fernandez de Alba]
+* Remove chameleon syntactig sugar [Carles Bruguera]
+* Refactor adapters to be layer-aware [Carles Bruguera]
+* define available roles on adapters [Carles Bruguera]
+* Remove chameleon syntactig sugar [Carles Bruguera]
+* Transfer Stats to core [Victor Fernandez de Alba]
+* Add attribute for directive for determine if additional information on stats view is required [Victor Fernandez de Alba]
+* New viewlet to hold directives related with Angular state variables used by services [Victor Fernandez de Alba]
+* add community subscribe put test [Paco Gregori]
+* modify subscription delete endpoint [Paco Gregori]
+* translate month and button stats [Alberto Duran]
+* add subscriptions put endpoint [Paco Gregori]
+* Fix tabs [Victor Fernandez de Alba]
+* Migrate search view to angular [Pilar Marinas]
+* Update, completion and refinement of the current API [Victor Fernandez de Alba]
+* api unsubscribe user [root muntanyeta]
+* api delete subscribers [Paco Gregori]
+* apply pep8 [Paco Gregori]
+* add crsf patch to api, update communities [root muntanyeta]
+* api community csrf patch [root muntanyeta]
+* Avoid modified hooks on sharing event [Carles Bruguera]
+* changes on api people update [Paco Gregori]
+* add endpoint in ws to add community [Paco Gregori]
+* add community adapter to can rewrite in others package [Paco Gregori]
+
+2.22 (2015-11-10)
+-----------------
+
+* Fix imports from mrs.max changeMemberPortrait [Victor Fernandez de Alba]
+* New pluggable changeMemberPortrait more specific for ulearn [Victor Fernandez de Alba]
+* Testing refactor [Victor Fernandez de Alba]
+* translate title favorites icon [Paco Gregori]
+* Añadir tipo de comunidad para que alert de subscribir solo salga en abiertas [Pilar Marinas]
+* Update community type [Pilar Marinas]
+
+2.21 (2015-10-27)
+-----------------
+
+* Remove ipdb [Carles Bruguera]
+* Unify way to return responses [Carles Bruguera]
+* Remove 'status' key from json responses [Carles Bruguera]
+
+2.20 (2015-10-20)
+-----------------
+
+* Fix errors on using new api_resource [Carles Bruguera]
+* Que a les comunitas tancades no et puguis subscriure [Pilar Marinas]
+
+2.19 (2015-10-20)
+-----------------
+
+* Update apis with a decorator [Carles Bruguera]
+* Que a les comunitats tancades no et puguis subscriure [Pilar Marinas]
+
+2.18 (2015-10-06)
+-----------------
+
+* Bullet proof testing boilerplate [Victor Fernandez de Alba]
+
+2.17 (2015-09-29)
+-----------------
+
+* Fix conflict error by traspassing the access time update to an async JavaScript request [Victor Fernandez de Alba]
+
+2.16 (2015-09-23)
+-----------------
+
+* Modify write per writer [Pilar Marinas]
+
+2.15 (2015-09-18)
+-----------------
+
+* Remove entry from catalog on delete [Carles Bruguera]
+* add lower to username in api/people [Paco Gregori]
+
+2.14 (2015-09-14)
+-----------------
+
+* Lowercase user [Carles Bruguera]
+
+2.13 (2015-09-10)
+-----------------
+
+* Update sync api with max sync, and more exc handling and logging [Carles Bruguera]
+* Set response and code [Carles Bruguera]
+
+2.12 (2015-09-09)
+-----------------
+
+* Translate video_embed [Pilar Marinas]
+* Fix tests [Victor Fernandez de Alba]
+* translate profile [Paco Gregori]
+
+2.11 (2015-09-07)
+-----------------
+
+* Improvements to the sync and create users [Victor Fernandez de Alba]
+
+2.10 (2015-09-07)
+-----------------
+
+* Force username to lowercase for global consistency with username casing [Victor Fernandez de Alba]
+
+2.9 (2015-09-07)
+----------------
+
+* Add too_many_users to user search [Victor Fernandez de Alba]
+* Fix test [Victor Fernandez de Alba]
+* CSS tests [Victor Fernandez de Alba]
+* translate blanquerna [Paco Gregori]
+* translate userextender blanquerna [Paco Gregori]
+* Solucio provisional perque no peti cerca usuaris dins una carpeta [Pilar Marinas]
+* Fix config.js location for tests [Carles Bruguera]
+
+2.8 (2015-09-04)
+----------------
+
+* Sync api to simulat an arbitrary user login [Carles Bruguera]
+* Try to decode form data if not json data [Carles Bruguera]
+* New test for viewlets resources [Victor Fernandez de Alba]
+
+2.7 (2015-07-14)
+----------------
+
+* Fix Document translation [Pilar Marinas]
+* modify news_post test [Paco Gregori]
+* Fix File translation [Pilar Marinas]
+* Default to username if fullname empty [Carles Bruguera]
+* API for groups and f-type interactions [Victor Fernandez de Alba]
+* add security file [Paco Gregori]
+* add manage user avatar on API [Paco Gregori]
+* New transform migration [Victor Fernandez de Alba]
+* Restrict script tag and others to the nasty tags for ulearn [Victor Fernandez de Alba]
+* add API news and test [Paco Gregori]
+
+2.6 (2015-07-01)
+----------------
+
+* updated i18n [Pilar Marinas]
+
+2.5 (2015-07-01)
+----------------
+
+* Translations properties extended Credit Andorra [Pilar Marinas]
+
+2.4 (2015-06-25)
+----------------
+
+* Fix migrations [Victor Fernandez de Alba]
+* Add support for custom icon list on TinyMCE. [Victor Fernandez de Alba]
+* Add support for custom icon list on TinyMCE. [Victor Fernandez de Alba]
+
+2.3 (2015-06-17)
+----------------
+
+* View displayName not id acl community [Pilar Marinas]
+
+2.2 (2015-06-10)
+----------------
+
+* Fix search user for using the soup instead of the mutable_properties [Victor Fernandez de Alba]
+* Improve the method of acquiring the current (if enabled) user properties extender, and make the default property backend (IPropertiesPlugin) the more preferent one. [Victor Fernandez de Alba]
+* Searchuser [Pilar Marinas]
+
+2.1 (2015-05-25)
+----------------
+
+* Add granularity to community creation by adding a role for each community type. CC open, CC closed, CC organizative. WebMasters retain their full permissions, and they are the only ones that could change the community type. [Victor Fernandez de Alba]
+* Modify hook Save date of user access to the community [Pilar Marinas]
+* Save date of user access to the community [Pilar Marinas]
+
+2.0 (2015-05-18)
+----------------
+
+* PEP8 [Victor Fernandez de Alba]
+* RAtionalize IGWUUID [Victor Fernandez de Alba]
+* Improve migration [Victor Fernandez de Alba]
+* Put securityindexing in the fridge [Victor Fernandez de Alba]
+* Missing send the permissions to the hub [Victor Fernandez de Alba]
+* Patch all the IGWUUID [Victor Fernandez de Alba]
+* Try to fix viewlet [Victor Fernandez de Alba]
+* Add private Folder [Pilar Marinas]
+* Fix gwuuid migration [Victor Fernandez de Alba]
+* Improve tests fiability [Victor Fernandez de Alba]
+* Last PEP8 [Victor Fernandez de Alba]
+* MORE PEP8 [Victor Fernandez de Alba]
+* More PEP8 [Victor Fernandez de Alba]
+* Erase traces of lcms ws for aquology [Victor Fernandez de Alba]
+* PEP8, double quotes [Victor Fernandez de Alba]
+* Translate Properties extended Credit Andorra [Pilar Marinas]
+* Updated patch to accomodate the properties and extended properties [Victor Fernandez de Alba]
+* Fix tests [Victor Fernandez de Alba]
+* New generic view for directory views [Victor Fernandez de Alba]
+* Updated for complete profile [Victor Fernandez de Alba]
+* Added experimental.securityindexing [Victor Fernandez de Alba]
+* Added migration for folders [Victor Fernandez de Alba]
+* Finalized implementation of the new folder distribution on communities [Victor Fernandez de Alba]
+* Fix test, new community initial subscriptions [Victor Fernandez de Alba]
+* Fix delete button [Victor Fernandez de Alba]
+* Sanitize the initialization of the Closed communities [Victor Fernandez de Alba]
+* Add manager to list of authorised users for get communities [Victor Fernandez de Alba]
+* Cleaning variables [Victor Fernandez de Alba]
+* Add hubclient and fix some integration with hub [Victor Fernandez de Alba]
+* Revert no creation of default folders [Victor Fernandez de Alba]
+* Interactions type-D and fix a serious bug when assigning plone permissions [Victor Fernandez de Alba]
+* PEP8 [Victor Fernandez de Alba]
+* Add test for (not fail) bug [Victor Fernandez de Alba]
+* Implement notlegit mark for users created via a non subscriber means, e.g a test or ACL [Victor Fernandez de Alba]
+* Complete changes in searching users when the user properties are extended [Victor Fernandez de Alba]
+* Improve search function by allowing to search through all the fields by introducing the new joined searchable_text. [Victor Fernandez de Alba]
+* fix delete issue [Victor Fernandez de Alba]
+* Not really used nor tested, but fixed people subscriptions [Victor Fernandez de Alba]
+* New communities views angular powered [Victor Fernandez de Alba]
+* old-style ACL migration [Victor Fernandez de Alba]
+* Improve API and specially its tests. Finished editacl view and related angularjs. Angularize alerts, dialogs for old interactions. Fix omega13 views. New i18n. [Victor Fernandez de Alba]
+* New endpoint for change community type and related views. Tests. [Victor Fernandez de Alba]
+* Fix migration gwuuid [Victor Fernandez de Alba]
+* Add documentation [Victor Fernandez de Alba]
+* Fix tests [Victor Fernandez de Alba]
+* Skip LDAP tests on JENKINS [Victor Fernandez de Alba]
+* Fixed tests [Victor Fernandez de Alba]
+* Last developments on ACL [Victor Fernandez de Alba]
+* Make all tests pass [Victor Fernandez de Alba]
+* ng-switch powah [Victor Fernandez de Alba]
+* Tabs working for ACL [Victor Fernandez de Alba]
+* Refactor of community and new API endpoints [Victor Fernandez de Alba]
+* Tested creation and edit communities [Victor Fernandez de Alba]
+* Creation working [Victor Fernandez de Alba]
+* WIP, refactoring communities [Victor Fernandez de Alba]
+* WIP, community refactor [Victor Fernandez de Alba]
+* Nou contingut video incrustat youtube [Pilar Marinas]
+* new branch portlet comunitats [Pilar Marinas]
+* added unrestrcited [Roberto Diaz]
+* added LCMS view [Roberto Diaz]
+* change community creation parameters to unify all contents in the same folder Documents [Paco Gregori]
+* pep8 [Victor Fernandez de Alba]
 
 1.67 (2015-04-01)
 -----------------

@@ -8,6 +8,7 @@
     i18n_domain="ulearn">
 
     <includeDependencies package="." />
+    <include file="behaviors.zcml" />
 
     <permission
       id="ulearn.addCommunity"
@@ -23,6 +24,11 @@
         id="ulearn.APIAccess"
         title="Ulearn: API Access"
         />
+
+    <permission
+      id="ulearn.addPrivateFolder"
+      title="Ulearn: Add Private Folder"
+      />
 
     <permission id="ulearn.core.setup"
                 title="Plone Site Setup: uLearn">
@@ -81,6 +87,18 @@
       allowed_interface=".interfaces.IUlearnUtils"
       />
 
+    <browser:page
+      for="*"
+      name="thumbnail-image"
+      class=".behaviors.view-thumb.Thumbnail"
+      layer="ulearn.theme.browser.interfaces.IUlearnTheme"
+      permission="zope2.Public"
+    />
+
+    <adapter
+        factory=".patches.NegotiateLanguage"
+        for="* ulearn.theme.browser.interfaces.IUlearnTheme"
+        />
 
     <include file="patches.zcml" />
 
