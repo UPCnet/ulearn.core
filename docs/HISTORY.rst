@@ -1,11 +1,15 @@
 Changelog
 =========
 
-2.55 (unreleased)
+2.55 (2017-12-19)
 -----------------
 
-- Nothing changed yet.
-
+* Merge remote-tracking branch 'origin/develop' [Roberto Diaz]
+* add gwopa allcommunities api search [Roberto Diaz]
+* Traducciones menu gestion [iago.lopez]
+* Traducció mail reinici contrasenya [Pilar Marinas]
+* Merge develop to master [Pilar Marinas]
+* check if show_in_app enabled [Roberto Diaz]
 
 2.54 (2017-11-21)
 -----------------
