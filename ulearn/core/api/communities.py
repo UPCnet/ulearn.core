@@ -44,6 +44,80 @@ class CommunityMixin(object):
     #     return True
 
 
+class CommunitiesGWOPA(REST):
+    """
+        /api/communitiesgwopa
+    """
+
+    placeholder_type = 'communitygwopa'
+    placeholder_id = 'communitygwopa'
+
+    grok.adapts(APIRoot, IPloneSiteRoot)
+    grok.require('genweb.authenticated')
+
+    @api_resource(required_roles=['Member', 'Manager'])
+    def GET(self):
+        """ Returns all the user communities and the open ones. """
+
+        # Hard security validation as the view is soft checked
+        # check_permission = self.check_roles(roles=['Member', 'Manager'])
+        # if check_permission is not True:
+        #     return check_permission
+
+        # Get all communities for the current user
+        pc = api.portal.get_tool('portal_catalog')
+        r_results = pc.searchResults(portal_type='ulearn.community', community_type=[u'Closed', u'Organizative'])
+        ur_results = pc.unrestrictedSearchResults(portal_type='ulearn.community', community_type=u'Open')
+        communities = r_results + ur_results
+
+        self.is_role_manager = False
+        self.username = api.user.get_current().id
+        global_roles = api.user.get_roles()
+        if 'Manager' in global_roles:
+            self.is_role_manager = True
+
+        result = []
+        favorites = self.get_favorites()
+        for brain in communities:
+            if brain.community_type == 'Closed':
+                community_type = 'WOP Team'
+            if brain.community_type == 'Open':
+                community_type = 'Community of Practice'
+            if brain.community_type == 'Organizative':
+                community_type = 'Corporate'
+            community = dict(id=brain.id,
+                             title=brain.Title,
+                             description=brain.Description,
+                             url=brain.getURL(),
+                             gwuuid=brain.gwuuid,
+                             type=community_type,
+                             image=brain.image_filename if brain.image_filename else False,
+                             favorited=brain.id in favorites,
+                             can_manage=self.is_community_manager(brain))
+            result.append(community)
+
+        return ApiResponse(result)
+
+    def get_favorites(self):
+        pc = api.portal.get_tool('portal_catalog')
+
+        results = pc.unrestrictedSearchResults(favoritedBy=self.username)
+        return [favorites.id for favorites in results]
+
+    def is_community_manager(self, community):
+        # The user has role Manager
+        if self.is_role_manager:
+            return True
+
+        gwuuid = community.gwuuid
+        portal = api.portal.get()
+        soup = get_soup('communities_acl', portal)
+
+        records = [r for r in soup.query(Eq('gwuuid', gwuuid))]
+        if records:
+            return self.username in [a['id'] for a in records[0].attrs['acl']['users'] if a['role'] == u'owner']
+
+
 class Communities(REST):
     """
         /api/communities
