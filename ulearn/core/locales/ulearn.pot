@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2017-09-13 14:43+0000\n"
+"POT-Creation-Date: 2017-12-18 14:04+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -31,7 +31,7 @@ msgstr ""
 msgid "Activitats mes valorades"
 msgstr ""
 
-#: ../ulearn.theme/ulearn/theme/portlets/flashesinformativos/flashesinformativos.py:188
+#: ../ulearn.theme/ulearn/theme/portlets/flashesinformativos/flashesinformativos.py:189
 msgid "Add Flashes Informativos Portlet"
 msgstr ""
 
@@ -130,7 +130,7 @@ msgstr ""
 msgid "Durada de la reunió"
 msgstr ""
 
-#: ../ulearn.theme/ulearn/theme/portlets/flashesinformativos/flashesinformativos.py:202
+#: ../ulearn.theme/ulearn/theme/portlets/flashesinformativos/flashesinformativos.py:203
 msgid "Edit Flashes Informativos portlet"
 msgstr ""
 
@@ -248,7 +248,7 @@ msgstr ""
 msgid "Inicio_stats"
 msgstr ""
 
-#: ./ulearn/core/configure.zcml:70
+#: ./ulearn/core/configure.zcml:71
 msgid "Installs the ulearn.core package"
 msgstr ""
 
@@ -418,7 +418,7 @@ msgstr ""
 msgid "Text Quick Links"
 msgstr ""
 
-#: ../ulearn.theme/ulearn/theme/portlets/flashesinformativos/flashesinformativos.py:189
+#: ../ulearn.theme/ulearn/theme/portlets/flashesinformativos/flashesinformativos.py:190
 msgid "This portlet displays Flashes Informativos."
 msgstr ""
 
@@ -434,12 +434,16 @@ msgstr ""
 msgid "This portlet displays subscribed News Items."
 msgstr ""
 
+#: ./ulearn/core/behaviors/thumbimage.py:19
+msgid "Thumbnail Image"
+msgstr ""
+
 #: ./ulearn/core/content/community.py:154
 msgid "Tipus de comunitat"
 msgstr ""
 
 #: ./ulearn/core/browser/stats.py:69
-#: ./ulearn/core/browser/viewlets.py:58
+#: ./ulearn/core/browser/viewlets.py:59
 msgid "Todas las comunidades"
 msgstr ""
 
@@ -464,11 +468,11 @@ msgstr ""
 msgid "Una comunitat administrable"
 msgstr ""
 
-#: ./ulearn/core/configure.zcml:78
+#: ./ulearn/core/configure.zcml:79
 msgid "Uninstall base setup for ulearn."
 msgstr ""
 
-#: ./ulearn/core/configure.zcml:78
+#: ./ulearn/core/configure.zcml:79
 msgid "Uninstall ulearn.core"
 msgstr ""
 
@@ -642,7 +646,7 @@ msgstr ""
 msgid "email"
 msgstr ""
 
-#: ../ulearn.theme/ulearn/theme/portlets/stats.py:69
+#: ../ulearn.theme/ulearn/theme/portlets/stats.py:70
 msgid "entrades"
 msgstr ""
 
@@ -1101,22 +1105,22 @@ msgid "label-newstoolbar"
 msgstr ""
 
 #. Default: "App"
-#: ./ulearn/core/browser/viewlets_templates/newstoolbar.pt:68
+#: ./ulearn/core/browser/viewlets_templates/newstoolbar.pt:69
 msgid "label-toogle-app"
 msgstr ""
 
 #. Default: "Flash"
-#: ./ulearn/core/browser/viewlets_templates/newstoolbar.pt:28
+#: ./ulearn/core/browser/viewlets_templates/newstoolbar.pt:29
 msgid "label-toogle-flash"
 msgstr ""
 
 #. Default: "Destacada"
-#: ./ulearn/core/browser/viewlets_templates/newstoolbar.pt:48
+#: ./ulearn/core/browser/viewlets_templates/newstoolbar.pt:49
 msgid "label-toogle-important"
 msgstr ""
 
 #. Default: "Lista"
-#: ./ulearn/core/browser/viewlets_templates/newstoolbar.pt:8
+#: ./ulearn/core/browser/viewlets_templates/newstoolbar.pt:9
 msgid "label-toogle-list"
 msgstr ""
 
@@ -1261,18 +1265,38 @@ msgstr ""
 msgid "maxui_form_bg"
 msgstr ""
 
+#. Default: "Estadístiques"
+#: ../ulearn.theme/ulearn/theme/browser/viewlets_templates/personal_bar.pt:123
+msgid "menu-gestio-estadistiques"
+msgstr ""
+
+#. Default: "Gestionar peu"
+#: ../ulearn.theme/ulearn/theme/browser/viewlets_templates/personal_bar.pt:111
+msgid "menu-gestio-footer"
+msgstr ""
+
+#. Default: "Gestionar capçalera"
+#: ../ulearn.theme/ulearn/theme/browser/viewlets_templates/personal_bar.pt:107
+msgid "menu-gestio-header"
+msgstr ""
+
+#. Default: "Noticies"
+#: ../ulearn.theme/ulearn/theme/browser/viewlets_templates/personal_bar.pt:103
+msgid "menu-gestio-noticies"
+msgstr ""
+
 #. Default: "Management"
 #: ../ulearn.theme/ulearn/theme/browser/viewlets_templates/personal_bar.pt:96
 msgid "menu-gestion"
 msgstr ""
 
 #. Default: "Management menu"
-#: ../ulearn.theme/ulearn/theme/browser/viewlets_templates/personal_bar.pt:103
+#: ../ulearn.theme/ulearn/theme/browser/viewlets_templates/personal_bar.pt:115
 msgid "menu-gestion-menu"
 msgstr ""
 
 #. Default: "Reset Menu"
-#: ../ulearn.theme/ulearn/theme/browser/viewlets_templates/personal_bar.pt:107
+#: ../ulearn.theme/ulearn/theme/browser/viewlets_templates/personal_bar.pt:119
 msgid "menu-reset-menu"
 msgstr ""
 
@@ -1536,7 +1560,7 @@ msgstr ""
 msgid "show_news_in_app"
 msgstr ""
 
-#: ../ulearn.theme/ulearn/theme/portlets/stats.py:20
+#: ../ulearn.theme/ulearn/theme/portlets/stats.py:21
 #: ../ulearn.theme/ulearn/theme/portlets/templates/stats.pt:7
 #: ./ulearn/core/browser/stats_templates/statsview.pt:143
 msgid "stats"
@@ -1588,7 +1612,7 @@ msgstr ""
 msgid "ubicacio"
 msgstr ""
 
-#: ./ulearn/core/configure.zcml:70
+#: ./ulearn/core/configure.zcml:71
 msgid "ulearn.core"
 msgstr ""
 
