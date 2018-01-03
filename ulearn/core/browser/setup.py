@@ -7,6 +7,7 @@ from zope.component.hooks import getSite
 from plone.portlets.interfaces import IPortletManager
 from plone.portlets.interfaces import IPortletAssignmentMapping
 from plone.dexterity.utils import createContentInContainer
+from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.interfaces import IPloneSiteRoot
 from Products.CMFPlone.interfaces.constrains import ISelectableConstrainTypes
 from genweb.portlets.browser.manager import ISpanStorage
@@ -24,6 +25,7 @@ from datetime import datetime
 from plone.namedfile.file import NamedBlobFile
 from ulearn.core.browser.sharing import IElasticSharing
 from ulearn.core.content.community import ICommunity
+from genweb.core.utils import json_response
 from genweb.core.utilities import IElasticSearch
 from ulearn.core.browser.sharing import ElasticSharing
 
@@ -594,3 +596,27 @@ class createElasticSharing(grok.View):
             )
 
             self.response.setBody('OK')
+
+
+class viewUsersWithNotUpdatedPhoto(grok.View):
+    grok.context(IPloneSiteRoot)
+    grok.require('zope2.ViewManagementScreens')
+
+    @json_response
+    def render(self):
+        portal = api.portal.get()
+        soup = get_soup('user_properties', portal)
+        records = [r for r in soup.data.items()]
+
+        result = {}
+        for record in records:
+            userID = record[1].attrs['id']
+            if userID != 'admin':
+                mtool = getToolByName(self.context, 'portal_membership')
+                portrait = mtool.getPersonalPortrait(userID)
+                typePortrait = portrait.__class__.__name__
+                if typePortrait == 'FSImage' or (typePortrait == 'Image' and portrait.size == 9715):
+                    userInfo = {'fullname' : record[1].attrs['fullname']}
+                    result[userID] = userInfo
+
+        return result
