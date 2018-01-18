@@ -1,11 +1,11 @@
 Changelog
 =========
 
-2.56 (unreleased)
+2.56 (2018-01-18)
 -----------------
 
-- Nothing changed yet.
-
+* Merge remote-tracking branch 'origin/develop' [Pilar Marinas]
+* Visualizar usuarios que no han actualizado su foto [iago.lopez]
 
 2.55 (2017-12-19)
 -----------------
