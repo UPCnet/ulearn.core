@@ -571,6 +571,12 @@ class OrganizativeCommunity(CommunityAdapterMixin):
     def subscribe_user(self, user_id):
         raise CommunityForbiddenAction('Subscription to organizative community forbidden.')
 
+    def set_plone_permissions(self, acl, changed=False):
+        if self.context.get_local_roles_for_userid(userid='AuthenticatedUsers'):
+            self.context.manage_delLocalRoles(['AuthenticatedUsers'])
+            changed = True
+
+        super(OrganizativeCommunity, self).set_plone_permissions(acl, changed)
 
 @grok.implementer(ICommunityTyped)
 @grok.adapter(ICommunity, Interface, name='Open')
