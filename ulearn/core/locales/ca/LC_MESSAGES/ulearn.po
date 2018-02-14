@@ -1782,3 +1782,15 @@ msgstr "Afegeix l'adreça web del video de youtube"
 #: ../ulearn.theme/ulearn/theme/portlets/templates/econnect.pt:8
 msgid "web_collaboration"
 msgstr "Crear una sessió"
+
+msgid "Entrada_buttonbar"
+msgstr "Activitat"
+
+msgid "my_communities_buttonbar"
+msgstr "Comunitats"
+
+msgid "news_buttonbar"
+msgstr "Noticies"
+
+msgid "shared_with_me_buttonbar"
+msgstr "Compartit"

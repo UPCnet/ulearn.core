@@ -974,6 +974,11 @@ class ToggleFavorite(grok.View):
 
     @json_response
     def render(self):
+        try:
+            from plone.protect.interfaces import IDisableCSRFProtection
+            alsoProvides(self.request, IDisableCSRFProtection)
+        except:
+            pass
         if self.request.method == 'POST':
             current_user = api.user.get_current()
             if current_user.id in IFavorite(self.context).get():

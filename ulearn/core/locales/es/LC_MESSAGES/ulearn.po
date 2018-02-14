@@ -1766,3 +1766,15 @@ msgstr "Agregar la dirección web del video de youtube"
 #: ../ulearn.theme/ulearn/theme/portlets/templates/econnect.pt:8
 msgid "web_collaboration"
 msgstr "<i class=\"fa fa-arrow-circle-right\"></i> Crear nueva sesión."
+
+msgid "Entrada_buttonbar"
+msgstr "Actividad"
+
+msgid "my_communities_buttonbar"
+msgstr "Comunidades"
+
+msgid "news_buttonbar"
+msgstr "Noticias"
+
+msgid "shared_with_me_buttonbar"
+msgstr "Compartido"
