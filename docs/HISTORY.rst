@@ -1,11 +1,13 @@
 Changelog
 =========
 
-2.57 (unreleased)
+2.57 (2018-02-19)
 -----------------
 
-- Nothing changed yet.
-
+* Merge remote-tracking branch 'origin/develop' [Pilar Marinas]
+* Traducciones [iago.lopez]
+* New Portlet Buttonbar Angular [Pilar Marinas]
+* Solucionar permisos al cambiar estado comunidad de abierta a organizativa [Pilar Marinas]
 
 2.56 (2018-01-18)
 -----------------
