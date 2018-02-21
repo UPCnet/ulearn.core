@@ -849,7 +849,7 @@ msgstr "Link to the service"
 #: ./ulearn/core/controlpanel.py:299
 #: ./ulearn/core/userschema.py:102
 msgid "help_language"
-msgstr "Site Language. It is configured when you reinstall the package."
+msgstr "Site Language."
 
 #. Default: "Afegiu la URL de la biblioteca associada a aquestes comunitats."
 #: ./ulearn/core/controlpanel.py:119
