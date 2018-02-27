@@ -831,7 +831,7 @@ msgstr "Enlace del servicio que aparece en la parte superior de la cabecera."
 #: ./ulearn/core/controlpanel.py:299
 #: ./ulearn/core/userschema.py:102
 msgid "help_language"
-msgstr "Idioma del sitio web. Se configura cuando se reinstala el paquete."
+msgstr "Idioma del sitio web."
 
 #. Default: "Afegiu la URL de la biblioteca associada a aquestes comunitats."
 #: ./ulearn/core/controlpanel.py:119

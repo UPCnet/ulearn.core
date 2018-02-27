@@ -846,12 +846,12 @@ msgstr "Aquest és l'enllaç al servei."
 #: ./ulearn/core/controlpanel.py:299
 #: ./ulearn/core/userschema.py:102
 msgid "help_language"
-msgstr "Idioma de l'espai. Es  configura quan es reinstal·la el paquet."
+msgstr "Idioma de l'espai web."
 
 #. Default: "Afegiu la URL de la biblioteca associada a aquestes comunitats."
 #: ./ulearn/core/controlpanel.py:119
 msgid "help_library_url"
-msgstr "Afegiu la URL de la biblioteca associada a aquestes comunitats."
+msgstr "Afegir la URL de la biblioteca associada a aquestes comunitats."
 
 #. Default: "Aquest és el llindar del winwin #1."
 #: ./ulearn/core/controlpanel.py:128
