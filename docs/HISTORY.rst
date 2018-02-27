@@ -1,11 +1,12 @@
 Changelog
 =========
 
-2.58 (unreleased)
+2.58 (2018-02-27)
 -----------------
 
-- Nothing changed yet.
-
+* Merge remote-tracking branch 'origin/develop' [Pilar Marinas]
+* removed incoherent translations [Roberto Diaz]
+* Reload activity [iago.lopez]
 
 2.57 (2018-02-19)
 -----------------
