@@ -659,7 +659,7 @@ msgstr "Crear una comunitat"
 #. Default: "Custom button bar"
 #: ../ulearn.theme/ulearn/theme/portlets/custombuttonbar/custombuttonbar.py:27
 msgid "custombuttonbar"
-msgstr "Custom button bar"
+msgstr "ButtonBar with Angular"
 
 #: ../ulearn.theme/ulearn/theme/browser/user_profile.py:106
 msgid "description"
