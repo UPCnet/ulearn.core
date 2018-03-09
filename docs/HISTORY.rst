@@ -1,11 +1,10 @@
 Changelog
 =========
 
-2.59 (unreleased)
+2.59 (2018-03-09)
 -----------------
 
-- Nothing changed yet.
-
+* translated custom button bar to ButtonBar with Angular [Roberto Diaz]
 
 2.58 (2018-02-27)
 -----------------
