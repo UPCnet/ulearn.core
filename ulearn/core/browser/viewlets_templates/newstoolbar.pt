@@ -1,6 +1,6 @@
-<tal:block i18n:domain="ulearn">
+<tal:block i18n:domain="ulearn" tal:condition="viewlet/isManagementNewsActivate">
 
-<div class="toogle-group" tal:condition="viewlet/isManagementNewsActivate">
+<div class="toogle-group">
     <div id="newtoolbar-title" i18n:translate="label-newstoolbar">
       Gestión Noticia:
     </div>
