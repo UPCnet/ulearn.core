@@ -101,28 +101,31 @@ def searchUsersFunction(context, request, search_string):  # noqa
                             pass
 
         else:
-            maxclientrestricted, settings = getUtility(IMAXClient)()
-            maxclientrestricted.setActor(settings.max_restricted_username)
-            maxclientrestricted.setToken(settings.max_restricted_token)
-            max_users = maxclientrestricted.contexts[context.absolute_url()].subscriptions.get(qs={'limit': 0})
-            max_users = [user.get('username') for user in max_users]
+            try:
+                maxclientrestricted, settings = getUtility(IMAXClient)()
+                maxclientrestricted.setActor(settings.max_restricted_username)
+                maxclientrestricted.setToken(settings.max_restricted_token)
+                max_users = maxclientrestricted.contexts[context.absolute_url()].subscriptions.get(qs={'limit': 0})
+                max_users = [user.get('username') for user in max_users]
 
-            users = []
-            for user in max_users:
-                record = [r for r in soup.query(Eq('id', user))]
-                if record:
-                    users.append(record[0])
-                else:
-                    # User subscribed, but no local profile found, append empty profile for display
-                    pass
+                users = []
+                for user in max_users:
+                    record = [r for r in soup.query(Eq('id', user))]
+                    if record:
+                        users.append(record[0])
+                    else:
+                        # User subscribed, but no local profile found, append empty profile for display
+                        pass
 
-            if nonvisibles:
-                filtered = []
-                for user in users:
-                    if user is not None:
-                        if user.attrs['username'] not in nonvisibles:
-                            filtered.append(user)
-                users = filtered
+                if nonvisibles:
+                    filtered = []
+                    for user in users:
+                        if user is not None:
+                            if user.attrs['username'] not in nonvisibles:
+                                filtered.append(user)
+                    users = filtered
+            except:
+                users = []
 
     # solución provisional para que no pete cuando estas en la biblioteca o en cualquier carpeta dentro de una comunidad
     # pendiente decidir cual sera el funcionamiento
