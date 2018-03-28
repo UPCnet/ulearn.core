@@ -1,11 +1,12 @@
 Changelog
 =========
 
-2.60 (unreleased)
+2.60 (2018-03-28)
 -----------------
 
-- Nothing changed yet.
-
+* View selector list in news if activate_news in UlearnControlPanelSettings [Pilar Marinas]
+* added try to bypass if no users found without MAX connection [Roberto Diaz]
+* changed condition to all the block [Roberto Diaz]
 
 2.59 (2018-03-09)
 -----------------
