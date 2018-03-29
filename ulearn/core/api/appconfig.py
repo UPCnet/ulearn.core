@@ -26,6 +26,8 @@ class Appconfig(REST):
         hub_server = api.portal.get_registry_record(name='mrs.max.browser.controlpanel.IMAXUISettings.hub_server')
         domain = api.portal.get_registry_record(name='mrs.max.browser.controlpanel.IMAXUISettings.domain')
         oauth_server = max_server + '/info'
+        buttonbar_selected = api.portal.get_registry_record(name='ulearn.core.controlpanel.IUlearnControlPanelSettings.buttonbar_selected')
+
 
         session = requests.Session()
         resp = session.get(oauth_server)
@@ -45,6 +47,7 @@ class Appconfig(REST):
                     domain=domain,
                     oauth_server=oauth_server,
                     max_oauth_server=max_oauth_server,
-                    show_news_in_app=show_news_in_app
+                    show_news_in_app=show_news_in_app,
+                    buttonbar_selected=buttonbar_selected
                     )
         return ApiResponse(info)

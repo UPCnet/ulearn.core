@@ -79,7 +79,7 @@ class IUlearnControlPanelSettings(model.Schema):
         _(u'General'),
         fields=['campus_url', 'library_url', 'people_literal',
                 'threshold_winwin1', 'threshold_winwin2',
-                'threshold_winwin3', 'stats_button', 'info_servei', 'activate_news', 'activate_sharedwithme'])
+                'threshold_winwin3', 'stats_button', 'info_servei', 'activate_news', 'activate_sharedwithme', 'buttonbar_selected'])
 
     model.fieldset(
         'Specific',
@@ -183,6 +183,13 @@ class IUlearnControlPanelSettings(model.Schema):
         required=False,
         default=False,
     )
+
+    buttonbar_selected = schema.Choice(
+        title=_(u'buttonbar_selected'),
+        description=_(u'Select the active button in the button bar.'),
+        values=['stream', 'news', 'mycommunities', 'sharedwithme'],
+        required=True,
+        default='stream')
 
     main_color = schema.TextLine(
         title=_(u'main_color',
