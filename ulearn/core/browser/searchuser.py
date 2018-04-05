@@ -48,10 +48,10 @@ def searchUsersFunction(context, request, search_string):  # noqa
             normalized_query = normalized_query.replace('.', ' ') + '*'
             users = [r for r in soup.query(Eq('searchable_text', normalized_query))]
         else:
-            too_many_users = api.portal.get_tool('portal_properties').site_properties.many_users
-            if too_many_users:
-                users = []
-            else:
+            #too_many_users = api.portal.get_tool('portal_properties').site_properties.many_users
+            #if too_many_users:
+            #    users = []
+            #else:
                 # Query for all users in the user_properties, showing only the legit ones
                 users = [r for r in soup.query(Eq('notlegit', False))]
                 if nonvisibles:
