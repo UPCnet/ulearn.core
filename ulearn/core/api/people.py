@@ -118,9 +118,9 @@ class Sync(REST):
             logger.info('- API REQUEST /api/people/sync: Synchronize user {}'.format(username))
             user_memberdata = api.user.get(username=username)
             try:
-                plone_user = user_memberdata.getUser() 
+                plone_user = user_memberdata.getUser()
             except:
-                logger.info('- API REQUEST /api/people/sync: ERROR sync user {}'.format(username))                
+                logger.info('- API REQUEST /api/people/sync: ERROR sync user {}'.format(username))
                 notfound_errors.append(username)
                 continue
 
