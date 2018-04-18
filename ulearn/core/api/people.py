@@ -398,7 +398,7 @@ class Person(REST):
             extender_name = api.portal.get_registry_record('genweb.controlpanel.core.IGenwebCoreControlPanelSettings.user_properties_extender')
             if extender_name in [a[0] for a in getUtilitiesFor(ICatalogFactory)]:
                 extended_user_properties_utility = getUtility(ICatalogFactory, name=extender_name)
-                for prop in extended_user_properties_utility.profile_properties:
+                for prop in extended_user_properties_utility.directory_properties:
                     userProp = user.getProperty(prop, '')
                     if userProp:
                         rendered_properties.append(dict(
@@ -409,7 +409,7 @@ class Person(REST):
             else:
                 # If it's not extended, then return the simple set of data we know
                 # about the user using also the profile_properties field
-                for prop in user_properties_utility.profile_properties:
+                for prop in user_properties_utility.directory_properties:
                     userProp = user.getProperty(prop, '')
                     if userProp:
                         rendered_properties.append(dict(
