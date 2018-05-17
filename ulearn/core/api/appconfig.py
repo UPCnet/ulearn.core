@@ -17,7 +17,7 @@ class Appconfig(REST):
     grok.adapts(APIRoot, IPloneSiteRoot)
     grok.require('genweb.authenticated')
 
-    @api_resource(required=[])
+    @api_resource(required=['username'])
     def GET(self):
         main_color = api.portal.get_registry_record(name='ulearn.core.controlpanel.IUlearnControlPanelSettings.main_color')
         secondary_color = api.portal.get_registry_record(name='ulearn.core.controlpanel.IUlearnControlPanelSettings.secondary_color')
@@ -28,6 +28,12 @@ class Appconfig(REST):
         oauth_server = max_server + '/info'
         buttonbar_selected = api.portal.get_registry_record(name='ulearn.core.controlpanel.IUlearnControlPanelSettings.buttonbar_selected')
 
+        username = self.params['username']
+        user = api.user.get(username=username)
+        if hasattr(user, 'language') and user.getProperty('language') != '':
+            language = user.getProperty('language')
+        else:
+            language = api.portal.get_default_language()
 
         session = requests.Session()
         resp = session.get(oauth_server)
@@ -48,6 +54,7 @@ class Appconfig(REST):
                     oauth_server=oauth_server,
                     max_oauth_server=max_oauth_server,
                     show_news_in_app=show_news_in_app,
-                    buttonbar_selected=buttonbar_selected
+                    buttonbar_selected=buttonbar_selected,
+                    language=language
                     )
         return ApiResponse(info)
