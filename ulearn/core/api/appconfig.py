@@ -11,13 +11,13 @@ import requests
 
 class Appconfig(REST):
     """
-        /api/appconfig
-
+        /api/appconfig --> Idioma por defecto del site
+        /api/appconfig?username=nom.cognom --> Idioma del perfil del usuario
     """
     grok.adapts(APIRoot, IPloneSiteRoot)
     grok.require('genweb.authenticated')
 
-    @api_resource(required=['username'])
+    @api_resource()
     def GET(self):
         main_color = api.portal.get_registry_record(name='ulearn.core.controlpanel.IUlearnControlPanelSettings.main_color')
         secondary_color = api.portal.get_registry_record(name='ulearn.core.controlpanel.IUlearnControlPanelSettings.secondary_color')
@@ -27,11 +27,13 @@ class Appconfig(REST):
         domain = api.portal.get_registry_record(name='mrs.max.browser.controlpanel.IMAXUISettings.domain')
         oauth_server = max_server + '/info'
         buttonbar_selected = api.portal.get_registry_record(name='ulearn.core.controlpanel.IUlearnControlPanelSettings.buttonbar_selected')
-
-        username = self.params['username']
-        user = api.user.get(username=username)
-        if hasattr(user, 'language') and user.getProperty('language') != '':
-            language = user.getProperty('language')
+        if 'username' in self.params:
+            username = self.params['username']
+            user = api.user.get(username=username)
+            if hasattr(user, 'language') and user.getProperty('language') != '':
+                language = user.getProperty('language')
+            else:
+                language = api.portal.get_default_language()
         else:
             language = api.portal.get_default_language()
 
