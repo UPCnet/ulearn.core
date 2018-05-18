@@ -1,10 +1,20 @@
 Changelog
 =========
 
-2.62 (unreleased)
+2.64 (unreleased)
 -----------------
 
 - Nothing changed yet.
+
+
+2.63 (2018-05-09)
+-----------------
+
+* Arreglar vista viewuserswithnotupdatedphoto en el caso de que un usuario no tenga el campo fullname [iago.lopez]
+
+2.62 (2018-04-18)
+-----------------
+
 
 
 2.61 (2018-03-29)
