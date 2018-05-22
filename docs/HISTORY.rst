@@ -1,11 +1,10 @@
 Changelog
 =========
 
-2.65 (unreleased)
+2.65 (2018-05-22)
 -----------------
 
-- Nothing changed yet.
-
+* Añadir vista clouseau para eliminar foto de un usuario [iago.lopez]
 
 2.64 (2018-05-22)
 -----------------
