@@ -1,11 +1,15 @@
 Changelog
 =========
 
-2.64 (unreleased)
+2.64 (2018-05-22)
 -----------------
 
-- Nothing changed yet.
-
+* Merge branch 'develop' of github.com:UPCnet/ulearn.core into develop [Roberto Diaz]
+* updated clouseau to show description [Roberto Diaz]
+* Not required username in appconfig [Pilar Marinas]
+* Add behaviors thumbimage in News for APP [Pilar Marinas]
+* Añadir campo language al resultado de /api/appconfig [iago.lopez]
+* Solucionar test [Pilar Marinas]
 
 2.63 (2018-05-09)
 -----------------
