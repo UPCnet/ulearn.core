@@ -1,11 +1,10 @@
 Changelog
 =========
 
-2.66 (unreleased)
+2.66 (2018-05-31)
 -----------------
 
-- Nothing changed yet.
-
+* Envia solo carpetas de primer nivel y enlaces [Pilar Marinas]
 
 2.65 (2018-05-22)
 -----------------
