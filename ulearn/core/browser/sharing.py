@@ -96,7 +96,7 @@ class ElasticSharing(object):
 			body=dict(
 				path=path,
 				principal=principal,
-				roles=api.user.get_roles(username=principal, obj=object),
+				roles=api.user.get_roles(username=principal, obj=object, inherit=False),
 				uuid=IGWUUID(object).get(),
 			)
 		)
