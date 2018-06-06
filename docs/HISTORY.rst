@@ -1,11 +1,12 @@
 Changelog
 =========
 
-2.67 (unreleased)
+2.67 (2018-06-06)
 -----------------
 
-- Nothing changed yet.
-
+* W3C compliant code [Roberto Diaz]
+* Modify get_roles user elastic [Pilar Marinas]
+* Modify update elastic para que no de error [Pilar Marinas]
 
 2.66 (2018-05-31)
 -----------------
