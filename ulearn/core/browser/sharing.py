@@ -223,7 +223,7 @@ class ElasticSharing(object):
 		self.elastic().update(index=ElasticSharing().get_index_name(),
 							  doc_type='sharing',
 							  id=result['hits']['hits'][0]['_id'],
-							  body={'doc': {'_source': { 'roles': attributes}}})
+							  body={'doc': { 'roles': attributes}})
 
 	def remove(self, object, principal):
 		"""
