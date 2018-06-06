@@ -18,25 +18,25 @@
 
   <metal:content-core define-macro="main">
 
-    <div ng-controller="uLearnSharingACL as ctrl" ngCloak>
+    <div data-ng-controller="uLearnSharingACL as ctrl" data-ng-cloak>
 
       <input type="hidden"
              tal:attributes="sharing view/get_acl" />
 
-      <div class="user_group btn-group" ng-cloak>
+      <div class="user_group btn-group" data-ng-cloak>
         <button class="btn active"
-                ng-click="ctrl.active_tab = 'users'"
-                ng-class="{active: ctrl.active_tab == 'users'}">{{'COMMUNITY_ACL.USERS' | translate}}</button>
+                data-ng-click="ctrl.active_tab = 'users'"
+                data-ng-class="{active: ctrl.active_tab == 'users'}">{{'COMMUNITY_ACL.USERS' | translate}}</button>
         <button class="btn"
-                ng-click="ctrl.active_tab = 'groups'"
-                ng-class="{active: ctrl.active_tab == 'groups'}">{{'COMMUNITY_ACL.GROUPS' | translate}}</button>
+                data-ng-click="ctrl.active_tab = 'groups'"
+                data-ng-class="{active: ctrl.active_tab == 'groups'}">{{'COMMUNITY_ACL.GROUPS' | translate}}</button>
       </div>
 
       <div class="acl_tabs"
-           ng-switch="ctrl.active_tab">
-        <div ng-switch-when="users" ng-cloak>
+           data-ng-switch="ctrl.active_tab">
+        <div data-ng-switch-when="users" data-ng-cloak>
 
-          <ui-select ng-model="ctrl.principals.selected" on-select="ctrl.selectUser($item, $model)" theme="selectize" style="width: 300px;">
+          <ui-select data-ng-model="ctrl.principals.selected" on-select="ctrl.selectUser($item, $model)" theme="selectize" style="width: 300px;">
             <ui-select-match placeholder="{{'COMMUNITY_ACL.SEARCHUSERS' | translate}}">{{$select.selected.id}}</ui-select-match>
             <ui-select-choices repeat="principal in ctrl.principals"
                  refresh="ctrl.searchUser($select.search)"
@@ -65,9 +65,9 @@
               <tr ng-repeat="user in ctrl.users">
                 <td>{{ user.id }}</td>
                 <td>{{ user.displayName }}</td>
-                <td class="text-center"><input ng-model="user.role" type="radio" name="{{user.id}}" value="reader" checked></td>
-                <td class="text-center"><input ng-model="user.role" type="radio" name="{{user.id}}" value="writer"></td>
-                <td class="text-center"><input ng-model="user.role" type="radio" name="{{user.id}}" value="owner"></td>
+                <td class="text-center"><input data-ng-model="user.role" type="radio" name="{{user.id}}" value="reader" checked></td>
+                <td class="text-center"><input data-ng-model="user.role" type="radio" name="{{user.id}}" value="writer"></td>
+                <td class="text-center"><input data-ng-model="user.role" type="radio" name="{{user.id}}" value="owner"></td>
                 <td class="text-center">
                     <button type="button" ng-click="ctrl.deleteUser(user)" class="btn btn-danger"><i class="fa fa-trash-o"></i></button>
                 </td>
@@ -78,7 +78,7 @@
         </div>
         <div ng-switch-when="groups" ng-cloak>
 
-          <ui-select ng-model="ctrl.group_results.selected" on-select="ctrl.selectGroup($item, $model)" theme="selectize" style="width: 300px;">
+          <ui-select data-ng-model="ctrl.group_results.selected" on-select="ctrl.selectGroup($item, $model)" theme="selectize" style="width: 300px;">
             <ui-select-match placeholder="{{'COMMUNITY_ACL.SEARCHGROUPS' | translate}}">{{$select.selected.id}}</ui-select-match>
             <ui-select-choices repeat="principal in ctrl.group_results"
                  refresh="ctrl.searchGroup($select.search)"
@@ -108,9 +108,9 @@
               <tr ng-repeat="group in ctrl.groups">
                 <td>{{ group.id }}</td>
                 <td>{{ group.displayName }}</td>
-                <td class="text-center"><input ng-model="group.role" type="radio" name="{{group.id}}" value="reader" checked></td>
-                <td class="text-center"><input ng-model="group.role" type="radio" name="{{group.id}}" value="writer"></td>
-                <td class="text-center"><input ng-model="group.role" type="radio" name="{{group.id}}" value="owner"></td>
+                <td class="text-center"><input data-ng-model="group.role" type="radio" name="{{group.id}}" value="reader" checked></td>
+                <td class="text-center"><input data-ng-model="group.role" type="radio" name="{{group.id}}" value="writer"></td>
+                <td class="text-center"><input data-ng-model="group.role" type="radio" name="{{group.id}}" value="owner"></td>
                 <td class="text-center">
                     <button type="button" ng-click="ctrl.deleteGroup(group)" class="btn btn-danger"><i class="fa fa-trash-o"></i></button>
                 </td>
