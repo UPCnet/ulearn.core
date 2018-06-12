@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2018-02-14 15:26+0000\n"
+"POT-Creation-Date: 2018-06-12 12:44+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Preferred-Encodings: utf-8 latin1\n"
 "Domain: ulearn\n"
 
-#: ./ulearn/core/controlpanel.py:353
+#: ./ulearn/core/controlpanel.py:360
 msgid "/mail_password_form?userid="
 msgstr ""
 
@@ -43,7 +43,6 @@ msgstr ""
 msgid "Add News Portlet"
 msgstr ""
 
-#: ../ulearn.theme/ulearn/theme/portlets/buttonbar/buttonbar.py:222
 #: ../ulearn.theme/ulearn/theme/portlets/subscribednews/subscribednews.py:201
 msgid "Add Subscribed News Portlet"
 msgstr ""
@@ -57,13 +56,17 @@ msgstr ""
 msgid "AgendaGW"
 msgstr ""
 
-#: ../ulearn.theme/ulearn/theme/portlets/legacycalendar.py:34
+#: ../ulearn.theme/ulearn/theme/portlets/buttonbar/buttonbar.py:45
+msgid "Button bar with angular"
+msgstr ""
+
+#: ../ulearn.theme/ulearn/theme/portlets/legacycalendar.py:29
 msgid "Calendar"
 msgstr ""
 
 #: ../ulearn.theme/ulearn/theme/controlportlets.py:442
 #: ./ulearn/core/browser/views.py:175
-#: ./ulearn/core/controlpanel.py:424
+#: ./ulearn/core/controlpanel.py:431
 msgid "Cancel"
 msgstr ""
 
@@ -71,7 +74,7 @@ msgstr ""
 msgid "Català"
 msgstr ""
 
-#: ./ulearn/core/controlpanel.py:421
+#: ./ulearn/core/controlpanel.py:428
 msgid "Changes saved"
 msgstr ""
 
@@ -92,6 +95,10 @@ msgstr ""
 msgid "Comunitat_stats"
 msgstr ""
 
+#: ../ulearn.theme/ulearn/theme/portlets/buttonbar/buttonbar.py:222
+msgid "Configure Custom button Bar With Angular"
+msgstr ""
+
 #: ./ulearn/core/browser/views.py:73
 msgid "Convidats moderadors"
 msgstr ""
@@ -102,6 +109,10 @@ msgstr ""
 
 #: ./ulearn/core/browser/views.py:100
 msgid "Create new meeting space"
+msgstr ""
+
+#: ./ulearn/core/behaviors.zcml:14
+msgid "Create thumb of News images for show in app"
 msgstr ""
 
 #: ./ulearn/core/content/community.py:125
@@ -131,6 +142,10 @@ msgstr ""
 msgid "Durada de la reunió"
 msgstr ""
 
+#: ../ulearn.theme/ulearn/theme/portlets/buttonbar/buttonbar.py:232
+msgid "Edit Configure Custom button Bar With Angular"
+msgstr ""
+
 #: ../ulearn.theme/ulearn/theme/portlets/flashesinformativos/flashesinformativos.py:203
 msgid "Edit Flashes Informativos portlet"
 msgstr ""
@@ -143,13 +158,12 @@ msgstr ""
 msgid "Edit News Portlet"
 msgstr ""
 
-#: ../ulearn.theme/ulearn/theme/portlets/buttonbar/buttonbar.py:232
 #: ../ulearn.theme/ulearn/theme/portlets/subscribednews/subscribednews.py:210
 msgid "Edit Subscribed News Portlet"
 msgstr ""
 
 #: ../ulearn.theme/ulearn/theme/controlportlets.py:444
-#: ./ulearn/core/controlpanel.py:426
+#: ./ulearn/core/controlpanel.py:433
 msgid "Edit cancelled"
 msgstr ""
 
@@ -216,7 +230,7 @@ msgstr ""
 msgid "General"
 msgstr ""
 
-#: ./ulearn/core/controlpanel.py:413
+#: ./ulearn/core/controlpanel.py:420
 msgid "Has marcat el comparteix pero falta la url del elasticsearch"
 msgstr ""
 
@@ -289,11 +303,11 @@ msgstr ""
 msgid "Link"
 msgstr ""
 
-#: ./ulearn/core/controlpanel.py:316
+#: ./ulearn/core/controlpanel.py:323
 msgid "Literals que identifiquen als usuaris de les comunitats i les seves aportacions."
 msgstr ""
 
-#: ./ulearn/core/controlpanel.py:309
+#: ./ulearn/core/controlpanel.py:316
 msgid "Llista amb les persones que no han de sortir a les cerques i que tenen accés restringit per les demés persones."
 msgstr ""
 
@@ -303,6 +317,10 @@ msgstr ""
 
 #: ./ulearn/core/browser/views.py:74
 msgid "Llista d'emails dels convidats MODERADORS, separats per comes."
+msgstr ""
+
+#: ../ulearn.theme/ulearn/theme/browser/viewlets_templates/personal_bar.pt:96
+msgid "Manage Nomines"
 msgstr ""
 
 #: ./ulearn/core/browser/migrations.py:191
@@ -347,6 +365,14 @@ msgstr ""
 
 #: ./ulearn/core/browser/views.py:53
 msgid "Nom de la reunió"
+msgstr ""
+
+#: ../ulearn.theme/ulearn/theme/browser/viewlets_templates/personal_bar.pt:89
+msgid "Nomines"
+msgstr ""
+
+#: ../ulearn.theme/ulearn/theme/browser/viewlets_templates/personal_bar.pt:102
+msgid "Nomines Root folder"
 msgstr ""
 
 #. Default: "Habilitar portlet News"
@@ -402,8 +428,16 @@ msgstr ""
 msgid "Save"
 msgstr ""
 
+#: ./ulearn/core/controlpanel.py:189
+msgid "Select the active button in the button bar."
+msgstr ""
+
 #: ./ulearn/core/controlpanel.py:86
 msgid "Specific"
+msgstr ""
+
+#: ../ulearn.theme/ulearn/theme/browser/views_templates/alltags.pt:20
+msgid "Subscribed Tags"
 msgstr ""
 
 #: ./ulearn/core/content/community.py:183
@@ -422,7 +456,7 @@ msgstr ""
 msgid "Text"
 msgstr ""
 
-#: ./ulearn/core/controlpanel.py:322
+#: ./ulearn/core/controlpanel.py:329
 msgid "Text Quick Links"
 msgstr ""
 
@@ -438,9 +472,16 @@ msgstr ""
 msgid "This portlet displays recent News Items."
 msgstr ""
 
-#: ../ulearn.theme/ulearn/theme/portlets/buttonbar/buttonbar.py:223
 #: ../ulearn.theme/ulearn/theme/portlets/subscribednews/subscribednews.py:202
 msgid "This portlet displays subscribed News Items."
+msgstr ""
+
+#: ../ulearn.theme/ulearn/theme/portlets/buttonbar/buttonbar.py:223
+msgid "Ths portlet shows News Items. Configure in the next fields."
+msgstr ""
+
+#: ./ulearn/core/behaviors.zcml:14
+msgid "Thumb News Images for App"
 msgstr ""
 
 #: ./ulearn/core/behaviors/thumbimage.py:19
@@ -469,7 +510,7 @@ msgstr ""
 msgid "UPCnet only"
 msgstr ""
 
-#: ./ulearn/core/controlpanel.py:370
+#: ./ulearn/core/controlpanel.py:377
 msgid "Ulearn settings"
 msgstr ""
 
@@ -485,9 +526,17 @@ msgstr ""
 msgid "Uninstall ulearn.core"
 msgstr ""
 
+#: ../ulearn.theme/ulearn/theme/browser/views_templates/alltags.pt:34
+msgid "Unsubscribed Tags"
+msgstr ""
+
 #. Default: "Usuario <span class=\"formHelp\"></span>"
 #: ./ulearn/core/browser/stats_templates/statsview.pt:224
 msgid "Usuario_stats"
+msgstr ""
+
+#: ../ulearn.theme/ulearn/theme/browser/viewlets_templates/personal_bar.pt:108
+msgid "View loginfo"
 msgstr ""
 
 #: ./ulearn/core/controlpanel.py:96
@@ -511,7 +560,7 @@ msgid "activate_sharedwithme"
 msgstr ""
 
 #: ./ulearn/core/content/community.py:162
-#: ./ulearn/core/controlpanel.py:341
+#: ./ulearn/core/controlpanel.py:348
 msgid "activity_view"
 msgstr ""
 
@@ -531,12 +580,12 @@ msgid "allcommunities"
 msgstr ""
 
 #. Default: "Color final dels gradients"
-#: ./ulearn/core/controlpanel.py:224
+#: ./ulearn/core/controlpanel.py:231
 msgid "alt_gradient_end_color"
 msgstr ""
 
 #. Default: "Color inicial dels gradients."
-#: ./ulearn/core/controlpanel.py:215
+#: ./ulearn/core/controlpanel.py:222
 msgid "alt_gradient_start_color"
 msgstr ""
 
@@ -546,12 +595,12 @@ msgid "angularrouteview"
 msgstr ""
 
 #. Default: "Color de fons global"
-#: ./ulearn/core/controlpanel.py:242
+#: ./ulearn/core/controlpanel.py:249
 msgid "background_color"
 msgstr ""
 
 #. Default: "Propietat de fons global"
-#: ./ulearn/core/controlpanel.py:233
+#: ./ulearn/core/controlpanel.py:240
 msgid "background_property"
 msgstr ""
 
@@ -561,18 +610,21 @@ msgid "btnCancel"
 msgstr ""
 
 #. Default: "Button bar"
-#: ../ulearn.theme/ulearn/theme/portlets/buttonbar/buttonbar.py:45
 #: ../ulearn.theme/ulearn/theme/portlets/homebuttonbar.py:19
 msgid "buttonbar"
 msgstr ""
 
+#: ./ulearn/core/controlpanel.py:188
+msgid "buttonbar_selected"
+msgstr ""
+
 #. Default: "Color primari dels botons"
-#: ./ulearn/core/controlpanel.py:251
+#: ./ulearn/core/controlpanel.py:258
 msgid "buttons_color_primary"
 msgstr ""
 
 #. Default: "Color secundari dels botons"
-#: ./ulearn/core/controlpanel.py:260
+#: ./ulearn/core/controlpanel.py:267
 msgid "buttons_color_secondary"
 msgstr ""
 
@@ -582,7 +634,7 @@ msgid "campus_url"
 msgstr ""
 
 #. Default: "Change type"
-#: ../ulearn.theme/ulearn/theme/portlets/templates/profile.pt:79
+#: ../ulearn.theme/ulearn/theme/portlets/templates/profile.pt:81
 msgid "change_community_type"
 msgstr ""
 
@@ -592,27 +644,27 @@ msgid "collective_polls_VotePortlet"
 msgstr ""
 
 #. Default: "Color comunitat tancada"
-#: ./ulearn/core/controlpanel.py:269
+#: ./ulearn/core/controlpanel.py:276
 msgid "color_community_closed"
 msgstr ""
 
 #. Default: "Color comunitat oberta"
-#: ./ulearn/core/controlpanel.py:287
+#: ./ulearn/core/controlpanel.py:294
 msgid "color_community_open"
 msgstr ""
 
 #. Default: "Color comunitat organitzativa"
-#: ./ulearn/core/controlpanel.py:278
+#: ./ulearn/core/controlpanel.py:285
 msgid "color_community_organizative"
 msgstr ""
 
-#: ../ulearn.theme/ulearn/theme/portlets/communities.py:33
-#: ../ulearn.theme/ulearn/theme/portlets/templates/communities.pt:6
+#: ../ulearn.theme/ulearn/theme/portlets/communities.py:30
+#: ../ulearn.theme/ulearn/theme/portlets/templates/communities.pt:8
 msgid "communities"
 msgstr ""
 
 #. Default: "This is an open community, but you are not currently subscribed."
-#: ./ulearn/core/content/community_templates/view.pt:47
+#: ./ulearn/core/content/community_templates/view.pt:48
 msgid "community_open_and_no_subscribed"
 msgstr ""
 
@@ -636,7 +688,7 @@ msgid "comunitat_modificada"
 msgstr ""
 
 #. Default: "Create a new community"
-#: ../ulearn.theme/ulearn/theme/portlets/templates/communities.pt:54
+#: ../ulearn.theme/ulearn/theme/portlets/templates/communities.pt:56
 msgid "createcommunity"
 msgstr ""
 
@@ -644,25 +696,17 @@ msgstr ""
 msgid "custombuttonbar"
 msgstr ""
 
-#: ../ulearn.theme/ulearn/theme/browser/user_profile.py:106
-msgid "description"
-msgstr ""
-
 #. Default: "Discussion portlet"
-#: ../ulearn.theme/ulearn/theme/portlets/discussion.py:35
+#: ../ulearn.theme/ulearn/theme/portlets/discussion.py:28
 msgid "discussion"
 msgstr ""
 
 #. Default: "Edit this community"
-#: ../ulearn.theme/ulearn/theme/portlets/templates/profile.pt:51
+#: ../ulearn.theme/ulearn/theme/portlets/templates/profile.pt:53
 msgid "editcommunity"
 msgstr ""
 
-#: ../ulearn.theme/ulearn/theme/browser/user_profile.py:106
-msgid "email"
-msgstr ""
-
-#: ../ulearn.theme/ulearn/theme/portlets/stats.py:70
+#: ../ulearn.theme/ulearn/theme/portlets/stats.py:74
 msgid "entrades"
 msgstr ""
 
@@ -682,22 +726,18 @@ msgstr ""
 msgid "flashesinformativos"
 msgstr ""
 
-#: ../ulearn.theme/ulearn/theme/browser/user_profile.py:106
-msgid "fullname"
-msgstr ""
-
 #. Default: "Habilitar portlet genweb_portlets_news_events_listing"
 #: ../ulearn.theme/ulearn/theme/controlportlets.py:27
 msgid "genweb_portlets_news_events_listing"
 msgstr ""
 
 #. Default: "Go to the campus"
-#: ../ulearn.theme/ulearn/theme/portlets/templates/communities.pt:74
+#: ../ulearn.theme/ulearn/theme/portlets/templates/communities.pt:76
 msgid "gotocampus"
 msgstr ""
 
 #. Default: "Go to the library"
-#: ../ulearn.theme/ulearn/theme/portlets/templates/communities.pt:80
+#: ../ulearn.theme/ulearn/theme/portlets/templates/communities.pt:82
 msgid "gotolibrary"
 msgstr ""
 
@@ -716,27 +756,27 @@ msgid "help_activate_sharedwithme"
 msgstr ""
 
 #: ./ulearn/core/content/community.py:163
-#: ./ulearn/core/controlpanel.py:342
+#: ./ulearn/core/controlpanel.py:349
 msgid "help_activity_view"
 msgstr ""
 
 #. Default: "Aquest és el color final dels gradients."
-#: ./ulearn/core/controlpanel.py:226
+#: ./ulearn/core/controlpanel.py:233
 msgid "help_alt_gradient_end_color"
 msgstr ""
 
 #. Default: "Aquest és el color inicial dels gradients."
-#: ./ulearn/core/controlpanel.py:217
+#: ./ulearn/core/controlpanel.py:224
 msgid "help_alt_gradient_start_color"
 msgstr ""
 
 #. Default: "Aquest és el color de fons global o la propietat corresponent."
-#: ./ulearn/core/controlpanel.py:244
+#: ./ulearn/core/controlpanel.py:251
 msgid "help_background_color"
 msgstr ""
 
 #. Default: "Aquest és la propietat de CSS de background."
-#: ./ulearn/core/controlpanel.py:235
+#: ./ulearn/core/controlpanel.py:242
 msgid "help_background_property"
 msgstr ""
 
@@ -746,12 +786,12 @@ msgid "help_biography"
 msgstr ""
 
 #. Default: "Aquest és el color primari dels botons."
-#: ./ulearn/core/controlpanel.py:253
+#: ./ulearn/core/controlpanel.py:260
 msgid "help_buttons_color_primary"
 msgstr ""
 
 #. Default: "Aquest és el color secundari dels botons."
-#: ./ulearn/core/controlpanel.py:262
+#: ./ulearn/core/controlpanel.py:269
 msgid "help_buttons_color_secondary"
 msgstr ""
 
@@ -766,17 +806,17 @@ msgid "help_collective_polls_VotePortlet"
 msgstr ""
 
 #. Default: "Aquest és el color per les comunitats tancades."
-#: ./ulearn/core/controlpanel.py:271
+#: ./ulearn/core/controlpanel.py:278
 msgid "help_color_community_closed"
 msgstr ""
 
 #. Default: "Aquest és el color per les comunitats obertes."
-#: ./ulearn/core/controlpanel.py:289
+#: ./ulearn/core/controlpanel.py:296
 msgid "help_color_community_open"
 msgstr ""
 
 #. Default: "Aquest és el color per les comunitats organitzatives."
-#: ./ulearn/core/controlpanel.py:280
+#: ./ulearn/core/controlpanel.py:287
 msgid "help_color_community_organizative"
 msgstr ""
 
@@ -826,7 +866,7 @@ msgid "help_info_servei"
 msgstr ""
 
 #. Default: "Aquest és l'idioma de l'espai, que es configura quan el paquet es reinstala."
-#: ./ulearn/core/controlpanel.py:299
+#: ./ulearn/core/controlpanel.py:306
 #: ./ulearn/core/userschema.py:102
 msgid "help_language"
 msgstr ""
@@ -857,12 +897,12 @@ msgid "help_location"
 msgstr ""
 
 #. Default: "Aquest és el color principal de l'espai."
-#: ./ulearn/core/controlpanel.py:190
+#: ./ulearn/core/controlpanel.py:197
 msgid "help_main_color"
 msgstr ""
 
 #. Default: "Aquest és el color del fons del widget de MAX."
-#: ./ulearn/core/controlpanel.py:208
+#: ./ulearn/core/controlpanel.py:215
 msgid "help_maxui_form_bg"
 msgstr ""
 
@@ -946,25 +986,25 @@ msgid "help_portrait"
 msgstr ""
 
 #. Default: "Afegiu la icona del Font Awesome que voleu que es mostri"
-#: ./ulearn/core/controlpanel.py:329
+#: ./ulearn/core/controlpanel.py:336
 msgid "help_quicklinks_icon"
 msgstr ""
 
-#: ./ulearn/core/controlpanel.py:337
+#: ./ulearn/core/controlpanel.py:344
 msgid "help_quicklinks_literal"
 msgstr ""
 
-#: ./ulearn/core/controlpanel.py:323
+#: ./ulearn/core/controlpanel.py:330
 msgid "help_quicklinks_table"
 msgstr ""
 
 #. Default: "Aquest és el color secundari de l'espai."
-#: ./ulearn/core/controlpanel.py:199
+#: ./ulearn/core/controlpanel.py:206
 msgid "help_secondary_color"
 msgstr ""
 
 #. Default: "If selected, then gives the option to show the News Items in Mobile App."
-#: ./ulearn/core/controlpanel.py:358
+#: ./ulearn/core/controlpanel.py:365
 msgid "help_show_news_in_app"
 msgstr ""
 
@@ -1069,7 +1109,7 @@ msgid "help_ulearn_profile"
 msgstr ""
 
 #. Default: "uLearn configuration registry."
-#: ./ulearn/core/controlpanel.py:371
+#: ./ulearn/core/controlpanel.py:378
 msgid "help_ulearn_settings_editform"
 msgstr ""
 
@@ -1089,7 +1129,7 @@ msgid "help_ulearn_thinkers"
 msgstr ""
 
 #. Default: "Url per defecte: \"/mail_password_form?userid=\". Per a dominis externs indiqueu la url completa, \"http://www.domini.cat\""
-#: ./ulearn/core/controlpanel.py:350
+#: ./ulearn/core/controlpanel.py:357
 msgid "help_url_forget_password"
 msgstr ""
 
@@ -1108,16 +1148,12 @@ msgstr ""
 msgid "help_wsurl"
 msgstr ""
 
-#: ../ulearn.theme/ulearn/theme/browser/user_profile.py:106
-msgid "home_page"
-msgstr ""
-
 #: ../ulearn.theme/ulearn/theme/portlets/importantnews/importantnews.py:46
 msgid "importantnews"
 msgstr ""
 
 #. Default: "Info"
-#: ./ulearn/core/content/community_templates/view.pt:44
+#: ./ulearn/core/content/community_templates/view.pt:45
 msgid "info"
 msgstr ""
 
@@ -1214,7 +1250,7 @@ msgid "label_portrait"
 msgstr ""
 
 #. Default: "Show all items"
-#: ../ulearn.theme/ulearn/theme/browser/views.py:414
+#: ../ulearn.theme/ulearn/theme/browser/views.py:415
 msgid "label_show_all"
 msgstr ""
 
@@ -1249,7 +1285,7 @@ msgid "label_wsurl"
 msgstr ""
 
 #. Default: "Idioma de l'espai"
-#: ./ulearn/core/controlpanel.py:297
+#: ./ulearn/core/controlpanel.py:304
 msgid "language"
 msgstr ""
 
@@ -1273,67 +1309,62 @@ msgstr ""
 msgid "llindar_winwin3"
 msgstr ""
 
-#: ../ulearn.theme/ulearn/theme/browser/user_profile.py:106
-msgid "location"
-msgstr ""
-
 #. Default: "Color principal"
-#: ./ulearn/core/controlpanel.py:188
+#: ./ulearn/core/controlpanel.py:195
 msgid "main_color"
 msgstr ""
 
 #. Default: "Manage members"
-#: ../ulearn.theme/ulearn/theme/portlets/templates/profile.pt:71
+#: ../ulearn.theme/ulearn/theme/portlets/templates/profile.pt:73
 msgid "manage_membership"
 msgstr ""
 
 #. Default: "Color del fons del widget de MAX."
-#: ./ulearn/core/controlpanel.py:206
+#: ./ulearn/core/controlpanel.py:213
 msgid "maxui_form_bg"
 msgstr ""
 
 #. Default: "Estadístiques"
-#: ../ulearn.theme/ulearn/theme/browser/viewlets_templates/personal_bar.pt:123
+#: ../ulearn.theme/ulearn/theme/browser/viewlets_templates/personal_bar.pt:149
 msgid "menu-gestio-estadistiques"
 msgstr ""
 
 #. Default: "Gestionar peu"
-#: ../ulearn.theme/ulearn/theme/browser/viewlets_templates/personal_bar.pt:111
+#: ../ulearn.theme/ulearn/theme/browser/viewlets_templates/personal_bar.pt:137
 msgid "menu-gestio-footer"
 msgstr ""
 
 #. Default: "Gestionar capçalera"
-#: ../ulearn.theme/ulearn/theme/browser/viewlets_templates/personal_bar.pt:107
+#: ../ulearn.theme/ulearn/theme/browser/viewlets_templates/personal_bar.pt:133
 msgid "menu-gestio-header"
 msgstr ""
 
 #. Default: "Noticies"
-#: ../ulearn.theme/ulearn/theme/browser/viewlets_templates/personal_bar.pt:103
+#: ../ulearn.theme/ulearn/theme/browser/viewlets_templates/personal_bar.pt:129
 msgid "menu-gestio-noticies"
 msgstr ""
 
 #. Default: "Management"
-#: ../ulearn.theme/ulearn/theme/browser/viewlets_templates/personal_bar.pt:96
+#: ../ulearn.theme/ulearn/theme/browser/viewlets_templates/personal_bar.pt:122
 msgid "menu-gestion"
 msgstr ""
 
 #. Default: "Management menu"
-#: ../ulearn.theme/ulearn/theme/browser/viewlets_templates/personal_bar.pt:115
+#: ../ulearn.theme/ulearn/theme/browser/viewlets_templates/personal_bar.pt:141
 msgid "menu-gestion-menu"
 msgstr ""
 
 #. Default: "Reset Menu"
-#: ../ulearn.theme/ulearn/theme/browser/viewlets_templates/personal_bar.pt:119
+#: ../ulearn.theme/ulearn/theme/browser/viewlets_templates/personal_bar.pt:145
 msgid "menu-reset-menu"
 msgstr ""
 
-#. Default: "The menu has been successfully reset."
-#: ../ulearn.theme/ulearn/theme/browser/views_templates/reset_menu_bar.pt:18
+#: ../ulearn.theme/ulearn/theme/browser/views.py:973
 msgid "menu-reset-menu-msg"
 msgstr ""
 
 #. Default: "Most valued portlet"
-#: ../ulearn.theme/ulearn/theme/portlets/mostvalued.py:28
+#: ../ulearn.theme/ulearn/theme/portlets/mostvalued.py:21
 msgid "mostvalued"
 msgstr ""
 
@@ -1348,7 +1379,7 @@ msgid "my_communities"
 msgstr ""
 
 #. Default: "Communities"
-#: ../ulearn.theme/ulearn/theme/portlets/buttonbar/buttonbar.pt:21
+#: ../ulearn.theme/ulearn/theme/portlets/buttonbar/buttonbar.pt:30
 msgid "my_communities_buttonbar"
 msgstr ""
 
@@ -1377,27 +1408,27 @@ msgid "newdiscussion"
 msgstr ""
 
 #. Default: "Create a new event"
-#: ../ulearn.theme/ulearn/theme/portlets/templates/calendar.pt:131
+#: ../ulearn.theme/ulearn/theme/portlets/templates/calendar.pt:129
 msgid "newevent"
 msgstr ""
 
 #. Default: "News"
-#: ../ulearn.theme/ulearn/theme/portlets/buttonbar/buttonbar.pt:30
+#: ../ulearn.theme/ulearn/theme/portlets/buttonbar/buttonbar.pt:21
 msgid "news_buttonbar"
 msgstr ""
 
 #. Default: "There is no content shared with you right now."
-#: ../ulearn.theme/ulearn/theme/browser/views_templates/sharedwithme.pt:35
+#: ../ulearn.theme/ulearn/theme/browser/views_templates/sharedwithme.pt:34
 #: ../ulearn.theme/ulearn/theme/portlets/templates/buttonbar.pt:117
 msgid "no_content_shared_user"
 msgstr ""
 
-#: ./ulearn/core/controlpanel.py:308
+#: ./ulearn/core/controlpanel.py:315
 msgid "no_visibles"
 msgstr ""
 
 #. Default: "nom.usuari"
-#: ../ulearn.theme/ulearn/theme/skins/ulearntheme_custom/login_form.cpt:186
+#: ../ulearn.theme/ulearn/theme/skins/ulearntheme_custom/login_form.cpt:182
 msgid "nom_usuari"
 msgstr ""
 
@@ -1411,11 +1442,11 @@ msgid "notify_activity_via_push_help"
 msgstr ""
 
 #. Default: "contrasenya"
-#: ../ulearn.theme/ulearn/theme/skins/ulearntheme_custom/login_form.cpt:201
+#: ../ulearn.theme/ulearn/theme/skins/ulearntheme_custom/login_form.cpt:197
 msgid "password"
 msgstr ""
 
-#: ./ulearn/core/controlpanel.py:315
+#: ./ulearn/core/controlpanel.py:322
 msgid "people_literal"
 msgstr ""
 
@@ -1484,12 +1515,12 @@ msgid "privateFolder"
 msgstr ""
 
 #. Default: "User profile"
-#: ../ulearn.theme/ulearn/theme/portlets/profile.py:34
+#: ../ulearn.theme/ulearn/theme/portlets/profile.py:33
 msgid "profile"
 msgstr ""
 
 #. Default: "icon-link"
-#: ./ulearn/core/controlpanel.py:327
+#: ./ulearn/core/controlpanel.py:334
 msgid "quicklinks_icon"
 msgstr ""
 
@@ -1501,8 +1532,8 @@ msgstr ""
 
 #. Default: "Cerca"
 #: ../ulearn.theme/ulearn/theme/browser/views_templates/filtered_contents_search.pt:35
-#: ../ulearn.theme/ulearn/theme/browser/views_templates/sharedwithme.pt:25
-#: ../ulearn.theme/ulearn/theme/portlets/templates/buttonbar.pt:107
+#: ../ulearn.theme/ulearn/theme/browser/views_templates/sharedwithme.pt:24
+#: ../ulearn.theme/ulearn/theme/portlets/buttonbar/buttonbar.pt:175
 msgid "search"
 msgstr ""
 
@@ -1521,13 +1552,8 @@ msgstr ""
 msgid "search_tags"
 msgstr ""
 
-#. Default: "Cerca"
-#: ../ulearn.theme/ulearn/theme/portlets/templates/thinnkers.pt:28
-msgid "search_users"
-msgstr ""
-
 #. Default: "Color secundari"
-#: ./ulearn/core/controlpanel.py:197
+#: ./ulearn/core/controlpanel.py:204
 msgid "secondary_color"
 msgstr ""
 
@@ -1537,12 +1563,12 @@ msgid "seemore"
 msgstr ""
 
 #. Default: "See more communities"
-#: ../ulearn.theme/ulearn/theme/portlets/templates/communities.pt:68
+#: ../ulearn.theme/ulearn/theme/portlets/templates/communities.pt:70
 msgid "seemore_communities"
 msgstr ""
 
 #. Default: "See more"
-#: ../ulearn.theme/ulearn/theme/portlets/templates/stats.pt:140
+#: ../ulearn.theme/ulearn/theme/portlets/templates/stats.pt:100
 msgid "seemore_stats"
 msgstr ""
 
@@ -1557,12 +1583,12 @@ msgid "seemorediscussions"
 msgstr ""
 
 #. Default: "See more events"
-#: ../ulearn.theme/ulearn/theme/portlets/templates/calendar.pt:112
+#: ../ulearn.theme/ulearn/theme/portlets/templates/calendar.pt:110
 msgid "seemoreevents"
 msgstr ""
 
 #. Default: "Veure tots els participants"
-#: ../ulearn.theme/ulearn/theme/portlets/templates/thinnkers.pt:38
+#: ../ulearn.theme/ulearn/theme/portlets/templates/thinnkers.pt:33
 msgid "seethinkers"
 msgstr ""
 
@@ -1578,7 +1604,7 @@ msgstr ""
 
 #. Default: "Shared content"
 #: ../ulearn.theme/ulearn/theme/browser/views_templates/filtered_contents_search.pt:74
-#: ../ulearn.theme/ulearn/theme/browser/views_templates/filtered_contents_search_ajax.pt:21
+#: ../ulearn.theme/ulearn/theme/browser/views_templates/filtered_contents_search_ajax.pt:9
 msgid "shared_content_title"
 msgstr ""
 
@@ -1599,11 +1625,11 @@ msgid "sharedwithme"
 msgstr ""
 
 #. Default: "Show News Items in App"
-#: ./ulearn/core/controlpanel.py:356
+#: ./ulearn/core/controlpanel.py:363
 msgid "show_news_in_app"
 msgstr ""
 
-#: ../ulearn.theme/ulearn/theme/portlets/stats.py:21
+#: ../ulearn.theme/ulearn/theme/portlets/stats.py:20
 #: ../ulearn.theme/ulearn/theme/portlets/templates/stats.pt:7
 #: ./ulearn/core/browser/stats_templates/statsview.pt:143
 msgid "stats"
@@ -1614,7 +1640,7 @@ msgstr ""
 msgid "stats_button"
 msgstr ""
 
-#: ../ulearn.theme/ulearn/theme/portlets/templates/stats.pt:29
+#: ../ulearn.theme/ulearn/theme/portlets/templates/stats.pt:22
 msgid "stats_comments"
 msgstr ""
 
@@ -1629,7 +1655,7 @@ msgid "subjects"
 msgstr ""
 
 #. Default: "Subscribe"
-#: ./ulearn/core/content/community_templates/view.pt:52
+#: ./ulearn/core/content/community_templates/view.pt:53
 msgid "subscribe"
 msgstr ""
 
@@ -1638,21 +1664,9 @@ msgstr ""
 msgid "teacher"
 msgstr ""
 
-#: ../ulearn.theme/ulearn/theme/browser/user_profile.py:106
-msgid "telefon"
-msgstr ""
-
 #. Default: "Thinnkers portlet"
-#: ../ulearn.theme/ulearn/theme/portlets/thinnkers.py:27
+#: ../ulearn.theme/ulearn/theme/portlets/thinnkers.py:21
 msgid "thinnkers"
-msgstr ""
-
-#: ../ulearn.theme/ulearn/theme/browser/user_profile.py:106
-msgid "twitter_username"
-msgstr ""
-
-#: ../ulearn.theme/ulearn/theme/browser/user_profile.py:106
-msgid "ubicacio"
 msgstr ""
 
 #: ./ulearn/core/configure.zcml:71
@@ -1696,7 +1710,7 @@ msgstr ""
 
 #. Default: "Documents"
 #: ../ulearn.theme/ulearn/theme/browser/viewlets_templates/folderbar.pt:26
-#: ../ulearn.theme/ulearn/theme/portlets/templates/stats.pt:42
+#: ../ulearn.theme/ulearn/theme/portlets/templates/stats.pt:31
 msgid "ulearn_documents"
 msgstr ""
 
@@ -1706,12 +1720,12 @@ msgid "ulearn_econnect"
 msgstr ""
 
 #. Default: "Links"
-#: ../ulearn.theme/ulearn/theme/portlets/templates/stats.pt:55
+#: ../ulearn.theme/ulearn/theme/portlets/templates/stats.pt:40
 msgid "ulearn_links"
 msgstr ""
 
 #. Default: "Media"
-#: ../ulearn.theme/ulearn/theme/portlets/templates/stats.pt:68
+#: ../ulearn.theme/ulearn/theme/portlets/templates/stats.pt:49
 msgid "ulearn_media"
 msgstr ""
 
@@ -1776,12 +1790,12 @@ msgid "ulearn_thinkers"
 msgstr ""
 
 #. Default: "Calendar portlet"
-#: ../ulearn.theme/ulearn/theme/portlets/calendar.py:43
+#: ../ulearn.theme/ulearn/theme/portlets/calendar.py:37
 msgid "ulearncalendar"
 msgstr ""
 
 #. Default: "URL contrasenya oblidada"
-#: ./ulearn/core/controlpanel.py:348
+#: ./ulearn/core/controlpanel.py:355
 msgid "url_forget_password"
 msgstr ""
 
