@@ -442,7 +442,7 @@ msgstr "Desa"
 
 #: ./ulearn/core/controlpanel.py:189
 msgid "Select the active button in the button bar."
-msgstr "Select the active button in the button bar.""
+msgstr "Select the active button in the button bar."
 
 #: ./ulearn/core/controlpanel.py:86
 msgid "Specific"
