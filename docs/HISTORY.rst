@@ -1,11 +1,22 @@
 Changelog
 =========
 
-2.68 (unreleased)
+2.69 (unreleased)
 -----------------
 
 - Nothing changed yet.
 
+
+2.68 (2018-06-13)
+-----------------
+
+
+
+2.68 (2018-06-13)
+-----------------
+
+* Normalize filename image new [Pilar Marinas]
+* nomines translations [Roberto Diaz]
 
 2.67 (2018-06-06)
 -----------------
