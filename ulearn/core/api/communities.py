@@ -21,6 +21,7 @@ from souper.soup import get_soup
 import requests
 from plone.namedfile.file import NamedBlobImage
 from mimetypes import MimeTypes
+from base64 import b64encode
 
 
 class CommunityMixin(object):
@@ -116,6 +117,69 @@ class CommunitiesGWOPA(REST):
         records = [r for r in soup.query(Eq('gwuuid', gwuuid))]
         if records:
             return self.username in [a['id'] for a in records[0].attrs['acl']['users'] if a['role'] == u'owner']
+
+class CommunitiesMigration(REST):
+    """
+        /api/communitiesmigration
+    """
+
+    placeholder_type = 'community'
+    placeholder_id = 'community'
+
+    grok.adapts(APIRoot, IPloneSiteRoot)
+    grok.require('genweb.authenticated')
+
+    @api_resource(required_roles=['Manager'])
+    def GET(self):
+        """ Returns all communities """
+
+        # Get all communities
+        pc = api.portal.get_tool('portal_catalog')
+        communities = pc.unrestrictedSearchResults(portal_type='ulearn.community')
+
+        result = []
+        for brain in communities:
+            object_community = brain.getObject()
+
+            community = dict(id=brain.id,
+                             title=brain.Title,
+                             description=brain.Description,
+                             url=brain.getURL(),
+                             gwuuid=brain.gwuuid,
+                             type=brain.community_type,
+                             image=brain.image_filename if brain.image_filename else False,
+                             listCreators=brain.listCreators,
+                             ModificationDate=brain.ModificationDate,
+                             CreationDate=brain.CreationDate,
+                             favoritedBy=str(brain.favoritedBy),
+                             community_hash=brain.community_hash,
+                             is_shared=brain.is_shared,
+                             Creator=brain.Creator,
+                             UID=brain.UID,
+                             editacl=self.get_editacl(brain),
+                             twitter_hashtag=object_community.twitter_hashtag,
+                             notify_activity_via_push=object_community.notify_activity_via_push,
+                             notify_activity_via_push_comments_too=object_community.notify_activity_via_push_comments_too,
+                             activity_view=object_community.activity_view,
+                             rawimage=b64encode(object_community.image.data) if object_community.image != None else ''
+                            )
+            result.append(community)
+
+        return ApiResponse(result)
+
+
+    def get_editacl(self, community):
+        # The user has role Manager
+
+        gwuuid = community.gwuuid
+        portal = api.portal.get()
+        soup = get_soup('communities_acl', portal)
+
+        records = [r for r in soup.query(Eq('gwuuid', gwuuid))]
+        editacl = dict(users=records[0].attrs['acl'].get('users', ''),
+                       groups=records[0].attrs['acl'].get('groups', ''))
+
+        return editacl
 
 
 class Communities(REST):
