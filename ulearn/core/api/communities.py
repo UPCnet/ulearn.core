@@ -140,8 +140,8 @@ class CommunitiesMigration(REST):
         result = []
         for brain in communities:
             object_community = brain.getObject()
-
-            community = dict(id=brain.id,
+            try:
+                community = dict(id=brain.id,
                              title=brain.Title,
                              description=brain.Description,
                              url=brain.getURL(),
@@ -163,7 +163,9 @@ class CommunitiesMigration(REST):
                              activity_view=object_community.activity_view,
                              rawimage=b64encode(object_community.image.data) if object_community.image != None else ''
                             )
-            result.append(community)
+                result.append(community)
+            except:
+                logger.info('HA FALLAT LA COMUNITAT {}'.format(brain.id))
 
         return ApiResponse(result)
 
@@ -177,8 +179,7 @@ class CommunitiesMigration(REST):
 
         records = [r for r in soup.query(Eq('gwuuid', gwuuid))]
         editacl = dict(users=records[0].attrs['acl'].get('users', ''),
-                       groups=records[0].attrs['acl'].get('groups', ''))
-
+                    groups=records[0].attrs['acl'].get('groups', ''))
         return editacl
 
 
