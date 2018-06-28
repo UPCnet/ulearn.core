@@ -1831,3 +1831,27 @@ msgstr "Add your website youtube video"
 #: ../ulearn.theme/ulearn/theme/portlets/templates/econnect.pt:8
 msgid "web_collaboration"
 msgstr "<i class=\"fa fa-arrow-circle-right\"></i> Create a new session"
+
+#: ../ulearn.core/ulearn/core/browser/statisticsTemplate.pt:66
+msgid "statsTitle"
+msgstr "General statistics"
+
+#: ../ulearn.core/ulearn/core/browser/statisticsTemplate.pt:67
+msgid "statsUpdating"
+msgstr "[Updating...]"
+
+#: ../ulearn.core/ulearn/core/browser/statisticsTemplate.pt:74
+msgid "statsAccessedOverTime"
+msgstr "Accesses over time"
+
+#: ../ulearn.core/ulearn/core/browser/statisticsTemplate.pt:74
+msgid "statsModifiedOverTime"
+msgstr "Modifications over time"
+
+#: ../ulearn.core/ulearn/core/browser/statisticsTemplate.pt:76
+msgid "statsAccumulative"
+msgstr "Accumulative results"
+
+#: ../ulearn.core/ulearn/core/browser/statisticsTemplate.pt:83
+msgid "statsCommunityName"
+msgstr "Community name"

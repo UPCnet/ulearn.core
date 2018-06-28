@@ -104,6 +104,10 @@ class IUlearnControlPanelSettings(model.Schema):
                    _(u'UPCnet only'),
                    fields=['language', 'activity_view', 'url_forget_password', 'show_news_in_app'])
 
+    model.fieldset('Google Analytics',
+                   u'Google Analytics',
+                   fields=['gAnalytics_enabled', 'gAnalytics_view_ID', 'gAnalytics_JSON_info'])
+
     campus_url = schema.TextLine(
         title=_(u'campus_url',
                 default=_(u'URL del campus')),
@@ -359,6 +363,24 @@ class IUlearnControlPanelSettings(model.Schema):
                       default=_(u"If selected, then gives the option to show the News Items in Mobile App.")),
         required=False,
         default=False,
+    )
+
+    gAnalytics_enabled = schema.Bool(
+        title=_(u"Enable querying Google Analytics' servers"),
+        required=True,
+        default=False
+    )
+
+    gAnalytics_view_ID = schema.TextLine(
+        title=_(u'View ID'),
+        description=_(u"Obtainable from the View Settings panel on Google Analytics Admin control panel"),
+        required=False
+    )
+
+    gAnalytics_JSON_info = schema.Text(
+        title=_(u"JSON encoded user info"),
+        description=_(u"Enter the content of the JSON file given when the service account was created"),
+        required=False
     )
 
 

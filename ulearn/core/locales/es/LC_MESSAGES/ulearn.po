@@ -1814,3 +1814,27 @@ msgstr "Agregar la dirección web del video de youtube"
 #: ../ulearn.theme/ulearn/theme/portlets/templates/econnect.pt:8
 msgid "web_collaboration"
 msgstr "<i class=\"fa fa-arrow-circle-right\"></i> Crear nueva sesión."
+
+#: ../ulearn.core/ulearn/core/browser/statisticsTemplate.pt:66
+msgid "statsTitle"
+msgstr "Estadísticas generales"
+
+#: ../ulearn.core/ulearn/core/browser/statisticsTemplate.pt:67
+msgid "statsUpdating"
+msgstr "[Actualizando...]"
+
+#: ../ulearn.core/ulearn/core/browser/statisticsTemplate.pt:74
+msgid "statsAccessedOverTime"
+msgstr "Accesos en función del tiempo"
+
+#: ../ulearn.core/ulearn/core/browser/statisticsTemplate.pt:74
+msgid "statsModifiedOverTime"
+msgstr "Modificaciones en función del tiempo"
+
+#: ../ulearn.core/ulearn/core/browser/statisticsTemplate.pt:76
+msgid "statsAccumulative"
+msgstr "Resultados acumulativos"
+
+#: ../ulearn.core/ulearn/core/browser/statisticsTemplate.pt:83
+msgid "statsCommunityName"
+msgstr "Nombre de la comunidad"
