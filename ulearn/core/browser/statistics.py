@@ -76,17 +76,17 @@ class statsAccessed(grok.View):
     def getAllAccessedTables(self, upToDate):
 
         dateIntervals = self.getDateIntervals()
-        gStoredAnalyticsFileName = "storedAnalytics.json"
+        #gStoredAnalyticsFileName = "storedAnalytics.json"
         gAnalyticsPath = path.join(path.dirname(__file__))
 
-        def getStoredAnalytics():
-            try:
-                storedAnalytics = file(path.join(gAnalyticsPath, gStoredAnalyticsFileName), "r")
-                data = json.loads(storedAnalytics.read())
-                storedAnalytics.close()
-                return data
-            except:
-                return {}
+        # def getStoredAnalytics():
+        #     try:
+        #         storedAnalytics = file(path.join(gAnalyticsPath, gStoredAnalyticsFileName), "r")
+        #         data = json.loads(storedAnalytics.read())
+        #         storedAnalytics.close()
+        #         return data
+        #     except:
+        #         return {}
 
         def getUpToDateAnalytics(communityShortpaths):
             settings = getUtility(IRegistry).forInterface(IUlearnControlPanelSettings)
@@ -99,9 +99,11 @@ class statsAccessed(grok.View):
             gAnalytics_view_ID = settings.gAnalytics_view_ID
             gAnalytics_JSON_info = settings.gAnalytics_JSON_info
 
-            falsePrefixes = ['/8/comunitats',
-                             '/acl_users/credentials_cookie_auth/require_login?'
-                             'came_from=https://comunitats.upc.edu']
+            # falsePrefixes = ['/2/intranetupcnet',
+            #                  '/acl_users/credentials_cookie_auth/require_login?'
+            #                  'came_from=https://comunitats.upcnet.es']
+
+            falsePrefixes = []
 
             credentials = ServiceAccountCredentials.from_json_keyfile_dict(
                            json.loads(gAnalytics_JSON_info),
@@ -147,9 +149,9 @@ class statsAccessed(grok.View):
             for communityShortpath in data:
                 data[communityShortpath].reverse()
 
-            storedAnalytics = file(path.join(gAnalyticsPath, gStoredAnalyticsFileName), "wb")
-            storedAnalytics.write(json.dumps(data, separators=(',', ':')))
-            storedAnalytics.close()
+            # storedAnalytics = file(path.join(gAnalyticsPath, gStoredAnalyticsFileName), "wb")
+            # storedAnalytics.write(json.dumps(data, separators=(',', ':')))
+            # storedAnalytics.close()
 
             return data
 
@@ -163,7 +165,8 @@ class statsAccessed(grok.View):
         if upToDate:
             data = getUpToDateAnalytics(communityShortpaths)
         else:
-            data = getStoredAnalytics()
+            #data = getStoredAnalytics()
+            data = {}
 
         accessedTable = []
         for communityShortpath in data:
