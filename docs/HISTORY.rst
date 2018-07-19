@@ -1,10 +1,9 @@
 Changelog
 =========
 
-2.70 (unreleased)
+2.70 (2018-07-19)
 -----------------
 
-- Nothing changed yet.
 
 
 2.69 (2018-07-12)
