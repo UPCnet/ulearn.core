@@ -1,11 +1,23 @@
 Changelog
 =========
 
-2.69 (unreleased)
+2.71 (unreleased)
 -----------------
 
 - Nothing changed yet.
 
+
+2.70 (2018-07-19)
+-----------------
+
+
+
+2.69 (2018-07-12)
+-----------------
+
+* WS Modify displayName user for uTalk [Pilar Marinas]
+* Add exception for communities migration [alberto.duran]
+* WS Communities Migration [Pilar Marinas]
 
 2.68 (2018-06-13)
 -----------------
