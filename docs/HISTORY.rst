@@ -1,11 +1,11 @@
 Changelog
 =========
 
-2.71 (unreleased)
+2.71 (2018-07-19)
 -----------------
 
-- Nothing changed yet.
-
+* added CMYK support to profile images [Roberto Diaz]
+* Merge remote-tracking branch 'remotes/origin/develop' into develop [Roberto Diaz]
 
 2.70 (2018-07-19)
 -----------------

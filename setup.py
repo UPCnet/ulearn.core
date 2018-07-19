@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import os
 
-version = '2.71.dev0'
+version = '2.71'
 
 README = open('README.rst').read()
 HISTORY = open(os.path.join('docs', 'HISTORY.rst')).read()
