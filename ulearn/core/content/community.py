@@ -578,6 +578,7 @@ class OrganizativeCommunity(CommunityAdapterMixin):
 
         super(OrganizativeCommunity, self).set_plone_permissions(acl, changed)
 
+
 @grok.implementer(ICommunityTyped)
 @grok.adapter(ICommunity, Interface, name='Open')
 class OpenCommunity(CommunityAdapterMixin):

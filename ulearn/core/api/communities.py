@@ -200,18 +200,25 @@ class SaveEditACL(REST):
 
     @api_resource(required_roles=['Manager'])
     def GET(self):
-        """ Returns all communities """
-
-        # Get all communities
+        """ Launch an editacl SAVE process on all communities """
         pc = api.portal.get_tool('portal_catalog')
         communities = pc.unrestrictedSearchResults(portal_type='ulearn.community')
+        results = []
 
-        result = []
+        for item in communities:
+            self.target = item.getObject()
+            self.payload = ICommunityACL(self.target)().attrs.get('acl', '')
+            adapter = self.target.adapted(request=self.request)
+            adapter.update_acl(self.payload)
+            acl = adapter.get_acl()
+            adapter.set_plone_permissions(acl)
+            adapter.update_hub_subscriptions()
+            success_response = 'Updated community subscriptions on: "{}" '.format(self.target.absolute_url())
+            logger.info(success_response)
+            community = dict(result=success_response)
+            results.append(community)
 
-        for brain in communities:
-            payload = ICommunityACL(brain.getObject())().attrs.get('acl', ''),
-            (api.portal.get().absolute_url_path() + '/api/communities/' + brain.gwuuid + '/subscriptions').post(payload)
-        return ApiResponse(result[0])
+        return ApiResponse(results)
 
 
 class Communities(REST):
