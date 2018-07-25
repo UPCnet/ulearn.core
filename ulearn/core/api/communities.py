@@ -118,6 +118,7 @@ class CommunitiesGWOPA(REST):
         if records:
             return self.username in [a['id'] for a in records[0].attrs['acl']['users'] if a['role'] == u'owner']
 
+
 class CommunitiesMigration(REST):
     """
         /api/communitiesmigration
@@ -142,33 +143,32 @@ class CommunitiesMigration(REST):
             object_community = brain.getObject()
             try:
                 community = dict(id=brain.id,
-                             title=brain.Title,
-                             description=brain.Description,
-                             url=brain.getURL(),
-                             gwuuid=brain.gwuuid,
-                             type=brain.community_type,
-                             image=brain.image_filename if brain.image_filename else False,
-                             listCreators=brain.listCreators,
-                             ModificationDate=brain.ModificationDate,
-                             CreationDate=brain.CreationDate,
-                             favoritedBy=str(brain.favoritedBy),
-                             community_hash=brain.community_hash,
-                             is_shared=brain.is_shared,
-                             Creator=brain.Creator,
-                             UID=brain.UID,
-                             editacl=self.get_editacl(brain),
-                             twitter_hashtag=object_community.twitter_hashtag,
-                             notify_activity_via_push=object_community.notify_activity_via_push,
-                             notify_activity_via_push_comments_too=object_community.notify_activity_via_push_comments_too,
-                             activity_view=object_community.activity_view,
-                             rawimage=b64encode(object_community.image.data) if object_community.image != None else ''
-                            )
+                                 title=brain.Title,
+                                 description=brain.Description,
+                                 url=brain.getURL(),
+                                 gwuuid=brain.gwuuid,
+                                 type=brain.community_type,
+                                 image=brain.image_filename if brain.image_filename else False,
+                                 listCreators=brain.listCreators,
+                                 ModificationDate=brain.ModificationDate,
+                                 CreationDate=brain.CreationDate,
+                                 favoritedBy=str(brain.favoritedBy),
+                                 community_hash=brain.community_hash,
+                                 is_shared=brain.is_shared,
+                                 Creator=brain.Creator,
+                                 UID=brain.UID,
+                                 editacl=self.get_editacl(brain),
+                                 twitter_hashtag=object_community.twitter_hashtag,
+                                 notify_activity_via_push=object_community.notify_activity_via_push,
+                                 notify_activity_via_push_comments_too=object_community.notify_activity_via_push_comments_too,
+                                 activity_view=object_community.activity_view,
+                                 rawimage=b64encode(object_community.image.data) if object_community.image else ''
+                                 )
                 result.append(community)
             except:
                 logger.info('HA FALLAT LA COMUNITAT {}'.format(brain.id))
 
         return ApiResponse(result)
-
 
     def get_editacl(self, community):
         # The user has role Manager
@@ -179,8 +179,50 @@ class CommunitiesMigration(REST):
 
         records = [r for r in soup.query(Eq('gwuuid', gwuuid))]
         editacl = dict(users=records[0].attrs['acl'].get('users', ''),
-                    groups=records[0].attrs['acl'].get('groups', ''))
+                       groups=records[0].attrs['acl'].get('groups', ''))
         return editacl
+
+
+class SaveEditACL(REST):
+    """
+        Simulate save on any communities on the Site.
+        Used to update the LDAP groups users membership.
+        Refresh users removed from LDAP in the soup catalog.
+
+            /api/saveeditacl
+    """
+
+    placeholder_type = 'saveeditacl'
+    placeholder_id = 'saveeditacl'
+
+    grok.adapts(APIRoot, IPloneSiteRoot)
+    grok.require('genweb.authenticated')
+
+    @api_resource(required_roles=['Manager'])
+    def GET(self):
+        """ Returns all communities """
+
+        # Get all communities
+        pc = api.portal.get_tool('portal_catalog')
+        communities = pc.unrestrictedSearchResults(portal_type='ulearn.community')
+
+        result = []
+        community = []
+        # import ipdb; ipdb.set_trace()
+        for brain in communities:
+            community = dict(id=brain.id,
+                             title=brain.Title,
+                             url=brain.getURL(),
+                             gwuuid=brain.gwuuid,
+                             type=brain.community_type,
+                             UID=brain.UID,
+                             editacl=ICommunityACL(brain.getObject())().attrs.get('acl', ''),
+                             )
+            result.append(community)
+        comm = result[0]
+        import ipdb; ipdb.set_trace()
+        api.portal.get().absolute_url()
+        return ApiResponse(result[0])
 
 
 class Communities(REST):
@@ -460,7 +502,6 @@ class Subscriptions(REST, CommunityMixin):
         # check_permission = self.check_roles(self.community, ['Owner', 'Manager'])
         # if check_permission is not True:
         #     return check_permission
-
         result = ICommunityACL(self.target)().attrs.get('acl', '')
 
         return ApiResponse(result)
