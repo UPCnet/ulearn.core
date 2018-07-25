@@ -206,15 +206,20 @@ class SaveEditACL(REST):
         results = []
 
         for item in communities:
-            self.target = item.getObject()
-            self.payload = ICommunityACL(self.target)().attrs.get('acl', '')
-            adapter = self.target.adapted(request=self.request)
-            adapter.update_acl(self.payload)
-            acl = adapter.get_acl()
-            adapter.set_plone_permissions(acl)
-            adapter.update_hub_subscriptions()
-            success_response = 'Updated community subscriptions on: "{}" '.format(self.target.absolute_url())
-            logger.info(success_response)
+            try:
+                self.target = item.getObject()
+                self.payload = ICommunityACL(self.target)().attrs.get('acl', '')
+                adapter = self.target.adapted(request=self.request)
+                adapter.update_acl(self.payload)
+                acl = adapter.get_acl()
+                adapter.set_plone_permissions(acl)
+                adapter.update_hub_subscriptions()
+                success_response = 'Updated community subscriptions on: "{}" '.format(self.target.absolute_url())
+                logger.info(success_response)
+            except:
+                success_response = 'Error updating community subscriptions on: "{}" '.format(self.target.absolute_url())
+                logger.error(success_response)
+                
             community = dict(result=success_response)
             results.append(community)
 
