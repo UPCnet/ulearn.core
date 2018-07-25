@@ -207,21 +207,10 @@ class SaveEditACL(REST):
         communities = pc.unrestrictedSearchResults(portal_type='ulearn.community')
 
         result = []
-        community = []
-        # import ipdb; ipdb.set_trace()
+
         for brain in communities:
-            community = dict(id=brain.id,
-                             title=brain.Title,
-                             url=brain.getURL(),
-                             gwuuid=brain.gwuuid,
-                             type=brain.community_type,
-                             UID=brain.UID,
-                             editacl=ICommunityACL(brain.getObject())().attrs.get('acl', ''),
-                             )
-            result.append(community)
-        comm = result[0]
-        import ipdb; ipdb.set_trace()
-        api.portal.get().absolute_url()
+            payload = ICommunityACL(brain.getObject())().attrs.get('acl', ''),
+            (api.portal.get().absolute_url_path() + '/api/communities/' + brain.gwuuid + '/subscriptions').post(payload)
         return ApiResponse(result[0])
 
 
