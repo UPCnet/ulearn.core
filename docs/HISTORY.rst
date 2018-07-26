@@ -1,11 +1,15 @@
 Changelog
 =========
 
-2.72 (unreleased)
+2.72 (2018-07-26)
 -----------------
 
-- Nothing changed yet.
-
+* group items in results json [Roberto Diaz]
+* added api permission [Roberto Diaz]
+* API SaveEditACL [Pilar Marinas]
+* testing aspb api editacl [Roberto Diaz]
+* testing aspb api [Roberto Diaz]
+* testing aspb api [Roberto Diaz]
 
 2.71 (2018-07-19)
 -----------------
