@@ -204,24 +204,27 @@ class SaveEditACL(REST):
         pc = api.portal.get_tool('portal_catalog')
         communities = pc.unrestrictedSearchResults(portal_type='ulearn.community')
         results = []
-
+        communities_ok = []
+        communities_error = []
         for item in communities:
             try:
-                self.target = item.getObject()
+                self.target = item._unrestrictedGetObject()
                 self.payload = ICommunityACL(self.target)().attrs.get('acl', '')
                 adapter = self.target.adapted(request=self.request)
                 adapter.update_acl(self.payload)
                 acl = adapter.get_acl()
                 adapter.set_plone_permissions(acl)
                 adapter.update_hub_subscriptions()
-                success_response = 'Updated community subscriptions on: "{}" '.format(self.target.absolute_url())
-                logger.info(success_response)
+                updated = 'Updated community subscriptions on: "{}" '.format(self.target.absolute_url())
+                logger.info(updated)
+                communities_ok.append(self.target.absolute_url())
             except:
-                success_response = 'Error updating community subscriptions on: "{}" '.format(self.target.absolute_url())
-                logger.error(success_response)
+                error = 'Error updating community subscriptions on: "{}" '.format(self.target.absolute_url())
+                logger.error(error)
+                communities_error.append(self.target.absolute_url())
 
-            community = dict(result=success_response)
-            results.append(community)
+        results.append(dict(successfully_updated_communities=communities_ok,
+                            error_updating_communities=communities_error))
 
         return ApiResponse(results)
 
