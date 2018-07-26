@@ -196,9 +196,9 @@ class SaveEditACL(REST):
     placeholder_id = 'saveeditacl'
 
     grok.adapts(APIRoot, IPloneSiteRoot)
-    grok.require('genweb.authenticated')
+    grok.require('ulearn.APIAccess')
 
-    @api_resource(required_roles=['Manager'])
+    @api_resource(required_roles=['Api'])
     def GET(self):
         """ Launch an editacl SAVE process on all communities """
         pc = api.portal.get_tool('portal_catalog')
@@ -219,7 +219,7 @@ class SaveEditACL(REST):
             except:
                 success_response = 'Error updating community subscriptions on: "{}" '.format(self.target.absolute_url())
                 logger.error(success_response)
-                
+
             community = dict(result=success_response)
             results.append(community)
 
