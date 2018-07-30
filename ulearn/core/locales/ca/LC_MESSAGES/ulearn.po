@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GenWebUPC\n"
-"POT-Creation-Date: 2018-07-27 09:56+0000\n"
+"POT-Creation-Date: 2018-07-27 11:48+0000\n"
 "PO-Revision-Date: 2014-04-14 11:20+0100\n"
 "Last-Translator: Corina Riba <corina.riba@upcnet.es>\n"
 "Language-Team: Plone Team@UPCnet <plone.team@upcnet.es>\n"
@@ -101,7 +101,7 @@ msgstr "Configure Custom button Bar With Angular"
 msgid "Convidats moderadors"
 msgstr "Convidats moderadors"
 
-#: ./ulearn/core/content/community.py:1077
+#: ./ulearn/core/content/community.py:1078
 msgid "Crea la comunitat"
 msgstr "Crea la comunitat"
 
@@ -134,10 +134,18 @@ msgid "Discussion"
 msgstr "Debats"
 
 #: ../ulearn.theme/ulearn/theme/portlets/rss/rss.py:230
+msgid "Display dates"
+msgstr "Mostrar dates"
+
+#: ../ulearn.theme/ulearn/theme/portlets/rss/rss.py:234
+msgid "Display descriptions"
+msgstr "Mostrar descripcions"
+
+#: ../ulearn.theme/ulearn/theme/portlets/rss/rss.py:238
 msgid "Display images"
 msgstr "Mostrar imatges"
 
-#: ./ulearn/core/content/community.py:1284
+#: ./ulearn/core/content/community.py:1285
 msgid "Documents"
 msgstr "Documents"
 
@@ -176,7 +184,7 @@ msgstr "Edició cancel·lada"
 msgid "Edit cancelled."
 msgstr "Edició cancel·lada"
 
-#: ./ulearn/core/content/community.py:1180
+#: ./ulearn/core/content/community.py:1181
 msgid "Edita la comunitat"
 msgstr "Desa"
 
@@ -199,7 +207,7 @@ msgstr "Activitat"
 msgid "Entrada_buttonbar"
 msgstr "Activitat"
 
-#: ./ulearn/core/content/community.py:1286
+#: ./ulearn/core/content/community.py:1287
 msgid "Esdeveniments"
 msgstr "Esdeveniments"
 
@@ -338,7 +346,7 @@ msgid "Manage Nomines"
 msgstr "Gestió de nòmines"
 
 #: ./ulearn/core/browser/migrations.py:191
-#: ./ulearn/core/content/community.py:1285
+#: ./ulearn/core/content/community.py:1286
 msgid "Media"
 msgstr "Media"
 
@@ -357,6 +365,14 @@ msgstr "Mes final"
 #: ./ulearn/core/browser/stats_templates/statsview.pt:156
 msgid "Mes_inicial"
 msgstr "Mes inicial"
+
+#: ../ulearn.theme/ulearn/theme/portlets/rss/rss.py:242
+msgid "More link"
+msgstr "Enllaç a més contingut"
+
+#: ../ulearn.theme/ulearn/theme/portlets/rss/rss.py:247
+msgid "More text"
+msgstr "Text enllaç a més contingut"
 
 #: ../ulearn.theme/ulearn/theme/portlets/subscribednews/subscribednews.py:49
 msgid "My Subscribed News"
@@ -476,6 +492,10 @@ msgstr "Text"
 msgid "Text Quick Links"
 msgstr "Títol dels enllaços directes"
 
+#: ../ulearn.theme/ulearn/theme/portlets/rss/rss.py:248
+msgid "Text to show more content."
+msgstr "Text que mostrará en el enllaç a més contingut."
+
 #: ../ulearn.theme/ulearn/theme/portlets/flashesinformativos/flashesinformativos.py:190
 msgid "This portlet displays Flashes Informativos."
 msgstr "This portlet displays Flashes Informativos."
@@ -545,6 +565,10 @@ msgstr "Uninstall ulearn.core"
 #: ../ulearn.theme/ulearn/theme/browser/views_templates/alltags.pt:34
 msgid "Unsubscribed Tags"
 msgstr "Unsubscribed Tags"
+
+#: ../ulearn.theme/ulearn/theme/portlets/rss/rss.py:243
+msgid "Url that links to more content."
+msgstr "Url a més contingut."
 
 #. Default: "Usuario <span class=\"formHelp\"></span>"
 #: ./ulearn/core/browser/stats_templates/statsview.pt:224
@@ -693,17 +717,17 @@ msgstr ""
 " Organitzativa: Només et pot subscriure un administrador i no et pots desubscriure't."
 
 #. Default: "La comunitat ${comunitat} ha estat creada."
-#: ./ulearn/core/content/community.py:1127
+#: ./ulearn/core/content/community.py:1128
 msgid "comunitat_creada"
 msgstr "La comunitat ${comunitat} ha estat creada."
 
 #. Default: "La comunitat ${comunitat} ja existeix, si us plau, escolliu un altre nom."
-#: ./ulearn/core/content/community.py:1103
+#: ./ulearn/core/content/community.py:1104
 msgid "comunitat_existeix"
 msgstr "La comunitat ${comunitat} ja existeix, si us plau, escolliu un altre nom."
 
 #. Default: "La comunitat ${comunitat} ha estat modificada."
-#: ./ulearn/core/content/community.py:1233
+#: ./ulearn/core/content/community.py:1234
 msgid "comunitat_modificada"
 msgstr "La comunitat ${comunitat} ha estat modificada."
 
@@ -1555,7 +1579,7 @@ msgstr "Icona Font Awesome"
 
 #. Default: "Leer mas.."
 #: ../ulearn.theme/ulearn/theme/portlets/buttonbar/buttonbar.pt:154
-#: ../ulearn.theme/ulearn/theme/portlets/subscribednews/subscribednews.pt:60
+#: ../ulearn.theme/ulearn/theme/portlets/subscribednews/subscribednews.pt:59
 msgid "readmore"
 msgstr "Llegeix més"
 
@@ -1564,7 +1588,7 @@ msgstr "Llegeix més"
 #. Default: "Cerca"
 #: ../ulearn.theme/ulearn/theme/browser/views_templates/filtered_contents_search.pt:35
 #: ../ulearn.theme/ulearn/theme/browser/views_templates/sharedwithme.pt:24
-#: ../ulearn.theme/ulearn/theme/portlets/buttonbar/buttonbar.pt:171
+#: ../ulearn.theme/ulearn/theme/portlets/buttonbar/buttonbar.pt:173
 msgid "search"
 msgstr "Cerca"
 

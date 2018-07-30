@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GenWebUPC\n"
-"POT-Creation-Date: 2018-07-27 09:56+0000\n"
+"POT-Creation-Date: 2018-07-27 11:48+0000\n"
 "PO-Revision-Date: 2014-04-14 11:35+0100\n"
 "Last-Translator: Roberto Diaz <roberto.diaz@upcnet.es>\n"
 "Language-Team: Plone Team@UPCnet <>\n"
@@ -101,7 +101,7 @@ msgstr "Configure Custom button Bar With Angular"
 msgid "Convidats moderadors"
 msgstr "Invited moderators"
 
-#: ./ulearn/core/content/community.py:1077
+#: ./ulearn/core/content/community.py:1078
 msgid "Crea la comunitat"
 msgstr "Create community"
 
@@ -134,10 +134,18 @@ msgid "Discussion"
 msgstr "Discussion"
 
 #: ../ulearn.theme/ulearn/theme/portlets/rss/rss.py:230
+msgid "Display dates"
+msgstr "Display dates"
+
+#: ../ulearn.theme/ulearn/theme/portlets/rss/rss.py:234
+msgid "Display descriptions"
+msgstr "Display descriptions"
+
+#: ../ulearn.theme/ulearn/theme/portlets/rss/rss.py:238
 msgid "Display images"
 msgstr "Display images"
 
-#: ./ulearn/core/content/community.py:1284
+#: ./ulearn/core/content/community.py:1285
 msgid "Documents"
 msgstr "Documents"
 
@@ -176,7 +184,7 @@ msgstr "Editing canceled"
 msgid "Edit cancelled."
 msgstr "Editing canceled"
 
-#: ./ulearn/core/content/community.py:1180
+#: ./ulearn/core/content/community.py:1181
 msgid "Edita la comunitat"
 msgstr "Save"
 
@@ -200,7 +208,7 @@ msgid "Entrada_buttonbar"
 msgstr "Stream"
 
 #. Default: "Eventos"
-#: ./ulearn/core/content/community.py:1286
+#: ./ulearn/core/content/community.py:1287
 msgid "Esdeveniments"
 msgstr "Events"
 
@@ -339,7 +347,7 @@ msgid "Manage Nomines"
 msgstr "Manage payment sheets"
 
 #: ./ulearn/core/browser/migrations.py:191
-#: ./ulearn/core/content/community.py:1285
+#: ./ulearn/core/content/community.py:1286
 msgid "Media"
 msgstr "Media"
 
@@ -358,6 +366,14 @@ msgstr "End month"
 #: ./ulearn/core/browser/stats_templates/statsview.pt:156
 msgid "Mes_inicial"
 msgstr "Start month"
+
+#: ../ulearn.theme/ulearn/theme/portlets/rss/rss.py:242
+msgid "More link"
+msgstr "More link"
+
+#: ../ulearn.theme/ulearn/theme/portlets/rss/rss.py:247
+msgid "More text"
+msgstr "More text"
 
 #: ../ulearn.theme/ulearn/theme/portlets/subscribednews/subscribednews.py:49
 msgid "My Subscribed News"
@@ -479,6 +495,10 @@ msgstr "Text"
 msgid "Text Quick Links"
 msgstr "Title Quick Links"
 
+#: ../ulearn.theme/ulearn/theme/portlets/rss/rss.py:248
+msgid "Text to show more content."
+msgstr "Text to show more content."
+
 #: ../ulearn.theme/ulearn/theme/portlets/flashesinformativos/flashesinformativos.py:190
 msgid "This portlet displays Flashes Informativos."
 msgstr "This portlet displays Flashes Informativos."
@@ -548,6 +568,10 @@ msgstr "Uninstall ulearn.core"
 #: ../ulearn.theme/ulearn/theme/browser/views_templates/alltags.pt:34
 msgid "Unsubscribed Tags"
 msgstr "Unsubscribed Tags"
+
+#: ../ulearn.theme/ulearn/theme/portlets/rss/rss.py:243
+msgid "Url that links to more content."
+msgstr "Url that links to more content."
 
 #. Default: "Usuario <span class=\"formHelp\"></span>"
 #: ./ulearn/core/browser/stats_templates/statsview.pt:224
@@ -696,17 +720,17 @@ msgstr ""
 " Organisational: Only the Social Network Manager can subscribe members and no member can unsubscribe him/hersef."
 
 #. Default: "La comunitat ${comunitat} ha estat creada."
-#: ./ulearn/core/content/community.py:1127
+#: ./ulearn/core/content/community.py:1128
 msgid "comunitat_creada"
 msgstr "Community ${comunitat} has been created."
 
 #. Default: "La comunitat ${comunitat} ja existeix, si us plau, escolliu un altre nom."
-#: ./ulearn/core/content/community.py:1103
+#: ./ulearn/core/content/community.py:1104
 msgid "comunitat_existeix"
 msgstr "Community ${comunitat} already exists, please choose a different name."
 
 #. Default: "La comunitat ${comunitat} ha estat modificada."
-#: ./ulearn/core/content/community.py:1233
+#: ./ulearn/core/content/community.py:1234
 msgid "comunitat_modificada"
 msgstr "Community ${comunitat} has been modified."
 
@@ -1558,14 +1582,14 @@ msgstr "Icon Font Awesome"
 
 #. Default: "Leer mas.."
 #: ../ulearn.theme/ulearn/theme/portlets/buttonbar/buttonbar.pt:154
-#: ../ulearn.theme/ulearn/theme/portlets/subscribednews/subscribednews.pt:60
+#: ../ulearn.theme/ulearn/theme/portlets/subscribednews/subscribednews.pt:59
 msgid "readmore"
 msgstr "Read more"
 
 #. Default: "Cerca"
 #: ../ulearn.theme/ulearn/theme/browser/views_templates/filtered_contents_search.pt:35
 #: ../ulearn.theme/ulearn/theme/browser/views_templates/sharedwithme.pt:24
-#: ../ulearn.theme/ulearn/theme/portlets/buttonbar/buttonbar.pt:171
+#: ../ulearn.theme/ulearn/theme/portlets/buttonbar/buttonbar.pt:173
 msgid "search"
 msgstr "Search"
 
