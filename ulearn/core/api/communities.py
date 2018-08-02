@@ -210,14 +210,27 @@ class SaveEditACL(REST):
             try:
                 self.target = item._unrestrictedGetObject()
                 self.payload = ICommunityACL(self.target)().attrs.get('acl', '')
+                print '--- Community: ' + str(self.target.absolute_url())
+                print '---- Payload: ' + str(self.payload)
                 adapter = self.target.adapted(request=self.request)
                 adapter.update_acl(self.payload)
+                users = self.payload['users']
+                users_checked = []
+
+                for user in users:
+                    try:
+                        adapter.update_acl_atomic(user['id'], user['role'])
+                        users_checked.append(str(user['id']) + ' as role ' + str(user['role']))
+                    except:
+                        raise BadParameters(user)
+
                 acl = adapter.get_acl()
                 adapter.set_plone_permissions(acl)
                 adapter.update_hub_subscriptions()
                 updated = 'Updated community subscriptions on: "{}" '.format(self.target.absolute_url())
                 logger.info(updated)
-                communities_ok.append(self.target.absolute_url())
+                communities_ok.append(dict(url=self.target.absolute_url(),
+                                           users_checked=users_checked))
             except:
                 error = 'Error updating community subscriptions on: "{}" '.format(self.target.absolute_url())
                 logger.error(error)
@@ -586,7 +599,6 @@ class Subscriptions(REST, CommunityMixin):
         adapter = self.target.adapted(request=self.request)
 
         # Change the uLearn part of the community
-
         users = self.params.pop('users')
         for user in users:
             try:
