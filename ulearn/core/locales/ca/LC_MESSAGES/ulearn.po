@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GenWebUPC\n"
-"POT-Creation-Date: 2018-07-27 11:48+0000\n"
+"POT-Creation-Date: 2018-10-05 11:20+0000\n"
 "PO-Revision-Date: 2014-04-14 11:20+0100\n"
 "Last-Translator: Corina Riba <corina.riba@upcnet.es>\n"
 "Language-Team: Plone Team@UPCnet <plone.team@upcnet.es>\n"
@@ -133,15 +133,19 @@ msgstr "Descripció"
 msgid "Discussion"
 msgstr "Debats"
 
-#: ../ulearn.theme/ulearn/theme/portlets/rss/rss.py:230
+#: ../ulearn.theme/ulearn/theme/portlets/rss/rss.py:246
+msgid "Display categories"
+msgstr "Mostrar categories"
+
+#: ../ulearn.theme/ulearn/theme/portlets/rss/rss.py:234
 msgid "Display dates"
 msgstr "Mostrar dates"
 
-#: ../ulearn.theme/ulearn/theme/portlets/rss/rss.py:234
+#: ../ulearn.theme/ulearn/theme/portlets/rss/rss.py:238
 msgid "Display descriptions"
 msgstr "Mostrar descripcions"
 
-#: ../ulearn.theme/ulearn/theme/portlets/rss/rss.py:238
+#: ../ulearn.theme/ulearn/theme/portlets/rss/rss.py:242
 msgid "Display images"
 msgstr "Mostrar imatges"
 
@@ -366,11 +370,11 @@ msgstr "Mes final"
 msgid "Mes_inicial"
 msgstr "Mes inicial"
 
-#: ../ulearn.theme/ulearn/theme/portlets/rss/rss.py:242
+#: ../ulearn.theme/ulearn/theme/portlets/rss/rss.py:250
 msgid "More link"
 msgstr "Enllaç a més contingut"
 
-#: ../ulearn.theme/ulearn/theme/portlets/rss/rss.py:247
+#: ../ulearn.theme/ulearn/theme/portlets/rss/rss.py:255
 msgid "More text"
 msgstr "Text enllaç a més contingut"
 
@@ -492,7 +496,7 @@ msgstr "Text"
 msgid "Text Quick Links"
 msgstr "Títol dels enllaços directes"
 
-#: ../ulearn.theme/ulearn/theme/portlets/rss/rss.py:248
+#: ../ulearn.theme/ulearn/theme/portlets/rss/rss.py:256
 msgid "Text to show more content."
 msgstr "Text que mostrará en el enllaç a més contingut."
 
@@ -566,7 +570,7 @@ msgstr "Uninstall ulearn.core"
 msgid "Unsubscribed Tags"
 msgstr "Unsubscribed Tags"
 
-#: ../ulearn.theme/ulearn/theme/portlets/rss/rss.py:243
+#: ../ulearn.theme/ulearn/theme/portlets/rss/rss.py:251
 msgid "Url that links to more content."
 msgstr "Url a més contingut."
 

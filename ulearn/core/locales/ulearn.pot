@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2018-07-27 11:48+0000\n"
+"POT-Creation-Date: 2018-10-05 11:20+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -134,15 +134,19 @@ msgstr ""
 msgid "Discussion"
 msgstr ""
 
-#: ../ulearn.theme/ulearn/theme/portlets/rss/rss.py:230
-msgid "Display dates"
+#: ../ulearn.theme/ulearn/theme/portlets/rss/rss.py:246
+msgid "Display categories"
 msgstr ""
 
 #: ../ulearn.theme/ulearn/theme/portlets/rss/rss.py:234
-msgid "Display descriptions"
+msgid "Display dates"
 msgstr ""
 
 #: ../ulearn.theme/ulearn/theme/portlets/rss/rss.py:238
+msgid "Display descriptions"
+msgstr ""
+
+#: ../ulearn.theme/ulearn/theme/portlets/rss/rss.py:242
 msgid "Display images"
 msgstr ""
 
@@ -355,11 +359,11 @@ msgstr ""
 msgid "Mes_inicial"
 msgstr ""
 
-#: ../ulearn.theme/ulearn/theme/portlets/rss/rss.py:242
+#: ../ulearn.theme/ulearn/theme/portlets/rss/rss.py:250
 msgid "More link"
 msgstr ""
 
-#: ../ulearn.theme/ulearn/theme/portlets/rss/rss.py:247
+#: ../ulearn.theme/ulearn/theme/portlets/rss/rss.py:255
 msgid "More text"
 msgstr ""
 
@@ -480,7 +484,7 @@ msgstr ""
 msgid "Text Quick Links"
 msgstr ""
 
-#: ../ulearn.theme/ulearn/theme/portlets/rss/rss.py:248
+#: ../ulearn.theme/ulearn/theme/portlets/rss/rss.py:256
 msgid "Text to show more content."
 msgstr ""
 
@@ -554,7 +558,7 @@ msgstr ""
 msgid "Unsubscribed Tags"
 msgstr ""
 
-#: ../ulearn.theme/ulearn/theme/portlets/rss/rss.py:243
+#: ../ulearn.theme/ulearn/theme/portlets/rss/rss.py:251
 msgid "Url that links to more content."
 msgstr ""
 
