@@ -20,6 +20,9 @@ from zope.event import notify
 from plone.app.workflow.events import LocalrolesModifiedEvent
 from Products.statusmessages.interfaces import IStatusMessage
 from plone.app.workflow import PloneMessageFactory as _
+from plone.registry.interfaces import IRegistry
+from zope.component import queryUtility
+from mrs.max.browser.controlpanel import IMAXUISettings
 
 import logging
 logger = logging.getLogger('event.LDAPMultiPlugin')
@@ -233,7 +236,13 @@ def authenticateCredentials(self, credentials):
     if user is None:
         return None
 
-    logger.error('XXX Successful login of {}'.format(login))
+    registry = queryUtility(IRegistry)
+    settings = registry.forInterface(IMAXUISettings, check=False)
+    domain = settings.domain
+    if domain == 'wecredit':
+        logger.error('XXX Successful login of {}'.format(login))
+    else:
+        logger.error('XXX Successful login of {} in domain {}'.format(login, domain))
     return (user.getId(), user.getUserName())
 
 
