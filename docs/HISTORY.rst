@@ -1,11 +1,16 @@
 Changelog
 =========
 
-2.73 (unreleased)
+2.73 (2018-10-23)
 -----------------
 
-- Nothing changed yet.
-
+* api/people/{username}: Permitir el cambio de email [iago.lopez]
+* Add domain in successful login [Pilar Marinas]
+* Traducciones: Portlet Ulearn RSS [iago.lopez]
+* Update viewuserswithnotupdatedphoto [iago.lopez]
+* testing aspb saveditacl [Roberto Diaz]
+* Traducciones [iago.lopez]
+* Traducciones [iago.lopez]
 
 2.72 (2018-07-26)
 -----------------
