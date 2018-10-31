@@ -20,7 +20,6 @@ from operator import itemgetter
 def searchUsersFunction(context, request, search_string):  # noqa
     portal = getSite()
     # pm = api.portal.get_tool(name='portal_membership')
-    nonvisibles = api.portal.get_registry_record(name='ulearn.core.controlpanel.IUlearnControlPanelSettings.nonvisibles')
 
     current_user = api.user.get_current()
     oauth_token = current_user.getProperty('oauth_token', '')
@@ -53,14 +52,7 @@ def searchUsersFunction(context, request, search_string):  # noqa
             #    users = []
             #else:
                 # Query for all users in the user_properties, showing only the legit ones
-                users = [r for r in soup.query(Eq('notlegit', False))]
-                if nonvisibles:
-                    filtered = []
-                    for user in users:
-                        if user is not None:
-                            if user.attrs['username'] not in nonvisibles:
-                                filtered.append(user)
-                    users = filtered
+            users = [r for r in soup.query(Eq('notlegit', False))]
 
     elif ICommunity.providedBy(context):
         if search_string:
@@ -116,14 +108,6 @@ def searchUsersFunction(context, request, search_string):  # noqa
                     # User subscribed, but no local profile found, append empty profile for display
                     pass
 
-            if nonvisibles:
-                filtered = []
-                for user in users:
-                    if user is not None:
-                        if user.attrs['username'] not in nonvisibles:
-                            filtered.append(user)
-                users = filtered
-
     # solución provisional para que no pete cuando estas en la biblioteca o en cualquier carpeta dentro de una comunidad
     # pendiente decidir cual sera el funcionamiento
     else:
@@ -141,13 +125,6 @@ def searchUsersFunction(context, request, search_string):  # noqa
             else:
                 # Query for all users in the user_properties, showing only the legit ones
                 users = [r for r in soup.query(Eq('notlegit', False))]
-                if nonvisibles:
-                    filtered = []
-                    for user in users:
-                        if user is not None:
-                            if user.attrs['username'] not in nonvisibles:
-                                filtered.append(user)
-                    users = filtered
 
     has_extended_properties = False
     extender_name = api.portal.get_registry_record('genweb.controlpanel.core.IGenwebCoreControlPanelSettings.user_properties_extender')
@@ -202,6 +179,11 @@ def searchUsersFunction(context, request, search_string):  # noqa
                 user_dict.update(dict(foto=str(userImage)))
                 user_dict.update(dict(url=portal.absolute_url() + '/profile/' + user.get('id', '')))
                 users_profile.append(user_dict)
+
+    nonvisibles = api.portal.get_registry_record(name='ulearn.core.controlpanel.IUlearnControlPanelSettings.nonvisibles')
+
+    if nonvisibles:
+        users_profile = [user for user in users_profile if user['id'] not in nonvisibles]
 
     len_usuaris = len(users_profile)
     if len_usuaris > 100:
