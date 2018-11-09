@@ -1,11 +1,11 @@
 Changelog
 =========
 
-2.74 (unreleased)
+2.74 (2018-11-09)
 -----------------
 
-- Nothing changed yet.
-
+* Searchuser: no ver usuarios de la lista nonvisible [iago.lopez]
+* api/news: mostrar solo noticias publicas o en intranet [iago.lopez]
 
 2.73 (2018-10-23)
 -----------------
