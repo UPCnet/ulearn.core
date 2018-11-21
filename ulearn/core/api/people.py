@@ -25,6 +25,9 @@ from Products.CMFCore.interfaces import ISiteRoot
 from zExceptions import Forbidden
 from souper.interfaces import ICatalogFactory
 from zope.component import getUtilitiesFor
+from zope.component import getMultiAdapter
+from itertools import chain
+import json
 
 import logging
 import requests
@@ -521,3 +524,39 @@ class Subscriptions(REST):
         records = [r for r in soup.query(Eq('gwuuid', gwuuid))]
         if records:
             return self.username in [a['id'] for a in records[0].attrs['acl']['users'] if a['role'] == u'owner']
+
+class UsersPropertiesMigration(REST):
+    """
+        /api/userspropertiesmigration
+    """
+
+    placeholder_type = 'person'
+    placeholder_id = 'username'
+
+    grok.adapts(APIRoot, IPloneSiteRoot)
+    grok.require('genweb.authenticated')
+
+    #@api_resource(required_roles=['Manager'])
+    def GET(self):
+        """ Returns all users properties """
+
+        # Get all ldap users
+        searchString = ''
+        searchView = getMultiAdapter((aq_inner(self.context), self.request), name='pas_search')
+        ldap_users = searchView.merge(chain(*[searchView.searchUsers(**{field: searchString}) for field in ['name']]), 'userid')
+
+        searchString = ''
+        result = []
+        for user in ldap_users:
+            user = api.user.get(username=user['id'])
+            properties = get_all_user_properties(user)
+
+            try:
+                info_user = dict(id=user.id,
+                                 properties=properties
+                                 )
+                result.append(info_user)
+            except:
+                logger.info('HA FALLAT LA INFO DE {}'.format(user.id))
+
+        return json.dumps(result)
