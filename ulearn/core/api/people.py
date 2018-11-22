@@ -536,7 +536,6 @@ class UsersPropertiesMigration(REST):
     grok.adapts(APIRoot, IPloneSiteRoot)
     grok.require('genweb.authenticated')
 
-    @api_resource(required_roles=['Manager'])
     def GET(self):
         """ Returns all users properties """
 
@@ -545,7 +544,6 @@ class UsersPropertiesMigration(REST):
         searchView = getMultiAdapter((aq_inner(self.context), self.request), name='pas_search')
         ldap_users = searchView.merge(chain(*[searchView.searchUsers(**{field: searchString}) for field in ['name']]), 'userid')
 
-        searchString = ''
         result = []
         for user in ldap_users:
             user = api.user.get(username=user['id'])
