@@ -536,7 +536,7 @@ class UsersPropertiesMigration(REST):
     grok.adapts(APIRoot, IPloneSiteRoot)
     grok.require('genweb.authenticated')
 
-    #@api_resource(required_roles=['Manager'])
+    @api_resource(required_roles=['Manager'])
     def GET(self):
         """ Returns all users properties """
 
