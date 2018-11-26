@@ -558,3 +558,36 @@ class UsersPropertiesMigration(REST):
                 logger.info('HA FALLAT LA INFO DE {}'.format(user.id))
 
         return json.dumps(result)
+
+
+class PortalRoleManagerMigration(REST):
+    """
+        /api/portalrolemanagermigration
+    """
+
+    placeholder_type = 'person'
+    placeholder_id = 'username'
+
+    grok.adapts(APIRoot, IPloneSiteRoot)
+    grok.require('genweb.authenticated')
+
+    def GET(self):
+        """ Returns all permision assigned to portal_role_manager """
+
+        portal = api.portal.get()
+        role_manager = portal.acl_users.portal_role_manager
+        roles = role_manager.enumerateRoles()
+
+        result = []
+        for role in roles:
+            users_assigned = role_manager.listAssignedPrincipals(role['id'])
+            try:
+                info_role_manager = dict(role_id=role['id'],
+                                         users_assigned=users_assigned
+                                    )
+                result.append(info_role_manager)
+            except:
+                logger.info('HA FALLAT LA INFO DE {}'.format(role['id']))
+
+        return json.dumps(result)
+
