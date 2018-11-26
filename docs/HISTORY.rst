@@ -1,11 +1,13 @@
 Changelog
 =========
 
-2.75 (unreleased)
+2.75 (2018-11-26)
 -----------------
 
-- Nothing changed yet.
-
+* Api return permission portal_role_manager [Pilar Marinas]
+* Api UsersPropertiesMigration [Pilar Marinas]
+* Required Manager Api UsersPropertiesMigration [Pilar Marinas]
+* Api UsersPropertiesMigration [Pilar Marinas]
 
 2.74 (2018-11-09)
 -----------------
