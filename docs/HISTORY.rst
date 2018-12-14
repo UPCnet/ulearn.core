@@ -1,11 +1,10 @@
 Changelog
 =========
 
-2.76 (unreleased)
+2.76 (2018-12-14)
 -----------------
 
-- Nothing changed yet.
-
+* Add in log objects added and modified [Pilar Marinas]
 
 2.75 (2018-11-26)
 -----------------
