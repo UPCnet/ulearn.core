@@ -618,7 +618,7 @@ class viewUsersWithNotUpdatedPhoto(grok.View):
                 typePortrait = portrait.__class__.__name__
                 if typePortrait == 'FSImage' or (typePortrait == 'Image' and portrait.size == 9715 or portrait.size == 4831):
                     fullname = record[1].attrs['fullname'] if 'fullname' in record[1].attrs else ''
-                    userInfo = {'fullname' : fullname}
+                    userInfo = {'fullname': fullname}
                     result[userID] = userInfo
 
         return result
@@ -651,3 +651,20 @@ class deletePhotoFromUser(grok.View):
                 return 'Error, user ' + self.request.form['user'] + ' not exist'
         else:
             return 'Add parameter ?user=nom.cognom in url'
+
+
+class listContentsLocalRolesBlock(grok.View):
+    """ List content in communities with local roles block """
+    grok.name('listcontentslocalrolesblock')
+    grok.context(IPloneSiteRoot)
+    grok.require('zope2.ViewManagementScreens')
+
+    def render(self):
+        result = ''
+        for community in self.context.portal_catalog(portal_type='ulearn.community'):
+            for item in self.context.portal_catalog(path=community.getPath()):
+                if item.portal_type != 'ulearn.community':
+                    itemObj = item.getObject()
+                    if hasattr(itemObj, '__ac_local_roles_block__') and itemObj.__ac_local_roles_block__:
+                        result += item.getPath() + "\n"
+        return result
