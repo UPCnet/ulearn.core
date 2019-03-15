@@ -1,11 +1,11 @@
 Changelog
 =========
 
-2.77 (unreleased)
+2.77 (2019-03-15)
 -----------------
 
-- Nothing changed yet.
-
+* Añadir vista clouseau: listcontentslocalrolesblock [Iago López Fernández]
+* Para que los hooks no den error al crear instancia [Pilar Marinas]
 
 2.76 (2018-12-14)
 -----------------
