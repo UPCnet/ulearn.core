@@ -560,6 +560,44 @@ class UsersPropertiesMigration(REST):
         return json.dumps(result)
 
 
+class UsersPropertiesMigrationSoup(REST):
+    """
+        /api/userspropertiesmigrationsoup
+    """
+
+    placeholder_type = 'person'
+    placeholder_id = 'username'
+
+    grok.adapts(APIRoot, IPloneSiteRoot)
+    grok.require('genweb.authenticated')
+
+    def GET(self):
+        """ Returns all users properties """
+
+        # Get all users soup
+        portal = api.portal.get()
+        soup = get_soup('user_properties', portal)
+        records = [r for r in soup.data.items()]
+        result = []
+        for record in records:
+            userid = str(record[1].attrs['id'])
+            user = api.user.get(username=userid)
+            try:
+                properties = get_all_user_properties(user)
+            except:
+                pass
+
+            try:
+                info_user = dict(id=user.id,
+                                 properties=properties
+                                 )
+                result.append(info_user)
+            except:
+                logger.info('HA FALLAT LA INFO DE {}'.format(userid))
+
+        return json.dumps(result)
+
+
 class PortalRoleManagerMigration(REST):
     """
         /api/portalrolemanagermigration
