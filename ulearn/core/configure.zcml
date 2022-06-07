@@ -93,13 +93,20 @@
       class=".behaviors.view-thumb.Thumbnail"
       layer="ulearn.theme.browser.interfaces.IUlearnTheme"
       permission="zope2.Public"
-    />
+      />
 
     <adapter
-        factory=".patches.NegotiateLanguage"
-        for="* ulearn.theme.browser.interfaces.IUlearnTheme"
-        />
+      factory=".patches.NegotiateLanguage"
+      for="* ulearn.theme.browser.interfaces.IUlearnTheme"
+      />
 
     <include file="patches.zcml" />
+
+    <browser:page
+      name="download_files"
+      for="plone.app.contenttypes.interfaces.IFolder"
+      permission="cmf.ModifyPortalContent"
+      class="ulearn.core.browser.folders.DownloadFiles"
+      />
 
 </configure>
