@@ -42,7 +42,7 @@ setup(name='ulearn.core',
           'collective.z3cform.datagridfield',
           'genweb.smartportlet',
           'collective.polls',
-          'pdfkit'
+          'pdfkit',
           # 'experimental.securityindexing'
       ],
       extras_require={'test': ['plone.app.testing',
