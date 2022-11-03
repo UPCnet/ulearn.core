@@ -23,7 +23,7 @@ class DownloadFiles(BrowserView):
         self.request = request
 
     def options(self):
-        return ['File', 'Image', 'News Item', 'Document', 'Event']
+        return ['File', 'Image', 'Document']
     
     def __call__(self):
         form = self.request.form
@@ -61,8 +61,6 @@ class DownloadFiles(BrowserView):
             plone_id: from_path
         }
 
-        options_pdf = {'cookie': [('__ac', self.request.cookies['__ac']),]}
-
         for item in items:
             relative_path = os.path.relpath(item.getPath(), from_path)  # diff between item path and root path
             zip_path = os.path.join(exp_path, relative_path)
@@ -72,31 +70,41 @@ class DownloadFiles(BrowserView):
                 print(("Saved {}".format(zip_path)))
             elif item.portal_type == 'File':
                 obj = item.getObject()
-                for x in folders:
-                    test_path = folders[x] + '/' + obj.id
-                    if test_path == item.getPath():
-                        f = open(zip_path, 'wb')
+                if obj.file:
+                    for x in folders:
+                        test_path = folders[x] + '/' + obj.id
+                        if test_path == item.getPath():
+                            f = open(zip_path, 'wb')
 
-                f.write(obj.file.data)
-                f.close()
-                print("Saved {}".format(zip_path))
+                    f.write(obj.file.data)
+                    f.close()
+                    print("Saved {}".format(zip_path))
             elif item.portal_type == 'Image':
                 obj = item.getObject()
-                for x in folders:
-                    test_path = folders[x] + '/' + obj.id
-                    if test_path == item.getPath():
-                        f = open(zip_path, 'wb')
-                f.write(obj.image.data)
-                f.close()
-                print("Saved {}".format(zip_path))
-            elif item.portal_type in ['News Item', 'Document', 'Event']:
+                if obj.image:
+                    for x in folders:
+                        test_path = folders[x] + '/' + obj.id
+                        if test_path == item.getPath():
+                            f = open(zip_path, 'wb')
+                    f.write(obj.image.data)
+                    f.close()
+                    print("Saved {}".format(zip_path))
+            elif item.portal_type == 'Document':
                 obj = item.getObject()
                 for x in folders:
                     test_path = folders[x] + '/' + obj.id
                     if test_path == item.getPath():
                         f = open(zip_path + '.pdf', 'wb')
 
-                pdfkit.from_url(obj.absolute_url(), '/tmp/' + exp_path + '.pdf', options=options_pdf)
+                options_pdf = {'cookie': [('__ac', self.request.cookies['__ac']), ],
+                               'disable-javascript': True,
+                               'minimum-font-size': 12}
+
+                try:
+                    pdfkit.from_url(obj.absolute_url() + "/print_document_view", '/tmp/' + exp_path + '.pdf', options=options_pdf)
+                except:
+                    pass
+
                 f.write(open('/tmp/' + exp_path + '.pdf', 'rb').read())
                 f.close()
                 print("Saved {}".format(zip_path + '.pdf'))
