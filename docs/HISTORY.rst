@@ -1,11 +1,15 @@
 Changelog
 =========
 
-2.78 (unreleased)
+2.78 (2022-11-03)
 -----------------
 
-- Nothing changed yet.
-
+* require pdfkit [Pilar Marinas]
+* fichero nuevo folders.pyr [Pilar Marinas]
+* Merge master add download_files [Pilar Marinas]
+* Add download_files [Pilar Marinas]
+* Add view download_files [Iago López]
+* UsersPropertiesMigrationSoup [Pilar Marinas]
 
 2.77 (2019-03-15)
 -----------------
