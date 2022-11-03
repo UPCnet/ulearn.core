@@ -103,6 +103,22 @@
     <include file="patches.zcml" />
 
     <browser:page
+      name="blank_template"
+      for="*"
+      layer="ulearn.theme.browser.interfaces.IUlearnTheme"
+      permission="zope.Public"
+      template="browser/views_templates/blank_template.pt"
+      />
+
+    <browser:page
+      name="print_document_view"
+      for="plone.app.contenttypes.interfaces.IDocument"
+      layer="ulearn.theme.browser.interfaces.IUlearnTheme"
+      permission="zope2.View"
+      template="browser/views_templates/print_document_view.pt"
+      />
+
+    <browser:page
       name="download_files"
       for="plone.app.contenttypes.interfaces.IFolder"
       permission="cmf.ModifyPortalContent"
