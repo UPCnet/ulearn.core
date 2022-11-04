@@ -1,11 +1,10 @@
 Changelog
 =========
 
-2.79 (unreleased)
+2.79 (2022-11-04)
 -----------------
 
-- Nothing changed yet.
-
+* Add News Item download_files [Pilar Marinas]
 
 2.78 (2022-11-03)
 -----------------
