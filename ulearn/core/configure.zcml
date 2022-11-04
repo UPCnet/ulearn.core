@@ -112,7 +112,7 @@
 
     <browser:page
       name="print_document_view"
-      for="plone.app.contenttypes.interfaces.IDocument"
+      for="*"
       layer="ulearn.theme.browser.interfaces.IUlearnTheme"
       permission="zope2.View"
       template="browser/views_templates/print_document_view.pt"

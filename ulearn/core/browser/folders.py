@@ -23,7 +23,7 @@ class DownloadFiles(BrowserView):
         self.request = request
 
     def options(self):
-        return ['File', 'Image', 'Document']
+        return ['File', 'Image', 'Document', 'News Item']
     
     def __call__(self):
         form = self.request.form
@@ -89,7 +89,7 @@ class DownloadFiles(BrowserView):
                     f.write(obj.image.data)
                     f.close()
                     print("Saved {}".format(zip_path))
-            elif item.portal_type == 'Document':
+            elif item.portal_type in ['News Item', 'Document']:
                 obj = item.getObject()
                 for x in folders:
                     test_path = folders[x] + '/' + obj.id
