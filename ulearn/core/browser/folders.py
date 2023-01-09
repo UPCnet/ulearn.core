@@ -7,6 +7,7 @@ from plone.namedfile import NamedBlobFile
 from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.statusmessages.interfaces import IStatusMessage
+from pdfkit.configuration import Configuration
 
 import os
 import pdfkit
@@ -101,7 +102,7 @@ class DownloadFiles(BrowserView):
                                'minimum-font-size': 12}
 
                 try:
-                    pdfkit.from_url(obj.absolute_url() + "/print_document_view", '/tmp/' + exp_path + '.pdf', options=options_pdf)
+                    pdfkit.from_url(obj.absolute_url() + "/print_document_view", '/tmp/' + exp_path + '.pdf', options=options_pdf, configuration=Configuration(wkhtmltopdf='/usr/local/bin/wkhtmltopdf'))
                 except:
                     pass
 
